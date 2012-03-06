@@ -107,6 +107,7 @@
      (define-key gnus-group-mode-map [?v ?f] 'fetchnews-fetch)
      (define-key gnus-group-mode-map [?v ?p] 'fetchnews-post)))
 
+(message "offlineimap-ctl.el loaded")
 (provide 'offlineimap-ctl)
 
 ;;; offlineimap-ctl.el ends here

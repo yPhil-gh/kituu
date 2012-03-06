@@ -1,10 +1,12 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Tue 06-Mar-2012 18:17:41>
+;; Time-stamp: <.gnus.el - Tue 06-Mar-2012 21:28:29>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
 (load-library "smtpmail")
 (gnus-demon-add-handler 'gnus-demon-scan-news 1 t) ; this does a call to gnus-group-get-new-news
+
+(require 'offlineimap-ctl)
 
 (add-hook 'message-mode-hook 'turn-on-auto-fill)
 
@@ -136,6 +138,13 @@ If all article have been seen, on the subject line of the last article."
 (setq gnus-select-method
       '(nntp "news.eternal-september.org"))
 
+
+(defun check-mail ()
+  "Sync IMAP, Get new mails, update modeline"
+  (interactive)
+  (start-offlineimap)
+  (gnus-group-get-new-news)
+  (gnus-mst-show-groups-with-new-messages))
 
 ;; Online
 ;; (setq gnus-secondary-select-methods

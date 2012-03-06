@@ -6,6 +6,5 @@ if ps aux | grep $e_user | grep 'emacs ' | grep -Ev 'grep' &>/dev/null; then
     echo "emacs client"
 else
     emacs "$@"
+    echo -e "\n plop"
 fi
-
-

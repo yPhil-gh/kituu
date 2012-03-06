@@ -111,11 +111,13 @@
 			       (format "[%s %s]"
 				       ;; (gnus-mst-notify-shorten-group-name
 				       ;; (car sublist))
-				       (substring (car sublist) 7)
-				       (gnus-group-unread (car sublist)))
+				       (substring (car sublist) 10 -6)
+				       (gnus-group-unread (car sublist))
+				       )
 			     (format "%s"
 				     (gnus-mst-notify-shorten-group-name
-				      (car sublist))))
+				      (car sublist))
+				     ))
 			   'face 'bold
 			   'keymap map
 			   'help-echo "Visit this group")
@@ -155,7 +157,7 @@
 (add-hook 'gnus-summary-exit-hook
 	  'gnus-mst-show-groups-with-new-messages)
 
-
+(message "REAL gnus-notify.el loaded")
 (provide 'gnus-notify)
 
 ;;; gnus-notify.el ends here
