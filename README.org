@@ -1,0 +1,48 @@
+* Kituu
+
+**  Fully configurable BASH environment
+
+*** Features
+
+    -Two-lines stable display
+    -Double-clickable full path (for copy & pasting)
+    -Simple and light load-meter
+    -Git branch and status
+    -Visual status of the latest command output
+    -Command history available across all new shells
+    -Cool aliases
+
+*** Installation
+    -cd ~/
+    -git clone git://github.com/xaccrocheur/kituu.git .kituu && .kituu/.scripts/kituu-setup.sh
+    -bash
+    -e& (re-launch emacs to overcome el-get timeouts at 1st launch)
+
+*** Usage
+    Many, if not all aspects, are configurable in the commented file ; It's also meant to be as secure as possible and avoids exporting crap in your env. Many surprises as well. I spent some time on this one. Bug reports *welcome*
+
+    Use this little script :
+    https://github.com/xaccrocheur/kituu/blob/master/.scripts/list-shell-colours.sh
+    To help you find your colors
+
+    If you defined custom paths and aliases in your existing .bashrc, don't forget to source them in the new one. Always keep a backup.
+
+    You should check this page regularly for updates. Use the force, read the source ;)
+
+    NOTE: this .bashrc only works with UTF-8 capable terminal emulators.
+
+    Don't forget that http://www.catonmat.net/blog/bash-emacs-editing-mode-cheat-sheet/ !
+
+*** LICENSE
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.

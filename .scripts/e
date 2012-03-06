@@ -1,0 +1,11 @@
+#!/bin/bash
+e_user=$(whoami)
+if ps aux | grep $e_user | grep 'emacs ' | grep -Ev 'grep' &>/dev/null; then
+# if [ "$(pidof emacs)" ] ; then
+    emacsclient "$@"
+    echo "emacs client"
+else
+    emacs "$@"
+fi
+
+
