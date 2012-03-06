@@ -1,7 +1,7 @@
 # ===================================================================
 # Kituu - the mildly over the top bash prompt - GPL3
 # pX <hallucinet@online.fr>
-# Time-stamp: <.bashrc - Fri 02-Mar-2012 19:51:25>
+# Time-stamp: <.bashrc - Tue 06-Mar-2012 17:35:22>
 # ===================================================================
 
 # If not running interactively, don't do anything
@@ -15,7 +15,7 @@
 #     emacs -mm "$@"
 # fi
 
-. ~/.scripts/git-completion.bash
+. ~/scripts/git-completion.bash
 GIT_PS1_SHOWDIRTYSTATE=true
 
 kituu_user=$(whoami)
@@ -28,7 +28,7 @@ if [ -n "${BASH+x}" ] ; then
     [ $UID -eq 0 ] && PATH=$PATH:/sbin:/usr/sbin:/bin
 
     PATH=$PATH:/usr/local/bin:/usr/local/sbin:/usr/local/include:/usr/bin/gnu
-    PATH=$PATH:~/.scripts:~/bin
+    PATH=$PATH:~/scripts:~/bin
     shopt -s histappend
     shopt -s cdspell      # cd spell check (try cd /usr/bon)
     shopt -s cmdhist

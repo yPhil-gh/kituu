@@ -36,10 +36,10 @@ done
 
 
 # set up git completion
-if [ ! -e ~/.scripts/git-completion.bash ]
+if [ ! -e ~/scripts/git-completion.bash ]
   then
     echo -e $sep"Installing Git completion..."
-    curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > ~/.scripts/git-completion.bash
+    curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > ~/scripts/git-completion.bash
 fi
 
 # set up tabbar
