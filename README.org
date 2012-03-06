@@ -14,7 +14,7 @@
 
 *** Installation
     -cd ~/
-    -git clone git://github.com/xaccrocheur/kituu.git .kituu && .kituu/.scripts/kituu-setup.sh
+    -git clone git://github.com/xaccrocheur/kituu.git .kituu && .kituu/scripts/kituu-setup.sh
     -bash
     -e& (re-launch emacs to overcome el-get timeouts at 1st launch)
 
