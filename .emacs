@@ -1,7 +1,7 @@
 (require 'cl) ; a rare necessary use of REQUIRE
 (defvar *emacs-load-start* (current-time))
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Tue 06-Mar-2012 17:54:50>
+;; Time-stamp: <.emacs - Tue 06-Mar-2012 18:18:22>
 ;; ===========================================================================
 
 ;; See https://github.com/xaccrocheur/kituu/
@@ -14,9 +14,11 @@
   (add-to-list 'load-path "~/.emacs.d/lisp/")
   (add-to-list 'load-path "~/.emacs.d/lisp/tabbar/")
   (require 'gnus-notify)
-  (require 'px)
   ;; )
 
+
+(when (file-exists-p "~/.emacs.d/lisp/px.el")
+  (require 'px))
 ;; Encryption
 ;; (require 'epa-file)
 ;; (epa-file-enable)
