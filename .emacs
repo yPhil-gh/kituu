@@ -1,7 +1,7 @@
 (require 'cl) ; a rare necessary use of REQUIRE
 (defvar *emacs-load-start* (current-time))
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Tue 06-Mar-2012 17:30:46>
+;; Time-stamp: <.emacs - Tue 06-Mar-2012 17:31:24>
 ;; ===========================================================================
 
 ;; See https://github.com/xaccrocheur/kituu/
@@ -16,7 +16,6 @@
   (require 'gnus-notify)
   (require 'px)
   ;; )
-
 
 ;; Encryption
 ;; (require 'epa-file)
