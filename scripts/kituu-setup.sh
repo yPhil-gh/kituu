@@ -2,7 +2,7 @@
 
 shopt -s dotglob
 dir=~/.kituu
-lispdir=~/.emacs.d/px-lisp/
+lispdir=~/.emacs.d/lisp/
 sep="\n################# "
 
 echo -e $sep"Kituu!"
