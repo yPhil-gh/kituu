@@ -1,7 +1,7 @@
 (require 'cl) ; a rare necessary use of REQUIRE
 (defvar *emacs-load-start* (current-time))
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Tue 06-Mar-2012 17:31:24>
+;; Time-stamp: <.emacs - Tue 06-Mar-2012 17:54:50>
 ;; ===========================================================================
 
 ;; See https://github.com/xaccrocheur/kituu/
@@ -475,19 +475,19 @@ inside html tags."
          (string-match "\*Article" bufname))
         (progn
           (xsteve-bury-gnus)
-	  ;; (tabbar-forward-group)
+	  (tabbar-mode t)
 	  )
 					;unbury
       (if (get-buffer "*Group*")
-          (xsteve-unbury-gnus)
-	;; (tabbar-mode -1)
+          (progn (xsteve-unbury-gnus)
+		 (tabbar-mode -1)
+)
         (gnus-unplugged)))))
 
 (defun xsteve-unbury-gnus ()
   "Restore gnus in its previous state"
   (interactive)
   (message "gnus")
-  ;; (tabbar-mode -1)
   (when (and (boundp 'gnus-bury-window-configuration) gnus-bury-window-configuration)
     (set-window-configuration gnus-bury-window-configuration)))
 
@@ -496,7 +496,6 @@ inside html tags."
   (interactive)
   (setq gnus-bury-window-configuration nil)
   (message "no gnus")
-  ;; (tabbar-mode 1)
   (let ((buf nil)
         (bufname nil))
     (dolist (buf (buffer-list))
