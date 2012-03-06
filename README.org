@@ -21,9 +21,7 @@
 *** Usage
     Many, if not all aspects, are configurable in the commented file ; It's also meant to be as secure as possible and avoids exporting crap in your env. Many surprises as well. I spent some time on this one. Bug reports *welcome*
 
-    Use this little [[file:scripts/list-shell-colours.sh][script]] :
-    https://github.com/xaccrocheur/kituu/blob/master/.scripts/list-shell-colours.sh
-    To help you find your colors
+    Use this little [[file:scripts/list-shell-colours.sh][script]] (https://github.com/xaccrocheur/kituu/blob/master/.scripts/list-shell-colours.sh) to help you find your colors but stick to the ASCII ones if you're going to use your .bashrc on weird old cruty machines, like I do.
 
     If you defined custom paths and aliases in your existing .bashrc, don't forget to source them in the new one. Always keep a backup.
 
