@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Tue 06-Mar-2012 17:36:56>
+;; Time-stamp: <.gnus.el - Tue 06-Mar-2012 18:17:41>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -11,34 +11,11 @@
 ;; Image handling
 (condition-case nil
     (progn (require ‘w3m nil t)
-       (setq mm-text-html-renderer ‘w3m
-	     mm-inline-text-html-with-images t
-	     mm-w3m-safe-url-regexp nil
-	     mm-inline-large-images nil))
+	   (setq mm-text-html-renderer ‘w3m
+		 mm-inline-text-html-with-images t
+		 mm-w3m-safe-url-regexp nil
+		 mm-inline-large-images nil))
   (error nil))
-
-(setq
-
- ;; The threading is not based on subject
- gnus-thread-ignore-subject t
-
- ;; How to deal with mails/articles when the root is lost (one
- ;; children becomes the father of the thread)
- gnus-summary-make-false-root `adopt
-
- ;; How to save articles
- gnus-default-article-saver `gnus-summary-save-in-file
-
- ;; What headers to show in a message
- ;;       gnus-visible-headers "^From:\\|^Newsgroups:\\|^Subject:\\|^Date:\\|^Followup-To:\\|^Reply-To:\\|^To:\\|^[BGF]?Cc:\\|^Posted-To:\\|^Mail-Copies-To:\\|^Apparently-To:\\|^Gnus-Warning:\\|^Resent-From:"
-
- ;; gnus-visible-headers
- ;;       '("^From" "^Subject" "^Date" "^Newsgroups" "^Followup-To"
- ;;         "^To" "^Cc" "^User-Agent" "^X-Newsreader" "^X-Mailer")
-
- ;; I always want the buttons to save and view documents
- gnus-unbuttonized-mime-types nil
- )
 
 ;; Go to the bottom
 (defun jidanni-gnus-summary-first-unseen-or-last-subject ()
@@ -56,6 +33,14 @@ If all article have been seen, on the subject line of the last article."
 (setq gnus-auto-select-subject 'jidanni-gnus-summary-first-unseen-or-last-subject)
 
 (setq
+ ;; The threading is not based on subject
+ gnus-thread-ignore-subject t
+ ;; when the root is lost
+ gnus-summary-make-false-root `adopt
+ ;; How to save articles
+ gnus-default-article-saver `gnus-summary-save-in-file
+
+ gnus-unbuttonized-mime-types nil
  gnus-use-full-window nil
  mm-inline-large-images t
  gnus-always-read-dribble-file t
@@ -65,7 +50,7 @@ If all article have been seen, on the subject line of the last article."
  gnus-check-new-newsgroups nil
  gnus-check-bogus-newsgroups nil
  gnus-no-groups-message "No news is terrrible news"
-;; This does not seem to work
+ ;; This does not seem to work
  gnus-asynchronous t
  gnus-use-cache t
  ;; visible . t
@@ -83,192 +68,9 @@ If all article have been seen, on the subject line of the last article."
  message-signature t
  message-signature-file "~/.signature"
  ;; gnus-treat-body-boundary nil
+ gnus-inhibit-mime-unbuttonizing t
+ gnus-buttonized-mime-types '("multipart/encrypted" "multipart/signed")
 )
-
-(defun xx-send-mail (bool)
-  (interactive
-    (list
-          (y-or-n-p "Send this mail? ")))
-  (if bool (message-send-and-exit)))
-
-(global-set-key (kbd "<C-return>") 'xx-send-mail)
-
-(require 'nnir)
-
-     (setq
-      gnus-parameters
-      '(("imap.*"
-         (gnus-use-adaptive-scoring nil)
-         (gnus-use-scoring nil)
-	 (display . 200)
-         (visible . t)
-         (display . all)
-)))
-
-;; (setq gnus-secondary-select-methods
-;;       '(
-;; 	(nnimap "gmail-pcm"
-;; 	       (nnimap-address "imap.gmail.com")
-;; 		;; (nnimap-authinfo-file "~/.authinfo.gpg")
-;; 		(nnimap-stream ssl)
-;; 		(nnir-search-engine imap)
-;; 		)
-;; 	(nnimap "adamweb"
-;; 	       ;; (remove-prefix "INBOX.")
-;; 	       (nnimap-stream ssl)
-;; 	       (nnimap-address "mail.gandi.net")
-;; 	       ;; (nnimap-authinfo-file "~/.authinfo.gpg")
-;; 	       (nnimap-authenticator cram-md5)
-;; 	       (nnimap-server-port 993)
-;; 	       (nnir-search-engine imap)
-;; 	       )
-;;        )
-;;    )
-
-
-(setq gnus-secondary-select-methods
-      '(
-	(nnmaildir "gmail-pcm"
-		   (directory "~/.mail/perso/")
-		   (directory-files nnheader-directory-files-safe)
-		   (get-new-mail nil)
-		   )
-	(nnmaildir "adamweb"
-	       ;; (remove-prefix "INBOX.")
-		   (directory "~/.mail/adamweb/")
-		   (directory-files nnheader-directory-files-safe)
-		   (get-new-mail nil)
-	       )
-       )
-   )
-
-(setq nnimap-split-inbox "INBOX") ;; (1)
-;; (setq nnimap-split-predicate "UNDELETED") ;; (2)
-(setq nnimap-split-rule
-      '(
-	("adamweb" "^To:.*contact@adamweb.net")
-	("P.Coatmeur" "^To:.*philippe.coatmeur@gmail.com")
-        ))
-
-(setq gnus-posting-styles
-      '(((header "to" "contact@adamweb.net")
-         (address "contact@adamweb.net")
-	 ("X-SMTP-Server" "mail.gandi.net")
-	 )
-	((header "to" "philippe.coatmeur@gmail.com")
-	 ("X-SMTP-Server" "smtp.gmail.com")
-         (address "philippe.coatmeur@gmail.com")
-	 )))
-
-;; (setq gnus-secondary-select-methods
-;;       '((nnimap "imap.gmail.com"
-;;                 (nnimap-stream ssl)
-;;                 (nnimap-authinfo-file "~/.authinfo")
-;;                 (nnimap-nov-is-evil t)
-;;                 (nnir-search-engine imap))))
-
-;; (setq gnus-secondary-select-methods
-;;       '((nnimap "mail.gandi.net"
-;;                 (nnimap-stream ssl)
-;;                 (nnimap-authinfo-file "~/.authinfo")
-;;                 (nnimap-nov-is-evil t)
-;;                 (nnir-search-engine imap)))
-;; )
-
-
-(setq gnus-select-method
-      '(nntp "news.eternal-september.org"))
-
-
-
-
-
-
-;; Each component of smtp-accounts has the form
-;; (protocol  "adres_matched_in_From_field@foo.com"  "protocol.foo.com"  "port"  "user@foo.com" "password" "key" "cert")
-;; where KEY and CERT are optional. Setting PASSWORD to NIL will make SMTPMAIL-SEND-IT prompt for a password before sending every message. (More secure, more bugging.)
-
- ;; Default smtpmail.el configurations.
- (require 'cl)
- (require 'smtpmail)
- (setq send-mail-function 'smtpmail-send-it
-       message-send-mail-function 'smtpmail-send-it
-       mail-from-style nil
-       ;; user-full-name "Philippe M. Coatmeur"
-       smtpmail-debug-info t
-       smtpmail-debug-verb t)
-
- (defun set-smtp (mech server port user password)
-   "Set related SMTP variables for supplied parameters."
-   (setq smtpmail-smtp-server server
-         smtpmail-smtp-service port
-         smtpmail-auth-credentials (list (list server port user password))
-         smtpmail-auth-supported (list mech)
-         smtpmail-starttls-credentials nil)
-   (message "Setting SMTP server to `%s:%s' for user `%s'."
-            server port user))
-
- (defun set-smtp-ssl (server port user password  &optional key cert)
-   "Set related SMTP and SSL variables for supplied parameters."
-   (setq starttls-use-gnutls t
-         starttls-gnutls-program "gnutls-cli"
-         starttls-extra-arguments nil
-         smtpmail-smtp-server server
-         smtpmail-smtp-service port
-         smtpmail-auth-credentials (list (list server port user password))
-         smtpmail-starttls-credentials (list (list server port key cert)))
-   (message
-    "Setting SMTP server to `%s:%s' for user `%s'. (SSL enabled.)"
-    server port user))
-
- (defun change-smtp ()
-   "Change the SMTP server according to the current from line."
-   (save-excursion
-     (loop with from = (save-restriction
-                         (message-narrow-to-headers)
-                         (message-fetch-field "from"))
-           for (auth-mech address . auth-spec) in smtp-accounts
-           when (string-match address from)
-           do (cond
-               ((memq auth-mech '(cram-md5 plain login))
-                (return (apply 'set-smtp (cons auth-mech auth-spec))))
-               ((eql auth-mech 'ssl)
-                (return (apply 'set-smtp-ssl auth-spec)))
-               (t (error "Unrecognized SMTP auth. mechanism: `%s'." auth-mech)))
-           finally (error "Cannot infer SMTP information."))))
-
-;; In order to trigger CHANGE-SMTP before every SMTPMAIL-VIA-SMTP call, we introduce an advice as follows.
-
-  (defadvice smtpmail-via-smtp
-    (before smtpmail-via-smtp-ad-change-smtp (recipient smtpmail-text-buffer))
-    "Call `change-smtp' before every `smtpmail-via-smtp'."
-    (with-current-buffer smtpmail-text-buffer (change-smtp)))
-
-  (ad-activate 'smtpmail-via-smtp)
-
-
-;; ;; Configure outbound mail (SMTP)
-;; (setq smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil))
-;;       smtpmail-smtp-server "smtp.gmail.com"
-;;       smtpmail-default-smtp-server "smtp.gmail.com"
-;;       send-mail-function 'smtpmail-send-it
-;;       message-send-mail-function 'smtpmail-send-it
-;;       smtpmail-smtp-service 587
-;;       smtpmail-auth-credentials '(("smtp.gmail.com" 587 "xaccrocheur@gmail.com" nil))
-;;       smtpmail-debug-info t
-;;       smtpmail-debug-verb t
-;;       )
-;; (setq smtpmail-local-domain nil)
-
-
-
-
-
-;; Buttonize the different parts, please
-(setq gnus-buttonized-mime-types '("multipart/encrypted" "multipart/signed"))
-
-;; But keep buttons for multiple parts
-(setq gnus-inhibit-mime-unbuttonizing t)
 
 (setq gnus-visible-headers
       '("^From:" "^Subject:" "^To:" "^Cc:" "^Resent-To:" "^Message-ID:"
@@ -291,35 +93,163 @@ If all article have been seen, on the subject line of the last article."
 
 ;; gnus-summary-line-format "%U%R%z %12&user-date; %(%[%-30,30f%]%) %B %s\n"
 
- ;; Jumps point to ":". %( %) will be be highlighted on mouse-over.
- ;; %U = mark (eg "R")
- ;; %R = secondary mark. Indicates if replied to, cached, or saved.
- ;; %z = zcore. "+"/"-" if above/below default score.
- ;; %i = score as a number
- ;; %3i    => minimum of 3 characters, right-justify
- ;; %-3i   => minimum of 3 characters, left-justify
- ;; %3,6i  => minimum of 3 characters, maximum of 6, right-justify
- ;; %-3,6i => minimum of 3 characters, maximum of 6, left-justify
- ;; %t = articles in thread
- ;; %I = start of thread indentation
- ;; %B = complex threading.
- ;; %s = subject if the article is the root of the thread
- ;; %n = name
- ;; %L = number of lines
- ;; %D = date
- ;; %n{ %} = gnus-face-n
- ;; %&user-date; - see `gnus-user-date-format-alist'.
+;; Jumps point to ":". %( %) will be be highlighted on mouse-over.
+;; %U = mark (eg "R")
+;; %R = secondary mark. Indicates if replied to, cached, or saved.
+;; %z = zcore. "+"/"-" if above/below default score.
+;; %i = score as a number
+;; %3i    => minimum of 3 characters, right-justify
+;; %-3i   => minimum of 3 characters, left-justify
+;; %3,6i  => minimum of 3 characters, maximum of 6, right-justify
+;; %-3,6i => minimum of 3 characters, maximum of 6, left-justify
+;; %t = articles in thread
+;; %I = start of thread indentation
+;; %B = complex threading.
+;; %s = subject if the article is the root of the thread
+;; %n = name
+;; %L = number of lines
+;; %D = date
+;; %n{ %} = gnus-face-n
+;; %&user-date; - see `gnus-user-date-format-alist'.
 
-;; (setq gnus-visible-headers
-;;       '("^From:" "^Newsgroups:" "^Subject:" "^Date:" "^Followup-To:" "^Reply-To:"
-;; 	"^Organization:" "^Summary:" "^Keywords:" "^To:" "^[BGF]?Cc:" "^Posted-To:"
-;; 	"^Mail-Copies-To:" "^Apparently-To:" "^X-Gnus-Warning:" "^Resent-From:"
-;; 	"^X-Sent:" "^X-Mailer:" "^X-Newsreader:" "^X-User-Agent:" "^User-Agent:"
-;; 	"^X-Diary" ))
+;; My C-RETURN send mail
+(defun xx-send-mail (bool)
+  (interactive
+   (list
+    (y-or-n-p "Send this mail? ")))
+  (if bool (message-send-and-exit)))
 
-;; (executable-find starttls-program)
-;; (setq gnus-visual '(article-highlight menu))
-;; (setq gnus-ignored-newsgroups "^to\\.\\|^[0-9. ]+\\( \\|$\\)\\|^[\"]\"[#'()]")
+(global-set-key (kbd "<C-return>") 'xx-send-mail)
+
+(require 'nnir)
+
+(setq
+ gnus-parameters
+ '(("imap.*"
+    (gnus-use-adaptive-scoring nil)
+    (gnus-use-scoring nil)
+    (display . 200)
+    (visible . t)
+    (display . all)
+    )))
+
+(setq gnus-select-method
+      '(nntp "news.eternal-september.org"))
+
+
+;; Online
+;; (setq gnus-secondary-select-methods
+;;       '(
+;; 	(nnimap "gmail-pcm"
+;; 	       (nnimap-address "imap.gmail.com")
+;; 		;; (nnimap-authinfo-file "~/.authinfo.gpg")
+;; 		(nnimap-stream ssl)
+;; 		(nnir-search-engine imap)
+;; 		)
+;; 	(nnimap "adamweb"
+;; 	       ;; (remove-prefix "INBOX.")
+;; 	       (nnimap-stream ssl)
+;; 	       (nnimap-address "mail.gandi.net")
+;; 	       ;; (nnimap-authinfo-file "~/.authinfo.gpg")
+;; 	       (nnimap-authenticator cram-md5)
+;; 	       (nnimap-server-port 993)
+;; 	       (nnir-search-engine imap)
+;; 	       )
+;;        )
+;;    )
+
+;; Offline
+(setq gnus-secondary-select-methods
+      '(
+	(nnmaildir "gmail-pcm"
+		   (directory "~/.mail/perso/")
+		   (directory-files nnheader-directory-files-safe)
+		   (get-new-mail nil)
+		   )
+	(nnmaildir "adamweb"
+		   ;; (remove-prefix "INBOX.")
+		   (directory "~/.mail/adamweb/")
+		   (directory-files nnheader-directory-files-safe)
+		   (get-new-mail nil)
+		   )
+	)
+      )
+
+;; Splitting & "from" setup
+(setq nnimap-split-inbox "INBOX") ;; (1)
+;; (setq nnimap-split-predicate "UNDELETED") ;; (2)
+(setq nnimap-split-rule
+      '(
+	("adamweb" "^To:.*contact@adamweb.net")
+	("P.Coatmeur" "^To:.*philippe.coatmeur@gmail.com")
+        ))
+
+(setq gnus-posting-styles
+      '(((header "to" "contact@adamweb.net")
+         (address "contact@adamweb.net")
+	 ("X-SMTP-Server" "mail.gandi.net")
+	 )
+	((header "to" "philippe.coatmeur@gmail.com")
+	 ("X-SMTP-Server" "smtp.gmail.com")
+         (address "philippe.coatmeur@gmail.com")
+	 )))
+
+;; Default smtpmail.el configurations.
+(require 'cl)
+(require 'smtpmail)
+(setq send-mail-function 'smtpmail-send-it
+      message-send-mail-function 'smtpmail-send-it
+      mail-from-style nil
+      ;; user-full-name "Philippe M. Coatmeur"
+      smtpmail-debug-info t
+      smtpmail-debug-verb t)
+
+(defun set-smtp (mech server port user password)
+  "Set related SMTP variables for supplied parameters."
+  (setq smtpmail-smtp-server server
+	smtpmail-smtp-service port
+	smtpmail-auth-credentials (list (list server port user password))
+	smtpmail-auth-supported (list mech)
+	smtpmail-starttls-credentials nil)
+  (message "Setting SMTP server to `%s:%s' for user `%s'."
+	   server port user))
+
+(defun set-smtp-ssl (server port user password  &optional key cert)
+  "Set related SMTP and SSL variables for supplied parameters."
+  (setq starttls-use-gnutls t
+	starttls-gnutls-program "gnutls-cli"
+	starttls-extra-arguments nil
+	smtpmail-smtp-server server
+	smtpmail-smtp-service port
+	smtpmail-auth-credentials (list (list server port user password))
+	smtpmail-starttls-credentials (list (list server port key cert)))
+  (message
+   "Setting SMTP server to `%s:%s' for user `%s'. (SSL enabled.)"
+   server port user))
+
+(defun change-smtp ()
+  "Change the SMTP server according to the current from line."
+  (save-excursion
+    (loop with from = (save-restriction
+			(message-narrow-to-headers)
+			(message-fetch-field "from"))
+	  for (auth-mech address . auth-spec) in smtp-accounts
+	  when (string-match address from)
+	  do (cond
+	      ((memq auth-mech '(cram-md5 plain login))
+	       (return (apply 'set-smtp (cons auth-mech auth-spec))))
+	      ((eql auth-mech 'ssl)
+	       (return (apply 'set-smtp-ssl auth-spec)))
+	      (t (error "Unrecognized SMTP auth. mechanism: `%s'." auth-mech)))
+	  finally (error "Cannot infer SMTP information."))))
+
+;; In order to trigger CHANGE-SMTP before every SMTPMAIL-VIA-SMTP call, we introduce an advice as follows.
+(defadvice smtpmail-via-smtp
+  (before smtpmail-via-smtp-ad-change-smtp (recipient smtpmail-text-buffer))
+  "Call `change-smtp' before every `smtpmail-via-smtp'."
+  (with-current-buffer smtpmail-text-buffer (change-smtp)))
+
+(ad-activate 'smtpmail-via-smtp)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Window configuration.
@@ -398,14 +328,3 @@ If all article have been seen, on the subject line of the last article."
 
 ;; Or, like this:
 (add-to-list 'mm-attachment-override-types "image/.*")
-;; Set point on latest (possibly old) article, if entering summary
-;; buffer and there are no new unseen/unread articles, otherwise goto
-;; first unseen or unread. [For hints, see gnus-sum.el.]
-;; (setq gnus-auto-select-subject
-;;       (lambda()
-;;         (if (and (not gnus-newsgroup-unreads)
-;;                  (not (null gnus-newsgroup-data)))
-;;             (progn
-;;               (goto-char (gnus-data-pos (car (last gnus-newsgroup-data))))
-;;               (gnus-summary-position-point))
-;;           (gnus-summary-first-unseen-or-unread-subject))))
