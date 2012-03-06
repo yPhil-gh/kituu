@@ -52,12 +52,18 @@ if [ ! -e ./tabbar/ ]
     rm -rf tabbar/.git/
 fi
 
-
-# set up offlineimap
 cd $scriptsdir
 if [ ! -e ./offlineimap/ ]
   then
     echo -e $sep"Installing offlineimap..."
+    git clone $ git clone https://github.com/spaetz/offlineimap.git && echo -e $sep"...Done."
+    ln -s offlineimap/offlineimap.el $scriptsdir
+fi
+
+cd $lispdir
+if [ ! -e ./offlineimap.el ]
+  then
+    echo -e $sep"Installing offlineimap.el..."
     git clone http://git.naquadah.org/git/offlineimap-el.git && echo -e $sep"...Done."
     cp offlineimap-el/offlineimap.el .
     rm -rf offlineimap-el/
