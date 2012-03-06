@@ -6,7 +6,7 @@ lispdir=~/.emacs.d/lisp/
 scriptsdir=~/scripts/
 sep="\n################# "
 
-echo -e $sep"Kituu!"
+echo -e "Kituu!"
 # clone &| check
 if [ ! -d $dir ]
 then
