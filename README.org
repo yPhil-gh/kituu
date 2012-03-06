@@ -21,7 +21,7 @@
 *** Usage
     Many, if not all aspects, are configurable in the commented file ; It's also meant to be as secure as possible and avoids exporting crap in your env. Many surprises as well. I spent some time on this one. Bug reports *welcome*
 
-    Use this little script :
+    Use this little [[file:scripts/list-shell-colours.sh][script]] :
     https://github.com/xaccrocheur/kituu/blob/master/.scripts/list-shell-colours.sh
     To help you find your colors
 
