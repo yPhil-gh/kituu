@@ -3,6 +3,7 @@
 shopt -s dotglob
 dir=~/.kituu
 lispdir=~/.emacs.d/lisp/
+scriptsdir=~/scripts/
 sep="\n################# "
 
 echo -e $sep"Kituu!"
@@ -50,3 +51,15 @@ if [ ! -e ./tabbar/ ]
     git clone https://github.com/dholm/tabbar.git && echo -e $sep"...Done."
     rm -rf tabbar/.git/
 fi
+
+
+# set up offlineimap
+cd $scriptsdir
+if [ ! -e ./offlineimap/ ]
+  then
+    echo -e $sep"Installing offlineimap..."
+    git clone http://git.naquadah.org/git/offlineimap-el.git && echo -e $sep"...Done."
+    cp offlineimap-el/offlineimap.el .
+    rm -rf offlineimap-el/
+fi
+
