@@ -157,4 +157,5 @@
 
 
 (provide 'gnus-notify)
-                                                                                                                                                                                                                                                                                                                                                                    ;;; gnus-notify.el ends here
+
+;;; gnus-notify.el ends here
