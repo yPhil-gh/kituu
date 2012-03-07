@@ -1,7 +1,7 @@
 (require 'cl) ; a rare necessary use of REQUIRE
 (defvar *emacs-load-start* (current-time))
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Wed 07-Mar-2012 19:19:31>
+;; Time-stamp: <.emacs - Wed 07-Mar-2012 19:23:27>
 ;; ===========================================================================
 
 ;; See https://github.com/xaccrocheur/kituu/
@@ -312,7 +312,7 @@ inside html tags."
 (menu-bar-mode -1)
 (global-linum-mode 1)
 ;; (global-undo-tree-mode 1)
-;; (global-smart-tab-mode 1)
+(global-smart-tab-mode 1)
 (global-font-lock-mode t)
 (tool-bar-mode 0)
 (set-scroll-bar-mode `right)
