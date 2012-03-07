@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Wed 07-Mar-2012 19:55:58>
+;; Time-stamp: <.gnus.el - Wed 07-Mar-2012 20:18:32>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -59,8 +59,8 @@
 
     ("INBOX"
      (display . all)
-     (modeline-notify . t))
-))
+     (modeline-notify . t)
+)))
 
 ;; Image handling
 (condition-case nil
@@ -118,8 +118,9 @@ If all article have been seen, on the subject line of the last article."
   (interactive)
   (start-offlineimap)
   (gnus-group-get-new-news)
-  (gnus-summary-rescan-group 500)
-  (gnus-mst-show-groups-with-new-messages))
+  ;; (gnus-summary-rescan-group 500)
+  ;; (gnus-mst-show-groups-with-new-messages)
+)
 
 (setq gnus-select-method
       '(nntp "news.eternal-september.org"))
