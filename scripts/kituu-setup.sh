@@ -1,20 +1,20 @@
 #!/bin/bash
 
 shopt -s dotglob
-dir=~/.kituu
-lispdir=~/.emacs.d/lisp/
-scriptsdir=~/scripts/
+kituudir=~/.kituu
+lispdir=~/.emacs.d/lisp
+scriptsdir=~/scripts
 sep="\n################# "
 
 echo -e "Kituu!"
 # clone &| check
-if [ ! -d $dir ]
+if [ ! -d $kituudir ]
 then
-    echo -e $sep"No existing $dir, cloning..."
+    echo -e $sep"No existing $kituudir, cloning..."
     git clone git@github.com:xaccrocheur/kituu.git
 else
-    echo -e $sep"Found $dir, fetching..."
-    cd $dir
+    echo -e $sep"Found $kituudir, fetching..."
+    cd $kituudir
     git fetch && git reset --hard origin/master
 fi
 
@@ -24,48 +24,42 @@ for i in * ; do
 	if [[ -e ~/$i ]] ; then
 	    mv ~/$i ~/$i.orig
 	    echo -e "\033[1m~/$i\033[0m has been backuped to ~/$i.orig"
-	    ln -s $dir/$i ~/
-	    echo -e "~/$i is now a link to $dir/$i"
+	    ln -s $kituudir/$i ~/
+	    echo -e "~/$i is now a link to $kituudir/$i"
 	else
-	    ln -s $dir/$i ~/
-	    echo -e "\033[1m~/$i\033[0m \t -> \t $dir/\033[1m$i\033[0m"
+	    ln -s $kituudir/$i ~/
+	    echo -e "\033[1m~/$i\033[0m \t -> \t $kituudir/\033[1m$i\033[0m"
 	fi
     else
 	[[ "${i}" != ".git" ]] && [[ "${i}" != "README.org" ]] && echo -e " \033[1m$i\033[0m \t > \t is already a symlink"
     fi
 done
 
-
-# set up git completion
-if [ ! -e ~/scripts/git-completion.bash ]
+if [ ! -e $scriptsdir/git-completion.bash ]
   then
     echo -e $sep"Installing Git completion..."
     curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > ~/scripts/git-completion.bash
 fi
 
-# set up tabbar
-cd $lispdir
-if [ ! -e ./tabbar/ ]
+if [ ! -e $lispdir/tabbar/ ]
   then
-    echo -e $sep"Installing Tabbar..."
+    echo -e $sep"Installing Tabbar in $lispdir/tabbar/"
     git clone https://github.com/dholm/tabbar.git && echo -e $sep"...Done."
     rm -rf tabbar/.git/
 fi
 
-cd $scriptsdir
-if [ ! -e ./offlineimap/ ]
+if [ ! -e $scriptsdir/offlineimap/ ]
   then
-    echo -e $sep"Installing offlineimap..."
+    echo -e $sep"Installing offlineimap in $scriptsdir/offlineimap/"
     git clone https://github.com/spaetz/offlineimap.git && echo -e $sep"...Done."
     ln -s offlineimap/offlineimap.el $scriptsdir
 fi
 
-cd $lispdir
-if [ ! -e ./offlineimap.el ]
+if [ ! -e $lispdir/offlineimap.el ]
   then
-    echo -e $sep"Installing offlineimap.el..."
+    echo -e $sep"Installing offlineimap.el in $lispdir/"
     git clone http://git.naquadah.org/git/offlineimap-el.git && echo -e $sep"...Done."
-    cp offlineimap-el/offlineimap.el .
-    rm -rf offlineimap-el/
+    cp offlineimap-el/offlineimap.el . && rm -rf offlineimap-el/
 fi
+
 
