@@ -40,7 +40,7 @@ if [ ! -e $lispdir/tabbar/ ]
   then
     echo -e $sep"Installing Tabbar in $lispdir/tabbar/"
     cd $lispdir &&  git clone https://github.com/dholm/tabbar.git
-    rm -rf tabbar/.git/* && rm -rfv tabbar/.git/ && echo -e $sep"...Done."
+    rm -rf tabbar/.git/* && rm -rfv $lispdir/tabbar/.git/ && echo -e $sep"...Done."
 fi
 
 if [ ! -e $scriptsdir/offlineimap/ ]
@@ -54,7 +54,7 @@ if [ ! -e $lispdir/offlineimap.el ]
   then
     echo -e $sep"Installing offlineimap.el in $lispdir/"
     cd $lispdir && git clone http://git.naquadah.org/git/offlineimap-el.git
-    cp -v offlineimap-el/offlineimap.el . && rm -rf offlineimap-el/* && rm -rfv offlineimap-el/ && echo -e $sep"...Done."
+    cp -v offlineimap-el/offlineimap.el . && rm -rf offlineimap-el/* && rm -rfv $lispdir/offlineimap-el/ && echo -e $sep"...Done."
 fi
 
 
