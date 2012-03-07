@@ -1,7 +1,7 @@
 (require 'cl) ; a rare necessary use of REQUIRE
 (defvar *emacs-load-start* (current-time))
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Wed 07-Mar-2012 18:21:31>
+;; Time-stamp: <.emacs - Wed 07-Mar-2012 18:31:39>
 ;; ===========================================================================
 
 ;; See https://github.com/xaccrocheur/kituu/
@@ -742,6 +742,7 @@ select 'this' or <that> (enclosed)  s-SPC
  '(fringe ((t (:background "#2c2c2c"))))
  '(gnus-group-mail-3 ((t (:foreground "#e9b96e" :weight bold))))
  '(gnus-group-mail-3-empty ((t (:foreground "#e9b96e"))))
+ '(gnus-header-name ((t (:foreground "#e6a8df"))))
  '(gnus-summary-normal-unread ((t (:weight bold :inherit (quote default)))))
  '(header-line ((t (:background "#555753" :foreground "#ffffff"))))
  '(isearch ((t (:background "#ce5c00" :foreground "#ffffff"))))
