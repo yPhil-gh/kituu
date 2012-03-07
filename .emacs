@@ -1,7 +1,7 @@
 (require 'cl) ; a rare necessary use of REQUIRE
 (defvar *emacs-load-start* (current-time))
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Wed 07-Mar-2012 16:46:16>
+;; Time-stamp: <.emacs - Wed 07-Mar-2012 17:26:50>
 ;; ===========================================================================
 
 ;; See https://github.com/xaccrocheur/kituu/
@@ -389,6 +389,9 @@ inside html tags."
 
 
 ;; Keys !!
+(define-key global-map [(meta up)] '(lambda() (interactive) (scroll-other-window -1)))
+(define-key global-map [(meta down)] '(lambda() (interactive) (scroll-other-window 1)))
+
 (define-key global-map [f1] 'delete-other-windows)
 (define-key global-map [S-f1] 'px-help-emacs)
 ;; (define-key global-map [M-f1] 'delete-window)
