@@ -47,7 +47,7 @@ if [ ! -e $scriptsdir/offlineimap/ ]
   then
     echo -e $sep"Installing offlineimap in $scriptsdir/offlineimap/"
     cd $scriptsdir && git clone https://github.com/spaetz/offlineimap.git
-    ln -sv offlineimap/offlineimap.el . && echo -e $sep"...Done."
+    ln -sv offlineimap/offlineimap.py . && echo -e $sep"...Done."
 fi
 
 if [ ! -e $lispdir/offlineimap.el ]
