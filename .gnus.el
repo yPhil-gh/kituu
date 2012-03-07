@@ -1,10 +1,11 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Wed 07-Mar-2012 17:24:10>
+;; Time-stamp: <.gnus.el - Wed 07-Mar-2012 17:25:20>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
 (load-library "smtpmail")
 (gnus-demon-add-handler 'gnus-demon-scan-news 1 t) ; this does a call to gnus-group-get-new-news
+
 
 (require 'offlineimap-ctl)
 
