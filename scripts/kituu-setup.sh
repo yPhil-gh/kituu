@@ -39,22 +39,22 @@ fi
 if [ ! -e $lispdir/tabbar/ ]
   then
     echo -e $sep"Installing Tabbar in $lispdir/tabbar/"
-    git clone https://github.com/dholm/tabbar.git
-    rm -rf $lispdir/tabbar/.git/* && rm -rfv $lispdir/tabbar/.git/ && echo -e $sep"...Done."
+    cd $lispdir &&  git clone https://github.com/dholm/tabbar.git
+    rm -rf tabbar/.git/* && rm -rfv tabbar/.git/ && echo -e $sep"...Done."
 fi
 
 if [ ! -e $scriptsdir/offlineimap/ ]
   then
     echo -e $sep"Installing offlineimap in $scriptsdir/offlineimap/"
-    git clone https://github.com/spaetz/offlineimap.git
-    ln -sv $scriptsdir/offlineimap/offlineimap.el $scriptsdir && echo -e $sep"...Done."
+    cd $scriptsdir && git clone https://github.com/spaetz/offlineimap.git
+    ln -sv offlineimap/offlineimap.el . && echo -e $sep"...Done."
 fi
 
 if [ ! -e $lispdir/offlineimap.el ]
   then
     echo -e $sep"Installing offlineimap.el in $lispdir/"
-    git clone http://git.naquadah.org/git/offlineimap-el.git
-    cp -v $lispdir/offlineimap-el/offlineimap.el . && rm -rf $lispdir/offlineimap-el/* && rm -rfv $lispdir/offlineimap-el/ && echo -e $sep"...Done."
+    cd $lispdir && git clone http://git.naquadah.org/git/offlineimap-el.git
+    cp -v offlineimap-el/offlineimap.el . && rm -rf offlineimap-el/* && rm -rfv offlineimap-el/ && echo -e $sep"...Done."
 fi
 
 
