@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Wed 07-Mar-2012 20:18:32>
+;; Time-stamp: <.gnus.el - Wed 07-Mar-2012 20:32:06>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -44,12 +44,16 @@
 ;; This for setting the "from" field depending on the group we're on
 (setq gnus-parameters
   '(("nnmaildir\\+gmail"
+     (display . all)
+     (modeline-notify . t)
      (posting-style
       (address "philippe.coatmeur@gmail.com")
       (name "Philippe M. Coatmeur")
       (user-mail-address "philippe.coatmeur@gmail.com")))
 
     ("nnmaildir\\+adamweb"
+     (display . all)
+     (modeline-notify . t)
      (posting-style
       (address "contact@adamweb.net")
       (name "Adamweb")
@@ -57,10 +61,7 @@
       ;; (eval (setq message-sendmail-extra-arguments '("-a" "neo")))
       (user-mail-address "contact@adamweb.net")))
 
-    ("INBOX"
-     (display . all)
-     (modeline-notify . t)
-)))
+    ))
 
 ;; Image handling
 (condition-case nil
