@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Wed 07-Mar-2012 18:36:04>
+;; Time-stamp: <.gnus.el - Wed 07-Mar-2012 19:21:45>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -9,8 +9,14 @@
 (require 'offlineimap-ctl)
 
 (add-hook 'message-mode-hook 'turn-on-auto-fill)
-  (add-hook 'message-mode-hook
-	    (tabbar-mode 0))
+(add-hook 'message-mode-hook 'my-gnus-hook)
+(add-hook 'summary-mode-hook 'my-gnus-hook)
+(add-hook 'gnus-Group-mode-hook 'my-gnus-hook)
+
+(defun my-gnus-hook ()
+  "A nice gnus session"
+  (tabbar-mode -1))
+
 (setq
  mm-inline-large-images t
  gnus-always-read-dribble-file t

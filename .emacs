@@ -1,7 +1,7 @@
 (require 'cl) ; a rare necessary use of REQUIRE
 (defvar *emacs-load-start* (current-time))
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Wed 07-Mar-2012 18:31:39>
+;; Time-stamp: <.emacs - Wed 07-Mar-2012 19:19:31>
 ;; ===========================================================================
 
 ;; See https://github.com/xaccrocheur/kituu/
@@ -17,8 +17,8 @@
   ;; )
 
 
-(when (file-exists-p "~/.emacs.d/lisp/px.el")
-  (require 'px))
+;; (when (file-exists-p "~/.emacs.d/lisp/px.el")
+;;   (require 'px))
 ;; Encryption
 ;; (require 'epa-file)
 ;; (epa-file-enable)
@@ -78,7 +78,10 @@
 (declare-function el-get "el-get.el")
 (el-get 'sync my-packages)
 
-(tabbar-mode t)
+(defun tabbar-hook-px ()
+  (tabbar-mode))
+
+(add-hook 'text-mode-hook 'tabbar-hook-px)
 
 ;; Server
 (server-start)
@@ -468,7 +471,6 @@ inside html tags."
 ;; (global-set-key [M-s-left] 'tabbar-backward)
 
 ;; (global-set-key (kbd "C-<tab>") 'tabbar-forward)
-
 (defun xsteve-gnus-px ()
   "Invoke gnus"
   (interactive)
@@ -486,7 +488,7 @@ inside html tags."
       (if (get-buffer "*Group*")
           (progn (xsteve-unbury-gnus)
 		 (tabbar-mode -1)
-)
+		 )
         (gnus)))))
 
 (defun xsteve-unbury-gnus ()
