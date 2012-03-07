@@ -1,7 +1,7 @@
 (require 'cl) ; a rare necessary use of REQUIRE
 (defvar *emacs-load-start* (current-time))
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Wed 07-Mar-2012 19:23:27>
+;; Time-stamp: <.emacs - Wed 07-Mar-2012 19:55:03>
 ;; ===========================================================================
 
 ;; See https://github.com/xaccrocheur/kituu/
@@ -56,6 +56,17 @@
 (defvar minibuffer_history)
 (defvar savehist-file)
 
+;; ;; hooks
+;; (add-hook 'text-mode-hook
+;;  (lambda ()
+;;    (tabbar-mode t)))
+
+;; (add-hook 'lisp-mode-hook
+;;  (lambda ()
+;;    (tabbar-mode t)))
+
+(tabbar-mode t)
+
 ;; El-get
 (setq el-get-dir (concat user-emacs-directory "el-get/"))
 (add-to-list 'load-path (concat user-emacs-directory "el-get/el-get"))
@@ -77,11 +88,6 @@
 ;; (declare-function tabbar-mode "tabbar.el")
 (declare-function el-get "el-get.el")
 (el-get 'sync my-packages)
-
-(defun tabbar-hook-px ()
-  (tabbar-mode))
-
-(add-hook 'text-mode-hook 'tabbar-hook-px)
 
 ;; Server
 (server-start)
@@ -306,7 +312,6 @@ inside html tags."
       time-stamp-warn-inactive t
       time-stamp-format "%f - %3a %02d-%3b-%:y %02H:%02M:%02S")
 
-
 ;; Modes
 (show-paren-mode t)
 (menu-bar-mode -1)
@@ -325,6 +330,7 @@ inside html tags."
 (recentf-mode 1)
 (mouse-avoidance-mode 'cat-and-mouse)
 (iswitchb-mode t)
+(fset 'yes-or-no-p 'y-or-n-p)
 
 ;; Vars
 (setq
@@ -345,7 +351,6 @@ inside html tags."
 (set-face-foreground 'show-paren-mismatch-face "red")
 (set-face-attribute 'show-paren-mismatch-face nil
                     :weight 'bold)
-(fset 'yes-or-no-p 'y-or-n-p)
 
 (setq yas/trigger-key (kbd "TAB"))
 ;; (global-set-key (kbd "C-²") 'yas/expand-from-trigger-key)

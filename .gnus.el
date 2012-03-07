@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Wed 07-Mar-2012 19:21:45>
+;; Time-stamp: <.gnus.el - Wed 07-Mar-2012 19:55:58>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -16,6 +16,12 @@
 (defun my-gnus-hook ()
   "A nice gnus session"
   (tabbar-mode -1))
+
+(eval-after-load "gnus-group"
+  '(progn
+     (define-key gnus-group-mode-map (kbd "<tab>") 'other-window)
+     (my-gnus-hook)
+     ))
 
 (setq
  mm-inline-large-images t
