@@ -1,7 +1,7 @@
 (require 'cl) ; a rare necessary use of REQUIRE
 (defvar *emacs-load-start* (current-time))
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Wed 07-Mar-2012 18:04:37>
+;; Time-stamp: <.emacs - Wed 07-Mar-2012 18:15:55>
 ;; ===========================================================================
 
 ;; See https://github.com/xaccrocheur/kituu/
@@ -740,9 +740,10 @@ select 'this' or <that> (enclosed)  s-SPC
  '(font-lock-variable-name-face ((t (:foreground "#fcaf3e"))))
  '(font-lock-warning-face ((t (:foreground "#ef2929"))))
  '(fringe ((t (:background "#2c2c2c"))))
- '(gnus-summary-normal-unread ((t (:weight bold))))
+
+ '(gnus-summary-normal-unread ((t (:weight bold :inherit 'default))))
+
  ;; '(gnus-summary-selected ((t (:background "#2e3436" :foreground "#ff0000"))))
- '(gnus-summary-selected-face ((t (:bold t))) t)
  '(header-line ((t (:background "#555753" :foreground "#ffffff"))))
  '(isearch ((t (:background "#ce5c00" :foreground "#ffffff"))))
  '(lazy-highlight ((t (:background "#8f5902"))))
