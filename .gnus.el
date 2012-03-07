@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Wed 07-Mar-2012 20:32:06>
+;; Time-stamp: <.gnus.el - Wed 07-Mar-2012 21:45:25>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -37,7 +37,6 @@
  gnus-agent-go-online t
  gnus-agent-queue-mail nil
  message-signature t
- message-signature-file "~/.signature"
  ;; gnus-treat-body-boundary nil
 )
 
@@ -48,6 +47,7 @@
      (modeline-notify . t)
      (posting-style
       (address "philippe.coatmeur@gmail.com")
+      (signature "~/.sig-pcm")
       (name "Philippe M. Coatmeur")
       (user-mail-address "philippe.coatmeur@gmail.com")))
 
@@ -56,6 +56,7 @@
      (modeline-notify . t)
      (posting-style
       (address "contact@adamweb.net")
+      (signature "~/.sig-adamweb")
       (name "Adamweb")
       ;; (body "\n\n\n Sivaram A\n -- \n")
       ;; (eval (setq message-sendmail-extra-arguments '("-a" "neo")))

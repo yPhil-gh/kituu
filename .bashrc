@@ -1,7 +1,7 @@
 # ===================================================================
 # Kituu - the mildly over the top bash prompt - GPL3
 # pX <hallucinet@online.fr>
-# Time-stamp: <.bashrc - Wed 07-Mar-2012 21:13:10>
+# Time-stamp: <.bashrc - Wed 07-Mar-2012 22:59:49>
 # ===================================================================
 
 # If not running interactively, don't do anything
@@ -73,7 +73,7 @@ alias U="urpmi"
 alias screen="screen -h 5000"
 alias commit="git commit -am"
 alias push="git push origin master"
-alias Syncmail="offlineimap.py -o -u blinkenlights"
+alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
 
 # if hash vim 2>&- ; then
 #     alias vi="vim"
