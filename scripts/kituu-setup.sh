@@ -7,28 +7,23 @@ scriptsdir=~/scripts
 sep="\n################# "
 
 echo -e "Kituu!"
-# clone &| check
+
 if [ ! -d $kituudir ]
 then
     echo -e $sep"No existing $kituudir, cloning..."
     cd && git clone git@github.com:xaccrocheur/kituu.git
 else
     echo -e $sep"Found $kituudir, fetching..."
-    cd $kituudir
-    git fetch && git reset --hard origin/master
+    cd $kituudir && git fetch && git reset --hard origin/master
 fi
 
-# Install
 for i in * ; do
     if [[ "${i}" != ".git" &&  "${i}" != "README.org" && "${i}" != "." && "${i}" != ".." && ! -L ~/$i ]] ; then
 	if [[ -e ~/$i ]] ; then
-	    mv ~/$i ~/$i.orig
-	    echo -e "\033[1m~/$i\033[0m has been backuped to ~/$i.orig"
-	    ln -s $kituudir/$i ~/
-	    echo -e "~/$i is now a link to $kituudir/$i"
+	    mv -v ~/$i ~/$i.orig
+	    ln -sv $kituudir/$i ~/
 	else
-	    ln -s $kituudir/$i ~/
-	    echo -e "\033[1m~/$i\033[0m \t -> \t $kituudir/\033[1m$i\033[0m"
+	    ln -sv $kituudir/$i ~/
 	fi
     else
 	[[ "${i}" != ".git" ]] && [[ "${i}" != "README.org" ]] && echo -e " \033[1m$i\033[0m \t > \t is already a symlink"
@@ -45,7 +40,7 @@ if [ ! -e $lispdir/tabbar/ ]
   then
     echo -e $sep"Installing Tabbar in $lispdir/tabbar/"
     git clone https://github.com/dholm/tabbar.git
-    rm -rfv tabbar/.git/ && echo -e $sep"...Done."
+    rm -rf tabbar/.git/* && rm -rfv tabbar/.git/ && echo -e $sep"...Done."
 fi
 
 if [ ! -e $scriptsdir/offlineimap/ ]
@@ -59,7 +54,7 @@ if [ ! -e $lispdir/offlineimap.el ]
   then
     echo -e $sep"Installing offlineimap.el in $lispdir/"
     git clone http://git.naquadah.org/git/offlineimap-el.git
-    cp -v offlineimap-el/offlineimap.el . && rm -rfv offlineimap-el/ && echo -e $sep"...Done."
+    cp -v offlineimap-el/offlineimap.el . && rm -rf offlineimap-el/* && rm -rfv offlineimap-el/ && echo -e $sep"...Done."
 fi
 
 
