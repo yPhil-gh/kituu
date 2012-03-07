@@ -11,7 +11,7 @@ echo -e "Kituu!"
 if [ ! -d $kituudir ]
 then
     echo -e $sep"No existing $kituudir, cloning..."
-    git clone git@github.com:xaccrocheur/kituu.git
+    cd && git clone git@github.com:xaccrocheur/kituu.git
 else
     echo -e $sep"Found $kituudir, fetching..."
     cd $kituudir
