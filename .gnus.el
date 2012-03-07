@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Wed 07-Mar-2012 17:08:45>
+;; Time-stamp: <.gnus.el - Wed 07-Mar-2012 17:24:10>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -18,9 +18,9 @@
  ;; gnus-use-full-window nil
  mm-inline-large-images t
  gnus-always-read-dribble-file t
- ;; gnus-show-threads nil
- ;; gnus-use-cross-reference nil
- ;; gnus-nov-is-evil nil
+ gnus-show-threads nil
+ gnus-use-cross-reference nil
+ gnus-nov-is-evil nil
  gnus-check-new-newsgroups nil
  gnus-check-bogus-newsgroups nil
  gnus-no-groups-message "No news is terrrible news"
@@ -36,7 +36,7 @@
  ;; user-login-name "philippe.coatmeur"
  ;; gnus-save-killed-list nil
  ;; gnus-check-new-newsgroups nil
- ;; gnus-save-newsrc-file nil
+ gnus-save-newsrc-file nil
  gnus-agent-go-online t
  gnus-agent-queue-mail nil
  ;; imap-store-password t
