@@ -1,7 +1,7 @@
 (require 'cl) ; a rare necessary use of REQUIRE
 (defvar *emacs-load-start* (current-time))
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Tue 06-Mar-2012 18:18:22>
+;; Time-stamp: <.emacs - Wed 07-Mar-2012 16:46:16>
 ;; ===========================================================================
 
 ;; See https://github.com/xaccrocheur/kituu/
@@ -479,12 +479,12 @@ inside html tags."
           (xsteve-bury-gnus)
 	  (tabbar-mode t)
 	  )
-					;unbury
+      ;; unbury
       (if (get-buffer "*Group*")
           (progn (xsteve-unbury-gnus)
 		 (tabbar-mode -1)
 )
-        (gnus-unplugged)))))
+        (gnus)))))
 
 (defun xsteve-unbury-gnus ()
   "Restore gnus in its previous state"
@@ -727,6 +727,9 @@ select 'this' or <that> (enclosed)  s-SPC
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
+
+ '(gnus-summary-selected-face ((t (:bold t))))
+
  '(default ((t (:background "#2e3436" :foreground "#eeeeec"))))
  '(cursor ((t (:background "#fce94f" :foreground "#2e3436"))))
  '(font-lock-builtin-face ((t (:foreground "#ad7fa8"))))

@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Tue 06-Mar-2012 21:28:29>
+;; Time-stamp: <.gnus.el - Wed 07-Mar-2012 17:08:45>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -10,6 +10,42 @@
 
 (add-hook 'message-mode-hook 'turn-on-auto-fill)
 
+(define-key gnus-summary-mode-map [(meta up)] '(lambda() (interactive) (scroll-other-window -1)))
+(define-key gnus-summary-mode-map [(meta down)] '(lambda() (interactive) (scroll-other-window 1)))
+
+
+(setq
+ ;; gnus-use-full-window nil
+ mm-inline-large-images t
+ gnus-always-read-dribble-file t
+ ;; gnus-show-threads nil
+ ;; gnus-use-cross-reference nil
+ ;; gnus-nov-is-evil nil
+ gnus-check-new-newsgroups nil
+ gnus-check-bogus-newsgroups nil
+ gnus-no-groups-message "No news is terrrible news"
+;; This does not seem to work
+ ;; gnus-asynchronous t
+ ;; gnus-use-cache t
+ ;; visible . t
+ ;; display . all
+ ;; gnus-group-line-format  "%M%S%p%P%5y:%B%(%g%)\n"
+ gnus-group-line-format  "%M%5y:%B%(%G%)\n"
+ ;; gnus-group-line-format "%M:%G\n"
+ ;; user-mail-address "philippe.coatmeur@gmail.com"
+ ;; user-login-name "philippe.coatmeur"
+ ;; gnus-save-killed-list nil
+ ;; gnus-check-new-newsgroups nil
+ ;; gnus-save-newsrc-file nil
+ gnus-agent-go-online t
+ gnus-agent-queue-mail nil
+ ;; imap-store-password t
+ ;; gnus-use-dribble-file nil
+ message-signature t
+ message-signature-file "~/.signature"
+ ;; gnus-treat-body-boundary nil
+)
+
 ;; Image handling
 (condition-case nil
     (progn (require ‘w3m nil t)
@@ -18,6 +54,25 @@
 		 mm-w3m-safe-url-regexp nil
 		 mm-inline-large-images nil))
   (error nil))
+
+(setq gnus-parameters
+      '(("mail\\..*"
+         (gnus-show-threads nil)
+         (gnus-use-scoring nil)
+         (gnus-summary-line-format
+          "%U%R%z%I%(%[%d:%ub%-23,23f%]%) %s\n")
+         (gcc-self . t)
+         (display . all))
+
+        ("^nnimap:\\(foo.bar\\)$"
+         (to-group . "\\1"))
+
+        ("mail\\.me"
+         (gnus-use-scoring  t))
+
+        ("list\\..*"
+         (total-expire . t)
+         (broken-reply-to . t))))
 
 ;; Go to the bottom
 (defun jidanni-gnus-summary-first-unseen-or-last-subject ()
@@ -34,45 +89,11 @@ If all article have been seen, on the subject line of the last article."
     (gnus-summary-position-point)))
 (setq gnus-auto-select-subject 'jidanni-gnus-summary-first-unseen-or-last-subject)
 
-(setq
- ;; The threading is not based on subject
- gnus-thread-ignore-subject t
- ;; when the root is lost
- gnus-summary-make-false-root `adopt
- ;; How to save articles
- gnus-default-article-saver `gnus-summary-save-in-file
-
- gnus-unbuttonized-mime-types nil
- gnus-use-full-window nil
- mm-inline-large-images t
- gnus-always-read-dribble-file t
- ;; gnus-show-threads nil
- ;; gnus-use-cross-reference nil
- gnus-nov-is-evil nil
- gnus-check-new-newsgroups nil
- gnus-check-bogus-newsgroups nil
- gnus-no-groups-message "No news is terrrible news"
- ;; This does not seem to work
- gnus-asynchronous t
- gnus-use-cache t
- ;; visible . t
- ;; display . all
- ;; gnus-group-line-format  "%M%S%p%P%5y:%B%(%g%)\n"
- gnus-group-line-format  "%M%5y:%B%(%G%)\n"
- ;; gnus-group-line-format "%M:%G\n"
- gnus-save-killed-list nil
- ;; gnus-check-new-newsgroups nil
- ;; gnus-save-newsrc-file nil
- gnus-agent-go-online t
- gnus-agent-queue-mail nil
- ;; imap-store-password t
- ;; gnus-use-dribble-file nil
- message-signature t
- message-signature-file "~/.signature"
- ;; gnus-treat-body-boundary nil
- gnus-inhibit-mime-unbuttonizing t
- gnus-buttonized-mime-types '("multipart/encrypted" "multipart/signed")
-)
+;; (make-face 'my-gnus-summary-selected)
+;; (custom-set-faces
+;;  '(my-gnus-summary-selected ((t (:background "#444444")))))
+;; (setq
+;;  gnus-summary-selected-face 'my-gnus-summary-selected)
 
 (setq gnus-visible-headers
       '("^From:" "^Subject:" "^To:" "^Cc:" "^Resent-To:" "^Message-ID:"
@@ -114,15 +135,6 @@ If all article have been seen, on the subject line of the last article."
 ;; %n{ %} = gnus-face-n
 ;; %&user-date; - see `gnus-user-date-format-alist'.
 
-;; My C-RETURN send mail
-(defun xx-send-mail (bool)
-  (interactive
-   (list
-    (y-or-n-p "Send this mail? ")))
-  (if bool (message-send-and-exit)))
-
-(global-set-key (kbd "<C-return>") 'xx-send-mail)
-
 (require 'nnir)
 
 (setq
@@ -139,11 +151,12 @@ If all article have been seen, on the subject line of the last article."
       '(nntp "news.eternal-september.org"))
 
 
-(defun check-mail ()
+(defun check-mail-px ()
   "Sync IMAP, Get new mails, update modeline"
   (interactive)
   (start-offlineimap)
   (gnus-group-get-new-news)
+  (gnus-summary-rescan-group 500)
   (gnus-mst-show-groups-with-new-messages))
 
 ;; Online
@@ -184,28 +197,88 @@ If all article have been seen, on the subject line of the last article."
 	)
       )
 
-;; Splitting & "from" setup
-(setq nnimap-split-inbox "INBOX") ;; (1)
-;; (setq nnimap-split-predicate "UNDELETED") ;; (2)
-(setq nnimap-split-rule
-      '(
-	("adamweb" "^To:.*contact@adamweb.net")
-	("P.Coatmeur" "^To:.*philippe.coatmeur@gmail.com")
-        ))
+;; ;; Splitting & "from" setup
+;; (setq nnimap-split-inbox "INBOX") ;; (1)
+;; ;; (setq nnimap-split-predicate "UNDELETED") ;; (2)
+;; (setq nnimap-split-rule
+;;       '(
+;; 	("adamweb" "^To:.*contact@adamweb.net")
+;; 	("P.Coatmeur" "^To:.*philippe.coatmeur@gmail.com")
+;;         ))
 
-(setq gnus-posting-styles
-      '(((header "to" "contact@adamweb.net")
-         (address "contact@adamweb.net")
-	 ("X-SMTP-Server" "mail.gandi.net")
-	 )
-	((header "to" "philippe.coatmeur@gmail.com")
-	 ("X-SMTP-Server" "smtp.gmail.com")
-         (address "philippe.coatmeur@gmail.com")
-	 )))
+;; (setq gnus-posting-styles
+;;       '(((header "to" "contact@adamweb.net")
+;;          (address "contact@adamweb.net")
+;; 	 ("X-SMTP-Server" "mail.gandi.net")
+;; 	 )
+;; 	((header "to" "philippe.coatmeur@gmail.com")
+;; 	 ("X-SMTP-Server" "smtp.gmail.com")
+;;          (address "philippe.coatmeur@gmail.com")
+;; 	 )))
+
+;; This for setting the "from" field depending on the group we're on
+(setq gnus-parameters
+  ;;Use notthere id for all gmane news group postings
+  '(("nnmaildir\\+gmail"
+     (display . all)
+     (posting-style
+      (address "philippe.coatmeur@gmail.com")
+      (name "Philippe M. Coatmeur")
+      ;; (body "\n\n\n sivaram\n -- ")
+      ;; (eval (setq message-sendmail-extra-arguments '("-a" "anderson")))
+      (user-mail-address "philippe.coatmeur@gmail.com")))
+      ;;use anotherguy id for all normal mails
+    ("nnmaildir\\+adamweb"
+     (display . all)
+     (posting-style
+      (address "contact@adamweb.net")
+      (name "Adamweb")
+      ;; (body "\n\n\n Sivaram A\n -- \n")
+      ;; (eval (setq message-sendmail-extra-arguments '("-a" "neo")))
+      (user-mail-address "contact@adamweb.net")))))
+
+
+;; This for setting the "from" field depending on the "To:" field of the mail we're replying to
+(defun send-this-biatch-px ()
+  "Sets the \"from\" field depending on the \"To:\" field of the mail we're replying to"
+  ;; (interactive)
+  (let (fromfield)
+    (setq fromfield (save-excursion
+		      (save-restriction
+			(message-narrow-to-headers)
+			(message-fetch-field "from"))))
+    (if (string-match "\\`philippe" fromfield)
+	(progn (setq message-send-mail-function 'smtpmail-send-it
+		     smtpmail-smtp-server "smtp.gmail.com"
+		     smtpmail-default-smtp-server "smtp.gmail.com"
+		     smtpmail-smtp-service 587
+		     smtpmail-starttls-credentials '(("smtp.gmail.com" 587 nil nil)))
+	       (message "yowa, %s" fromfield)
+	       (message-send-and-exit))
+
+      (progn (setq message-send-mail-function 'smtpmail-send-it
+		   smtpmail-smtp-server "mail.gandi.net"
+		   smtpmail-default-smtp-server "mail.gandi.net"
+		   smtpmail-smtp-service 587
+		   smtpmail-starttls-credentials '(("mail.gandi.net" 587 nil nil)))
+	     (message "yowa, %s" fromfield)
+	     (message-send-and-exit)))))
+
+(defun send-mail-px (bool)
+  "Send mail by C-RETURN"
+  (interactive
+   (list
+    (y-or-n-p "Send this mail? ")))
+  (if bool (send-this-biatch-px)))
+
+(global-set-key (kbd "<C-return>") 'send-mail-px)
+
 
 ;; Default smtpmail.el configurations.
 (require 'cl)
 (require 'smtpmail)
+
+
 (setq send-mail-function 'smtpmail-send-it
       message-send-mail-function 'smtpmail-send-it
       mail-from-style nil
@@ -213,52 +286,65 @@ If all article have been seen, on the subject line of the last article."
       smtpmail-debug-info t
       smtpmail-debug-verb t)
 
-(defun set-smtp (mech server port user password)
-  "Set related SMTP variables for supplied parameters."
-  (setq smtpmail-smtp-server server
-	smtpmail-smtp-service port
-	smtpmail-auth-credentials (list (list server port user password))
-	smtpmail-auth-supported (list mech)
-	smtpmail-starttls-credentials nil)
-  (message "Setting SMTP server to `%s:%s' for user `%s'."
-	   server port user))
+(setq starttls-use-gnutls t
+      starttls-gnutls-program "gnutls-cli"
+      starttls-extra-arguments '("--insecure"))
 
-(defun set-smtp-ssl (server port user password  &optional key cert)
-  "Set related SMTP and SSL variables for supplied parameters."
-  (setq starttls-use-gnutls t
-	starttls-gnutls-program "gnutls-cli"
-	starttls-extra-arguments nil
-	smtpmail-smtp-server server
-	smtpmail-smtp-service port
-	smtpmail-auth-credentials (list (list server port user password))
-	smtpmail-starttls-credentials (list (list server port key cert)))
-  (message
-   "Setting SMTP server to `%s:%s' for user `%s'. (SSL enabled.)"
-   server port user))
+(setq message-send-mail-function 'smtpmail-send-it
+      smtpmail-smtp-server "imap.gmail.com"
+      smtpmail-default-smtp-server "imap.gmail.com"
+      smtpmail-smtp-service 587
+      smtpmail-starttls-credentials '(("imap.gmail.com" 587 nil nil))
+      ;; smtpmail-auth-credentials '(("mail.example.com" 587 "jsmith@example.com" nil))
+      ;; smtpmail-local-domain "example.com")
+)
 
-(defun change-smtp ()
-  "Change the SMTP server according to the current from line."
-  (save-excursion
-    (loop with from = (save-restriction
-			(message-narrow-to-headers)
-			(message-fetch-field "from"))
-	  for (auth-mech address . auth-spec) in smtp-accounts
-	  when (string-match address from)
-	  do (cond
-	      ((memq auth-mech '(cram-md5 plain login))
-	       (return (apply 'set-smtp (cons auth-mech auth-spec))))
-	      ((eql auth-mech 'ssl)
-	       (return (apply 'set-smtp-ssl auth-spec)))
-	      (t (error "Unrecognized SMTP auth. mechanism: `%s'." auth-mech)))
-	  finally (error "Cannot infer SMTP information."))))
+;; (defun set-smtp (mech server port user password)
+;;   "Set related SMTP variables for supplied parameters."
+;;   (setq smtpmail-smtp-server server
+;; 	smtpmail-smtp-service port
+;; 	smtpmail-auth-credentials (list (list server port user password))
+;; 	smtpmail-auth-supported (list mech)
+;; 	smtpmail-starttls-credentials nil)
+;;   (message "Setting SMTP server to `%s:%s' for user `%s'."
+;; 	   server port user))
 
-;; In order to trigger CHANGE-SMTP before every SMTPMAIL-VIA-SMTP call, we introduce an advice as follows.
-(defadvice smtpmail-via-smtp
-  (before smtpmail-via-smtp-ad-change-smtp (recipient smtpmail-text-buffer))
-  "Call `change-smtp' before every `smtpmail-via-smtp'."
-  (with-current-buffer smtpmail-text-buffer (change-smtp)))
+;; (defun set-smtp-ssl (server port user password  &optional key cert)
+;;   "Set related SMTP and SSL variables for supplied parameters."
+;;   (setq starttls-use-gnutls t
+;; 	starttls-gnutls-program "gnutls-cli"
+;; 	starttls-extra-arguments nil
+;; 	smtpmail-smtp-server server
+;; 	smtpmail-smtp-service port
+;; 	smtpmail-auth-credentials (list (list server port user password))
+;; 	smtpmail-starttls-credentials (list (list server port key cert)))
+;;   (message
+;;    "Setting SMTP server to `%s:%s' for user `%s'. (SSL enabled.)"
+;;    server port user))
 
-(ad-activate 'smtpmail-via-smtp)
+;; (defun change-smtp ()
+;;   "Change the SMTP server according to the current from line."
+;;   (save-excursion
+;;     (loop with from = (save-restriction
+;; 			(message-narrow-to-headers)
+;; 			(message-fetch-field "from"))
+;; 	  for (auth-mech address . auth-spec) in smtp-accounts
+;; 	  when (string-match address from)
+;; 	  do (cond
+;; 	      ((memq auth-mech '(cram-md5 plain login))
+;; 	       (return (apply 'set-smtp (cons auth-mech auth-spec))))
+;; 	      ((eql auth-mech 'ssl)
+;; 	       (return (apply 'set-smtp-ssl auth-spec)))
+;; 	      (t (error "Unrecognized SMTP auth. mechanism: `%s'." auth-mech)))
+;; 	  finally (error "Cannot infer SMTP information."))))
+
+;; ;; In order to trigger CHANGE-SMTP before every SMTPMAIL-VIA-SMTP call, we introduce an advice as follows.
+;; (defadvice smtpmail-via-smtp
+;;   (before smtpmail-via-smtp-ad-change-smtp (recipient smtpmail-text-buffer))
+;;   "Call `change-smtp' before every `smtpmail-via-smtp'."
+;;   (with-current-buffer smtpmail-text-buffer (change-smtp)))
+
+;; (ad-activate 'smtpmail-via-smtp)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Window configuration.
