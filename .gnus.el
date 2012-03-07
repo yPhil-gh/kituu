@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Wed 07-Mar-2012 17:36:04>
+;; Time-stamp: <.gnus.el - Wed 07-Mar-2012 17:56:00>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -32,7 +32,8 @@
 (setq gnus-parameters
   ;;Use notthere id for all gmane news group postings
   '(("nnmaildir\\+gmail"
-     (display . all)
+     ;; (display . all)
+     ;; (modeline-notify . t)
      (posting-style
       (address "philippe.coatmeur@gmail.com")
       (name "Philippe M. Coatmeur")
@@ -40,14 +41,21 @@
       ;; (eval (setq message-sendmail-extra-arguments '("-a" "anderson")))
       (user-mail-address "philippe.coatmeur@gmail.com")))
       ;;use anotherguy id for all normal mails
+
     ("nnmaildir\\+adamweb"
-     (display . all)
+     ;; (display . all)
+     ;; (modeline-notify . t)
      (posting-style
       (address "contact@adamweb.net")
       (name "Adamweb")
       ;; (body "\n\n\n Sivaram A\n -- \n")
       ;; (eval (setq message-sendmail-extra-arguments '("-a" "neo")))
-      (user-mail-address "contact@adamweb.net")))))
+      (user-mail-address "contact@adamweb.net")))
+
+    ("INBOX"
+     (display . all)
+     (modeline-notify . t))
+))
 
 ;; Image handling
 (condition-case nil
