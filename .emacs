@@ -1,7 +1,7 @@
 (require 'cl) ; a rare necessary use of REQUIRE
 (defvar *emacs-load-start* (current-time))
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Wed 07-Mar-2012 17:26:50>
+;; Time-stamp: <.emacs - Wed 07-Mar-2012 18:04:37>
 ;; ===========================================================================
 
 ;; See https://github.com/xaccrocheur/kituu/
@@ -629,17 +629,15 @@ inside html tags."
   (deactivate-mark)) ;; don't mess with selection
 
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(auto-save-file-name-transforms (quote ((".*" "~/.bkp/\\1" t))))
+ '(backup-directory-alist (quote ((".*" . "~/.bkp/"))))
  '(display-time-use-mail-icon t)
  '(inhibit-startup-echo-area-message (user-login-name))
- '(recentf-save-file "~/.bkp/recentf")
- '(auto-save-file-name-transforms '((".*" "~/.bkp/\\1" t)))
- '(backup-directory-alist '((".*" . "~/.bkp/")))
- ;; '(tabbar-background-color nil)
-)
+ '(recentf-save-file "~/.bkp/recentf"))
 
 
 ;; Help
@@ -726,13 +724,10 @@ select 'this' or <that> (enclosed)  s-SPC
 ;;             (define-key yas/minor-mode-map yas/trigger-key 'yas/expand)))
 
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
-
- '(gnus-summary-selected-face ((t (:bold t))))
-
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(default ((t (:background "#2e3436" :foreground "#eeeeec"))))
  '(cursor ((t (:background "#fce94f" :foreground "#2e3436"))))
  '(font-lock-builtin-face ((t (:foreground "#ad7fa8"))))
@@ -745,6 +740,9 @@ select 'this' or <that> (enclosed)  s-SPC
  '(font-lock-variable-name-face ((t (:foreground "#fcaf3e"))))
  '(font-lock-warning-face ((t (:foreground "#ef2929"))))
  '(fringe ((t (:background "#2c2c2c"))))
+ '(gnus-summary-normal-unread ((t (:weight bold))))
+ ;; '(gnus-summary-selected ((t (:background "#2e3436" :foreground "#ff0000"))))
+ '(gnus-summary-selected-face ((t (:bold t))) t)
  '(header-line ((t (:background "#555753" :foreground "#ffffff"))))
  '(isearch ((t (:background "#ce5c00" :foreground "#ffffff"))))
  '(lazy-highlight ((t (:background "#8f5902"))))
@@ -753,8 +751,7 @@ select 'this' or <that> (enclosed)  s-SPC
  '(minibuffer-prompt ((t (:foreground "#fce94f"))))
  '(mode-line ((t (:background "#777777" :foreground "#000000"))))
  '(mode-line-inactive ((t (:background "#555753" :foreground "#ffffff"))))
- '(region ((t (:background "#555753"))))
-)
+ '(region ((t (:background "#555753")))))
 
 ;; Tabbar faces
 (set-face-attribute 'tabbar-default nil
