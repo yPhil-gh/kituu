@@ -1,7 +1,7 @@
 (require 'cl) ; a rare necessary use of REQUIRE
 (defvar *emacs-load-start* (current-time))
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Thu 08-Mar-2012 01:14:39>
+;; Time-stamp: <.emacs - Thu 08-Mar-2012 17:32:52>
 ;; ===========================================================================
 
 ;; See https://github.com/xaccrocheur/kituu/
@@ -13,7 +13,7 @@
   ;;   (normal-top-level-add-subdirs-to-load-path))
   (add-to-list 'load-path "~/.emacs.d/lisp/")
   (add-to-list 'load-path "~/.emacs.d/lisp/tabbar/")
-  (require 'gnus-notify)
+ (require 'gnus-notify)
   ;; )
 
 
@@ -318,6 +318,7 @@ inside html tags."
       time-stamp-format "%f - %3a %02d-%3b-%:y %02H:%02M:%02S")
 
 ;; Modes
+;; (set-fringe-mode '(1 . 1))
 (show-paren-mode t)
 (menu-bar-mode -1)
 (global-linum-mode 1)
@@ -339,6 +340,12 @@ inside html tags."
 
 ;; Vars
 (setq
+ ;; scroll-preserve-screen-position t
+ ;; scroll-up-aggressively 0.1
+ ;; scroll-down-aggressively 0.5
+ scroll-conservatively 200
+ scroll-margin 3
+ recenter-redisplay nil
  inhibit-startup-screen t
  inhibit-startup-echo-area-message t
  ;; user-mail-address "philippe.coatmeur@gmail.com"
@@ -493,12 +500,14 @@ inside html tags."
         (progn
           (xsteve-bury-gnus)
 	  (tabbar-mode t)
+	  (scroll-bar-mode t)
 	  ;; (menu-bar-mode -1)
 	  )
       ;; unbury
       (if (get-buffer "*Group*")
           (progn (xsteve-unbury-gnus)
 		 (tabbar-mode -1)
+		 (scroll-bar-mode -1)
 		 ;; (menu-bar-mode)
 		 )
         (gnus)))))
@@ -649,6 +658,7 @@ inside html tags."
  ;; If there is more than one, they won't work right.
  '(auto-save-file-name-transforms (quote ((".*" "~/.bkp/\\1" t))))
  '(backup-directory-alist (quote ((".*" . "~/.bkp/"))))
+ '(canlock-password "cf5f7a7261c5832898abfc7ea08ba333a36ed78c")
  '(display-time-use-mail-icon t)
  '(inhibit-startup-echo-area-message (user-login-name))
  '(recentf-save-file "~/.bkp/recentf"))

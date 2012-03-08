@@ -75,19 +75,27 @@
 
 (defun gnus-mst-notify-shorten-group-name (group)
   "shorten the group name to make it better fit on the modeline"
-  (let ((name 'group)))
 
-  ;; (let ((name (if (string-match ":" group)
-  ;; (cadr (split-string group "[:]"))
-  ;; group)))
-  ;; (mapconcat 'identity
-  ;; (mapcar
-  ;; (lambda (segment)
-  ;; (string (elt segment 0)))
-  ;; (split-string name "[\\./]"))
-  ;; "."))
-  )
+(if (string-match "inbox" group)
+    ;; (message "the name is %S" group)
+    (substring group 10 -6)
+(let ((name (if (string-match ":" group)
+                  (cadr (split-string group "[:]"))
+                group)))
+  ;; (car (last name))
+;;  (setq last-element (car (last group)))
 
+    (mapconcat 'identity
+               (mapcar
+                (lambda (segment)
+                  (string (elt segment 0)))
+                (split-string name "[\\./]"))
+               ".")
+)))
+
+    ;; (message "new name is %s" (gnus-mst-notify-shorten-group-name "azefd.azd.chihaja:gnu.emacs.gnus"))
+
+    ;; (message "new name is %s" (gnus-mst-notify-shorten-group-name "nnmaildir+plop:INBOX"))
 
 (defun gnus-mst-notify-update-modeline ()
   "Update the modeline to show groups containing new messages"
@@ -109,9 +117,9 @@
 		     (list ':propertize
 			   (if gnus-notify-show-unread-counts
 			       (format "[%s %s]"
-				       ;; (gnus-mst-notify-shorten-group-name
-				       ;; (car sublist))
-				       (substring (car sublist) 10 -6)
+				       (gnus-mst-notify-shorten-group-name
+				       (car sublist))
+				       ;; (substring (car sublist) 10 -6)
 				       (gnus-group-unread (car sublist))
 				       )
 			     (format "%s"
