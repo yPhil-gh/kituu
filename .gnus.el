@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Wed 07-Mar-2012 21:45:25>
+;; Time-stamp: <.gnus.el - Thu 08-Mar-2012 01:45:14>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -11,19 +11,31 @@
 (add-hook 'message-mode-hook 'turn-on-auto-fill)
 (add-hook 'message-mode-hook 'my-gnus-hook)
 (add-hook 'summary-mode-hook 'my-gnus-hook)
-(add-hook 'gnus-Group-mode-hook 'my-gnus-hook)
+(add-hook 'gnus-group-mode-hook 'gnus-group-mode-hook-px)
+
+(defun gnus-group-mode-hook-px ()
+(scroll-bar-mode -1))
 
 (defun my-gnus-hook ()
   "A nice gnus session"
+  ;; (menu-bar-mode)
   (tabbar-mode -1))
+
+(defun skipit ()
+(other-window 1))
 
 (eval-after-load "gnus-group"
   '(progn
      (define-key gnus-group-mode-map (kbd "<tab>") 'other-window)
+     (define-key gnus-summary-mode-map (kbd "<backtab>") (lambda ()
+							 (interactive)
+							 (other-window 2)))
      (my-gnus-hook)
      ))
 
 (setq
+ gnus-always-force-window-configuration t
+ ;; gnus-read-active-file nil
  mm-inline-large-images t
  gnus-always-read-dribble-file t
  gnus-show-threads nil
@@ -33,7 +45,7 @@
  gnus-check-bogus-newsgroups nil
  gnus-no-groups-message "No news is terrrible news"
  gnus-group-line-format  "%M%5y:%B%(%G%)\n"
- gnus-save-newsrc-file nil
+ gnus-save-newsrc-file t
  gnus-agent-go-online t
  gnus-agent-queue-mail nil
  message-signature t
@@ -42,27 +54,43 @@
 
 ;; This for setting the "from" field depending on the group we're on
 (setq gnus-parameters
-  '(("nnmaildir\\+gmail"
-     (display . all)
-     (modeline-notify . t)
-     (posting-style
-      (address "philippe.coatmeur@gmail.com")
-      (signature "~/.sig-pcm")
-      (name "Philippe M. Coatmeur")
-      (user-mail-address "philippe.coatmeur@gmail.com")))
+      '(("INBOX"
+	 ;; (gnus-use-adaptive-scoring nil)
+	 ;; (gnus-use-scoring nil)
+	 ;; (visible . t)
+	 (display . all)
+	 (modeline-notify . t))
 
-    ("nnmaildir\\+adamweb"
-     (display . all)
-     (modeline-notify . t)
-     (posting-style
-      (address "contact@adamweb.net")
-      (signature "~/.sig-adamweb")
-      (name "Adamweb")
-      ;; (body "\n\n\n Sivaram A\n -- \n")
-      ;; (eval (setq message-sendmail-extra-arguments '("-a" "neo")))
-      (user-mail-address "contact@adamweb.net")))
+	("nnmaildir\\+gmail"
+	 ;; (display . all)
+	 ;; (modeline-notify . t)
+	 (posting-style
+	  (address "philippe.coatmeur@gmail.com")
+	  (signature "~/.sig-pcm")
+	  (name "Philippe M. Coatmeur")
+	  (user-mail-address "philippe.coatmeur@gmail.com")))
 
-    ))
+	("nnmaildir\\+adamweb"
+	 ;; (display . all)
+	 (posting-style
+	  (address "contact@adamweb.net")
+	  (signature "~/.sig-adamweb")
+	  (name "Adamweb")
+	  ;; (body "\n\n\n Sivaram A\n -- \n")
+	  ;; (eval (setq message-sendmail-extra-arguments '("-a" "neo")))
+	  (user-mail-address "contact@adamweb.net")))))
+
+;; ;; This HAS to come AFTER the previous rules
+;; (setq gnus-parameters
+;;  '(("INBOX"
+;;     ;; (gnus-use-adaptive-scoring nil)
+;;     ;; (gnus-use-scoring nil)
+;;     ;; (visible . t)
+;;     (display . all)
+;;     (modeline-notify . t)
+;;     )))
+
+;; nnmaildir+adamweb:INBOX
 
 ;; Image handling
 (condition-case nil
@@ -126,6 +154,9 @@ If all article have been seen, on the subject line of the last article."
 
 (setq gnus-select-method
       '(nntp "news.eternal-september.org"))
+
+;; (setq gnus-select-method "localhost")
+;; (setq gnus-select-method '(nnspool ""))
 
 ;; Online
 ;; (setq gnus-secondary-select-methods
@@ -225,37 +256,54 @@ If all article have been seen, on the subject line of the last article."
 
 ;; Window configuration.
 ;; see `http://www-verimag.imag.fr/~moy/emacs/.gnus.el'
-(if (eq window-system 'x)
-    (progn
-      (gnus-add-configuration
-       '(summary
-      	 (horizontal 1.0
-      		     (vertical 0.25 (group 1.0))
-      		     (summary 1.0))))
+;; (if (eq window-system 'x)
+;;     (progn
+;;       (gnus-add-configuration
+;;        '(summary
+;;       	 (horizontal 1.0
+;;       		     (vertical 0.25 (group 1.0))
+;;       		     (summary 1.0))))
 
-      (gnus-add-configuration
-       '(article
-      	 (horizontal 1.0
-      		     (vertical 0.25 (group 1.0))
-      		     (vertical 1.0 (summary 0.25) (article 1.0)))))
+;;       (gnus-add-configuration
+;;        '(article
+;;       	 (horizontal 1.0
+;;       		     (vertical 0.25 (group 1.0))
+;;       		     (vertical 1.0 (summary 0.25) (article 1.0)))))
 
-      (gnus-add-configuration
-       '(reply-yank
-      	 (horizontal 1.0
-      		     (vertical 0.25 (group 1.0))
-      		     (vertical 1.0 (summary 0.25) (message 1.0 point)))))
+;;       (gnus-add-configuration
+;;        '(reply-yank
+;;       	 (horizontal 1.0
+;;       		     (vertical 0.25 (group 1.0))
+;;       		     (vertical 1.0 (summary 0.25) (message 1.0 point)))))
 
-      (gnus-add-configuration
-       '(reply
-	 (vertical 1.0
-		   (article 0.3)
-		   (message 1.0 point)))))
+;;       (gnus-add-configuration
+;;        '(reply
+;; 	 (vertical 1.0
+;; 		   (article 0.3)
+;; 		   (message 1.0 point)))))
 
-  (gnus-add-configuration
-   '(article
-     (vertical 1.0
-	       (summary 0.3 point)
-	       (article 1.0)))))
+;;   (gnus-add-configuration
+;;    '(article
+;;      (vertical 1.0
+;; 	       (summary 0.3 point)
+;; 	       (article 1.0)))))
+
+
+
+(gnus-add-configuration
+ '(article
+   (horizontal 1.0
+               (vertical 25 (group 1.0))
+               (vertical 1.0
+                         (summary 0.16 point)
+                         (article 1.0)))))
+
+(gnus-add-configuration
+ '(summary
+   (horizontal 1.0
+               (vertical 25 (group 1.0))
+               (vertical 1.0 (summary 1.0 point)))))
+
 
 ;; affichage de la date en relatif
 (setq gnus-user-date-format-alist

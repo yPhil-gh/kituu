@@ -1,7 +1,7 @@
 (require 'cl) ; a rare necessary use of REQUIRE
 (defvar *emacs-load-start* (current-time))
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Wed 07-Mar-2012 19:55:03>
+;; Time-stamp: <.emacs - Thu 08-Mar-2012 01:14:39>
 ;; ===========================================================================
 
 ;; See https://github.com/xaccrocheur/kituu/
@@ -55,6 +55,11 @@
 (defvar minibuffer_history)
 (defvar minibuffer_history)
 (defvar savehist-file)
+
+(defun text-mode-hook-px ()
+(menu-bar-mode -1))
+
+(add-hook 'text-mode-hook 'text-mode-hook-px)
 
 ;; ;; hooks
 ;; (add-hook 'text-mode-hook
@@ -488,11 +493,13 @@ inside html tags."
         (progn
           (xsteve-bury-gnus)
 	  (tabbar-mode t)
+	  ;; (menu-bar-mode -1)
 	  )
       ;; unbury
       (if (get-buffer "*Group*")
           (progn (xsteve-unbury-gnus)
 		 (tabbar-mode -1)
+		 ;; (menu-bar-mode)
 		 )
         (gnus)))))
 
