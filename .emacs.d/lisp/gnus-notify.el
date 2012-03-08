@@ -3,6 +3,7 @@
 ;; Author: Mark Triggs <mark@dishevelled.net>
 ;;
 ;; Contributions from: Frederic Couchet <fcouchet AT april.org>
+;; Modified by P.Coatmeur to allow mail usage
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -73,29 +74,23 @@
 		  (list '(:eval (gnus-mst-notify-modeline-form)))))))
 
 
+(defun shorten-group (groupname)
+  (setq lastname (last (split-string groupname "[\\./]")))
+  (setq prename (mapconcat 'identity
+			   (mapcar
+			    (lambda (segment)
+			      (string (elt segment 0)))
+			    (split-string groupname "[\\./]"))
+			   "."))
+  (concat (car (cons (substring prename 0 -1) lastname)) (car lastname)))
+
 (defun gnus-mst-notify-shorten-group-name (group)
   "shorten the group name to make it better fit on the modeline"
-
 (if (string-match "inbox" group)
-    ;; (message "the name is %S" group)
+    ;; This is a mail account
     (substring group 10 -6)
-(let ((name (if (string-match ":" group)
-                  (cadr (split-string group "[:]"))
-                group)))
-  ;; (car (last name))
-;;  (setq last-element (car (last group)))
-
-    (mapconcat 'identity
-               (mapcar
-                (lambda (segment)
-                  (string (elt segment 0)))
-                (split-string name "[\\./]"))
-               ".")
-)))
-
-    ;; (message "new name is %s" (gnus-mst-notify-shorten-group-name "azefd.azd.chihaja:gnu.emacs.gnus"))
-
-    ;; (message "new name is %s" (gnus-mst-notify-shorten-group-name "nnmaildir+plop:INBOX"))
+  ;; This is a news group
+  (shorten-group group)))
 
 (defun gnus-mst-notify-update-modeline ()
   "Update the modeline to show groups containing new messages"

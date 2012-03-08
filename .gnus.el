@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Thu 08-Mar-2012 15:41:46>
+;; Time-stamp: <.gnus.el - Thu 08-Mar-2012 20:43:37>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -60,7 +60,7 @@
 ;; This for setting the "from" field depending on the group we're on
 (setq gnus-parameters
       '(
-	("gnu."
+	("news"
 	 (modeline-notify . t)
 	  (address "philippe.coatmeur@gmail.com")
 	  (signature "Philippe M. Coatmeur
@@ -164,11 +164,8 @@ If all article have been seen, on the subject line of the last article."
   ;; (gnus-mst-show-groups-with-new-messages)
 )
 
-(setq gnus-select-method
-      '(nntp "news.eternal-september.org"))
-
-;; (setq gnus-select-method "localhost")
-;; (setq gnus-select-method '(nnspool ""))
+;; (setq gnus-select-method
+;;       '(nntp "news.eternal-september.org"))
 
 ;; Online
 ;; (setq gnus-secondary-select-methods
@@ -194,6 +191,10 @@ If all article have been seen, on the subject line of the last article."
 ;; Offline
 (setq gnus-secondary-select-methods
       '(
+	(nntp "news"
+	      (nntp-address "news.eternal-september.org")
+	      ;; (nntp-xref-number-is-evil t)
+	      )
 	(nnmaildir "gmail-pcm"
 		   (directory "~/.mail/perso/")
 		   (directory-files nnheader-directory-files-safe)
