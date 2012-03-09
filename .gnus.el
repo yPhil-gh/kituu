@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Fri 09-Mar-2012 14:36:15>
+;; Time-stamp: <.gnus.el - Fri 09-Mar-2012 15:48:34>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -24,7 +24,7 @@
 (setq
  ;; gnus-group-line-format "%M%S%p%P%5y:%B%(%G%)\n"
  ;; gnus-group-line-format "%M%S%p%P%5y:%B%(%g%)\n"
- gnus-group-line-format " %G:%N %B\n"
+ gnus-group-line-format " %G %N %B\n"
  ;; gnus-group-line-format "%P|%B|%M%o%S%L[%6t|%3i]%6y :%(%~(pad-right 65)g%):%6,6~(cut 2)d\n"
 )
 
@@ -42,21 +42,25 @@
 
 (setq gnus-face-1 'bold)
 (copy-face 'bold 'my-topic-line-face)
-(set-face-foreground 'my-topic-line-face "#4682B4")
+(set-face-foreground 'my-topic-line-face "DarkOrange")
 (setq gnus-face-100 'my-topic-line-face)
 
-; The gnus-face-100 is used in gnus-topic-line-format
+;; The gnus-face-100 is used in gnus-topic-line-format
 
 
-(setq gnus-topic-line-format "%100{%i[ %(%{%n%}%) -- %A ]%v%}\n")
+(setq gnus-topic-line-format "%100{%i[ %(%{%n%}%) %A ]%v%}\n")
 
 
 
 
 (setq nntp-authinfo-file "~/.authinfo.pgp")
 
+;; (setq gnus-select-method
+;;       '(nntp "news.sunsite.dk")
+;;       )
+
 (setq gnus-select-method
-      '(nntp "news.sunsite.dk")
+      '(nntp "news.eternal-september.org")
       )
 
 ;; ;; Offline
@@ -111,6 +115,7 @@
       '(
 	("gnu"
 	 (modeline-notify . t)
+	 (visible . t)
 	 (display . all)
 	 (address "philippe.coatmeur@gmail.com")
 	 (signature "Philippe M. Coatmeur
@@ -204,6 +209,8 @@
 (add-hook 'summary-mode-hook 'my-gnus-hook)
 (add-hook 'gnus-group-mode-hook 'gnus-group-mode-hook-px)
 
+(add-hook 'gnus-started-hook 'gnus-mst-show-groups-with-new-messages)
+
 ;; Summary format stuff
 (setq
  gnus-user-date-format-alist
@@ -293,12 +300,11 @@ If all article have been seen, on the subject line of the last article."
 ;;        "%1{%B%}"
 ;;        "%s %)\n"))
 
-(defun check-mail-px ()
+(defun chk-mail-px ()
   "Sync IMAP, Get new mails, update modeline"
   (interactive)
-  (start-offlineimap)
   (gnus-group-get-new-news)
-  ;; (gnus-summary-rescan-group 500)
+  (gnus-summary-rescan-group 500)
   ;; (gnus-mst-show-groups-with-new-messages)
   )
 
@@ -363,7 +369,7 @@ If all article have been seen, on the subject line of the last article."
 (gnus-add-configuration
  '(article
    (horizontal 1.0
-               (vertical 20 (group 1.0))
+               (vertical 22 (group 1.0))
                (vertical 1.0
                          (summary 0.35 point)
                          (article 1.0)))))
@@ -371,9 +377,8 @@ If all article have been seen, on the subject line of the last article."
 (gnus-add-configuration
  '(summary
    (horizontal 1.0
-               (vertical 20 (group 1.0))
+               (vertical 22 (group 1.0))
                (vertical 1.0 (summary 1.0 point)))))
-
 
 ;; Enable mailinglist support
 ;; (when (fboundp 'turn-on-gnus-mailing-list-mode)

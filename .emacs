@@ -1,7 +1,7 @@
 (require 'cl) ; a rare necessary use of REQUIRE
 (defvar *emacs-load-start* (current-time))
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Fri 09-Mar-2012 01:14:24>
+;; Time-stamp: <.emacs - Fri 09-Mar-2012 18:33:03>
 ;; ===========================================================================
 
 ;; See https://github.com/xaccrocheur/kituu/
@@ -57,9 +57,17 @@
 (defvar savehist-file)
 
 (defun text-mode-hook-px ()
+(tabbar-mode t)
 (menu-bar-mode -1))
 
+(defun gnus-mode-hook-px ()
+(tabbar-mode -1)
+;; (menu-bar-mode -1)
+)
+
 (add-hook 'text-mode-hook 'text-mode-hook-px)
+(add-hook 'gnus-before-startup-hook 'gnus-mode-hook-px)
+(add-hook 'gnus-exit-gnus-hook 'text-mode-hook-px)
 
 ;; ;; hooks
 ;; (add-hook 'text-mode-hook
@@ -71,6 +79,7 @@
 ;;    (tabbar-mode t)))
 
 (tabbar-mode t)
+
 
 ;; El-get
 (setq el-get-dir (concat user-emacs-directory "el-get/"))
@@ -88,7 +97,6 @@
       (append
        '(linum-off smart-tab php-mode-improved haml-mode)
        (mapcar 'el-get-source-name el-get-sources)))
-
 
 ;; (declare-function tabbar-mode "tabbar.el")
 (declare-function el-get "el-get.el")
@@ -674,73 +682,80 @@ select 'this' or <that> (enclosed)  s-SPC
 ;;           '(lambda ()
 ;;             (define-key yas/minor-mode-map yas/trigger-key 'yas/expand)))
 
+
+
 (if (eq window-system 'x)
-    (progn (custom-set-faces
-	    ;; custom-set-faces was added by Custom.
-	    ;; If you edit it by hand, you could mess it up, so be careful.
-	    ;; Your init file should contain only one such instance.
-	    ;; If there is more than one, they won't work right.
-	    '(default ((t (:background "#2e3436" :foreground "#eeeeec"))))
-	    '(cursor ((t (:background "#fce94f" :foreground "#2e3436"))))
-	    '(font-lock-builtin-face ((t (:foreground "#ad7fa8"))))
-	    '(font-lock-comment-face ((t (:foreground "#73d216"))))
-	    '(font-lock-constant-face ((t (:foreground "#e6a8df"))))
-	    '(font-lock-function-name-face ((t (:foreground "#fce84f"))))
-	    '(font-lock-keyword-face ((t (:foreground "#8cc4ff"))))
-	    '(font-lock-string-face ((t (:foreground "#e9b96e"))))
-	    '(font-lock-type-face ((t (:foreground "#a5ff4d"))))
-	    '(font-lock-variable-name-face ((t (:foreground "#fcaf3e"))))
-	    '(font-lock-warning-face ((t (:foreground "#ef2929"))))
-	    '(fringe ((t (:background "#2c2c2c"))))
-	    '(gnus-group-mail-3 ((t (:foreground "#e9b96e" :weight bold))))
-	    '(gnus-group-mail-3-empty ((t (:foreground "#e9b96e"))))
-	    '(gnus-header-name ((t (:foreground "#e6a8df"))))
-	    '(gnus-summary-normal-unread ((t (:weight bold :inherit (quote default)))))
-	    '(header-line ((t (:background "#555753" :foreground "#ffffff"))))
-	    '(isearch ((t (:background "#ce5c00" :foreground "#ffffff"))))
-	    '(lazy-highlight ((t (:background "#8f5902"))))
-	    '(link ((t (:foreground "#729fcf" :underline t))))
-	    '(link-visited ((t (:foreground "#3465a4" :underline t))))
-	    '(minibuffer-prompt ((t (:foreground "#fce94f"))))
-	    '(mode-line ((t (:background "#777777" :foreground "#000000"))))
-	    '(mode-line-inactive ((t (:background "#555753" :foreground "#ffffff"))))
-	    '(region ((t (:background "#555753")))))
+(progn (set-background-color "black")
+(message "we are running in x")
+))
 
-	   ;; Tabbar faces
-	   (set-face-attribute 'tabbar-default nil
-			       :inherit nil
-			       :height 110
-			       :weight 'normal
-			       :width 'normal
-			       :slant 'normal
-			       :underline nil
-			       :strike-through nil
-			       :stipple nil
-			       :background "gray80"
-			       :foreground "black"
-			       :box nil
-			       ;; :family "Lucida Grande"
-			       )
 
-	   (set-face-attribute 'tabbar-selected nil
-			       :background "#2e3436"
-			       :foreground "red"
-			       :inherit 'tabbar-default
-			       :box '(:line-width 3 :color "#2e3436" :style nil))
+(if (eq window-system 'x)
+(progn
+(set-face-attribute 'default nil :background "#2e3436" :foreground "#eeeeec")
+(set-face-attribute 'cursor nil :background "#fce94f" :foreground "#2e3436")
+(set-face-attribute 'font-lock-builtin-face nil :foreground "#ad7fa8")
+(set-face-attribute 'font-lock-comment-face nil :foreground "#73d216")
+(set-face-attribute 'font-lock-constant-face nil :foreground "#e6a8df")
+(set-face-attribute 'font-lock-function-name-face nil :foreground "#fce84f")
+(set-face-attribute 'font-lock-keyword-face nil :foreground "#8cc4ff")
+(set-face-attribute 'font-lock-string-face nil :foreground "#e9b96e")
+(set-face-attribute 'font-lock-type-face nil :foreground "#a5ff4d")
+(set-face-attribute 'font-lock-variable-name-face nil :foreground "#fcaf3e")
+(set-face-attribute 'font-lock-warning-face nil :foreground "#ef2929")
+(set-face-attribute 'fringe nil :background "#2c2c2c")
+;; (set-face-attribute 'gnus-group-mail-3 nil :foreground "#e9b96e" :weight bold)
+(set-face-attribute 'gnus-group-mail-3-empty nil :foreground "#e9b96e")
+(set-face-attribute 'gnus-header-name nil :foreground "#e6a8df")
+;; (set-face-attribute 'gnus-summary-normal-unread nil :weight bold :inherit (quote default))
+(set-face-attribute 'header-line nil :background "#555753" :foreground "#ffffff")
+(set-face-attribute 'isearch nil :background "#ce5c00" :foreground "#ffffff")
+(set-face-attribute 'lazy-highlight nil :background "#8f5902")
+(set-face-attribute 'link nil :foreground "#729fcf" :underline t)
+(set-face-attribute 'link-visited nil :foreground "#3465a4" :underline t)
+(set-face-attribute 'minibuffer-prompt nil :foreground "#fce94f")
+(set-face-attribute 'mode-line nil :background "#777777" :foreground "#000000")
+(set-face-attribute 'mode-line-inactive nil :background "#555753" :foreground "#ffffff")
+(set-face-attribute 'region nil :background "#555753")
+)
+(set-face-attribute 'default nil :background "black" :foreground "white")
+)
 
-	   (set-face-attribute 'tabbar-unselected nil
-			       :inherit 'tabbar-default
-			       :background "gray50"
-			       :box '(:line-width 3 :color "grey50" :style nil))
+;; Tabbar faces
+(set-face-attribute 'tabbar-default nil
+		    :inherit nil
+		    :height 110
+		    :weight 'normal
+		    :width 'normal
+		    :slant 'normal
+		    :underline nil
+		    :strike-through nil
+		    :stipple nil
+		    :background "gray80"
+		    :foreground "black"
+		    :box nil
+		    ;; :family "Lucida Grande"
+		    )
 
-	   (set-face-attribute 'tabbar-highlight nil
-			       :foreground "white"
-			       :underline nil)
+(set-face-attribute 'tabbar-selected nil
+		    :background "#2e3436"
+		    :foreground "red"
+		    :inherit 'tabbar-default
+		    :box '(:line-width 3 :color "#2e3436" :style nil))
 
-	   (set-face-attribute 'tabbar-button nil
-			       :inherit 'tabbar-default
-			       :box nil)
-	   ))
+(set-face-attribute 'tabbar-unselected nil
+		    :inherit 'tabbar-default
+		    :background "gray50"
+		    :box '(:line-width 3 :color "grey50" :style nil))
+
+(set-face-attribute 'tabbar-highlight nil
+		    :foreground "white"
+		    :underline nil)
+
+(set-face-attribute 'tabbar-button nil
+		    :inherit 'tabbar-default
+		    :box nil)
+
 ;; (set-face-attribute 'tabbar-separator nil
 ;; 		    :background "grey50"
 ;;  		    :foreground "grey50"
@@ -750,33 +765,3 @@ select 'this' or <that> (enclosed)  s-SPC
 
 (message "%s loaded in %ds" user-init-file (destructuring-bind (hi lo ms) (current-time)
 				     (- (+ hi lo) (+ (first *emacs-load-start*) (second *emacs-load-start*)))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:background "#2e3436" :foreground "#eeeeec"))))
- '(cursor ((t (:background "#fce94f" :foreground "#2e3436"))))
- '(font-lock-builtin-face ((t (:foreground "#ad7fa8"))))
- '(font-lock-comment-face ((t (:foreground "#73d216"))))
- '(font-lock-constant-face ((t (:foreground "#e6a8df"))))
- '(font-lock-function-name-face ((t (:foreground "#fce84f"))))
- '(font-lock-keyword-face ((t (:foreground "#8cc4ff"))))
- '(font-lock-string-face ((t (:foreground "#e9b96e"))))
- '(font-lock-type-face ((t (:foreground "#a5ff4d"))))
- '(font-lock-variable-name-face ((t (:foreground "#fcaf3e"))))
- '(font-lock-warning-face ((t (:foreground "#ef2929"))))
- '(fringe ((t (:background "#2c2c2c"))))
- '(gnus-group-mail-3 ((t (:foreground "#e9b96e" :weight bold))))
- '(gnus-group-mail-3-empty ((t (:foreground "#e9b96e"))))
- '(gnus-header-name ((t (:foreground "#e6a8df"))))
- '(gnus-summary-normal-unread ((t (:weight bold :inherit (quote default)))))
- '(header-line ((t (:background "#555753" :foreground "#ffffff"))))
- '(isearch ((t (:background "#ce5c00" :foreground "#ffffff"))))
- '(lazy-highlight ((t (:background "#8f5902"))))
- '(link ((t (:foreground "#729fcf" :underline t))))
- '(link-visited ((t (:foreground "#3465a4" :underline t))))
- '(minibuffer-prompt ((t (:foreground "#fce94f"))))
- '(mode-line ((t (:background "#777777" :foreground "#000000"))))
- '(mode-line-inactive ((t (:background "#555753" :foreground "#ffffff"))))
- '(region ((t (:background "#555753")))))
