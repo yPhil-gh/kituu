@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Fri 09-Mar-2012 21:13:55>
+;; Time-stamp: <.gnus.el - Fri 09-Mar-2012 21:34:30>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -15,7 +15,7 @@
 ;;;_   , group buffer
 
 (setq gnus-topic-indent-level 0)
-;; (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
+(add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
 ;; (setq gnus-permanently-visible-groups ".*")
 ;; (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
 
@@ -56,7 +56,7 @@
 ;; The gnus-face-100 is used in gnus-topic-line-format
 
 
-(setq gnus-topic-line-format "%(%{%n%} %A%)\n")
+(setq gnus-topic-line-format "%([%{%n%} %A]%)\n")
 
 (setq nntp-authinfo-file "~/.authinfo.pgp")
 
@@ -251,7 +251,7 @@
 
  ;; gnus-summary-line-format (concat
  ;; 			   "%( %0{%U%R%z%}"
- ;; 			   "%3{│%}" "%1{%12&user-date;%}" "%3{│%}" ;; date
+ ;; 			   "%3{│%}" "%1{%12%12&user-date;%}" "%3{│%}" ;; date
  ;; 			   "  "
  ;; 			   "%4{%-20,20f%}"               ;; name
  ;; 			   "  "
@@ -261,7 +261,7 @@
  ;; 			   "%s %)\n")
 
  gnus-summary-line-format
- (concat "%(%U%R %~(pad-right 2)t%* %B%~(max-right 30)~(pad-right 30)n  "
+ (concat "%(%U%R %~(pad-right 2)t%* %12&user-date; %B%~(max-right 30)~(pad-right 30)n  "
 	 "%~(max-right 90)~(pad-right 90)s %-135=%&user-date;%)\n")
 
  )
