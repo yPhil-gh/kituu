@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Thu 08-Mar-2012 20:43:37>
+;; Time-stamp: <.gnus.el - Fri 09-Mar-2012 00:37:28>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -7,6 +7,62 @@
 (gnus-demon-add-handler 'gnus-demon-scan-news 1 t) ; this does a call to gnus-group-get-new-news
 
 (require 'offlineimap-ctl)
+
+
+;; (setq gnus-select-method
+;;       '(nntp "news.sunsite.dk"))
+
+;; (setq gnus-select-method '(nnspool ""))
+
+;; (setq gnus-select-method '(nntp
+;; 			   "news"
+;; 			    (nntp-address "news.sunsite.dk")
+;; 			    ;; (nntp-port-number 119)
+;; ))
+
+;; Online
+;; (setq gnus-secondary-select-methods
+;;       '(
+;; 	(nnimap "gmail-pcm"
+;; 	       (nnimap-address "imap.gmail.com")
+;; 		;; (nnimap-authinfo-file "~/.authinfo.gpg")
+;; 		(nnimap-stream ssl)
+;; 		(nnir-search-engine imap)
+;; 		)
+;; 	(nnimap "adamweb"
+;; 	       ;; (remove-prefix "INBOX.")
+;; 	       (nnimap-stream ssl)
+;; 	       (nnimap-address "mail.gandi.net")
+;; 	       ;; (nnimap-authinfo-file "~/.authinfo.gpg")
+;; 	       (nnimap-authenticator cram-md5)
+;; 	       (nnimap-server-port 993)
+;; 	       (nnir-search-engine imap)
+;; 	       )
+;;        )
+;;    )
+
+;; ;; Offline
+;; (setq gnus-secondary-select-methods
+;;       '(
+;; 	(nntp "news"
+;; 	      (nntp-address "news.sunsite.dk")
+;; 	      ;; (nntp-xref-number-is-evil t)
+;; 	      )
+
+;; 	(nnmaildir "gmail-pcm"
+;; 		   (directory "~/.mail/perso/")
+;; 		   (directory-files nnheader-directory-files-safe)
+;; 		   (get-new-mail nil)
+;; 		   )
+;; 	(nnmaildir "adamweb"
+;; 		   ;; (remove-prefix "INBOX.")
+;; 		   (directory "~/.mail/adamweb/")
+;; 		   (directory-files nnheader-directory-files-safe)
+;; 		   (get-new-mail nil)
+;; 		   )
+;; 	)
+;;       )
+
 
 (defun gnus-group-mode-hook-px ()
 (scroll-bar-mode -1))
@@ -21,6 +77,8 @@
 
 (eval-after-load "gnus-group"
   '(progn
+     (define-key gnus-summary-mode-map [(meta up)] '(lambda() (interactive) (scroll-other-window -1)))
+     (define-key gnus-summary-mode-map [(meta down)] '(lambda() (interactive) (scroll-other-window 1)))
      (define-key gnus-group-mode-map (kbd "<tab>") 'other-window)
      (define-key gnus-summary-mode-map (kbd "<backtab>") (lambda ()
 							 (interactive)
@@ -163,52 +221,6 @@ If all article have been seen, on the subject line of the last article."
   ;; (gnus-summary-rescan-group 500)
   ;; (gnus-mst-show-groups-with-new-messages)
 )
-
-;; (setq gnus-select-method
-;;       '(nntp "news.eternal-september.org"))
-
-;; Online
-;; (setq gnus-secondary-select-methods
-;;       '(
-;; 	(nnimap "gmail-pcm"
-;; 	       (nnimap-address "imap.gmail.com")
-;; 		;; (nnimap-authinfo-file "~/.authinfo.gpg")
-;; 		(nnimap-stream ssl)
-;; 		(nnir-search-engine imap)
-;; 		)
-;; 	(nnimap "adamweb"
-;; 	       ;; (remove-prefix "INBOX.")
-;; 	       (nnimap-stream ssl)
-;; 	       (nnimap-address "mail.gandi.net")
-;; 	       ;; (nnimap-authinfo-file "~/.authinfo.gpg")
-;; 	       (nnimap-authenticator cram-md5)
-;; 	       (nnimap-server-port 993)
-;; 	       (nnir-search-engine imap)
-;; 	       )
-;;        )
-;;    )
-
-;; Offline
-(setq gnus-secondary-select-methods
-      '(
-	(nntp "news"
-	      (nntp-address "news.eternal-september.org")
-	      ;; (nntp-xref-number-is-evil t)
-	      )
-	(nnmaildir "gmail-pcm"
-		   (directory "~/.mail/perso/")
-		   (directory-files nnheader-directory-files-safe)
-		   (get-new-mail nil)
-		   )
-	(nnmaildir "adamweb"
-		   ;; (remove-prefix "INBOX.")
-		   (directory "~/.mail/adamweb/")
-		   (directory-files nnheader-directory-files-safe)
-		   (get-new-mail nil)
-		   )
-	)
-      )
-
 
 ;; This for setting the SMTP host depending on the "To:" field of the mail we're replying to
 (defun send-this-biatch-px ()

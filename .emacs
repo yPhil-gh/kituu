@@ -1,7 +1,7 @@
 (require 'cl) ; a rare necessary use of REQUIRE
 (defvar *emacs-load-start* (current-time))
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Thu 08-Mar-2012 17:32:52>
+;; Time-stamp: <.emacs - Thu 08-Mar-2012 21:07:08>
 ;; ===========================================================================
 
 ;; See https://github.com/xaccrocheur/kituu/
@@ -542,80 +542,6 @@ inside html tags."
 
 (global-set-key [(meta f1)] 'xsteve-gnus-px)
 
-
-;; (defun door-gnus ()
-;;   "Switch between gnus and non-gnus buffers, preserving window configurations."
-;;   (interactive)
-;;   (let ((bufname (buffer-name)))
-;;     (if (or
-;; 	 (string-equal "*Group*" bufname)
-;; 	 (string-equal "*BBDB*" bufname)
-;; 	 (string-match "\*Summary" bufname)
-;; 	 (string-match "\*mail" bufname)
-;; 	 (string-match "\*wide" bufname)
-;; 	 (string-match "\*reply" bufname)
-;; 	 (string-match "\*Article" bufname))
-;; 	(progn
-;; 	  (door-bury-gnus))
-;;       (if (get-buffer "*Group*")
-;; 	  (door-unbury-gnus)
-;; 	(progn
-;; 	  (setq gnus-unbury-window-configuration (current-window-configuration))
-;; 	  (delete-other-windows)
-;; 	  (linum-mode -1)
-;; 	  (tabbar-mode -1)
-;; 	  (menu-bar-mode 1)
-;; 	  (gnus))))))
-
-;; (defun door-unbury-gnus ()
-;;   (interactive)
-;;   (setq gnus-unbury-window-configuration nil)
-;;   (let ((buf nil)
-;; 	(bufname nil))
-;;     (dolist (buf (buffer-list))
-;;       (setq bufname (buffer-name buf))
-;;       (when (and (boundp 'gnus-bury-window-configuration) gnus-bury-window-configuration)
-;; 	(unless gnus-unbury-window-configuration
-;;       (setq gnus-unbury-window-configuration (current-window-configuration)))
-;;     (delete-other-windows)
-;;     (if (eq (current-buffer) buf)
-;; 	(bury-buffer)
-;; 	  (linum-mode -1)
-;; 	  (tabbar-mode -1)
-;; 	  (menu-bar-mode 1)
-;; 	  ;; (gnus-mst-display-new-messages)
-;;       (bury-buffer buf))
-;;     (set-window-configuration gnus-bury-window-configuration)))))
-
-;; (defun door-bury-gnus ()
-;;   (interactive)
-;;   (setq gnus-bury-window-configuration nil)
-;;   (let ((buf nil)
-;; 	(bufname nil))
-;;     (dolist (buf (buffer-list))
-;;       (setq bufname (buffer-name buf))
-;;       (when (or
-;; 	     (string-equal "*Group*" bufname)
-;; 	     (string-equal "*BBDB*" bufname)
-;; 	     (string-match "\*Summary" bufname)
-;; 	     (string-match "\*mail" bufname)
-;; 	     (string-match "\*reply" bufname)
-;; 	     (string-match "\*wide" bufname)
-;; 	     (string-match "\*Article" bufname))
-;; 	(unless gnus-bury-window-configuration
-;; 	  (setq gnus-bury-window-configuration (current-window-configuration)))
-;; 	(delete-other-windows)
-;; 	(linum-mode 1)
-;; 	(tabbar-mode 1)
-;; 	(menu-bar-mode -1)
-;; 	;; (maximize-frame-px)
-;; 	(if (eq (current-buffer) buf)
-;; 	    (bury-buffer)
-;; 	  (bury-buffer buf))
-;; 	(set-window-configuration gnus-unbury-window-configuration)))))
-
-;; (global-set-key [(meta f1)] 'door-gnus)
-
 ;; Save the minibuffer history
 (setq minibuffer_history (concat user-emacs-directory "minibuffer_history"))
 (setq savehist-file minibuffer_history)
@@ -747,72 +673,73 @@ select 'this' or <that> (enclosed)  s-SPC
 ;;           '(lambda ()
 ;;             (define-key yas/minor-mode-map yas/trigger-key 'yas/expand)))
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:background "#2e3436" :foreground "#eeeeec"))))
- '(cursor ((t (:background "#fce94f" :foreground "#2e3436"))))
- '(font-lock-builtin-face ((t (:foreground "#ad7fa8"))))
- '(font-lock-comment-face ((t (:foreground "#73d216"))))
- '(font-lock-constant-face ((t (:foreground "#e6a8df"))))
- '(font-lock-function-name-face ((t (:foreground "#fce84f"))))
- '(font-lock-keyword-face ((t (:foreground "#8cc4ff"))))
- '(font-lock-string-face ((t (:foreground "#e9b96e"))))
- '(font-lock-type-face ((t (:foreground "#a5ff4d"))))
- '(font-lock-variable-name-face ((t (:foreground "#fcaf3e"))))
- '(font-lock-warning-face ((t (:foreground "#ef2929"))))
- '(fringe ((t (:background "#2c2c2c"))))
- '(gnus-group-mail-3 ((t (:foreground "#e9b96e" :weight bold))))
- '(gnus-group-mail-3-empty ((t (:foreground "#e9b96e"))))
- '(gnus-header-name ((t (:foreground "#e6a8df"))))
- '(gnus-summary-normal-unread ((t (:weight bold :inherit (quote default)))))
- '(header-line ((t (:background "#555753" :foreground "#ffffff"))))
- '(isearch ((t (:background "#ce5c00" :foreground "#ffffff"))))
- '(lazy-highlight ((t (:background "#8f5902"))))
- '(link ((t (:foreground "#729fcf" :underline t))))
- '(link-visited ((t (:foreground "#3465a4" :underline t))))
- '(minibuffer-prompt ((t (:foreground "#fce94f"))))
- '(mode-line ((t (:background "#777777" :foreground "#000000"))))
- '(mode-line-inactive ((t (:background "#555753" :foreground "#ffffff"))))
- '(region ((t (:background "#555753")))))
+(if (eq window-system 'x)
+    (progn (custom-set-faces
+	    ;; custom-set-faces was added by Custom.
+	    ;; If you edit it by hand, you could mess it up, so be careful.
+	    ;; Your init file should contain only one such instance.
+	    ;; If there is more than one, they won't work right.
+	    '(default ((t (:background "#2e3436" :foreground "#eeeeec"))))
+	    '(cursor ((t (:background "#fce94f" :foreground "#2e3436"))))
+	    '(font-lock-builtin-face ((t (:foreground "#ad7fa8"))))
+	    '(font-lock-comment-face ((t (:foreground "#73d216"))))
+	    '(font-lock-constant-face ((t (:foreground "#e6a8df"))))
+	    '(font-lock-function-name-face ((t (:foreground "#fce84f"))))
+	    '(font-lock-keyword-face ((t (:foreground "#8cc4ff"))))
+	    '(font-lock-string-face ((t (:foreground "#e9b96e"))))
+	    '(font-lock-type-face ((t (:foreground "#a5ff4d"))))
+	    '(font-lock-variable-name-face ((t (:foreground "#fcaf3e"))))
+	    '(font-lock-warning-face ((t (:foreground "#ef2929"))))
+	    '(fringe ((t (:background "#2c2c2c"))))
+	    '(gnus-group-mail-3 ((t (:foreground "#e9b96e" :weight bold))))
+	    '(gnus-group-mail-3-empty ((t (:foreground "#e9b96e"))))
+	    '(gnus-header-name ((t (:foreground "#e6a8df"))))
+	    '(gnus-summary-normal-unread ((t (:weight bold :inherit (quote default)))))
+	    '(header-line ((t (:background "#555753" :foreground "#ffffff"))))
+	    '(isearch ((t (:background "#ce5c00" :foreground "#ffffff"))))
+	    '(lazy-highlight ((t (:background "#8f5902"))))
+	    '(link ((t (:foreground "#729fcf" :underline t))))
+	    '(link-visited ((t (:foreground "#3465a4" :underline t))))
+	    '(minibuffer-prompt ((t (:foreground "#fce94f"))))
+	    '(mode-line ((t (:background "#777777" :foreground "#000000"))))
+	    '(mode-line-inactive ((t (:background "#555753" :foreground "#ffffff"))))
+	    '(region ((t (:background "#555753")))))
 
-;; Tabbar faces
-(set-face-attribute 'tabbar-default nil
-		    :inherit nil
-		    :height 110
-		    :weight 'normal
-		    :width 'normal
-		    :slant 'normal
-		    :underline nil
-		    :strike-through nil
-		    :stipple nil
-		    :background "gray80"
-		    :foreground "black"
-		    :box nil
-		    ;; :family "Lucida Grande"
-)
+	   ;; Tabbar faces
+	   (set-face-attribute 'tabbar-default nil
+			       :inherit nil
+			       :height 110
+			       :weight 'normal
+			       :width 'normal
+			       :slant 'normal
+			       :underline nil
+			       :strike-through nil
+			       :stipple nil
+			       :background "gray80"
+			       :foreground "black"
+			       :box nil
+			       ;; :family "Lucida Grande"
+			       )
 
-(set-face-attribute 'tabbar-selected nil
-		    :background "#2e3436"
-		    :foreground "red"
-		    :inherit 'tabbar-default
-		    :box '(:line-width 3 :color "#2e3436" :style nil))
+	   (set-face-attribute 'tabbar-selected nil
+			       :background "#2e3436"
+			       :foreground "red"
+			       :inherit 'tabbar-default
+			       :box '(:line-width 3 :color "#2e3436" :style nil))
 
-(set-face-attribute 'tabbar-unselected nil
-		    :inherit 'tabbar-default
-		    :background "gray50"
-		    :box '(:line-width 3 :color "grey50" :style nil))
+	   (set-face-attribute 'tabbar-unselected nil
+			       :inherit 'tabbar-default
+			       :background "gray50"
+			       :box '(:line-width 3 :color "grey50" :style nil))
 
-(set-face-attribute 'tabbar-highlight nil
-		    :foreground "white"
-		    :underline nil)
+	   (set-face-attribute 'tabbar-highlight nil
+			       :foreground "white"
+			       :underline nil)
 
-(set-face-attribute 'tabbar-button nil
-		    :inherit 'tabbar-default
-		    :box nil)
-
+	   (set-face-attribute 'tabbar-button nil
+			       :inherit 'tabbar-default
+			       :box nil)
+	   ))
 ;; (set-face-attribute 'tabbar-separator nil
 ;; 		    :background "grey50"
 ;;  		    :foreground "grey50"
