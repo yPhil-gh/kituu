@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Fri 09-Mar-2012 15:48:34>
+;; Time-stamp: <.gnus.el - Fri 09-Mar-2012 21:13:55>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -9,24 +9,32 @@
 (require 'offlineimap-ctl)
 (require 'nnir)
 
+(setq gnus-visual t)
 
 ;; Topics
 ;;;_   , group buffer
 
 (setq gnus-topic-indent-level 0)
-(add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
-(setq gnus-permanently-visible-groups ".*")
-(add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
+;; (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
+;; (setq gnus-permanently-visible-groups ".*")
+;; (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
 
 ;;;_    . group line format
 
 
 (setq
- ;; gnus-group-line-format "%M%S%p%P%5y:%B%(%G%)\n"
+ ;; gnus-group-line-format "%(%M %G %B %)\n"
  ;; gnus-group-line-format "%M%S%p%P%5y:%B%(%g%)\n"
- gnus-group-line-format " %G %N %B\n"
+ gnus-group-line-format " %(%G:%N %M%)\n"
+ ;; gnus-group-line-format " %G %N %B\n"
  ;; gnus-group-line-format "%P|%B|%M%o%S%L[%6t|%3i]%6y :%(%~(pad-right 65)g%):%6,6~(cut 2)d\n"
 )
+
+;; ;; Faces
+;; (set-face-attribute 'gnus-group-mail-3 nil :foreground "#e9b96e")
+;; (set-face-attribute 'gnus-group-mail-3-empty nil :foreground "#e9b96e")
+;; (set-face-attribute 'gnus-header-name nil :foreground "#e6a8df")
+;; (set-face-attribute 'gnus-summary-normal-unread nil :weight)
 
 
 ;;;_    . topic line format
@@ -40,18 +48,15 @@
 ; RET and the customize feature so that stuff goes to the
 ; boffom of `.emacs'.
 
-(setq gnus-face-1 'bold)
-(copy-face 'bold 'my-topic-line-face)
-(set-face-foreground 'my-topic-line-face "DarkOrange")
-(setq gnus-face-100 'my-topic-line-face)
+;; (setq gnus-face-1 'bold)
+;; (copy-face 'bold 'my-topic-line-face)
+;; (set-face-foreground 'my-topic-line-face "DarkOrange")
+;; (setq gnus-face-100 'my-topic-line-face)
 
 ;; The gnus-face-100 is used in gnus-topic-line-format
 
 
-(setq gnus-topic-line-format "%100{%i[ %(%{%n%}%) %A ]%v%}\n")
-
-
-
+(setq gnus-topic-line-format "%(%{%n%} %A%)\n")
 
 (setq nntp-authinfo-file "~/.authinfo.pgp")
 
@@ -242,18 +247,23 @@
  gnus-sum-thread-tree-vertical        "│ "
  gnus-sum-thread-tree-single-leaf     "╰─► "
 
- gnus-summary-line-format "%U%R%z%12&user-date; %(%[%-30,30f%]%) %B %s\n"
+ ;; gnus-summary-line-format "%U%R%z%12&user-date; %(%[%-30,30f%]%) %B %s\n"
 
- gnus-summary-line-format (concat
-			   "%( %0{%U%R%z%}"
-			   "%3{│%}" "%1{%12&user-date;%}" "%3{│%}" ;; date
-			   "  "
-			   "%4{%-20,20f%}"               ;; name
-			   "  "
-			   "%3{│%}"
-			   " "
-			   "%1{%B%}"
-			   "%s %)\n")
+ ;; gnus-summary-line-format (concat
+ ;; 			   "%( %0{%U%R%z%}"
+ ;; 			   "%3{│%}" "%1{%12&user-date;%}" "%3{│%}" ;; date
+ ;; 			   "  "
+ ;; 			   "%4{%-20,20f%}"               ;; name
+ ;; 			   "  "
+ ;; 			   "%3{│%}"
+ ;; 			   " "
+ ;; 			   "%1{%B%}"
+ ;; 			   "%s %)\n")
+
+ gnus-summary-line-format
+ (concat "%(%U%R %~(pad-right 2)t%* %B%~(max-right 30)~(pad-right 30)n  "
+	 "%~(max-right 90)~(pad-right 90)s %-135=%&user-date;%)\n")
+
  )
 
 (setq gnus-visible-headers
