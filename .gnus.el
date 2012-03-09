@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Fri 09-Mar-2012 21:34:30>
+;; Time-stamp: <.gnus.el - Fri 09-Mar-2012 21:40:55>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -262,8 +262,7 @@
 
  gnus-summary-line-format
  (concat "%(%U%R %~(pad-right 2)t%* %12&user-date; %B%~(max-right 30)~(pad-right 30)n  "
-	 "%~(max-right 90)~(pad-right 90)s %-135=%&user-date;%)\n")
-
+	 "%~(max-right 90)~(pad-right 90)s%)\n")
  )
 
 (setq gnus-visible-headers
