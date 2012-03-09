@@ -1,7 +1,7 @@
 (require 'cl) ; a rare necessary use of REQUIRE
 (defvar *emacs-load-start* (current-time))
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Thu 08-Mar-2012 21:07:08>
+;; Time-stamp: <.emacs - Fri 09-Mar-2012 01:14:24>
 ;; ===========================================================================
 
 ;; See https://github.com/xaccrocheur/kituu/
@@ -586,6 +586,7 @@ inside html tags."
  '(backup-directory-alist (quote ((".*" . "~/.bkp/"))))
  '(canlock-password "cf5f7a7261c5832898abfc7ea08ba333a36ed78c")
  '(display-time-use-mail-icon t)
+ '(gnus-read-active-file nil)
  '(inhibit-startup-echo-area-message (user-login-name))
  '(recentf-save-file "~/.bkp/recentf"))
 
@@ -749,3 +750,33 @@ select 'this' or <that> (enclosed)  s-SPC
 
 (message "%s loaded in %ds" user-init-file (destructuring-bind (hi lo ms) (current-time)
 				     (- (+ hi lo) (+ (first *emacs-load-start*) (second *emacs-load-start*)))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:background "#2e3436" :foreground "#eeeeec"))))
+ '(cursor ((t (:background "#fce94f" :foreground "#2e3436"))))
+ '(font-lock-builtin-face ((t (:foreground "#ad7fa8"))))
+ '(font-lock-comment-face ((t (:foreground "#73d216"))))
+ '(font-lock-constant-face ((t (:foreground "#e6a8df"))))
+ '(font-lock-function-name-face ((t (:foreground "#fce84f"))))
+ '(font-lock-keyword-face ((t (:foreground "#8cc4ff"))))
+ '(font-lock-string-face ((t (:foreground "#e9b96e"))))
+ '(font-lock-type-face ((t (:foreground "#a5ff4d"))))
+ '(font-lock-variable-name-face ((t (:foreground "#fcaf3e"))))
+ '(font-lock-warning-face ((t (:foreground "#ef2929"))))
+ '(fringe ((t (:background "#2c2c2c"))))
+ '(gnus-group-mail-3 ((t (:foreground "#e9b96e" :weight bold))))
+ '(gnus-group-mail-3-empty ((t (:foreground "#e9b96e"))))
+ '(gnus-header-name ((t (:foreground "#e6a8df"))))
+ '(gnus-summary-normal-unread ((t (:weight bold :inherit (quote default)))))
+ '(header-line ((t (:background "#555753" :foreground "#ffffff"))))
+ '(isearch ((t (:background "#ce5c00" :foreground "#ffffff"))))
+ '(lazy-highlight ((t (:background "#8f5902"))))
+ '(link ((t (:foreground "#729fcf" :underline t))))
+ '(link-visited ((t (:foreground "#3465a4" :underline t))))
+ '(minibuffer-prompt ((t (:foreground "#fce94f"))))
+ '(mode-line ((t (:background "#777777" :foreground "#000000"))))
+ '(mode-line-inactive ((t (:background "#555753" :foreground "#ffffff"))))
+ '(region ((t (:background "#555753")))))
