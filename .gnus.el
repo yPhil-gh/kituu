@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Fri 09-Mar-2012 21:40:55>
+;; Time-stamp: <.gnus.el - Sat 10-Mar-2012 11:28:26>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -64,17 +64,19 @@
 ;;       '(nntp "news.sunsite.dk")
 ;;       )
 
-(setq gnus-select-method
-      '(nntp "news.eternal-september.org")
-      )
+;; (setq gnus-select-method
+;;       '(nntp "news.eternal-september.org")
+;;       )
+
+(setq gnus-select-method '(nnnil ""))
 
 ;; ;; Offline
 (setq gnus-secondary-select-methods
       '(
-	;; (nntp "news"
-	;;       (nntp-address "newz.sunsite.dk")
-	;;       ;; (nntp-xref-number-is-evil t)
-	;;       )
+	(nntp "news"
+	      (nntp-address "news.eternal-september.org")
+	      ;; (nntp-xref-number-is-evil t)
+	      )
 
 	(nnmaildir "gmail-pcm"
 		   (directory "~/.mail/perso/")
@@ -118,7 +120,7 @@
 ;; This for setting the "from" field depending on the group we're on
 (setq gnus-parameters
       '(
-	("gnu"
+	("news"
 	 (modeline-notify . t)
 	 (visible . t)
 	 (display . all)
@@ -249,21 +251,26 @@
 
  ;; gnus-summary-line-format "%U%R%z%12&user-date; %(%[%-30,30f%]%) %B %s\n"
 
- ;; gnus-summary-line-format (concat
- ;; 			   "%( %0{%U%R%z%}"
- ;; 			   "%3{│%}" "%1{%12%12&user-date;%}" "%3{│%}" ;; date
- ;; 			   "  "
- ;; 			   "%4{%-20,20f%}"               ;; name
- ;; 			   "  "
- ;; 			   "%3{│%}"
- ;; 			   " "
- ;; 			   "%1{%B%}"
- ;; 			   "%s %)\n")
+ gnus-summary-line-format (concat
+ 			   "%( %0{%U%R%z%}"
+ 			   "%3{│%}" "%1{%10&user-date;%}" "%3{│%}" ;; date
+ 			   "%4{%-20,20f%}"               ;; name
+ 			   "%3{│%}"
+ 			   "%1{%B%}"
+			   "%~(max-right 69)~(pad-right 69)s%)\n"
+)
 
- gnus-summary-line-format
- (concat "%(%U%R %~(pad-right 2)t%* %12&user-date; %B%~(max-right 30)~(pad-right 30)n  "
-	 "%~(max-right 90)~(pad-right 90)s%)\n")
- )
+ ;; gnus-summary-line-format
+ ;; (concat "%(%U%R %~(pad-right 2)t%* %12&user-date; %B%~(max-right 30)~(pad-right 30)n  "
+ ;; 	 "%~(max-right 50)~(pad-right 10)s%)\n")
+
+
+ ;; gnus-summary-line-format
+ ;; (concat "%(%U%R %~(pad-right 2)t%* %12&user-date; %B│%~(max-right 15)~(pad-right 15)n  "
+ ;; 	 "%~(max-right 69)~(pad-right 69)s%)\n")
+
+
+)
 
 (setq gnus-visible-headers
       '("^From:" "^Subject:" "^To:" "^Cc:" "^Resent-To:" "^Message-ID:"
