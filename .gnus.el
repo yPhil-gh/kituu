@@ -1,52 +1,15 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Sat 10-Mar-2012 19:51:09>
+;; Time-stamp: <.gnus.el - Sat 10-Mar-2012 20:53:12>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
 ;; (load-library "smtpmail")
-(gnus-demon-add-handler 'gnus-demon-scan-news 1 t) ; this does a call to gnus-group-get-new-news
+(gnus-demon-add-handler 'gnus-demon-scan-news-and-update 1 t) ; One minute
 
 (require 'offlineimap-ctl)
 (require 'nnir)
 
 (setq gnus-visual t)
-
-;; automatic mail scan without manual effort.
-;;
-;; level-specified group scanner.
-(defun gnus-demon-scan-mail-or-news-and-update (level)
-"Scan for new mail, updating the *Group* buffer."
-  (let ((win (current-window-configuration)))
-    (unwind-protect
-        (save-window-excursion
-          (save-excursion
-            (when (gnus-alive-p)
-              (save-excursion
-                (set-buffer gnus-group-buffer)
-                (gnus-group-get-new-news level)))))
-      (set-window-configuration win))))
-;;
-;; level 2: only mail groups are scanned.
-(defun gnus-demon-scan-mail-and-update ()
-"Scan for new mail, updating the *Group* buffer."
-  (gnus-demon-scan-mail-or-news-and-update 2))
-(gnus-demon-add-handler 'gnus-demon-scan-mail-and-update 5 nil)
-;;
-;; level 3: mail and local news groups are scanned.
-(defun gnus-demon-scan-news-and-update ()
-"Scan for new mail, updating the *Group* buffer."
-  (gnus-demon-scan-mail-or-news-and-update 3))
-(gnus-demon-add-handler 'gnus-demon-scan-news-and-update 20 20)
-;;
-;; a useful new twist on immediate mail acquisition.
-(defun gnus-get-new-mail-and-reselect (&optional x)
-  "A simple-minded attempt to be able to get newly-arrived
-mail immediately, in the current group, without a need to
-manually exit the group, get mail, and re-enter."
-  (interactive)
-  (gnus-demon-scan-mail-and-update)
-  (gnus-summary-reselect-current-group))
-(define-key gnus-summary-mode-map (kbd "s-w") 'gnus-get-new-mail-and-reselect)
 
 ;; Topics
 (setq gnus-topic-indent-level 0)
@@ -206,8 +169,8 @@ manually exit the group, get mail, and re-enter."
 	))
 
 ;; Vars
-(setq gnus-large-newsgroup 'nil)
 (setq
+ gnus-large-newsgroup 'nil
  user-mail-address "philippe.coatmeur@gmail.com"
  user-full-name "Philippe M. Coatmeur"
  gnus-always-force-window-configuration t
@@ -229,7 +192,6 @@ manually exit the group, get mail, and re-enter."
  message-signature t
  ;; gnus-treat-body-boundary nil
  )
-
 
 ;; Hooks & Keys
 
@@ -361,13 +323,22 @@ If all article have been seen, on the subject line of the last article."
 ;;        "%1{%B%}"
 ;;        "%s %)\n"))
 
-(defun chk-mail-px ()
+(defun Chk-mail-px ()
   "Sync IMAP, Get new mails, update modeline"
   (interactive)
-  (gnus-group-get-new-news)
-  (gnus-summary-rescan-group 500)
+  ;; (gnus-group-get-new-news)
+  (gnus-summary-rescan-group 'all)
   ;; (gnus-mst-show-groups-with-new-messages)
   )
+
+(defun plop ()
+(message "plopy"))
+
+(gnus-demon-add-handler 'plop 1 t)
+
+;; tells gnus to get new mail and also display all old mail
+(define-key gnus-summary-mode-map (kbd "s-m") 'Chk-mail-px)
+
 
 ;; This for setting the SMTP host depending on the "To:" field of the mail we're replying to
 (defun send-this-biatch-px ()
