@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Sat 10-Mar-2012 11:28:26>
+;; Time-stamp: <.gnus.el - Sat 10-Mar-2012 19:51:09>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -11,52 +11,92 @@
 
 (setq gnus-visual t)
 
-;; Topics
-;;;_   , group buffer
+;; automatic mail scan without manual effort.
+;;
+;; level-specified group scanner.
+(defun gnus-demon-scan-mail-or-news-and-update (level)
+"Scan for new mail, updating the *Group* buffer."
+  (let ((win (current-window-configuration)))
+    (unwind-protect
+        (save-window-excursion
+          (save-excursion
+            (when (gnus-alive-p)
+              (save-excursion
+                (set-buffer gnus-group-buffer)
+                (gnus-group-get-new-news level)))))
+      (set-window-configuration win))))
+;;
+;; level 2: only mail groups are scanned.
+(defun gnus-demon-scan-mail-and-update ()
+"Scan for new mail, updating the *Group* buffer."
+  (gnus-demon-scan-mail-or-news-and-update 2))
+(gnus-demon-add-handler 'gnus-demon-scan-mail-and-update 5 nil)
+;;
+;; level 3: mail and local news groups are scanned.
+(defun gnus-demon-scan-news-and-update ()
+"Scan for new mail, updating the *Group* buffer."
+  (gnus-demon-scan-mail-or-news-and-update 3))
+(gnus-demon-add-handler 'gnus-demon-scan-news-and-update 20 20)
+;;
+;; a useful new twist on immediate mail acquisition.
+(defun gnus-get-new-mail-and-reselect (&optional x)
+  "A simple-minded attempt to be able to get newly-arrived
+mail immediately, in the current group, without a need to
+manually exit the group, get mail, and re-enter."
+  (interactive)
+  (gnus-demon-scan-mail-and-update)
+  (gnus-summary-reselect-current-group))
+(define-key gnus-summary-mode-map (kbd "s-w") 'gnus-get-new-mail-and-reselect)
 
+;; Topics
 (setq gnus-topic-indent-level 0)
 (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
 ;; (setq gnus-permanently-visible-groups ".*")
 ;; (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
 
-;;;_    . group line format
-
+;; (setq gnus-topic-topology '(("Perso" visible) (("Adamweb" visible nil nil)) (("News" visible nil nil))))
 
 (setq
  ;; gnus-group-line-format "%(%M %G %B %)\n"
  ;; gnus-group-line-format "%M%S%p%P%5y:%B%(%g%)\n"
- gnus-group-line-format " %(%G:%N %M%)\n"
+ ;; This one
+ ;; gnus-group-line-format " %(%G:%N %M%)\n"
  ;; gnus-group-line-format " %G %N %B\n"
  ;; gnus-group-line-format "%P|%B|%M%o%S%L[%6t|%3i]%6y :%(%~(pad-right 65)g%):%6,6~(cut 2)d\n"
 )
 
-;; ;; Faces
-;; (set-face-attribute 'gnus-group-mail-3 nil :foreground "#e9b96e")
-;; (set-face-attribute 'gnus-group-mail-3-empty nil :foreground "#e9b96e")
-;; (set-face-attribute 'gnus-header-name nil :foreground "#e6a8df")
-;; (set-face-attribute 'gnus-summary-normal-unread nil :weight)
+;; (defun gnus-user-format-function-j ()
+;; (message "plop"))
 
+;; (defvar *jao-mails*
+;;         "jao@foo\\.org\\|jao@baz\\.com\\|jao@grogle\\.com")
 
-;;;_    . topic line format
+;; (defun gnus-user-format-function-j (headers)
+;;   (let ((to (gnus-extra-header 'To headers)))
+;;     (if (string-match *jao-mails* to)
+;;         (if (string-match "," to) "~" "»")
+;;         (if (or (string-match *jao-mails*
+;;                               (gnus-extra-header 'Cc headers))
+;;                 (string-match *jao-mails*
+;;                               (gnus-extra-header 'BCc headers)))
+;;             "~"
+;;             " "))))
 
-; Make gnus-topic-line into another color -- see (Info-goto-node
-; "(gnus)Formatting Fonts"). For colors take a look at
-; http://en.wikipedia.org/wiki/Web_colors
+;; (defun gnus-user-format-function-x (header)
+;; (setq plop header)
+;; )
 
-; FIXME
-; Stupid! Why do you set faces like this. Use M-x list-faces
-; RET and the customize feature so that stuff goes to the
-; boffom of `.emacs'.
+;; Test
+(defun gnus-user-format-function-t (dummy)
+  (format "%d" 05)
+)
 
-;; (setq gnus-face-1 'bold)
-;; (copy-face 'bold 'my-topic-line-face)
-;; (set-face-foreground 'my-topic-line-face "DarkOrange")
-;; (setq gnus-face-100 'my-topic-line-face)
+;; Works
+(setq
+ gnus-group-line-format " %(%G:%N %M%)\n"
+)
 
-;; The gnus-face-100 is used in gnus-topic-line-format
-
-
-(setq gnus-topic-line-format "%([%{%n%} %A]%)\n")
+;; (setq gnus-topic-line-format "%([%{%n%} %A]%)\n")
 
 (setq nntp-authinfo-file "~/.authinfo.pgp")
 
@@ -74,7 +114,7 @@
 (setq gnus-secondary-select-methods
       '(
 	(nntp "news"
-	      (nntp-address "news.eternal-september.org")
+	      (nntp-address "news.sunsite.dk")
 	      ;; (nntp-xref-number-is-evil t)
 	      )
 
@@ -121,20 +161,25 @@
 (setq gnus-parameters
       '(
 	("news"
+         (gnus-group-line-format
+          "(% %c %)\n")
 	 (modeline-notify . t)
 	 (visible . t)
 	 (display . all)
-	 (address "philippe.coatmeur@gmail.com")
-	 (signature "Philippe M. Coatmeur
+	 (posting-style
+	  (address "philippe.coatmeur@gmail.com")
+	  (signature "Philippe M. Coatmeur
 +212(0)6 10 64 73 72")
-	 (name "Philippe M. Coatmeur")
-	 (user-mail-address "philippe.coatmeur@gmail.com"))
+	  (name "Philippe M. Coatmeur")
+	  ))
 
 	("INBOX"
 	 ;; (gnus-use-adaptive-scoring nil)
 	 ;; (gnus-use-scoring nil)
 	 ;; (visible . t)
+         (gnus-use-scoring nil)
 	 (display . all)
+	 (visible . t)
 	 (modeline-notify . t))
 
 	("nnmaildir\\+gmail"
@@ -145,7 +190,7 @@
 	  (signature "Philippe M. Coatmeur
 +212(0)6 10 64 73 72")
 	  (name "Philippe M. Coatmeur")
-	  (user-mail-address "philippe.coatmeur@gmail.com")))
+	  ))
 
 	("nnmaildir\\+adamweb"
 	 ;; (display . all)
@@ -156,14 +201,15 @@
 	  (name "Adamweb")
 	  ;; (body "\n\n\n Sivaram A\n -- \n")
 	  ;; (eval (setq message-sendmail-extra-arguments '("-a" "neo")))
-	  (user-mail-address "contact@adamweb.net")))
+	  ))
 
 	))
 
 ;; Vars
-(setq user-mail-address "philippe.coatmeur@gmail.com")
-
+(setq gnus-large-newsgroup 'nil)
 (setq
+ user-mail-address "philippe.coatmeur@gmail.com"
+ user-full-name "Philippe M. Coatmeur"
  gnus-always-force-window-configuration t
  ;; gnus-read-active-file nil
  mm-inline-large-images t
@@ -186,12 +232,11 @@
 
 
 ;; Hooks & Keys
-(defun gnus-group-mode-hook-px ()
-  (scroll-bar-mode -1))
 
-(defun my-gnus-hook ()
+(defun gnus-hook-px ()
   "A nice gnus session"
   ;; (menu-bar-mode)
+  (scroll-bar-mode -1)
   (tabbar-mode -1))
 
 (defun skipit ()
@@ -212,9 +257,9 @@
 (define-key gnus-summary-mode-map "+" 'gnus-summary-show-thread)
 
 (add-hook 'message-mode-hook 'turn-on-auto-fill)
-(add-hook 'message-mode-hook 'my-gnus-hook)
-(add-hook 'summary-mode-hook 'my-gnus-hook)
-(add-hook 'gnus-group-mode-hook 'gnus-group-mode-hook-px)
+(add-hook 'message-mode-hook 'gnus-hook-px)
+(add-hook 'summary-mode-hook 'gnus-hook-px)
+(add-hook 'gnus-group-mode-hook 'gnus-hook-px)
 
 (add-hook 'gnus-started-hook 'gnus-mst-show-groups-with-new-messages)
 
@@ -258,7 +303,7 @@
  			   "%3{│%}"
  			   "%1{%B%}"
 			   "%~(max-right 69)~(pad-right 69)s%)\n"
-)
+			   )
 
  ;; gnus-summary-line-format
  ;; (concat "%(%U%R %~(pad-right 2)t%* %12&user-date; %B%~(max-right 30)~(pad-right 30)n  "
@@ -385,7 +430,7 @@ If all article have been seen, on the subject line of the last article."
 (gnus-add-configuration
  '(article
    (horizontal 1.0
-               (vertical 22 (group 1.0))
+               (vertical 24 (group 1.0))
                (vertical 1.0
                          (summary 0.35 point)
                          (article 1.0)))))
@@ -393,7 +438,7 @@ If all article have been seen, on the subject line of the last article."
 (gnus-add-configuration
  '(summary
    (horizontal 1.0
-               (vertical 22 (group 1.0))
+               (vertical 24 (group 1.0))
                (vertical 1.0 (summary 1.0 point)))))
 
 ;; Enable mailinglist support

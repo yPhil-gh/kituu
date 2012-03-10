@@ -1,7 +1,7 @@
 (require 'cl) ; a rare necessary use of REQUIRE
 (defvar *emacs-load-start* (current-time))
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Fri 09-Mar-2012 19:07:40>
+;; Time-stamp: <.emacs - Sat 10-Mar-2012 18:56:22>
 ;; ===========================================================================
 
 ;; See https://github.com/xaccrocheur/kituu/
@@ -55,30 +55,6 @@
 (defvar minibuffer_history)
 (defvar minibuffer_history)
 (defvar savehist-file)
-
-(defun text-mode-hook-px ()
-(tabbar-mode t)
-(menu-bar-mode -1))
-
-(defun gnus-mode-hook-px ()
-(tabbar-mode -1)
-;; (menu-bar-mode -1)
-)
-
-(add-hook 'text-mode-hook 'text-mode-hook-px)
-(add-hook 'gnus-before-startup-hook 'gnus-mode-hook-px)
-(add-hook 'gnus-exit-gnus-hook 'text-mode-hook-px)
-
-;; ;; hooks
-;; (add-hook 'text-mode-hook
-;;  (lambda ()
-;;    (tabbar-mode t)))
-
-;; (add-hook 'lisp-mode-hook
-;;  (lambda ()
-;;    (tabbar-mode t)))
-
-(tabbar-mode t)
 
 
 ;; El-get
@@ -289,44 +265,9 @@ inside html tags."
   )
 
 
-;; Hooks
-(add-hook       'flyspell-mode-hook 'flyspell-prog-mode)
-
-(add-hook 'write-file-hooks 'time-stamp)
-
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-(add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
-(add-hook 'display-time-hook
-          (lambda () (setq gnus-mode-non-string-length
-                           (+ 21
-                              (if line-number-mode 5 0)
-                              (if column-number-mode 4 0)
-                              (length display-time-string)))))
-;; (add-hook 'php-mode-hook 'yas/minor-mode)
-;; (add-hook 'html-mode-hook 'yas/minor-mode)
-;; (setq yas/extra-mode-hooks '(php-html-helper-mode))
-;; (setq yas/extra-mode-hooks '(css-mode))
-
-
-;; Ediff
-(setq ediff-window-setup-function (quote ediff-setup-windows-plain))
-(setq ediff-split-window-function 'split-window-horizontally)
-
-
-;; Window title (with edited status + remote indication)
-(setq frame-title-format
-      '("" invocation-name " %@ "(:eval (if (buffer-file-name)
-					    (abbreviate-file-name (buffer-file-name))
-					  "%b")) " [%*]"))
-
-
-;; Time-stamp
-(setq time-stamp-active t
-      time-stamp-warn-inactive t
-      time-stamp-format "%f - %3a %02d-%3b-%:y %02H:%02M:%02S")
-
 ;; Modes
 ;; (set-fringe-mode '(1 . 1))
+(tabbar-mode t)
 (show-paren-mode t)
 (menu-bar-mode -1)
 (global-linum-mode 1)
@@ -379,6 +320,63 @@ inside html tags."
 (setq desktop-path '("~/.bkp/"))
 (setq desktop-dirname "~/.bkp/")
 (setq desktop-base-file-name "emacs-desktop")
+
+;; Ediff
+(setq ediff-window-setup-function (quote ediff-setup-windows-plain))
+(setq ediff-split-window-function 'split-window-horizontally)
+
+
+;; Window title (with edited status + remote indication)
+(setq frame-title-format
+      '("" invocation-name " %@ "(:eval (if (buffer-file-name)
+					    (abbreviate-file-name (buffer-file-name))
+					  "%b")) " [%*]"))
+
+
+;; Time-stamp
+(setq time-stamp-active t
+      time-stamp-warn-inactive t
+      time-stamp-format "%f - %3a %02d-%3b-%:y %02H:%02M:%02S")
+
+
+;; Hooks
+(defun text-mode-hook-px ()
+(tabbar-mode t)
+(menu-bar-mode -1))
+
+(defun gnus-mode-hook-px ()
+(tabbar-mode -1)
+;; (menu-bar-mode -1)
+)
+
+;; FIXME
+(defun info-mode-hook-px ()
+(tabbar-mode t)
+;; (menu-bar-mode -1)
+)
+
+(add-hook 'text-mode-hook 'text-mode-hook-px)
+(add-hook 'gnus-before-startup-hook 'gnus-mode-hook-px)
+(add-hook 'gnus-exit-gnus-hook 'text-mode-hook-px)
+(add-hook 'Info-mode-hook 'info-mode-hook-px)
+
+(add-hook 'flyspell-mode-hook 'flyspell-prog-mode)
+
+(add-hook 'write-file-hooks 'time-stamp)
+
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
+(add-hook 'display-time-hook
+          (lambda () (setq gnus-mode-non-string-length
+                           (+ 21
+                              (if line-number-mode 5 0)
+                              (if column-number-mode 4 0)
+                              (length display-time-string)))))
+;; (add-hook 'php-mode-hook 'yas/minor-mode)
+;; (add-hook 'html-mode-hook 'yas/minor-mode)
+;; (setq yas/extra-mode-hooks '(php-html-helper-mode))
+;; (setq yas/extra-mode-hooks '(css-mode))
+
 
 ;; remove desktop after it's been read
 (add-hook 'desktop-after-read-hook
@@ -523,7 +521,6 @@ inside html tags."
 (defun xsteve-unbury-gnus ()
   "Restore gnus in its previous state"
   (interactive)
-  (message "gnus")
   (when (and (boundp 'gnus-bury-window-configuration) gnus-bury-window-configuration)
     (set-window-configuration gnus-bury-window-configuration)))
 
@@ -531,7 +528,6 @@ inside html tags."
   "Bury gnus and restore previous buffer"
   (interactive)
   (setq gnus-bury-window-configuration nil)
-  (message "no gnus")
   (let ((buf nil)
         (bufname nil))
     (dolist (buf (buffer-list))

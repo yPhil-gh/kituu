@@ -86,6 +86,11 @@
 (add-hook 'gnus-agent-unplugged-hook 'shutdown-offlineimap)
 (add-hook 'gnus-after-exiting-gnus-hook 'shutdown-offlineimap)
 
+(defun offlineimap-switch-to-buffer ()
+  "Go to OfflineIMAP buffer."
+  (interactive)
+    (switch-to-buffer (get-buffer "*offlineimap*")))
+
 (defun fetchnews-fetch ()
   (interactive)
   (if (executable-find "getnews")
