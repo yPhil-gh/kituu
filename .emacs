@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Sun 11-Mar-2012 21:47:15>
+;; Time-stamp: <.emacs - Sun 11-Mar-2012 22:07:52>
 ;; ===========================================================================
   ;; (kill-buffer "*scratch*")
 ;; See https://github.com/xaccrocheur/kituu/
@@ -392,13 +392,13 @@ inside html tags."
 ;; (setq yas/extra-mode-hooks '(css-mode))
 
 
-;; remove desktop after it's been read
-(add-hook 'desktop-after-read-hook
-	  '(lambda ()
-	     ;; desktop-remove clears desktop-dirname
-	     (setq desktop-dirname-tmp desktop-dirname)
-	     (desktop-remove)
-	     (setq desktop-dirname desktop-dirname-tmp)))
+;; ;; remove desktop after it's been read
+;; (add-hook 'desktop-after-read-hook
+;; 	  '(lambda ()
+;; 	     ;; desktop-remove clears desktop-dirname
+;; 	     (setq desktop-dirname-tmp desktop-dirname)
+;; 	     (desktop-remove)
+;; 	     (setq desktop-dirname desktop-dirname-tmp)))
 
 (defun saved-session ()
   (file-exists-p (concat desktop-dirname "/" desktop-base-file-name)))
@@ -409,7 +409,6 @@ inside html tags."
   (if (saved-session)
       (desktop-read)
     (message "No desktop file found.")))
-
 
 (defun session-save-px ()
   "Save an emacs session."
@@ -852,3 +851,4 @@ select 'this' or <that> (enclosed)  s-SPC
 
 ;; (setq tabbar-separator '(1)) ;; set tabbar-separator size to 1 pixel
 ;; (setq backbuffer (buffer-name))
+(message "%s loaded" (buffer-file-name))

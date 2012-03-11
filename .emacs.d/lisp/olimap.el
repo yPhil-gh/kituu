@@ -44,5 +44,5 @@
 ;; (substring ol-output-line ( + (search ":Folder " ol-output-line) 8) (- (search "[acc" ol-output-line) 1))
 ;; (substring ol-output-line  (+ (search "[acc" ol-output-line) 6) (search "]" ol-output-line :from-end t))
 
-(message "olimap loaded")
+(message "%s loaded" (buffer-file-name))
 (provide 'olimap)

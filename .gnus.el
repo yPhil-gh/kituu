@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Sun 11-Mar-2012 20:35:21>
+;; Time-stamp: <.gnus.el - Sun 11-Mar-2012 21:57:33>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -9,7 +9,7 @@
 ;; (gnus-demon-add-rescan)
 
 (require 'olimap)
-(require 'gnus-notify)
+(require 'gnus-notify-)
 (require 'nnir)
 
 (defun chk-all ()

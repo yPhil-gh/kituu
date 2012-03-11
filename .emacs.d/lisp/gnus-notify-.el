@@ -177,7 +177,7 @@
 (add-hook 'gnus-summary-exit-hook
 	  'gnus-mst-show-groups-with-new-messages)
 
-(message "REAL gnus-notify.el loaded")
-(provide 'gnus-notify)
+(message "%s loaded" (buffer-file-name))
+(provide 'gnus-notify-)
 
 ;;; gnus-notify.el ends here
