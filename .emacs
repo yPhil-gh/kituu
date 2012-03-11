@@ -1,9 +1,7 @@
-(require 'cl) ; a rare necessary use of REQUIRE
-(defvar *emacs-load-start* (current-time))
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Sun 11-Mar-2012 00:48:33>
+;; Time-stamp: <.emacs - Sun 11-Mar-2012 21:47:15>
 ;; ===========================================================================
-
+  ;; (kill-buffer "*scratch*")
 ;; See https://github.com/xaccrocheur/kituu/
 
 ;; Init
@@ -13,9 +11,7 @@
   ;;   (normal-top-level-add-subdirs-to-load-path))
   (add-to-list 'load-path "~/.emacs.d/lisp/")
   (add-to-list 'load-path "~/.emacs.d/lisp/tabbar/")
-(require 'gnus-notify)
   ;; )
-
 
 ;; (when (file-exists-p "~/.emacs.d/lisp/px.el")
 ;;   (require 'px))
@@ -107,6 +103,12 @@
 
 ;; (if (search ".emacs" buffer-file-name)
 ;;     (message "found!"))
+
+(defun switch-buffer-px ()
+  (interactive)
+  (switch-to-buffer (other-buffer (current-buffer) 1)))
+
+(global-set-key (kbd "s-²") 'switch-buffer-px)
 
 (defun make-backup-dir-px (dirname)
   "create backup dir"
@@ -298,6 +300,7 @@ inside html tags."
 
 (add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)
 
+(setq-default cursor-type 'bar)
 ;; Vars
 (setq
  ;; scroll-preserve-screen-position t
@@ -369,7 +372,7 @@ inside html tags."
 (add-hook 'text-mode-hook 'text-mode-hook-px)
 (add-hook 'gnus-before-startup-hook 'gnus-mode-hook-px)
 (add-hook 'gnus-exit-gnus-hook 'text-mode-hook-px)
-(add-hook 'Info-mode-hook 'info-mode-hook-px)
+(add-hook 'lisp-mode-hook 'info-mode-hook-px)
 
 (add-hook 'flyspell-mode-hook 'flyspell-prog-mode)
 
@@ -482,33 +485,83 @@ inside html tags."
 (global-set-key (kbd "M-²") 'hippie-expand)
 
 
-;; (defun tabbar-buffer-groups ()
-;;   "Return the list of group names the current buffer belongs to.
-;; This function is a custom function for tabbar-mode's tabbar-buffer-groups.
-;; This function groups all buffers into 3 groups:
-;; Those Dired, those user buffer, and those emacs buffer.
-;; Emacs buffer are those starting with “*”."
-;;   (list
-;;    (cond
-;;     ((string-equal "*" (substring (buffer-name) 0 1))
-;;      "Emacs Buffer"
-;;      )
-;;     ((eq major-mode 'dired-mode)
-;;      "Dired"
-;;      )
-;;     (t
-;;      "User Buffer"
-;;      )
-;;     )))
+(defun tabbar-buffer-groups ()
+  "Return the list of group names the current buffer belongs to.
+This function is a custom function for tabbar-mode's tabbar-buffer-groups.
+This function groups all buffers into 3 groups:
+Those Dired, those user buffer, and those emacs buffer.
+Emacs buffer are those starting with “*”."
+  (list
+   (cond
+    ((string-equal "*" (substring (buffer-name) 0 1))
+     "Emacs Buffer"
+     )
+    ((eq major-mode 'dired-mode)
+     "Dired"
+     )
+    (t
+     "User Buffer"
+     )
+    )))
 
-;; (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
+(setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
 
 ;; (global-set-key [C-] 'tabbar-forward)
 ;; (global-set-key [M-s-left] 'tabbar-backward)
 
-;; (global-set-key (kbd "C-<tab>") 'tabbar-forward)
-(defun xsteve-gnus-px ()
-  "Invoke gnus"
+;; ;; (global-set-key (kbd "C-<tab>") 'tabbar-forward)
+;; (defun xsteve-gnus-px ()
+;;   "Invoke gnus"
+;;   (interactive)
+;;   (let ((bufname (buffer-name)))
+;;     (if (or
+;;          (string-equal "*Group*" bufname)
+;;          (string-equal "*BBDB*" bufname)
+;;          (string-match "\*Summary" bufname)
+;;          (string-match "\*Article" bufname))
+;;         (progn
+;;           (xsteve-bury-gnus)
+;; 	  (tabbar-mode t)
+;; 	  (scroll-bar-mode t)
+;; 	  ;; (menu-bar-mode -1)
+;; 	  )
+;;       ;; unbury
+;;       (if (get-buffer "*Group*")
+;;           (progn (xsteve-unbury-gnus)
+;; 		 (tabbar-mode -1)
+;; 		 (scroll-bar-mode -1)
+;; 		 ;; (menu-bar-mode)
+;; 		 )
+;;         (gnus)))))
+
+;; (defun xsteve-unbury-gnus ()
+;;   "Restore gnus in its previous state"
+;;   (interactive)
+;;   (when (and (boundp 'gnus-bury-window-configuration) gnus-bury-window-configuration)
+;;     (set-window-configuration gnus-bury-window-configuration)))
+
+;; (defun xsteve-bury-gnus ()
+;;   "Bury gnus and restore previous buffer"
+;;   (interactive)
+;;   (setq gnus-bury-window-configuration nil)
+;;   (let ((buf nil)
+;;         (bufname nil))
+;;     (dolist (buf (buffer-list))
+;;       (setq bufname (buffer-name buf))
+;;       (when (or
+;;              (string-equal "*Group*" bufname)
+;;              (string-equal "*BBDB*" bufname)
+;;              (string-match "\*Summary" bufname)
+;;              (string-match "\*Article" bufname))
+;;         (unless gnus-bury-window-configuration
+;;           (setq gnus-bury-window-configuration (current-window-configuration)))
+;;         (delete-other-windows)
+;;         (if (eq (current-buffer) buf)
+;;             (bury-buffer)
+;;           (bury-buffer buf))))))
+
+;; (global-set-key [(meta f1)] 'xsteve-gnus-px)
+(defun xsteve-gnus ()
   (interactive)
   (let ((bufname (buffer-name)))
     (if (or
@@ -518,27 +571,24 @@ inside html tags."
          (string-match "\*Article" bufname))
         (progn
           (xsteve-bury-gnus)
-	  (tabbar-mode t)
-	  (scroll-bar-mode t)
-	  ;; (menu-bar-mode -1)
-	  )
-      ;; unbury
+	  (message "back to %s" backbuffer)
+	  (switch-to-buffer backbuffer)
+	  (tabbar-mode t))
+      ;unbury
       (if (get-buffer "*Group*")
-          (progn (xsteve-unbury-gnus)
-		 (tabbar-mode -1)
-		 (scroll-bar-mode -1)
-		 ;; (menu-bar-mode)
-		 )
-        (gnus)))))
+          (progn
+	    (setq backbuffer (buffer-name))
+	    (message "my name is %s" backbuffer)
+	    (xsteve-unbury-gnus)
+		 (tabbar-mode -1))
+        (gnus-unplugged)))))
 
 (defun xsteve-unbury-gnus ()
-  "Restore gnus in its previous state"
   (interactive)
   (when (and (boundp 'gnus-bury-window-configuration) gnus-bury-window-configuration)
     (set-window-configuration gnus-bury-window-configuration)))
 
 (defun xsteve-bury-gnus ()
-  "Bury gnus and restore previous buffer"
   (interactive)
   (setq gnus-bury-window-configuration nil)
   (let ((buf nil)
@@ -557,8 +607,11 @@ inside html tags."
             (bury-buffer)
           (bury-buffer buf))))))
 
-(global-set-key [(meta f1)] 'xsteve-gnus-px)
+(global-set-key [(meta f1)] 'xsteve-gnus)
 
+;;(message "%s" bufname)
+;; (current-buffer)
+;; (switch-to-buffer "olimap.el")
 ;; Save the minibuffer history
 (setq minibuffer_history (concat user-emacs-directory "minibuffer_history"))
 (setq savehist-file minibuffer_history)
@@ -798,6 +851,4 @@ select 'this' or <that> (enclosed)  s-SPC
 ;; 		    :height 1.0)
 
 ;; (setq tabbar-separator '(1)) ;; set tabbar-separator size to 1 pixel
-
-(message "%s loaded in %ds" user-init-file (destructuring-bind (hi lo ms) (current-time)
-				     (- (+ hi lo) (+ (first *emacs-load-start*) (second *emacs-load-start*)))))
+;; (setq backbuffer (buffer-name))

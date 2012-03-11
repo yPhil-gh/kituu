@@ -1,21 +1,22 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Sun 11-Mar-2012 19:27:38>
+;; Time-stamp: <.gnus.el - Sun 11-Mar-2012 20:35:21>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
 ;; (load-library "smtpmail")
 (gnus-demon-init)
-;; (gnus-demon-add-handler 'chk-all 5 nil) ; One minute
+(gnus-demon-add-handler 'chk-all 5 nil) ; 5 minutes
 ;; (gnus-demon-add-rescan)
+
+(require 'olimap)
+(require 'gnus-notify)
+(require 'nnir)
 
 (defun chk-all ()
 "Let gnus read the msgs fetched by offlineimap"
 (message "Chkng...")
-(gnus-demon-scan-news)
+(olimap-run)
 )
-
-(require 'olimap)
-(require 'nnir)
 
 (setq gnus-visual t)
 
