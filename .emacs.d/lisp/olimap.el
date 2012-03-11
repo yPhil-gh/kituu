@@ -1,17 +1,19 @@
 ;; olimap.el
 (defun olimap-check (ol-output-line)
   (if (string-match "terminate" ol-output-line)
-(progn
-      (message "Sync finished on %s" (format-time-string "%Y-%m-%d at %H:%M:%S"))
-      (gnus-demon-scan-news)
-)
-  ;; (when
-  ;;     (string-match "copyingmessage" ol-output-line)
-  ;;   (el-get-notify "New Mail!"
-  ;; 		   (format "In (%s) on account (%s)"
-  ;; 			   (substring ol-output-line ( + (search ":Folder " ol-output-line) 8) (- (search "[acc" ol-output-line) 1))
-  ;; 			   (substring ol-output-line  (+ (search "[acc" ol-output-line) 6) (search "]" ol-output-line :from-end t)))))
-  ))
+      (progn
+	(message "Sync finished on %s" (format-time-string "%Y-%m-%d at %H:%M:%S"))
+	(gnus-demon-scan-news)
+	)
+    (when
+	(string-match "copyingmessage" ol-output-line)
+      (el-get-notify "New Mail!" (format "Mail received at %s on %s" (format-time-string "%H:%M:%S") (substring ol-output-line ( + (search ":Folder " ol-output-line) 8) (- (search "[acc" ol-output-line) 1))))
+      ;; (message "Mail received at %s on %s" (format-time-string "%H:%M:%S") (substring ol-output-line ( + (search ":Folder " ol-output-line) 8) (- (search "[acc" ol-output-line) 1)))
+      ;; (el-get-notify "New Mail!"
+      ;; 		     (format "In (%s) on account (%s)"
+      ;; 			     (substring ol-output-line ( + (search ":Folder " ol-output-line) 8) (- (search "[acc" ol-output-line) 1))
+      ;; 			     (substring ol-output-line  (+ (search "[acc" ol-output-line) 6) (search "]" ol-output-line :from-end t))))
+      )))
 
 (add-hook 'comint-output-filter-functions
           'olimap-check)

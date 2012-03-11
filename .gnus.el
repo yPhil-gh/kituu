@@ -1,11 +1,11 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Sun 11-Mar-2012 21:57:33>
+;; Time-stamp: <.gnus.el - Sun 11-Mar-2012 22:56:15>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
 ;; (load-library "smtpmail")
 (gnus-demon-init)
-(gnus-demon-add-handler 'chk-all 5 nil) ; 5 minutes
+(gnus-demon-add-handler 'chk-all 1 nil) ; 5 minutes
 ;; (gnus-demon-add-rescan)
 
 (require 'olimap)
@@ -13,10 +13,10 @@
 (require 'nnir)
 
 (defun chk-all ()
-"Let gnus read the msgs fetched by offlineimap"
-(message "Chkng...")
-(olimap-run)
-)
+  "Let gnus read the msgs fetched by offlineimap"
+  (message "Chkng...")
+  (olimap-run)
+  )
 
 (setq gnus-visual t)
 
@@ -35,7 +35,7 @@
  ;; gnus-group-line-format " %(%G:%N %M%)\n"
  ;; gnus-group-line-format " %G %N %B\n"
  ;; gnus-group-line-format "%P|%B|%M%o%S%L[%6t|%3i]%6y :%(%~(pad-right 65)g%):%6,6~(cut 2)d\n"
-)
+ )
 
 ;; (defun gnus-user-format-function-j ()
 ;; (message "plop"))
@@ -61,7 +61,7 @@
 ;; Test
 (defun gnus-user-format-function-t (dummy)
   (format "%d" 05)
-)
+  )
 
 ;; Works
 (setq gnus-group-line-format " %(%G:%N %M%)\n")
@@ -208,10 +208,21 @@
   (scroll-bar-mode -1)
   (tabbar-mode -1))
 
+(setq gnus-Select-group-hook
+      '(lambda ()
+         ;; First of all, sort by date.
+         (gnus-sort-headers
+          '(lambda (a b)
+             (gnus-date-lessp (gnus-header-date a)
+                              (gnus-header-date b))))
+	 (scroll-bar-mode -1)
+	 (tabbar-mode -1)
+	 ))
+
 (defun alert-me ()
-(setq inbox "plop")
-(el-get-notify (format "New mail in %s" inbox)
-	       "Click on the mailbox icon to open it"))
+  (setq inbox "plop")
+  (el-get-notify (format "New mail in %s" inbox)
+		 "Click on the mailbox icon to open it"))
 
 (defun skipit ()
   (other-window 1))
@@ -273,22 +284,22 @@
  ;; gnus-summary-line-format "%U%R%z%12&user-date; %(%[%-30,30f%]%) %B %s\n"
 
  gnus-summary-line-format (concat
- 			   "%( %0{%U%R%z%}"
- 			   "%3{│%}" "%1{%10&user-date;%}" "%3{│%}" ;; date
- 			   "%4{%-20,20f%}"               ;; name
- 			   "%3{│%}"
- 			   "%1{%B%}"
-			   "%~(max-right 69)~(pad-right 69)s%)\n"
-			   )
+ "%( %0{%U%R%z%}"
+ "%3{│%}" "%1{%10&user-date;%}" "%3{│%}" ;; date
+ "%4{%-20,20f%}"               ;; name
+ "%3{│%}"
+ "%1{%B%}"
+ "%~(max-right 60)~(pad-right 60)s%)\n"
+ )
 
- ;; gnus-summary-line-format
- ;; (concat "%(%U%R %~(pad-right 2)t%* %12&user-date; %B%~(max-right 30)~(pad-right 30)n  "
- ;; 	 "%~(max-right 50)~(pad-right 10)s%)\n")
+;; gnus-summary-line-format
+;; (concat "%(%U%R %~(pad-right 2)t%* %12&user-date; %B%~(max-right 30)~(pad-right 30)n  "
+;; 	 "%~(max-right 50)~(pad-right 10)s%)\n")
 
 
- ;; gnus-summary-line-format
- ;; (concat "%(%U%R %~(pad-right 2)t%* %12&user-date; %B│%~(max-right 15)~(pad-right 15)n  "
- ;; 	 "%~(max-right 69)~(pad-right 69)s%)\n")
+;; gnus-summary-line-format
+;; (concat "%(%U%R %~(pad-right 2)t%* %12&user-date; %B│%~(max-right 15)~(pad-right 15)n  "
+;; 	 "%~(max-right 69)~(pad-right 69)s%)\n")
 
 
 )
@@ -324,18 +335,6 @@ If all article have been seen, on the subject line of the last article."
 	(forward-line -1))
     (gnus-summary-position-point)))
 (setq gnus-auto-select-subject 'jidanni-gnus-summary-first-unseen-or-last-subject)
-
-;; (setq gnus-summary-line-format
-;;       (concat
-;;        "%( %0{%U%R%z%}"
-;;        "%3{│%}" "%1{%d%}" "%3{│%}" ;; date
-;;        "  "
-;;        "%4{%-20,20f%}"               ;; name
-;;        "  "
-;;        "%3{│%}"
-;;        " "
-;;        "%1{%B%}"
-;;        "%s %)\n"))
 
 (defun Chk-mail-px ()
   "Sync IMAP, Get new mails, update modeline"
@@ -462,3 +461,4 @@ If all article have been seen, on the subject line of the last article."
 ;;     )))
 
 ;; nnmaildir+adamweb:INBOX
+(message "%s loaded" (buffer-file-name))

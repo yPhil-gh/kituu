@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Sun 11-Mar-2012 22:07:52>
+;; Time-stamp: <.emacs - Sun 11-Mar-2012 22:34:42>
 ;; ===========================================================================
   ;; (kill-buffer "*scratch*")
 ;; See https://github.com/xaccrocheur/kituu/
@@ -100,10 +100,6 @@
 ;; (add-hook 'emacs-lisp-mode-hook 'my-emacs-lisp-mode-hook)
 
 
-
-;; (if (search ".emacs" buffer-file-name)
-;;     (message "found!"))
-
 (defun switch-buffer-px ()
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer) 1)))
@@ -116,11 +112,6 @@
     (if (not (file-exists-p dirname))
         (make-directory dirname t)))
 (make-backup-dir-px "~/.bkp/")
-
-;; (defun plop (msg)
-;; (interactive)
-;; (message "the messae is %s" msg))
-;; (plop "yo")
 
 (defun bkp-px ()
   "Write the current buffer to a new file - silently - and append the date+time to the filename, retaining extention"
@@ -795,7 +786,7 @@ select 'this' or <that> (enclosed)  s-SPC
  '(font-lock-variable-name-face ((t (:foreground "#fcaf3e"))))
  '(font-lock-warning-face ((t (:foreground "#ef2929"))))
  '(fringe ((t (:background "#2c2c2c"))))
- '(gnus-summary-selected ((t (:bold t))))
+ '(gnus-summary-selected ((t (:background "orange red" :foreground "black" :weight bold))))
  '(gnus-summary-selected-face ((t (:bold t))) t)
  '(header-line ((t (:background "#555753" :foreground "#ffffff"))))
  '(isearch ((t (:background "#ce5c00" :foreground "#ffffff"))))
