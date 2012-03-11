@@ -31,6 +31,24 @@
 
 ;; Code:
 
+;; (setq inbox "plop")
+
+;; (el-get-notify (format "New mail in %s" inbox)
+;; 		 "Click on the malbox incon to open it")
+
+(copy-face 'font-lock-constant-face 'my-face)
+;; (defface another-face)
+
+;; (set-face-attribute 'my-face nil
+;; 		    :inherit nil
+;; 		    :height 110
+;; 		    :weight 'bold
+;; 		    :background "gray80"
+;; 		    :foreground "black"
+;; 		    :box nil
+;; 		    ;; :family "Lucida Grande"
+;; 		    )
+
 (defvar gnus-notify-show-unread-counts t
   "If true, show the number of unread messages in the modeline in addition to shortened group names.")
 
@@ -114,7 +132,6 @@
 			       (format "[%s %s]"
 				       (gnus-mst-notify-shorten-group-name
 				       (car sublist))
-				       ;; (substring (car sublist) 10 -6)
 				       (gnus-group-unread (car sublist))
 				       )
 			     (format "%s"

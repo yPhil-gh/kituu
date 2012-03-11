@@ -1,12 +1,20 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Sat 10-Mar-2012 20:53:12>
+;; Time-stamp: <.gnus.el - Sun 11-Mar-2012 18:57:54>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
 ;; (load-library "smtpmail")
-(gnus-demon-add-handler 'gnus-demon-scan-news-and-update 1 t) ; One minute
+(gnus-demon-init)
+;; (gnus-demon-add-handler 'chk-all 5 nil) ; One minute
+;; (gnus-demon-add-rescan)
 
-(require 'offlineimap-ctl)
+(defun chk-all ()
+(message "checking...")
+;; (start-offlineimap)
+(gnus-demon-scan-news)
+)
+
+(require 'olimap)
 (require 'nnir)
 
 (setq gnus-visual t)
@@ -21,7 +29,7 @@
 
 (setq
  ;; gnus-group-line-format "%(%M %G %B %)\n"
- ;; gnus-group-line-format "%M%S%p%P%5y:%B%(%g%)\n"
+ ;; gnus-group-line-format " %M%S%p%P%5y:%B%(%g%)\n"
  ;; This one
  ;; gnus-group-line-format " %(%G:%N %M%)\n"
  ;; gnus-group-line-format " %G %N %B\n"
@@ -55,9 +63,7 @@
 )
 
 ;; Works
-(setq
- gnus-group-line-format " %(%G:%N %M%)\n"
-)
+(setq gnus-group-line-format " %(%G:%N %M%)\n")
 
 ;; (setq gnus-topic-line-format "%([%{%n%} %A]%)\n")
 
@@ -128,7 +134,7 @@
           "(% %c %)\n")
 	 (modeline-notify . t)
 	 (visible . t)
-	 (display . all)
+	 (display . 100)
 	 (posting-style
 	  (address "philippe.coatmeur@gmail.com")
 	  (signature "Philippe M. Coatmeur
@@ -201,6 +207,11 @@
   (scroll-bar-mode -1)
   (tabbar-mode -1))
 
+(defun alert-me ()
+(setq inbox "plop")
+(el-get-notify (format "New mail in %s" inbox)
+	       "Click on the mailbox icon to open it"))
+
 (defun skipit ()
   (other-window 1))
 
@@ -222,6 +233,8 @@
 (add-hook 'message-mode-hook 'gnus-hook-px)
 (add-hook 'summary-mode-hook 'gnus-hook-px)
 (add-hook 'gnus-group-mode-hook 'gnus-hook-px)
+
+(add-hook 'nnmaildir-read-incoming-hook 'alert-me)
 
 (add-hook 'gnus-started-hook 'gnus-mst-show-groups-with-new-messages)
 
@@ -330,11 +343,6 @@ If all article have been seen, on the subject line of the last article."
   (gnus-summary-rescan-group 'all)
   ;; (gnus-mst-show-groups-with-new-messages)
   )
-
-(defun plop ()
-(message "plopy"))
-
-(gnus-demon-add-handler 'plop 1 t)
 
 ;; tells gnus to get new mail and also display all old mail
 (define-key gnus-summary-mode-map (kbd "s-m") 'Chk-mail-px)

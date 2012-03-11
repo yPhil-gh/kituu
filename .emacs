@@ -1,7 +1,7 @@
 (require 'cl) ; a rare necessary use of REQUIRE
 (defvar *emacs-load-start* (current-time))
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Sat 10-Mar-2012 18:56:22>
+;; Time-stamp: <.emacs - Sun 11-Mar-2012 00:48:33>
 ;; ===========================================================================
 
 ;; See https://github.com/xaccrocheur/kituu/
@@ -13,7 +13,7 @@
   ;;   (normal-top-level-add-subdirs-to-load-path))
   (add-to-list 'load-path "~/.emacs.d/lisp/")
   (add-to-list 'load-path "~/.emacs.d/lisp/tabbar/")
- (require 'gnus-notify)
+(require 'gnus-notify)
   ;; )
 
 
@@ -71,7 +71,7 @@
 ;; REMEMBER to put your el-get installed packages here, if you want to use this .emacs on another machine
 (setq my-packages
       (append
-       '(linum-off smart-tab php-mode-improved haml-mode)
+       '(linum-off smart-tab php-mode-improved haml-mode tail)
        (mapcar 'el-get-source-name el-get-sources)))
 
 ;; (declare-function tabbar-mode "tabbar.el")
@@ -287,6 +287,17 @@ inside html tags."
 (iswitchb-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
 
+(defun iswitchb-local-keys ()
+  (mapc (lambda (K)
+	  (let* ((key (car K)) (fun (cdr K)))
+	    (define-key iswitchb-mode-map (edmacro-parse-keys key) fun)))
+	'(("<right>" . iswitchb-next-match)
+	  ("<left>"  . iswitchb-prev-match)
+	  ("<up>"    . ignore             )
+	  ("<down>"  . ignore             ))))
+
+(add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)
+
 ;; Vars
 (setq
  ;; scroll-preserve-screen-position t
@@ -423,7 +434,9 @@ inside html tags."
 ;; (define-key global-map [M-f1] 'delete-window)
 (define-key global-map [M-f2] 'swap-buffers-in-windows)
 (define-key global-map [f2] 'other-window)
-(define-key global-map [f3] 'split-window-vertically)
+
+(define-key global-map [f3] 'isearch-forward)
+
 (define-key global-map [f4] 'split-window-horizontally)
 (define-key global-map [f5] 'iswitchb-buffer) ;new way
 (define-key global-map [f7] 'flyspell-buffer)
@@ -714,13 +727,10 @@ select 'this' or <that> (enclosed)  s-SPC
 ;; )
 
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
-
- '(gnus-summary-selected-face ((t (:bold t))))
-
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(default ((t (:background "#2e3436" :foreground "#eeeeec"))))
  '(cursor ((t (:background "#fce94f" :foreground "#2e3436"))))
  '(font-lock-builtin-face ((t (:foreground "#ad7fa8"))))
@@ -733,6 +743,8 @@ select 'this' or <that> (enclosed)  s-SPC
  '(font-lock-variable-name-face ((t (:foreground "#fcaf3e"))))
  '(font-lock-warning-face ((t (:foreground "#ef2929"))))
  '(fringe ((t (:background "#2c2c2c"))))
+ '(gnus-summary-selected ((t (:bold t))))
+ '(gnus-summary-selected-face ((t (:bold t))) t)
  '(header-line ((t (:background "#555753" :foreground "#ffffff"))))
  '(isearch ((t (:background "#ce5c00" :foreground "#ffffff"))))
  '(lazy-highlight ((t (:background "#8f5902"))))
@@ -741,8 +753,9 @@ select 'this' or <that> (enclosed)  s-SPC
  '(minibuffer-prompt ((t (:foreground "#fce94f"))))
  '(mode-line ((t (:background "#777777" :foreground "#000000"))))
  '(mode-line-inactive ((t (:background "#555753" :foreground "#ffffff"))))
- '(region ((t (:background "#555753"))))
-)
+ '(my-face ((t (:foreground "goldenrod" :weight ultra-bold))) t)
+ '(region ((t (:background "#555753")))))
+
 
 ;; Tabbar faces
 (set-face-attribute 'tabbar-default nil
