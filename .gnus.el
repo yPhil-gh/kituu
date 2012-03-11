@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Sun 11-Mar-2012 18:57:54>
+;; Time-stamp: <.gnus.el - Sun 11-Mar-2012 19:27:38>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -9,8 +9,8 @@
 ;; (gnus-demon-add-rescan)
 
 (defun chk-all ()
-(message "checking...")
-;; (start-offlineimap)
+"Let gnus read the msgs fetched by offlineimap"
+(message "Chkng...")
 (gnus-demon-scan-news)
 )
 

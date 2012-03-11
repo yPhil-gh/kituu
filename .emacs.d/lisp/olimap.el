@@ -1,7 +1,10 @@
 ;; olimap.el
 (defun olimap-check (ol-output-line)
   (if (string-match "terminate" ol-output-line)
-      (message "Sync finished on %s" (format-time-string "%Y-%m-%d at %H:%M:%S")))
+(progn
+      (message "Sync finished on %s" (format-time-string "%Y-%m-%d at %H:%M:%S"))
+      (chk-all)
+))
   ;; (when
   ;;     (string-match "copyingmessage" ol-output-line)
   ;;   (el-get-notify "New Mail!"
