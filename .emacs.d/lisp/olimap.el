@@ -7,7 +7,11 @@
 	)
     (when
 	(string-match "copyingmessage" ol-output-line)
-      (el-get-notify "New Mail!" (format "Mail received at %s on %s" (format-time-string "%H:%M:%S") (substring ol-output-line ( + (search ":Folder " ol-output-line) 8) (- (search "[acc" ol-output-line) 1))))
+      (if (require 'el-get nil 'noerror)
+	  (el-get-notify "New Mail!" (format "Mail received at %s on %s" (format-time-string "%H:%M:%S") (substring ol-output-line ( + (search ":Folder " ol-output-line) 8) (- (search "[acc" ol-output-line) 1))))
+	(message "Mail received at %s on %s" (format-time-string "%H:%M:%S") (substring ol-output-line ( + (search ":Folder " ol-output-line) 8) (- (search "[acc" ol-output-line) 1))))
+
+
       ;; (message "Mail received at %s on %s" (format-time-string "%H:%M:%S") (substring ol-output-line ( + (search ":Folder " ol-output-line) 8) (- (search "[acc" ol-output-line) 1)))
       ;; (el-get-notify "New Mail!"
       ;; 		     (format "In (%s) on account (%s)"
