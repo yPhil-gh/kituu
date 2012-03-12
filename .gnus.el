@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Sun 11-Mar-2012 22:56:15>
+;; Time-stamp: <.gnus.el - Sun 11-Mar-2012 23:26:49>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -29,6 +29,16 @@
 ;; (setq gnus-topic-topology '(("Perso" visible) (("Adamweb" visible nil nil)) (("News" visible nil nil))))
 
 (setq
+
+ gnus-summary-line-format (concat
+ "%( %0{%U%R%z%}"
+ "%3{│%}" "%1{%10&user-date;%}" "%3{│%}" ;; date
+ "%4{%-20,20f%}"               ;; name
+ "%3{│%}"
+ "%1{%B%}"
+ "%~(max-right 68)~(pad-right 68)s%)\n"
+ )
+
  ;; gnus-group-line-format "%(%M %G %B %)\n"
  ;; gnus-group-line-format " %M%S%p%P%5y:%B%(%g%)\n"
  ;; This one
@@ -282,15 +292,6 @@
  gnus-sum-thread-tree-single-leaf     "╰─► "
 
  ;; gnus-summary-line-format "%U%R%z%12&user-date; %(%[%-30,30f%]%) %B %s\n"
-
- gnus-summary-line-format (concat
- "%( %0{%U%R%z%}"
- "%3{│%}" "%1{%10&user-date;%}" "%3{│%}" ;; date
- "%4{%-20,20f%}"               ;; name
- "%3{│%}"
- "%1{%B%}"
- "%~(max-right 60)~(pad-right 60)s%)\n"
- )
 
 ;; gnus-summary-line-format
 ;; (concat "%(%U%R %~(pad-right 2)t%* %12&user-date; %B%~(max-right 30)~(pad-right 30)n  "
