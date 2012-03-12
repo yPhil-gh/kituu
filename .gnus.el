@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Sun 11-Mar-2012 23:26:49>
+;; Time-stamp: <.gnus.el - Mon 12-Mar-2012 01:45:39>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -36,7 +36,7 @@
  "%4{%-20,20f%}"               ;; name
  "%3{│%}"
  "%1{%B%}"
- "%~(max-right 68)~(pad-right 68)s%)\n"
+ "%~(max-right 67)~(pad-right 67)s%)\n"
  )
 
  ;; gnus-group-line-format "%(%M %G %B %)\n"

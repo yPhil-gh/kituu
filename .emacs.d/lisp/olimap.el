@@ -38,7 +38,7 @@
 	(gnus-demon-scan-news))
     (when
 	(string-match "copyingmessage" ol-output-line)
-      (setq time-received (format-time-string "%H:%M:%S"))
+      (setq time-received (format-time-string "%Y-%m-%d at %H:%M:%S"))
       (setq mailbox-name
 	    (substring ol-output-line ( + (search ":Folder " ol-output-line) 8)
 		       (- (search "[acc" ol-output-line) 1)))
@@ -48,7 +48,7 @@
 	      (setq mysweetvar (match-string 0 ol-output-line))))
       (if
 	  (require 'el-get nil 'noerror)
-	  (el-get-notify "New Mail! Yiii!" (format "Mail received at %s on %s %s" time-received mailbox-name account-name))
+	  (el-get-notify "New Mail!" (format "Received at %s \n %s %s" time-received mailbox-name account-name))
 	(message "Mail received at %s on %s %s" time-received mailbox-name account-name)))))
 
 (defconst *argx* "-umachineui")

@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Sun 11-Mar-2012 22:34:42>
+;; Time-stamp: <.emacs - Mon 12-Mar-2012 12:41:32>
 ;; ===========================================================================
   ;; (kill-buffer "*scratch*")
 ;; See https://github.com/xaccrocheur/kituu/
@@ -841,5 +841,6 @@ select 'this' or <that> (enclosed)  s-SPC
 ;; 		    :height 1.0)
 
 ;; (setq tabbar-separator '(1)) ;; set tabbar-separator size to 1 pixel
-;; (setq backbuffer (buffer-name))
 (message "%s loaded" (buffer-file-name))
+(switch-to-buffer (create-file-buffer "untitled.txt"))
+(setq backbuffer (buffer-name))
