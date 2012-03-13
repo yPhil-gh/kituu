@@ -61,7 +61,7 @@
  input and output via buffer *olimap*."
   (interactive)
   (message "Sync started on %s" (format-time-string "%Y-%m-%d at %H:%M:%S"))
-  (apply 'make-comint "ofimap" *main* nil
+  (apply 'make-comint "olimap" *main* nil
          (list *argx*)))
 
 (defun olimap-kill ()

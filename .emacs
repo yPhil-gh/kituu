@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Tue 13-Mar-2012 02:36:49>
+;; Time-stamp: <.emacs - Tue 13-Mar-2012 04:07:29>
 ;; ===========================================================================
   ;; (kill-buffer "*scratch*")
 ;; See https://github.com/xaccrocheur/kituu/
@@ -27,8 +27,8 @@
 	  t
 	nil)))
 
-
 (require 'tabbar)
+(require 'cl)
 
 (defvar time-stamp-active)
 (defvar time-stamp-warn-inactive)
@@ -561,6 +561,22 @@ Emacs buffer are those starting with “*”."
 (setq savehist-file minibuffer_history)
 (when (functionp 'savehist-mode) (savehist-mode 1))
 
+(defun kill-boring-buffers-px (regexp &optional internal-too)
+  "Kill buffers whose name matches the specified REGEXP.
+The optional second argument indicates whether to kill internal buffers too."
+  ;; (interactive "sKill buffers matching this regular expression: \nP")
+  (dolist (buffer (buffer-list))
+    (let ((name (buffer-name buffer)))
+      (when (and name (not (string-equal name ""))
+                 (or internal-too (/= (aref name 0) ?\s))
+                 (string-match regexp name))
+        (kill-buffer buffer)))))
+
+(defun kill-boring-buffers ()
+(interactive)
+(kill-boring-buffers-px "*Completions*\\|*Compile-Log*\\|*.*trace\\|*Help*\\|*RE-Builder*\\|Customize"))
+
+
 ;; ;; Kill & copy lines
 (defadvice kill-ring-save (before slick-copy activate compile)
   "When called interactively with no active region, COPY a single line instead."
@@ -749,6 +765,9 @@ select 'this' or <that> (enclosed)  s-SPC
 ;; (set-face-attribute 'default nil :background "black" :foreground "white")
 ;; )
 
+(if (>= emacs-major-version 23)
+(set-default-font "Monospace-12"))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -776,9 +795,12 @@ select 'this' or <that> (enclosed)  s-SPC
  '(minibuffer-prompt ((t (:foreground "#fce94f"))))
  '(mode-line ((t (:background "#777777" :foreground "#000000"))))
  '(mode-line-inactive ((t (:background "#555753" :foreground "#ffffff"))))
- '(my-face ((t (:foreground "goldenrod" :weight ultra-bold))) t)
+ '(my-tushi-face ((t (:foreground "goldenrod" :weight ultra-bold))) t)
  '(region ((t (:background "#555753")))))
 
+
+(set-face-attribute 'my-tushi-face nil
+		    :family "Metal")
 
 ;; Tabbar faces
 (set-face-attribute 'tabbar-default nil

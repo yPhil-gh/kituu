@@ -1,11 +1,11 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Tue 13-Mar-2012 02:50:17>
+;; Time-stamp: <.gnus.el - Tue 13-Mar-2012 03:58:22>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
 ;; (load-library "smtpmail")
 (gnus-demon-init)
-;; (gnus-demon-add-handler 'chk-all 5 nil) ; 5 minutes
+(gnus-demon-add-handler 'chk-all 5 nil) ; 5 minutes
 ;; (gnus-demon-add-rescan)
 
 (require 'olimap)
@@ -14,11 +14,13 @@
 
 (defun chk-all ()
   "Let gnus read the msgs fetched by offlineimap"
+  (interactive)
   (message "Chkng...")
   (olimap-run)
   )
 
 (setq gnus-visual t)
+(setq message-from-style 'angles)
 
 ;; Topics
 (setq gnus-topic-indent-level 0)
@@ -82,17 +84,27 @@
 ;; ))
 )
 
-(
-setq
- gnus-topic-line-format "%([%{%n%} %A]%)\n"
- gnus-group-line-format " %(%* %G:%N %M%)\n"
+(setq gnus-topic-line-format "%i%u&topic-line; %v\n")
+
+;; this corresponds to a topic line format of "%n %A"
+(defun gnus-user-format-function-topic-line (dummy)
+  (let ((topic-face (if (zerop total-number-of-articles)
+			'my-tushi-face
+		      'my-tushi-face)))
+    (propertize
+     (format "%s %d" name total-number-of-articles)
+     'face topic-face)))
+
+(setq
+ ;; gnus-topic-line-format "%{%n%}\n"
+ gnus-group-line-format "%(%* %G %-12y%)\n"
  gnus-summary-line-format (concat
  "%(%* %0{%U%R%z%}"
  "%3{│%}" "%1{%10&user-date;%}" "%3{│%}" ;; date
  "%4{%-20,20f%}"               ;; name
  "%3{│%}"
  "%1{%B%}"
- "%~(max-right 67)~(pad-right 67)s%)\n"))
+ "%~(max-right 55)~(pad-right 55)s%)\n"))
 
  ;; gnus-group-line-format "%(%M %G %B %)\n"
  ;; gnus-group-line-format " %M%S%p%P%5y:%B%(%g%)\n"
@@ -440,7 +452,6 @@ If all article have been seen, on the subject line of the last article."
 
 
 ;; SMTP configs.
-(require 'cl)
 (require 'smtpmail)
 
 
