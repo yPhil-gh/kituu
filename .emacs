@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Mon 12-Mar-2012 12:41:32>
+;; Time-stamp: <.emacs - Tue 13-Mar-2012 02:36:49>
 ;; ===========================================================================
   ;; (kill-buffer "*scratch*")
 ;; See https://github.com/xaccrocheur/kituu/
@@ -18,6 +18,15 @@
 ;; Encryption
 ;; (require 'epa-file)
 ;; (epa-file-enable)
+
+
+(defun this-buffer-is-visible (buffer)
+  "Test if BUFFER is actually on screen"
+  (if (get-buffer buffer)
+      (if (get-buffer-window-list buffer)
+	  t
+	nil)))
+
 
 (require 'tabbar)
 
@@ -474,7 +483,6 @@ inside html tags."
 
 (global-set-key (kbd "M-²") 'hippie-expand)
 
-
 (defun tabbar-buffer-groups ()
   "Return the list of group names the current buffer belongs to.
 This function is a custom function for tabbar-mode's tabbar-buffer-groups.
@@ -496,60 +504,6 @@ Emacs buffer are those starting with “*”."
 
 (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
 
-;; (global-set-key [C-] 'tabbar-forward)
-;; (global-set-key [M-s-left] 'tabbar-backward)
-
-;; ;; (global-set-key (kbd "C-<tab>") 'tabbar-forward)
-;; (defun xsteve-gnus-px ()
-;;   "Invoke gnus"
-;;   (interactive)
-;;   (let ((bufname (buffer-name)))
-;;     (if (or
-;;          (string-equal "*Group*" bufname)
-;;          (string-equal "*BBDB*" bufname)
-;;          (string-match "\*Summary" bufname)
-;;          (string-match "\*Article" bufname))
-;;         (progn
-;;           (xsteve-bury-gnus)
-;; 	  (tabbar-mode t)
-;; 	  (scroll-bar-mode t)
-;; 	  ;; (menu-bar-mode -1)
-;; 	  )
-;;       ;; unbury
-;;       (if (get-buffer "*Group*")
-;;           (progn (xsteve-unbury-gnus)
-;; 		 (tabbar-mode -1)
-;; 		 (scroll-bar-mode -1)
-;; 		 ;; (menu-bar-mode)
-;; 		 )
-;;         (gnus)))))
-
-;; (defun xsteve-unbury-gnus ()
-;;   "Restore gnus in its previous state"
-;;   (interactive)
-;;   (when (and (boundp 'gnus-bury-window-configuration) gnus-bury-window-configuration)
-;;     (set-window-configuration gnus-bury-window-configuration)))
-
-;; (defun xsteve-bury-gnus ()
-;;   "Bury gnus and restore previous buffer"
-;;   (interactive)
-;;   (setq gnus-bury-window-configuration nil)
-;;   (let ((buf nil)
-;;         (bufname nil))
-;;     (dolist (buf (buffer-list))
-;;       (setq bufname (buffer-name buf))
-;;       (when (or
-;;              (string-equal "*Group*" bufname)
-;;              (string-equal "*BBDB*" bufname)
-;;              (string-match "\*Summary" bufname)
-;;              (string-match "\*Article" bufname))
-;;         (unless gnus-bury-window-configuration
-;;           (setq gnus-bury-window-configuration (current-window-configuration)))
-;;         (delete-other-windows)
-;;         (if (eq (current-buffer) buf)
-;;             (bury-buffer)
-;;           (bury-buffer buf))))))
-
 ;; (global-set-key [(meta f1)] 'xsteve-gnus-px)
 (defun xsteve-gnus ()
   (interactive)
@@ -561,14 +515,14 @@ Emacs buffer are those starting with “*”."
          (string-match "\*Article" bufname))
         (progn
           (xsteve-bury-gnus)
-	  (message "back to %s" backbuffer)
-	  (switch-to-buffer backbuffer)
+	  ;; (message "back to %s" backbuffer)
+	  ;; (switch-to-buffer backbuffer)
 	  (tabbar-mode t))
       ;unbury
       (if (get-buffer "*Group*")
           (progn
-	    (setq backbuffer (buffer-name))
-	    (message "my name is %s" backbuffer)
+	    ;; (setq backbuffer (buffer-name))
+	    ;; (message "my name is %s" backbuffer)
 	    (xsteve-unbury-gnus)
 		 (tabbar-mode -1))
         (gnus-unplugged)))))
@@ -646,6 +600,32 @@ Emacs buffer are those starting with “*”."
  '(backup-directory-alist (quote ((".*" . "~/.bkp/"))))
  '(canlock-password "cf5f7a7261c5832898abfc7ea08ba333a36ed78c")
  '(display-time-use-mail-icon t)
+ '(gnus-group-highlight
+   (quote
+    (((this-buffer-is-visible (concat "*Summary " group "*")) . gnus-summary-selected)
+     ((and mailp (= unread 0) (eq level 1)) . gnus-group-mail-1-empty)
+     ((and mailp (eq level 1)) . gnus-group-mail-1)
+     ((and mailp (= unread 0) (eq level 2)) . gnus-group-mail-2-empty)
+     ((and mailp (eq level 2)) . gnus-group-mail-2)
+     ((and mailp (= unread 0) (eq level 3)) . gnus-group-mail-3-empty)
+     ((and mailp (eq level 3)) . gnus-group-mail-3)
+     ((and mailp (= unread 0)) . gnus-group-mail-low-empty)
+     ((and mailp) . gnus-group-mail-low)
+     ((and (= unread 0) (eq level 1)) . gnus-group-news-1-empty)
+     ((and (eq level 1)) . gnus-group-news-1)
+     ((and (= unread 0) (eq level 2)) . gnus-group-news-2-empty)
+     ((and (eq level 2)) . gnus-group-news-2)
+     ((and (= unread 0) (eq level 3)) . gnus-group-news-3-empty)
+     ((and (eq level 3)) . gnus-group-news-3)
+     ((and (= unread 0) (eq level 4)) . gnus-group-news-4-empty)
+     ((and (eq level 4)) . gnus-group-news-4)
+     ((and (= unread 0) (eq level 5)) . gnus-group-news-5-empty)
+     ((and (eq level 5)) . gnus-group-news-5)
+     ((and (= unread 0) (eq level 6)) . gnus-group-news-6-empty)
+     ((and (eq level 6)) . gnus-group-news-6)
+     ((and (= unread 0)) . gnus-group-news-low-empty)
+     (t . gnus-group-news-low))))
+ ;; '(gnus-group-update-group-hook nil)
  '(gnus-read-active-file nil)
  '(inhibit-startup-echo-area-message (user-login-name))
  '(recentf-save-file "~/.bkp/recentf"))
@@ -786,7 +766,7 @@ select 'this' or <that> (enclosed)  s-SPC
  '(font-lock-variable-name-face ((t (:foreground "#fcaf3e"))))
  '(font-lock-warning-face ((t (:foreground "#ef2929"))))
  '(fringe ((t (:background "#2c2c2c"))))
- '(gnus-summary-selected ((t (:background "orange red" :foreground "black" :weight bold))))
+ '(gnus-summary-selected ((t (:background "dark red" :weight bold))))
  '(gnus-summary-selected-face ((t (:bold t))) t)
  '(header-line ((t (:background "#555753" :foreground "#ffffff"))))
  '(isearch ((t (:background "#ce5c00" :foreground "#ffffff"))))
@@ -842,5 +822,5 @@ select 'this' or <that> (enclosed)  s-SPC
 
 ;; (setq tabbar-separator '(1)) ;; set tabbar-separator size to 1 pixel
 (message "%s loaded" (buffer-file-name))
-(switch-to-buffer (create-file-buffer "untitled.txt"))
+;; (switch-to-buffer (create-file-buffer "untitled.el"))
 (setq backbuffer (buffer-name))

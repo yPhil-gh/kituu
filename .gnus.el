@@ -1,11 +1,11 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Mon 12-Mar-2012 01:45:39>
+;; Time-stamp: <.gnus.el - Tue 13-Mar-2012 02:50:17>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
 ;; (load-library "smtpmail")
 (gnus-demon-init)
-(gnus-demon-add-handler 'chk-all 1 nil) ; 5 minutes
+;; (gnus-demon-add-handler 'chk-all 5 nil) ; 5 minutes
 ;; (gnus-demon-add-rescan)
 
 (require 'olimap)
@@ -23,21 +23,76 @@
 ;; Topics
 (setq gnus-topic-indent-level 0)
 (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
+
+ ;; (add-hook gnus-select-group-hook
+ ;; 	   (lambda ()
+ ;; 	 (gnus-group-get-new-news)))
+
+;; (setq gnus-select-group-hook
+;;       '(lambda ()
+;; (message "hook on")
+;; (gnus-group-get-new-news)))
+
+(setq gnus-select-group-hook
+      '(lambda ()
+	 (if (this-buffer-is-visible "*Group*")
+	     (progn
+	       (message "hookin")
+	       (tabbar-mode -1)
+	       (sit-for 0.1)
+	       (gnus-group-get-new-news)))))
+
+(setq gnus-article-prepare-hook
+      '(lambda ()
+	 (if (this-buffer-is-visible "*Group*")
+	     (progn
+	       (message "hookin")
+	       (tabbar-mode -1)
+	       (sit-for 0.1)
+	       (gnus-group-get-new-news)))))
+
+(setq gnus-select-article-hook
+      '(lambda ()
+	 (if (this-buffer-is-visible "*Group*")
+	     (progn
+	       (message "hookin")
+	       (tabbar-mode -1)
+	       (sit-for 0.1)
+	       (gnus-group-get-new-news)))))
+
 ;; (setq gnus-permanently-visible-groups ".*")
 ;; (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
 
 ;; (setq gnus-topic-topology '(("Perso" visible) (("Adamweb" visible nil nil)) (("News" visible nil nil))))
 
-(setq
 
+;; (if (string-match "z" "z") "●" "◯")
+
+;; (nth 0 (buffer-list (car (visible-frame-list))))
+
+(defun gnus-user-format-function-j (dummy)
+  ;; (if (string-match "z" "z") "●" "◯")
+  (format "(%s) (%s)" (nth 0 (buffer-list (car (visible-frame-list)))) (nth 1 (buffer-list (car (visible-frame-list)))))
+  ;; (substring headers 0 5)
+  ;; (setq plop (nth 0 (buffer-list (car (visible-frame-list)))))
+
+ ;;  (let ((to (gnus-extra-header 'To headers)))
+;;     (if (string-match "z" to)
+;; 	(setq plop "plop")
+;; ))
+)
+
+(
+setq
+ gnus-topic-line-format "%([%{%n%} %A]%)\n"
+ gnus-group-line-format " %(%* %G:%N %M%)\n"
  gnus-summary-line-format (concat
- "%( %0{%U%R%z%}"
+ "%(%* %0{%U%R%z%}"
  "%3{│%}" "%1{%10&user-date;%}" "%3{│%}" ;; date
  "%4{%-20,20f%}"               ;; name
  "%3{│%}"
  "%1{%B%}"
- "%~(max-right 67)~(pad-right 67)s%)\n"
- )
+ "%~(max-right 67)~(pad-right 67)s%)\n"))
 
  ;; gnus-group-line-format "%(%M %G %B %)\n"
  ;; gnus-group-line-format " %M%S%p%P%5y:%B%(%g%)\n"
@@ -45,7 +100,14 @@
  ;; gnus-group-line-format " %(%G:%N %M%)\n"
  ;; gnus-group-line-format " %G %N %B\n"
  ;; gnus-group-line-format "%P|%B|%M%o%S%L[%6t|%3i]%6y :%(%~(pad-right 65)g%):%6,6~(cut 2)d\n"
- )
+
+;; Test
+(defun gnus-user-format-function-t (dummy)
+  (format "%d" 05)
+  )
+
+;; Works
+;; (setq gnus-group-line-format " %(%G:%N %M%)\n")
 
 ;; (defun gnus-user-format-function-j ()
 ;; (message "plop"))
@@ -67,14 +129,6 @@
 ;; (defun gnus-user-format-function-x (header)
 ;; (setq plop header)
 ;; )
-
-;; Test
-(defun gnus-user-format-function-t (dummy)
-  (format "%d" 05)
-  )
-
-;; Works
-(setq gnus-group-line-format " %(%G:%N %M%)\n")
 
 ;; (setq gnus-topic-line-format "%([%{%n%} %A]%)\n")
 
@@ -191,9 +245,9 @@
  user-mail-address "philippe.coatmeur@gmail.com"
  user-full-name "Philippe M. Coatmeur"
  gnus-always-force-window-configuration t
- ;; gnus-read-active-file nil
+ gnus-read-active-file nil
  mm-inline-large-images t
- gnus-always-read-dribble-file t
+ gnus-always-read-dribble-file nil
  gnus-show-threads t
  gnus-use-cross-reference nil
  gnus-nov-is-evil nil
@@ -410,7 +464,7 @@ If all article have been seen, on the subject line of the last article."
 (gnus-add-configuration
  '(article
    (horizontal 1.0
-               (vertical 24 (group 1.0))
+               (vertical 22 (group 1.0))
                (vertical 1.0
                          (summary 0.35 point)
                          (article 1.0)))))
@@ -418,7 +472,7 @@ If all article have been seen, on the subject line of the last article."
 (gnus-add-configuration
  '(summary
    (horizontal 1.0
-               (vertical 24 (group 1.0))
+               (vertical 22 (group 1.0))
                (vertical 1.0 (summary 1.0 point)))))
 
 ;; Enable mailinglist support
