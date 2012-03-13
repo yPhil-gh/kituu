@@ -57,4 +57,15 @@ if [ ! -e $lispdir/offlineimap.el ]
     cp -v offlineimap-el/offlineimap.el . && rm -rf offlineimap-el/* && rm -rfv $lispdir/offlineimap-el/ && echo -e $sep"...Done."
 fi
 
+if [ ! -e $lispdir/gnus-harvest.el ]
+  then
+    echo -e $sep"Installing gnus-harvest.el in $lispdir/"
+    cd $lispdir && git clone https://github.com/jwiegley/gnus-harvest.git
+    cp -v offlineimap-el/gnus-harvest.el . && rm -rf gnus-harvest/* && rm -rfv $lispdir/gnus-harvest/ && echo -e $sep"...Done."
+fi
 
+if [ ! -e $lispdir/offlineimap.el ]
+  then
+    echo -e $sep"Installing message-x.el in $lispdir/"
+    cd $lispdir && curl -# -O http://www.emacswiki.org/cgi-bin/wiki/download/message-x.el && echo -e $sep"...Done."
+fi
