@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Tue 13-Mar-2012 20:10:20>
+;; Time-stamp: <.emacs - Tue 13-Mar-2012 23:00:06>
 ;; ===========================================================================
   ;; (kill-buffer "*scratch*")
 ;; See https://github.com/xaccrocheur/kituu/
@@ -26,6 +26,10 @@
       (if (get-buffer-window-list buffer)
 	  t
 	nil)))
+
+(eval-after-load "gnus"
+  '(progn (require 'gnus-harvest)
+	  (gnus-harvest-install 'message-x)))
 
 (require 'tabbar)
 (require 'cl)
@@ -153,13 +157,13 @@
        (buffer-file-name x))
      (buffer-list)))))
 
-(defun fullscreen-px ()
+(defun Fullscreen-px ()
   "Maximize the current frame (to full screen)"
   (interactive)
   (x-send-client-message nil 0 nil "_NET_WM_STATE" 32 '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0))
   (x-send-client-message nil 0 nil "_NET_WM_STATE" 32 '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0)))
 
-(defun google-that-bitch-px (start end)
+(defun Google-that-bitch-px (start end)
   "Google selected string"
   (interactive "r")
   (let ((q (buffer-substring-no-properties start end)))
@@ -182,13 +186,6 @@
     (set-window-buffer this other-buffer)
     )
   )
-
-(defun kill-other-buffers-px ()
-  "Kill all other buffers."
-  (interactive)
-  (mapc 'kill-buffer
-	(delq (current-buffer)
-	      (remove-if-not 'buffer-file-name (buffer-list)))))
 
 (defun select-text-in-quote-px ()
   "Select text between the nearest left and right delimiters.
@@ -437,6 +434,7 @@ inside html tags."
 ;; (define-key global-map [M-f1] 'delete-window)
 (define-key global-map [M-f2] 'swap-buffers-in-windows)
 (define-key global-map [f2] 'other-window)
+(define-key global-map [f11] 'Fullscreen-px)
 
 (define-key global-map [s-kp-0] 'zzzap)
 
@@ -513,13 +511,14 @@ Emacs buffer are those starting with “*”."
 
 
 ;; Toggle gnus
-(define-key emacs-lisp-mode-map [(meta f1)]
+(define-key global-map [(meta f1)]
   '(lambda() (interactive)
      (setq px-no-gnus-window-configuration (current-window-configuration))
      (if (get-buffer "*Group*")
 	 (progn
 	   (set-window-configuration px-gnus-window-configuration)
-	   (tabbar-mode -1))
+	   (tabbar-mode -1)
+	   (scroll-bar-mode -1))
        (gnus-unplugged))))
 
 (eval-after-load "gnus-group"
@@ -528,9 +527,8 @@ Emacs buffer are those starting with “*”."
        '(lambda() (interactive)
 	  (setq px-gnus-window-configuration (current-window-configuration))
 	  (set-window-configuration px-no-gnus-window-configuration)
-	  (tabbar-mode t)))))
-
-(define-key emacs-lisp-mode-map [(meta f1)] 'toggle-gnus-px)
+	  (tabbar-mode t)
+	  (scroll-bar-mode -1)))))
 
 ;; Save the minibuffer history
 (setq minibuffer_history (concat user-emacs-directory "minibuffer_history"))
