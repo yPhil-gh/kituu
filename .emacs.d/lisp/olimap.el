@@ -1,6 +1,5 @@
 ;;; olimap.el --- Control & monitor Offlineimap
 
-
 ;; Copyright (C) 2011 Philippe M. Coatmeur
 
 ;; Author: Philippe M. Coatmeur <philippe.coatmeur@gmail.com>
