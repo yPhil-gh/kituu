@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Tue 13-Mar-2012 04:07:29>
+;; Time-stamp: <.emacs - Tue 13-Mar-2012 04:10:52>
 ;; ===========================================================================
   ;; (kill-buffer "*scratch*")
 ;; See https://github.com/xaccrocheur/kituu/
@@ -575,7 +575,6 @@ The optional second argument indicates whether to kill internal buffers too."
 (defun kill-boring-buffers ()
 (interactive)
 (kill-boring-buffers-px "*Completions*\\|*Compile-Log*\\|*.*trace\\|*Help*\\|*RE-Builder*\\|Customize"))
-
 
 ;; ;; Kill & copy lines
 (defadvice kill-ring-save (before slick-copy activate compile)
