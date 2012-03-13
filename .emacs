@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Tue 13-Mar-2012 04:10:52>
+;; Time-stamp: <.emacs - Tue 13-Mar-2012 20:10:20>
 ;; ===========================================================================
   ;; (kill-buffer "*scratch*")
 ;; See https://github.com/xaccrocheur/kituu/
@@ -76,7 +76,7 @@
 ;; REMEMBER to put your el-get installed packages here, if you want to use this .emacs on another machine
 (setq my-packages
       (append
-       '(linum-off smart-tab php-mode-improved haml-mode tail)
+       '(linum-off smart-tab php-mode-improved haml-mode cperl-mode tail)
        (mapcar 'el-get-source-name el-get-sources)))
 
 ;; (declare-function tabbar-mode "tabbar.el")
@@ -303,6 +303,7 @@ inside html tags."
 (setq-default cursor-type 'bar)
 ;; Vars
 (setq
+ iswitchb-buffer-ignore '("^ " "*.")
  ;; scroll-preserve-screen-position t
  ;; scroll-up-aggressively 0.1
  ;; scroll-down-aggressively 0.5
@@ -437,6 +438,12 @@ inside html tags."
 (define-key global-map [M-f2] 'swap-buffers-in-windows)
 (define-key global-map [f2] 'other-window)
 
+(define-key global-map [s-kp-0] 'zzzap)
+
+(defun zzzap ()
+(interactive)
+(other-window 1))
+
 (define-key global-map [f3] 'isearch-forward)
 
 (define-key global-map [f4] 'split-window-horizontally)
@@ -504,58 +511,27 @@ Emacs buffer are those starting with “*”."
 
 (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
 
-;; (global-set-key [(meta f1)] 'xsteve-gnus-px)
-(defun xsteve-gnus ()
-  (interactive)
-  (let ((bufname (buffer-name)))
-    (if (or
-         (string-equal "*Group*" bufname)
-         (string-equal "*BBDB*" bufname)
-         (string-match "\*Summary" bufname)
-         (string-match "\*Article" bufname))
-        (progn
-          (xsteve-bury-gnus)
-	  ;; (message "back to %s" backbuffer)
-	  ;; (switch-to-buffer backbuffer)
-	  (tabbar-mode t))
-      ;unbury
-      (if (get-buffer "*Group*")
-          (progn
-	    ;; (setq backbuffer (buffer-name))
-	    ;; (message "my name is %s" backbuffer)
-	    (xsteve-unbury-gnus)
-		 (tabbar-mode -1))
-        (gnus-unplugged)))))
 
-(defun xsteve-unbury-gnus ()
-  (interactive)
-  (when (and (boundp 'gnus-bury-window-configuration) gnus-bury-window-configuration)
-    (set-window-configuration gnus-bury-window-configuration)))
+;; Toggle gnus
+(define-key emacs-lisp-mode-map [(meta f1)]
+  '(lambda() (interactive)
+     (setq px-no-gnus-window-configuration (current-window-configuration))
+     (if (get-buffer "*Group*")
+	 (progn
+	   (set-window-configuration px-gnus-window-configuration)
+	   (tabbar-mode -1))
+       (gnus-unplugged))))
 
-(defun xsteve-bury-gnus ()
-  (interactive)
-  (setq gnus-bury-window-configuration nil)
-  (let ((buf nil)
-        (bufname nil))
-    (dolist (buf (buffer-list))
-      (setq bufname (buffer-name buf))
-      (when (or
-             (string-equal "*Group*" bufname)
-             (string-equal "*BBDB*" bufname)
-             (string-match "\*Summary" bufname)
-             (string-match "\*Article" bufname))
-        (unless gnus-bury-window-configuration
-          (setq gnus-bury-window-configuration (current-window-configuration)))
-        (delete-other-windows)
-        (if (eq (current-buffer) buf)
-            (bury-buffer)
-          (bury-buffer buf))))))
+(eval-after-load "gnus-group"
+  '(progn
+     (define-key gnus-summary-mode-map [(meta f1)]
+       '(lambda() (interactive)
+	  (setq px-gnus-window-configuration (current-window-configuration))
+	  (set-window-configuration px-no-gnus-window-configuration)
+	  (tabbar-mode t)))))
 
-(global-set-key [(meta f1)] 'xsteve-gnus)
+(define-key emacs-lisp-mode-map [(meta f1)] 'toggle-gnus-px)
 
-;;(message "%s" bufname)
-;; (current-buffer)
-;; (switch-to-buffer "olimap.el")
 ;; Save the minibuffer history
 (setq minibuffer_history (concat user-emacs-directory "minibuffer_history"))
 (setq savehist-file minibuffer_history)
@@ -574,7 +550,7 @@ The optional second argument indicates whether to kill internal buffers too."
 
 (defun kill-boring-buffers ()
 (interactive)
-(kill-boring-buffers-px "*Completions*\\|*Compile-Log*\\|*.*trace\\|*Help*\\|*RE-Builder*\\|Customize"))
+(kill-boring-buffers-px "*Completions*\\|*Compile-Log*\\|*.*trace\\|*Help*\\|*RE-Builder*\\|Customize\\|\\.newsrc-dribble\\|*olimap*\\|.*el\\.gz"))
 
 ;; ;; Kill & copy lines
 (defadvice kill-ring-save (before slick-copy activate compile)
@@ -615,32 +591,7 @@ The optional second argument indicates whether to kill internal buffers too."
  '(backup-directory-alist (quote ((".*" . "~/.bkp/"))))
  '(canlock-password "cf5f7a7261c5832898abfc7ea08ba333a36ed78c")
  '(display-time-use-mail-icon t)
- '(gnus-group-highlight
-   (quote
-    (((this-buffer-is-visible (concat "*Summary " group "*")) . gnus-summary-selected)
-     ((and mailp (= unread 0) (eq level 1)) . gnus-group-mail-1-empty)
-     ((and mailp (eq level 1)) . gnus-group-mail-1)
-     ((and mailp (= unread 0) (eq level 2)) . gnus-group-mail-2-empty)
-     ((and mailp (eq level 2)) . gnus-group-mail-2)
-     ((and mailp (= unread 0) (eq level 3)) . gnus-group-mail-3-empty)
-     ((and mailp (eq level 3)) . gnus-group-mail-3)
-     ((and mailp (= unread 0)) . gnus-group-mail-low-empty)
-     ((and mailp) . gnus-group-mail-low)
-     ((and (= unread 0) (eq level 1)) . gnus-group-news-1-empty)
-     ((and (eq level 1)) . gnus-group-news-1)
-     ((and (= unread 0) (eq level 2)) . gnus-group-news-2-empty)
-     ((and (eq level 2)) . gnus-group-news-2)
-     ((and (= unread 0) (eq level 3)) . gnus-group-news-3-empty)
-     ((and (eq level 3)) . gnus-group-news-3)
-     ((and (= unread 0) (eq level 4)) . gnus-group-news-4-empty)
-     ((and (eq level 4)) . gnus-group-news-4)
-     ((and (= unread 0) (eq level 5)) . gnus-group-news-5-empty)
-     ((and (eq level 5)) . gnus-group-news-5)
-     ((and (= unread 0) (eq level 6)) . gnus-group-news-6-empty)
-     ((and (eq level 6)) . gnus-group-news-6)
-     ((and (= unread 0)) . gnus-group-news-low-empty)
-     (t . gnus-group-news-low))))
- ;; '(gnus-group-update-group-hook nil)
+ '(gnus-group-highlight (quote (((this-buffer-is-visible (concat "*Summary " group "*")) . gnus-summary-selected) ((and mailp (= unread 0) (eq level 1)) . gnus-group-mail-1-empty) ((and mailp (eq level 1)) . gnus-group-mail-1) ((and mailp (= unread 0) (eq level 2)) . gnus-group-mail-2-empty) ((and mailp (eq level 2)) . gnus-group-mail-2) ((and mailp (= unread 0) (eq level 3)) . gnus-group-mail-3-empty) ((and mailp (eq level 3)) . gnus-group-mail-3) ((and mailp (= unread 0)) . gnus-group-mail-low-empty) ((and mailp) . gnus-group-mail-low) ((and (= unread 0) (eq level 1)) . gnus-group-news-1-empty) ((and (eq level 1)) . gnus-group-news-1) ((and (= unread 0) (eq level 2)) . gnus-group-news-2-empty) ((and (eq level 2)) . gnus-group-news-2) ((and (= unread 0) (eq level 3)) . gnus-group-news-3-empty) ((and (eq level 3)) . gnus-group-news-3) ((and (= unread 0) (eq level 4)) . gnus-group-news-4-empty) ((and (eq level 4)) . gnus-group-news-4) ((and (= unread 0) (eq level 5)) . gnus-group-news-5-empty) ((and (eq level 5)) . gnus-group-news-5) ((and (= unread 0) (eq level 6)) . gnus-group-news-6-empty) ((and (eq level 6)) . gnus-group-news-6) ((and (= unread 0)) . gnus-group-news-low-empty) (t . gnus-group-news-low))))
  '(gnus-read-active-file nil)
  '(inhibit-startup-echo-area-message (user-login-name))
  '(recentf-save-file "~/.bkp/recentf"))
@@ -784,6 +735,7 @@ select 'this' or <that> (enclosed)  s-SPC
  '(font-lock-variable-name-face ((t (:foreground "#fcaf3e"))))
  '(font-lock-warning-face ((t (:foreground "#ef2929"))))
  '(fringe ((t (:background "#2c2c2c"))))
+ '(gnus-summary-normal-unread ((t (:weight bold))))
  '(gnus-summary-selected ((t (:background "dark red" :weight bold))))
  '(gnus-summary-selected-face ((t (:bold t))) t)
  '(header-line ((t (:background "#555753" :foreground "#ffffff"))))

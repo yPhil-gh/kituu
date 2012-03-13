@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Tue 13-Mar-2012 03:58:22>
+;; Time-stamp: <.gnus.el - Tue 13-Mar-2012 20:05:33>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -19,6 +19,56 @@
   (olimap-run)
   )
 
+(defun full-frame-iswitchb ()
+  "*full frame"
+  (interactive)
+  (defadvice iswitchb (after iswitchb activate)
+    (delete-other-windows)))
+
+(add-hook 'gnus-group-mode-hook 'full-frame-iswitchb)
+
+;; From and to fields
+(defvar my-email-addresses
+  '("contact@adamweb.net"
+    "philippe.coatmeur@gmail.com"))
+
+(let ((addr my-email-addresses))
+  (setq-default
+   user-mail-address (car addr)
+   message-alternative-emails (regexp-opt (cdr addr) 'words)
+   message-dont-reply-to-names (regexp-opt addr 'words)
+   gnus-ignored-from-addresses message-dont-reply-to-names))
+
+;; The cycling functionality
+(add-hook 'message-mode-hook 'my-message-mode-hook)
+
+(defun my-message-mode-hook ()
+  (define-key message-mode-map (kbd "<f9>")
+    'my-message-toggle-from))
+
+(defun my-message-toggle-from ()
+  (interactive)
+  (require 'mail-extr)
+  (let* ((current (nth 1 (mail-extract-address-components
+			  (message-fetch-field "From"))))
+	 (next (or (nth 1 (member current my-email-addresses))
+		   (nth 0 my-email-addresses))))
+
+    (when (and current next)
+      (save-excursion
+	(save-restriction
+	  (message-narrow-to-head)
+	  (save-match-data
+	    (when (re-search-forward "^From: " nil t)
+	      (message-narrow-to-field)
+	      (delete-region (point-min) (point-max))
+	      (insert "From: " user-full-name " <" next ">\n"))))))))
+
+;; (setq gnus-ignored-from-addresses "philippe\\.coatmeur@gmail.com\\|adamweb\\.net")
+
+;; (setq gnus-ignored-from-addresses
+;;       "schua@ateneo.edu\\|sacha@free.net.ph\\|sachachua.com\\|sachac@ca.ibm.com")
+
 (setq gnus-visual t)
 (setq message-from-style 'angles)
 
@@ -26,32 +76,19 @@
 (setq gnus-topic-indent-level 0)
 (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
 
- ;; (add-hook gnus-select-group-hook
- ;; 	   (lambda ()
- ;; 	 (gnus-group-get-new-news)))
-
-;; (setq gnus-select-group-hook
-;;       '(lambda ()
-;; (message "hook on")
-;; (gnus-group-get-new-news)))
+;; (gnus-group-list-groups)
 
 (setq gnus-select-group-hook
       '(lambda ()
 	 (if (this-buffer-is-visible "*Group*")
 	     (progn
-	       (message "hookin")
-	       (tabbar-mode -1)
-	       (sit-for 0.1)
-	       (gnus-group-get-new-news)))))
+	       (sit-for 0.5)
+	       (gnus-group-list-groups)))))
 
 (setq gnus-article-prepare-hook
       '(lambda ()
 	 (if (this-buffer-is-visible "*Group*")
-	     (progn
-	       (message "hookin")
-	       (tabbar-mode -1)
-	       (sit-for 0.1)
-	       (gnus-group-get-new-news)))))
+	     (gnus-group-list-groups))))
 
 (setq gnus-select-article-hook
       '(lambda ()
@@ -61,6 +98,9 @@
 	       (tabbar-mode -1)
 	       (sit-for 0.1)
 	       (gnus-group-get-new-news)))))
+
+(defadvice gnus-topic-select-group (before save-buffer-now activate)
+  (when buffer-file-name (save-buffer)))
 
 ;; (setq gnus-permanently-visible-groups ".*")
 ;; (add-hook 'gnus-select-group-hook 'gnus-group-set-timestamp)
@@ -228,7 +268,7 @@
 	 (visible . t)
 	 (modeline-notify . t))
 
-	("nnmaildir\\+gmail"
+	("gmail"
 	 ;; (display . all)
 	 ;; (modeline-notify . t)
 	 (posting-style
@@ -238,7 +278,7 @@
 	  (name "Philippe M. Coatmeur")
 	  ))
 
-	("nnmaildir\\+adamweb"
+	("adamweb"
 	 ;; (display . all)
 	 (posting-style
 	  (address "contact@adamweb.net")
@@ -253,9 +293,10 @@
 
 ;; Vars
 (setq
- gnus-large-newsgroup 'nil
- user-mail-address "philippe.coatmeur@gmail.com"
- user-full-name "Philippe M. Coatmeur"
+ gnus-fetch-old-headers t
+ gnus-large-newsgroup nil
+ ;; user-mail-address "philippe.coatmeur@gmail.com"
+ ;; user-full-name "Philippe M. Coatmeur"
  gnus-always-force-window-configuration t
  gnus-read-active-file nil
  mm-inline-large-images t
@@ -265,10 +306,7 @@
  gnus-nov-is-evil nil
  gnus-check-new-newsgroups nil
  gnus-check-bogus-newsgroups nil
- gnus-no-groups-message "No news is terrrible news"
- ;; gnus-group-line-format  "%M%5y:%B%(%G%)\n"
- ;; gnus-group-line-format  " %y:%B%(%G%)\n"
- ;; gnus-group-line-format  "%B%(%G%)\n"
+ gnus-no-groups-message "No news is good news"
  gnus-save-newsrc-file t
  gnus-agent-go-online t
  gnus-agent-queue-mail nil
@@ -471,6 +509,18 @@ If all article have been seen, on the subject line of the last article."
       smtpmail-smtp-service 587
       smtpmail-starttls-credentials '(("imap.gmail.com" 587 nil nil)))
 
+(gnus-add-configuration
+ '(group
+   (horizontal 1.0
+               (vertical 22 (group 1.0 point))
+               (vertical 1.0 (summary 1.0)))))
+
+(gnus-add-configuration
+ '(summary
+   (horizontal 1.0
+               (vertical 22 (group 1.0))
+               (vertical 1.0 (summary 1.0 point)))))
+
 ;; Window configuration - http://gnus.org/manual/gnus_289.html
 (gnus-add-configuration
  '(article
@@ -479,12 +529,6 @@ If all article have been seen, on the subject line of the last article."
                (vertical 1.0
                          (summary 0.35 point)
                          (article 1.0)))))
-
-(gnus-add-configuration
- '(summary
-   (horizontal 1.0
-               (vertical 22 (group 1.0))
-               (vertical 1.0 (summary 1.0 point)))))
 
 ;; Enable mailinglist support
 ;; (when (fboundp 'turn-on-gnus-mailing-list-mode)
