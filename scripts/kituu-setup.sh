@@ -61,7 +61,7 @@ if [ ! -e $lispdir/gnus-harvest.el ]
   then
     echo -e $sep"Installing gnus-harvest.el in $lispdir/"
     cd $lispdir && git clone https://github.com/jwiegley/gnus-harvest.git
-    cp -v offlineimap-el/gnus-harvest.el . && rm -rf gnus-harvest/* && rm -rfv $lispdir/gnus-harvest/ && echo -e $sep"...Done."
+    cp -v gnus-harvest/gnus-harvest.el . && rm -rf gnus-harvest/* && rm -rfv $lispdir/gnus-harvest/ && echo -e $sep"...Done."
 fi
 
 if [ ! -e $lispdir/offlineimap.el ]
