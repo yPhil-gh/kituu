@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Tue 13-Mar-2012 20:05:33>
+;; Time-stamp: <.gnus.el - Thu 15-Mar-2012 09:32:20>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -27,42 +27,42 @@
 
 (add-hook 'gnus-group-mode-hook 'full-frame-iswitchb)
 
-;; From and to fields
-(defvar my-email-addresses
-  '("contact@adamweb.net"
-    "philippe.coatmeur@gmail.com"))
+;; ;; From and to fields
+;; (defvar my-email-addresses
+;;   '("contact@adamweb.net"
+;;     "philippe.coatmeur@gmail.com"))
 
-(let ((addr my-email-addresses))
-  (setq-default
-   user-mail-address (car addr)
-   message-alternative-emails (regexp-opt (cdr addr) 'words)
-   message-dont-reply-to-names (regexp-opt addr 'words)
-   gnus-ignored-from-addresses message-dont-reply-to-names))
+;; (let ((addr my-email-addresses))
+;;   (setq-default
+;;    user-mail-address (car addr)
+;;    message-alternative-emails (regexp-opt (cdr addr) 'words)
+;;    message-dont-reply-to-names (regexp-opt addr 'words)
+;;    gnus-ignored-from-addresses message-dont-reply-to-names))
 
-;; The cycling functionality
-(add-hook 'message-mode-hook 'my-message-mode-hook)
+;; ;; The cycling functionality
+;; (add-hook 'message-mode-hook 'my-message-mode-hook)
 
-(defun my-message-mode-hook ()
-  (define-key message-mode-map (kbd "<f9>")
-    'my-message-toggle-from))
+;; (defun my-message-mode-hook ()
+;;   (define-key message-mode-map (kbd "<f9>")
+;;     'my-message-toggle-from))
 
-(defun my-message-toggle-from ()
-  (interactive)
-  (require 'mail-extr)
-  (let* ((current (nth 1 (mail-extract-address-components
-			  (message-fetch-field "From"))))
-	 (next (or (nth 1 (member current my-email-addresses))
-		   (nth 0 my-email-addresses))))
+;; (defun my-message-toggle-from ()
+;;   (interactive)
+;;   (require 'mail-extr)
+;;   (let* ((current (nth 1 (mail-extract-address-components
+;; 			  (message-fetch-field "From"))))
+;; 	 (next (or (nth 1 (member current my-email-addresses))
+;; 		   (nth 0 my-email-addresses))))
 
-    (when (and current next)
-      (save-excursion
-	(save-restriction
-	  (message-narrow-to-head)
-	  (save-match-data
-	    (when (re-search-forward "^From: " nil t)
-	      (message-narrow-to-field)
-	      (delete-region (point-min) (point-max))
-	      (insert "From: " user-full-name " <" next ">\n"))))))))
+;;     (when (and current next)
+;;       (save-excursion
+;; 	(save-restriction
+;; 	  (message-narrow-to-head)
+;; 	  (save-match-data
+;; 	    (when (re-search-forward "^From: " nil t)
+;; 	      (message-narrow-to-field)
+;; 	      (delete-region (point-min) (point-max))
+;; 	      (insert "From: " user-full-name " <" next ">\n"))))))))
 
 ;; (setq gnus-ignored-from-addresses "philippe\\.coatmeur@gmail.com\\|adamweb\\.net")
 
@@ -509,11 +509,12 @@ If all article have been seen, on the subject line of the last article."
       smtpmail-smtp-service 587
       smtpmail-starttls-credentials '(("imap.gmail.com" 587 nil nil)))
 
-(gnus-add-configuration
- '(group
-   (horizontal 1.0
-               (vertical 22 (group 1.0 point))
-               (vertical 1.0 (summary 1.0)))))
+
+;; (gnus-add-configuration
+;;  '(group
+;;    (horizontal 1.0
+;;                (vertical 22 (group 1.0 point))
+;;                (vertical 1.0 (summary 1.0)))))
 
 (gnus-add-configuration
  '(summary
@@ -530,6 +531,30 @@ If all article have been seen, on the subject line of the last article."
                          (summary 0.35 point)
                          (article 1.0)))))
 
+(gnus-add-configuration
+ '(reply
+   (horizontal 1.0
+               (vertical 22 (group 1.0))
+               (vertical 1.0
+                         (summary 0.35)
+                         (article 1.0 point)))))
+
+(gnus-add-configuration
+ '(reply-yank
+   (horizontal 1.0
+               (vertical 22 (group 1.0))
+               (vertical 1.0
+                         (summary 0.35)
+                         (article 1.0 point)))))
+
+(gnus-add-configuration
+ '(forward
+   (horizontal 1.0
+               (vertical 22 (group 1.0))
+               (vertical 1.0
+                         (summary 0.35)
+                         (article 1.0 point)))))
+
 ;; Enable mailinglist support
 ;; (when (fboundp 'turn-on-gnus-mailing-list-mode)
 ;;   (add-hook 'gnus-summary-mode-hook 'turn-on-gnus-mailing-list-mode))
@@ -539,36 +564,6 @@ If all article have been seen, on the subject line of the last article."
 
 ;; Or, like this:
 (add-to-list 'mm-attachment-override-types "image/.*")
-
-;; Garbage
-;; Jumps point to ":". %( %) will be be highlighted on mouse-over.
-;; %U = mark (eg "R")
-;; %R = secondary mark. Indicates if replied to, cached, or saved.
-;; %z = zcore. "+"/"-" if above/below default score.
-;; %i = score as a number
-;; %3i    => minimum of 3 characters, right-justify
-;; %-3i   => minimum of 3 characters, left-justify
-;; %3,6i  => minimum of 3 characters, maximum of 6, right-justify
-;; %-3,6i => minimum of 3 characters, maximum of 6, left-justify
-;; %t = articles in thread
-;; %I = start of thread indentation
-;; %B = complex threading.
-;; %s = subject if the article is the root of the thread
-;; %n = name
-;; %L = number of lines
-;; %D = date
-;; %n{ %} = gnus-face-n
-;; %&user-date; - see `gnus-user-date-format-alist'.
-
-;; ;; This HAS to come AFTER the previous rules
-;; (setq gnus-parameters
-;;  '(("INBOX"
-;;     ;; (gnus-use-adaptive-scoring nil)
-;;     ;; (gnus-use-scoring nil)
-;;     ;; (visible . t)
-;;     (display . all)
-;;     (modeline-notify . t)
-;;     )))
 
 ;; nnmaildir+adamweb:INBOX
 (message "%s loaded" (buffer-file-name))
