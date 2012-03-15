@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Thu 15-Mar-2012 10:05:35>
+;; Time-stamp: <.emacs - Thu 15-Mar-2012 10:22:28>
 ;; ===========================================================================
   ;; (kill-buffer "*scratch*")
 ;; See https://github.com/xaccrocheur/kituu/
@@ -51,10 +51,6 @@
 	  t
 	nil)))
 
-
-(eval-after-load "gnus"
-  '(progn (require 'gnus-harvest)
-	  (gnus-harvest-install 'message-x)))
 
 (require 'tabbar)
 (require 'cl)
