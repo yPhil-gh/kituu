@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Thu 15-Mar-2012 13:13:49>
+;; Time-stamp: <.gnus.el - Thu 15-Mar-2012 23:58:06>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -448,7 +448,7 @@
 (setq gnus-secondary-select-methods
       '(
 	(nntp "news"
-	      (nntp-address "news.sunsite.dk")
+	      (nntp-address "news.eternal-september.org")
 	      ;; (nntp-xref-number-is-evil t)
 	      )
 
