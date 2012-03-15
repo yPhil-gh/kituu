@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Thu 15-Mar-2012 09:25:46>
+;; Time-stamp: <.emacs - Thu 15-Mar-2012 10:05:35>
 ;; ===========================================================================
   ;; (kill-buffer "*scratch*")
 ;; See https://github.com/xaccrocheur/kituu/
@@ -50,6 +50,7 @@
       (if (get-buffer-window-list buffer)
 	  t
 	nil)))
+
 
 (eval-after-load "gnus"
   '(progn (require 'gnus-harvest)
@@ -537,7 +538,7 @@ Emacs buffer are those starting with “*”."
 ;; Toggle gnus
 (define-key global-map [(meta f1)]
   '(lambda() (interactive)
-     (setq px-no-gnus-window-configuration (current-window-configuration))
+     (defvar px-no-gnus-window-configuration (current-window-configuration))
      (if (get-buffer "*Group*")
 	 (progn
 	   (set-window-configuration px-gnus-window-configuration)
@@ -545,11 +546,14 @@ Emacs buffer are those starting with “*”."
 	   (scroll-bar-mode -1))
        (gnus-unplugged))))
 
+(if (boundp 'abracadabra)
+    (message "plop"))
+
 (eval-after-load "gnus-group"
   '(progn
      (define-key gnus-summary-mode-map [(meta f1)]
        '(lambda() (interactive)
-	  (setq px-gnus-window-configuration (current-window-configuration))
+	  (defvar px-gnus-window-configuration (current-window-configuration))
 	  (set-window-configuration px-no-gnus-window-configuration)
 	  (tabbar-mode t)
 	  (scroll-bar-mode -1)))))

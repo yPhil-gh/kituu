@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Thu 15-Mar-2012 09:32:20>
+;; Time-stamp: <.gnus.el - Thu 15-Mar-2012 09:44:02>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -293,6 +293,7 @@
 
 ;; Vars
 (setq
+ mm-discouraged-alternatives '("text/html" "text/richtext")
  gnus-fetch-old-headers t
  gnus-large-newsgroup nil
  ;; user-mail-address "philippe.coatmeur@gmail.com"
@@ -313,6 +314,9 @@
  message-signature t
  ;; gnus-treat-body-boundary nil
  )
+(add-to-list 'mm-attachment-override-types "image/.*")
+;; (when (fboundp 'turn-on-gnus-mailing-list-mode)
+;;   (add-hook 'gnus-summary-mode-hook 'turn-on-gnus-mailing-list-mode))
 
 ;; Hooks & Keys
 
@@ -453,7 +457,7 @@ If all article have been seen, on the subject line of the last article."
 (define-key gnus-summary-mode-map (kbd "s-m") 'Chk-mail-px)
 
 
-;; This for setting the SMTP host depending on the "To:" field of the mail we're replying to
+;; Set the SMTP host depending on the "To:" field of the mail we're replying to
 (defun send-this-biatch-px ()
   "Sets the \"from\" field depending on the \"To:\" field of the mail we're replying to"
   ;; (interactive)
@@ -492,7 +496,6 @@ If all article have been seen, on the subject line of the last article."
 ;; SMTP configs.
 (require 'smtpmail)
 
-
 (setq send-mail-function 'smtpmail-send-it
       message-send-mail-function 'smtpmail-send-it
       mail-from-style nil
@@ -509,7 +512,6 @@ If all article have been seen, on the subject line of the last article."
       smtpmail-smtp-service 587
       smtpmail-starttls-credentials '(("imap.gmail.com" 587 nil nil)))
 
-
 ;; (gnus-add-configuration
 ;;  '(group
 ;;    (horizontal 1.0
@@ -522,7 +524,6 @@ If all article have been seen, on the subject line of the last article."
                (vertical 22 (group 1.0))
                (vertical 1.0 (summary 1.0 point)))))
 
-;; Window configuration - http://gnus.org/manual/gnus_289.html
 (gnus-add-configuration
  '(article
    (horizontal 1.0
@@ -537,7 +538,7 @@ If all article have been seen, on the subject line of the last article."
                (vertical 22 (group 1.0))
                (vertical 1.0
                          (summary 0.35)
-                         (article 1.0 point)))))
+                         (reply 1.0 point)))))
 
 (gnus-add-configuration
  '(reply-yank
@@ -555,15 +556,5 @@ If all article have been seen, on the subject line of the last article."
                          (summary 0.35)
                          (article 1.0 point)))))
 
-;; Enable mailinglist support
-;; (when (fboundp 'turn-on-gnus-mailing-list-mode)
-;;   (add-hook 'gnus-summary-mode-hook 'turn-on-gnus-mailing-list-mode))
-(setq mm-discouraged-alternatives '("text/html" "text/richtext"))
-;; Inline images?
-;; (setq mm-attachment-override-types '("image/.*"))
 
-;; Or, like this:
-(add-to-list 'mm-attachment-override-types "image/.*")
-
-;; nnmaildir+adamweb:INBOX
 (message "%s loaded" (buffer-file-name))
