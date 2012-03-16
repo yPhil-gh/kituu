@@ -1,7 +1,6 @@
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Fri 16-Mar-2012 03:07:01>
+;; Time-stamp: <.emacs - Fri 16-Mar-2012 03:36:45>
 ;; ===========================================================================
-  ;; (kill-buffer "*scratch*")
 ;; See https://github.com/xaccrocheur/kituu/
 
 ;; Init
@@ -13,20 +12,6 @@
 (add-to-list 'load-path "~/.emacs.d/lisp/tabbar/")
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/bbdb/")
 ;; )
-
-;; (when (file-exists-p "~/.emacs.d/lisp/px.el")
-;;   (require 'px))
-;; Encryption
-;; (require 'epa-file)
-;; (epa-file-enable)
-
-
-(defun this-buffer-is-visible (buffer)
-  "Test if BUFFER is actually on screen"
-  (if (get-buffer buffer)
-      (if (get-buffer-window-list buffer)
-	  t
-	nil)))
 
 
 (require 'tabbar)
@@ -98,6 +83,13 @@
 
 
 ;; Functions
+
+(defun this-buffer-is-visible (buffer)
+  "Test if BUFFER is actually on screen"
+  (if (get-buffer buffer)
+      (if (get-buffer-window-list buffer)
+	  t
+	nil)))
 
 ;; (defun compile-init-file-px ()
 ;;   (let ((byte-compile-warnings '(unresolved)))
@@ -688,70 +680,66 @@ select 'this' or <that> (enclosed)  s-SPC
 ))
 
 
-;; (if (eq window-system 'x)
-;; (progn
-;; (set-face-attribute 'default nil :background "#2e3436" :foreground "#eeeeec")
-;; (set-face-attribute 'cursor nil :background "#fce94f" :foreground "#2e3436")
-;; (set-face-attribute 'font-lock-builtin-face nil :foreground "#ad7fa8")
-;; (set-face-attribute 'font-lock-comment-face nil :foreground "#73d216")
-;; (set-face-attribute 'font-lock-constant-face nil :foreground "#e6a8df")
-;; (set-face-attribute 'font-lock-function-name-face nil :foreground "#fce84f")
-;; (set-face-attribute 'font-lock-keyword-face nil :foreground "#8cc4ff")
-;; (set-face-attribute 'font-lock-string-face nil :foreground "#e9b96e")
-;; (set-face-attribute 'font-lock-type-face nil :foreground "#a5ff4d")
-;; (set-face-attribute 'font-lock-variable-name-face nil :foreground "#fcaf3e")
-;; (set-face-attribute 'font-lock-warning-face nil :foreground "#ef2929")
-;; (set-face-attribute 'fringe nil :background "#2c2c2c")
-;; (set-face-attribute 'header-line nil :background "#555753" :foreground "#ffffff")
-;; (set-face-attribute 'isearch nil :background "#ce5c00" :foreground "#ffffff")
-;; (set-face-attribute 'lazy-highlight nil :background "#8f5902")
-;; (set-face-attribute 'link nil :foreground "#729fcf" :underline t)
-;; (set-face-attribute 'link-visited nil :foreground "#3465a4" :underline t)
-;; (set-face-attribute 'minibuffer-prompt nil :foreground "#fce94f")
-;; (set-face-attribute 'mode-line nil :background "#777777" :foreground "#000000")
-;; (set-face-attribute 'mode-line-inactive nil :background "#555753" :foreground "#ffffff")
-;; (set-face-attribute 'region nil :background "#555753")
-;; )
-;; (set-face-attribute 'default nil :background "black" :foreground "white")
-;; )
+(if (eq window-system 'x)
+    (progn
+      (set-face-attribute 'default nil :background "#2e3436" :foreground "#eeeeec")
+      (set-face-attribute 'cursor nil :background "#fce94f" :foreground "#2e3436")
+      (set-face-attribute 'font-lock-builtin-face nil :foreground "#ad7fa8")
+      (set-face-attribute 'font-lock-comment-face nil :foreground "#73d216")
+      (set-face-attribute 'font-lock-constant-face nil :foreground "#e6a8df")
+      (set-face-attribute 'font-lock-function-name-face nil :foreground "#fce84f")
+      (set-face-attribute 'font-lock-keyword-face nil :foreground "#8cc4ff")
+      (set-face-attribute 'font-lock-string-face nil :foreground "#e9b96e")
+      (set-face-attribute 'font-lock-type-face nil :foreground "#a5ff4d")
+      (set-face-attribute 'font-lock-variable-name-face nil :foreground "#fcaf3e")
+      (set-face-attribute 'font-lock-warning-face nil :foreground "#ef2929")
+      (set-face-attribute 'fringe nil :background "#2c2c2c")
+      (set-face-attribute 'header-line nil :background "#555753" :foreground "#ffffff")
+      (set-face-attribute 'isearch nil :background "#ce5c00" :foreground "#ffffff")
+      (set-face-attribute 'lazy-highlight nil :background "#8f5902")
+      (set-face-attribute 'link nil :foreground "#729fcf" :underline t)
+      (set-face-attribute 'link-visited nil :foreground "#3465a4" :underline t)
+      (set-face-attribute 'minibuffer-prompt nil :foreground "#fce94f")
+      (set-face-attribute 'mode-line nil :background "#777777" :foreground "#000000")
+      (set-face-attribute 'mode-line-inactive nil :background "#555753" :foreground "#ffffff")
+      (set-face-attribute 'region nil :background "#555753")
+)
+  (set-face-attribute 'default nil :background "black" :foreground "white"))
 
 (if (>= emacs-major-version 23)
 (set-default-font "Monospace-12"))
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:background "#2e3436" :foreground "#eeeeec"))))
- '(cursor ((t (:background "#fce94f" :foreground "#2e3436"))))
- '(font-lock-builtin-face ((t (:foreground "#ad7fa8"))))
- '(font-lock-comment-face ((t (:foreground "#73d216"))))
- '(font-lock-constant-face ((t (:foreground "#e6a8df"))))
- '(font-lock-function-name-face ((t (:foreground "#fce84f"))))
- '(font-lock-keyword-face ((t (:foreground "#8cc4ff"))))
- '(font-lock-string-face ((t (:foreground "#e9b96e"))))
- '(font-lock-type-face ((t (:foreground "#a5ff4d"))))
- '(font-lock-variable-name-face ((t (:foreground "#fcaf3e"))))
- '(font-lock-warning-face ((t (:foreground "#ef2929"))))
- '(fringe ((t (:background "#2c2c2c"))))
- '(gnus-summary-normal-unread ((t (:weight bold))))
- '(gnus-summary-selected ((t (:background "dark red" :weight bold))))
- '(gnus-summary-selected-face ((t (:bold t))) t)
- '(header-line ((t (:background "#555753" :foreground "#ffffff"))))
- '(isearch ((t (:background "#ce5c00" :foreground "#ffffff"))))
- '(lazy-highlight ((t (:background "#8f5902"))))
- '(link ((t (:foreground "#729fcf" :underline t))))
- '(link-visited ((t (:foreground "#3465a4" :underline t))))
- '(minibuffer-prompt ((t (:foreground "#fce94f"))))
- '(mode-line ((t (:background "#777777" :foreground "#000000"))))
- '(mode-line-inactive ((t (:background "#555753" :foreground "#ffffff"))))
- '(my-tushi-face ((t (:foreground "goldenrod" :weight ultra-bold))) t)
- '(region ((t (:background "#555753")))))
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(default ((t (:background "#2e3436" :foreground "#eeeeec"))))
+;;  '(cursor ((t (:background "#fce94f" :foreground "#2e3436"))))
+;;  '(font-lock-builtin-face ((t (:foreground "#ad7fa8"))))
+;;  '(font-lock-comment-face ((t (:foreground "#73d216"))))
+;;  '(font-lock-constant-face ((t (:foreground "#e6a8df"))))
+;;  '(font-lock-function-name-face ((t (:foreground "#fce84f"))))
+;;  '(font-lock-keyword-face ((t (:foreground "#8cc4ff"))))
+;;  '(font-lock-string-face ((t (:foreground "#e9b96e"))))
+;;  '(font-lock-type-face ((t (:foreground "#a5ff4d"))))
+;;  '(font-lock-variable-name-face ((t (:foreground "#fcaf3e"))))
+;;  '(font-lock-warning-face ((t (:foreground "#ef2929"))))
+;;  '(fringe ((t (:background "#2c2c2c"))))
+;;  '(gnus-summary-normal-unread ((t (:weight bold))))
+;;  '(gnus-summary-selected ((t (:background "dark red" :weight bold))))
+;;  '(gnus-summary-selected-face ((t (:bold t))) t)
+;;  '(header-line ((t (:background "#555753" :foreground "#ffffff"))))
+;;  '(isearch ((t (:background "#ce5c00" :foreground "#ffffff"))))
+;;  '(lazy-highlight ((t (:background "#8f5902"))))
+;;  '(link ((t (:foreground "#729fcf" :underline t))))
+;;  '(link-visited ((t (:foreground "#3465a4" :underline t))))
+;;  '(minibuffer-prompt ((t (:foreground "#fce94f"))))
+;;  '(mode-line ((t (:background "#777777" :foreground "#000000"))))
+;;  '(mode-line-inactive ((t (:background "#555753" :foreground "#ffffff"))))
+;;  '(my-tushi-face ((t (:foreground "goldenrod" :weight ultra-bold))) t)
+;;  '(region ((t (:background "#555753")))))
 
-
-(set-face-attribute 'my-tushi-face nil
-		    :family "Metal")
 
 ;; Tabbar faces
 (set-face-attribute 'tabbar-default nil
