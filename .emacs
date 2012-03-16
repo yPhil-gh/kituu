@@ -1,10 +1,9 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Fri 16-Mar-2012 17:06:40>
+;; Time-stamp: <.emacs - Fri 16-Mar-2012 17:08:06>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
 ;; Init! ______________________________________________________________________
-
 
 ;; (setq user-emacs-directory "~/.lisp/")
 (eval-when-compile
@@ -20,7 +19,6 @@
 (require 'cl)
 (require 'px-org-conf)
 (tabbar-mode t))
-
 
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
