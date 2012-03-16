@@ -42,7 +42,7 @@ if [ ! -e $lispdir/tabbar/ ] ; then
     cd $lispdir && git clone https://github.com/dholm/tabbar.git && echo -e $sep"...Done."
     # rm -rf tabbar/.git/* && rm -rfv $lispdir/tabbar/.git/
 else
-    cd $lispdir/tabbar/ && git fetch && git reset --hard origin/master && echo -e $sep"...Done."
+    cd $lispdir/tabbar/ && git pull
 fi
 
 if [ ! -e $scriptsdir/offlineimap/ ] ; then
@@ -50,5 +50,5 @@ echo -e $sep"Installing offlineimap in $scriptsdir/offlineimap/"
     cd $scriptsdir && git clone https://github.com/spaetz/offlineimap.git
     ln -sv offlineimap/offlineimap.py . && echo -e $sep"...Done."
 else
-    cd $scriptsdir/offlineimap/ && git fetch && git reset --hard origin/master && echo -e $sep"...Done."
+    cd $scriptsdir/offlineimap/ && git pull
 fi
