@@ -1,7 +1,7 @@
 # ===================================================================
 # Kituu - the mildly over the top bash prompt - GPL3
 # pX <hallucinet@online.fr>
-# Time-stamp: <.bashrc - Fri 16-Mar-2012 02:22:52>
+# Time-stamp: <.bashrc - Fri 16-Mar-2012 06:46:40>
 # ===================================================================
 
 # If not running interactively, don't do anything
@@ -15,7 +15,7 @@
 #     emacs -mm "$@"
 # fi
 
-. ~/scripts/git-completion.bash
+[ $UID != "0" ] && . ~/scripts/git-completion.bash
 GIT_PS1_SHOWDIRTYSTATE=true
 
 kituu_user=$(whoami)
@@ -137,13 +137,16 @@ else
     kituu_load_meter_size="n"
 fi
 
-kituu_git_status=`echo $(__git_ps1) | sed 's/^ *//'`
-
 # this is your top info, right next to username@machine - add info like this - no wait don't touch anything, it's still WIP
 kituu_info_up1=$kituu_time
 kituu_info_up2_size=${kituu_load_meter_size}
 kituu_info_up2=${kituu_load_meter}
+
+# No git for root. Bad root.
+if [ $UID != "0" ] ; then
+kituu_git_status=`echo $(__git_ps1) | sed 's/^ *//'`
 kituu_info_up3=${kituu_git_status}
+fi
 
 # The max. lengh of the pwd is half of the screen width - it should be automatically computed from the other elements (promptsize-path-some air)
 if [ "${HOSTTYPE}" = "arm" ]; then
