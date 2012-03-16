@@ -2,8 +2,7 @@
 
 **  Fully configurable BASH environment
 
-*** Features
-
+*** BASH Features
     -Two-lines stable display
     -Double-clickable full path (for copy & pasting)
     -Simple and light load-meter
@@ -12,24 +11,27 @@
     -Command history available across all new shells
     -Cool aliases
 
+*** Emacs features
+    -Generalized awesomeness
+
 *** Installation
     -cd ~/
     -git clone git://github.com/xaccrocheur/kituu.git .kituu && .kituu/scripts/kituu-setup.sh
     -bash
-    -e& (re-launch emacs to overcome el-get timeouts at 1st launch)
+    -e&
 
 *** Usage
-    Many, if not all aspects, are configurable in the commented file ; It's also meant to be as secure as possible and avoids exporting crap in your env. Many surprises as well. I spent some time on this one. Bug reports *welcome*
+    -Many, if not all aspects, are configurable in the commented [[https://github.com/xaccrocheur/kituu/blob/master/.bashrc][.bashrc]] file ; It's also meant to be as secure as possible and avoids exporting crap in your env. Many surprises as well. I spent some time on this one. Bug reports *welcome*
 
-    Use this little [[file:scripts/list-shell-colours.sh][script]] (https://github.com/xaccrocheur/kituu/blob/master/.scripts/list-shell-colours.sh) to help you find your colors but stick to the ASCII ones if you're going to use your .bashrc on weird old cruty machines, like I do.
+    -Use this little [[file:scripts/list-shell-colours.sh][script]] to help you find your colors but stick to the ASCII ones if you're going to use your .bashrc on weird old crusty machines, like I do.
 
-    If you defined custom paths and aliases in your existing .bashrc, don't forget to source them in the new one. Always keep a backup.
+    -If you defined custom paths and aliases in your existing .bashrc, don't forget to source them in the new one. Always keep a backup.
 
-    You should check this page regularly for updates. Use the force, read the source ;)
+    -Use the force, read the source ;)
 
     NOTE: this .bashrc only works with UTF-8 capable terminal emulators.
 
-    Don't forget that http://www.catonmat.net/blog/bash-emacs-editing-mode-cheat-sheet/ !
+    -Don't forget that in BASH, [[http://www.catonmat.net/blog/bash-emacs-editing-mode-cheat-sheet/][you're already in Emacs]] !
 
 *** LICENSE
     This program is free software: you can redistribute it and/or modify

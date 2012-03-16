@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Fri 16-Mar-2012 05:34:26>
+;; Time-stamp: <.emacs - Fri 16-Mar-2012 06:33:26>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -600,7 +600,7 @@ The optional second argument indicates whether to kill internal buffers too."
 
 ;; Help ______________________________________________________________________
 
-(defun help-px ()
+(defun Help-px ()
   (interactive)
   (princ "* My EMACS cheat cheet
 
