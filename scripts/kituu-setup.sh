@@ -11,11 +11,9 @@ echo -e $sep"Kituu! #################"
 
 if [ ! -d $kituudir ]
 then
-    echo -e $sep"No existing $kituudir, so"
-    cd && git clone git@github.com:xaccrocheur/kituu.git
+    echo -e $sep"No existing $kituudir, so" && git clone git@github.com:xaccrocheur/kituu.git
 else
-    echo -e $sep"Found $kituudir, so"
-    cd $kituudir && $gitcommand
+    echo -e $sep"Found $kituudir, so" && $gitcommand
 fi
 
 for i in * ; do
