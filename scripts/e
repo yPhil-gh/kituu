@@ -4,5 +4,6 @@ if ps aux | grep $e_user | grep 'emacs ' | grep -Ev 'grep' &>/dev/null; then
 # if [ "$(pidof emacs)" ] ; then
     emacsclient "$@"
 else
-    emacs "$@"
+	# echo "plop"
+    emacs -mm $@ 2>1&
 fi

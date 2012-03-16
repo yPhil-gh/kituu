@@ -1,24 +1,29 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Fri 16-Mar-2012 04:04:51>
+;; Time-stamp: <.emacs - Fri 16-Mar-2012 05:34:26>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
 ;; Init! ______________________________________________________________________
 
 ;; (setq user-emacs-directory "~/.lisp/")
-;; (eval-when-compile
+(eval-when-compile
   ;; (let ((default-directory "~/.emacs.d/px-lisp/"))
   ;;   (normal-top-level-add-subdirs-to-load-path))
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 (add-to-list 'load-path "~/.emacs.d/lisp/tabbar/")
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/bbdb/")
-;; )
+)
 
-
+(eval-when-compile
 (require 'tabbar)
 (require 'cl)
 (require 'px-org-conf)
+(tabbar-mode t))
 
+
+(defvar iswitchb-mode-map)
+(defvar iswitchb-buffer-ignore)
+(defvar show-paren-delay)
 (defvar time-stamp-active)
 (defvar time-stamp-warn-inactive)
 (defvar time-stamp-format)
@@ -33,10 +38,8 @@
 (defvar el-get-dir)
 (defvar el-get-sources)
 (defvar my-packages)
-(defvar my-packages)
 
-(defvar newName)
-(defvar newName)
+(defvar px-newName)
 
 (defvar display-time-string)
 (defvar gnus-mode-non-string-length)
@@ -46,8 +49,7 @@
 
 (defvar gnus-bury-window-configuration)
 (defvar gnus-bury-window-configuration)
-(defvar minibuffer_history)
-(defvar minibuffer_history)
+(defvar px-minibuffer-history)
 (defvar savehist-file)
 
 
@@ -94,17 +96,18 @@
 	  t
 	nil)))
 
-;; (defun compile-init-file-px ()
-;;   (let ((byte-compile-warnings '(unresolved)))
-;;     (byte-compile-file user-init-file)
-;;     (message "%s saved and compiled." user-init-file)))
+(defun compile-init-file-px ()
+  (let ((byte-compile-warnings '(unresolved)))
+    (byte-compile-file user-init-file)
+    (message "%s saved and compiled." user-init-file)))
 
-;; (defun my-emacs-lisp-mode-hook ()
-;;   ;; (if (string-equal buffer-file-name user-init-file)
-;;   (if (search ".emacs" buffer-file-name)
-;;       (progn (add-hook 'after-save-hook 'compile-init-file-px t t)
-;;     	     )))
-;; (add-hook 'emacs-lisp-mode-hook 'my-emacs-lisp-mode-hook)
+(defun my-emacs-lisp-mode-hook ()
+  ;; (if (string-equal buffer-file-name user-init-file)
+  (if (search ".emacs" buffer-file-name)
+      (message "compiling %s" buffer-file-name)
+      (progn (add-hook 'after-save-hook 'compile-init-file-px t t)
+    	     )))
+(add-hook 'emacs-lisp-mode-hook 'my-emacs-lisp-mode-hook)
 
 
 (defun switch-buffer-px ()
@@ -123,15 +126,15 @@
 (defun bkp-px ()
   "Write the current buffer to a new file - silently - and append the date+time to the filename, retaining extention"
   (interactive)
-  (setq newName
+  (setq px-newName
 	(concat
 	 (file-name-sans-extension buffer-file-name) "-"
 	 (format-time-string  "%Y-%m-%d") "."
 	 (format-time-string "%Hh%M") "."
 	 (file-name-extension buffer-file-name))
 	)
-  (write-region (point-min) (point-max) newName)
-  (message "backuped %s" newName)
+  (write-region (point-min) (point-max) px-newName)
+  (message "backuped %s" px-newName)
   )
 
 (defun query-replace-regexp-in-open-buffers-px (arg1 arg2)
@@ -261,7 +264,6 @@ inside html tags."
 ;; Modes! ______________________________________________________________________
 
 ;; (set-fringe-mode '(1 . 1))
-(tabbar-mode t)
 (show-paren-mode t)
 (menu-bar-mode -1)
 (global-linum-mode 1)
@@ -531,8 +533,8 @@ Emacs buffer are those starting with “*”."
 	  (scroll-bar-mode -1)))))
 
 ;; Save the minibuffer history
-(setq minibuffer_history (concat user-emacs-directory "minibuffer_history"))
-(setq savehist-file minibuffer_history)
+(setq px-minibuffer-history (concat user-emacs-directory "px-minibuffer-history"))
+(setq savehist-file px-minibuffer-history)
 (when (functionp 'savehist-mode) (savehist-mode 1))
 
 (defun kill-boring-buffers-px (regexp &optional internal-too)
@@ -545,6 +547,7 @@ The optional second argument indicates whether to kill internal buffers too."
                  (or internal-too (/= (aref name 0) ?\s))
                  (string-match regexp name))
         (kill-buffer buffer)))))
+
 
 (defun kill-boring-buffers ()
 (interactive)
@@ -708,7 +711,7 @@ select 'this' or <that> (enclosed)  s-SPC
   (set-face-attribute 'default nil :background "black" :foreground "white"))
 
 (if (>= emacs-major-version 23)
-(set-default-font "Monospace-12"))
+(set-frame-font "Monospace-12"))
 
 (set-face-attribute 'tabbar-default nil
 		    :inherit nil
