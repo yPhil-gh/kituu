@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Fri 16-Mar-2012 03:42:01>
+;; Time-stamp: <.gnus.el - Fri 16-Mar-2012 03:50:30>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -15,8 +15,16 @@
 
 ;; (setq gnus-topic-topology '(("Adamweb" visible nil nil) (("News" visible nil nil) (("Perso" visible nil nil))) (("Local" visible nil nil))))
 
-;; (set-face-attribute 'my-tushi-face nil :family "Metal")
-;; (set-face-attribute 'my-tushi-face nil :foreground "goldenrod" :weight 'ultra-bold)
+
+(defface my-tushi-face
+  '((t
+     :family "Metal"
+     ))
+  "Face used for topics."
+  :group 'faces)
+
+(set-face-attribute 'my-tushi-face nil :family "Metal")
+(set-face-attribute 'my-tushi-face nil :foreground "goldenrod" :weight 'ultra-bold)
 ;; (set-face-attribute 'gnus-summary-selected nil :family "Metal")
 ;; (set-face-attribute 'gnus-summary-selected-face nil :weight 'bold)
 (set-face-attribute 'gnus-summary-selected nil :underline nil :background "dark red" :weight 'bold)
@@ -139,8 +147,8 @@
 ;; this corresponds to a topic line format of "%n %A"
 (defun gnus-user-format-function-topic-line (dummy)
   (let ((topic-face (if (zerop total-number-of-articles)
-			'gnus-summary-normal-unread
-		      'gnus-summary-normal-unread)))
+			'my-tushi-face
+		      'my-tushi-face)))
     (propertize
      (format "%s %d" name total-number-of-articles)
      'face topic-face)))
