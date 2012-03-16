@@ -5,6 +5,7 @@ kituudir=~/.kituu
 lispdir=~/.emacs.d/lisp
 scriptsdir=~/scripts
 sep="\n################# "
+gitcommand=$(git fetch && git reset --hard origin/master)
 
 echo -e $sep"Kituu! #################"
 
@@ -14,7 +15,7 @@ then
     cd && git clone git@github.com:xaccrocheur/kituu.git
 else
     echo -e $sep"Found $kituudir, so"
-    cd $kituudir && git fetch && git reset --hard origin/master
+    cd $kituudir && $gitcommand
 fi
 
 for i in * ; do
@@ -30,42 +31,22 @@ for i in * ; do
     fi
 done
 
-if [ ! -e $scriptsdir/git-completion.bash ]
-  then
+if [ ! -e $scriptsdir/git-completion.bash ] ; then
     echo -e $sep"Installing Git completion..."
     curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptsdir/git-completion.bash
 fi
 
-if [ ! -e $lispdir/tabbar/ ]
-  then
+if [ ! -e $lispdir/tabbar/ ] ; then
     echo -e $sep"Installing Tabbar in $lispdir/tabbar/"
-    cd $lispdir &&  git clone https://github.com/dholm/tabbar.git
-    rm -rf tabbar/.git/* && rm -rfv $lispdir/tabbar/.git/ && echo -e $sep"...Done."
+    cd $lispdir &&  git clone https://github.com/dholm/tabbar.git && echo -e $sep"...Done."
+else
+    cd $lispdir/tabbar/ && $gitcommand
 fi
 
-if [ ! -e $scriptsdir/offlineimap/ ]
-  then
+if [ ! -e $scriptsdir/offlineimap/ ] ; then
     echo -e $sep"Installing offlineimap in $scriptsdir/offlineimap/"
     cd $scriptsdir && git clone https://github.com/spaetz/offlineimap.git
     ln -sv offlineimap/offlineimap.py . && echo -e $sep"...Done."
-fi
-
-if [ ! -e $lispdir/offlineimap.el ]
-  then
-    echo -e $sep"Installing offlineimap.el in $lispdir/"
-    cd $lispdir && git clone http://git.naquadah.org/git/offlineimap-el.git
-    cp -v offlineimap-el/offlineimap.el . && rm -rf offlineimap-el/* && rm -rfv $lispdir/offlineimap-el/ && echo -e $sep"...Done."
-fi
-
-if [ ! -e $lispdir/gnus-harvest.el ]
-  then
-    echo -e $sep"Installing gnus-harvest.el in $lispdir/"
-    cd $lispdir && git clone https://github.com/jwiegley/gnus-harvest.git
-    cp -v gnus-harvest/gnus-harvest.el . && rm -rf gnus-harvest/* && rm -rfv $lispdir/gnus-harvest/ && echo -e $sep"...Done."
-fi
-
-if [ ! -e $lispdir/offlineimap.el ]
-  then
-    echo -e $sep"Installing message-x.el in $lispdir/"
-    cd $lispdir && curl -# -O http://www.emacswiki.org/cgi-bin/wiki/download/message-x.el && echo -e $sep"...Done."
+else
+    cd $scriptsdir/offlineimap/ && $gitcommand
 fi

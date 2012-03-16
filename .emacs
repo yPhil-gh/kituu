@@ -266,7 +266,7 @@ inside html tags."
 (menu-bar-mode -1)
 (global-linum-mode 1)
 ;; (global-undo-tree-mode 1)
-(global-smart-tab-mode 1)
+;;(global-smart-tab-mode 1)
 (global-font-lock-mode t)
 (tool-bar-mode 0)
 (set-scroll-bar-mode `right)
