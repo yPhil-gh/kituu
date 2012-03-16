@@ -12,6 +12,7 @@
     -git integration : commands completion + branch status in prompt
 
 *** Emacs features
+    -Gnus mail integration : [[file:.emacs.d/lisp/gnus-notify-.el::%3B%3B%20gnus-notify.el%20---%20use%20the%20modeline%20to%20indicate%20groups%20with%20new%20messages][gnus-notify-]] and [[file:.emacs.d/lisp/olimap.el][olimap.el]]
     -Generalized awesomeness
 
 *** Installation
