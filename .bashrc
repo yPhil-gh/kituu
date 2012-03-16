@@ -1,7 +1,7 @@
 # ===================================================================
 # Kituu - the mildly over the top bash prompt - GPL3
 # pX <hallucinet@online.fr>
-# Time-stamp: <.bashrc - Wed 07-Mar-2012 23:03:45>
+# Time-stamp: <.bashrc - Fri 16-Mar-2012 02:22:52>
 # ===================================================================
 
 # If not running interactively, don't do anything
@@ -27,7 +27,8 @@ export ALTERNATE_EDITOR=emacs EDITOR=emacs
 if [ -n "${BASH+x}" ] ; then
     [ $UID -eq 0 ] && PATH=$PATH:/sbin:/usr/sbin:/bin
 
-    PATH=$PATH:/usr/local/bin:/usr/local/sbin:/usr/local/include:/usr/bin/gnu
+    PATH=$PATH:/usr/local/include:/usr/bin/gnu
+    PATH=/usr/local/bin:$PATH
     PATH=$PATH:~/scripts:~/bin
     shopt -s histappend
     shopt -s cdspell      # cd spell check (try cd /usr/bon)

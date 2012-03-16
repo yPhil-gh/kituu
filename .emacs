@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.emacs - Thu 15-Mar-2012 23:56:51>
+;; Time-stamp: <.emacs - Fri 16-Mar-2012 00:54:51>
 ;; ===========================================================================
   ;; (kill-buffer "*scratch*")
 ;; See https://github.com/xaccrocheur/kituu/
@@ -9,9 +9,10 @@
 ;; (eval-when-compile
   ;; (let ((default-directory "~/.emacs.d/px-lisp/"))
   ;;   (normal-top-level-add-subdirs-to-load-path))
-  (add-to-list 'load-path "~/.emacs.d/lisp/")
-  (add-to-list 'load-path "~/.emacs.d/lisp/tabbar/")
-  ;; )
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+(add-to-list 'load-path "~/.emacs.d/lisp/tabbar/")
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/bbdb/")
+;; )
 
 ;; (when (file-exists-p "~/.emacs.d/lisp/px.el")
 ;;   (require 'px))
