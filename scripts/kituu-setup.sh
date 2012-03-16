@@ -36,6 +36,7 @@ echo -e $sep"Installing Git completion..."
     curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptsdir/git-completion.bash
 fi
 
+
 if [ ! -e $lispdir/tabbar/ ] ; then
     echo -e $sep"Installing Tabbar in $lispdir/tabbar/"
     cd $lispdir && git clone https://github.com/dholm/tabbar.git && echo -e $sep"...Done."
