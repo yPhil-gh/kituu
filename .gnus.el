@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Fri 16-Mar-2012 03:03:09>
+;; Time-stamp: <.gnus.el - Fri 16-Mar-2012 03:05:41>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -11,7 +11,7 @@
 (require 'olimap)
 (require 'gnus-notify-)
 (require 'nnir)
-(require 'bbdb-px-conf)
+(require 'px-bbdb-conf)
 
 ;; (setq gnus-topic-topology '(("Adamweb" visible nil nil) (("News" visible nil nil) (("Perso" visible nil nil))) (("Local" visible nil nil))))
 
