@@ -1,9 +1,10 @@
-;; ==========================================================================
-;; Time-stamp: <.emacs - Fri 16-Mar-2012 03:36:45>
+;; ===========================================================================
+;; Time-stamp: <.emacs - Fri 16-Mar-2012 04:04:51>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
-;; Init
+;; Init! ______________________________________________________________________
+
 ;; (setq user-emacs-directory "~/.lisp/")
 ;; (eval-when-compile
   ;; (let ((default-directory "~/.emacs.d/px-lisp/"))
@@ -50,28 +51,30 @@
 (defvar savehist-file)
 
 
-;; El-get
-(setq el-get-dir (concat user-emacs-directory "el-get/"))
-(add-to-list 'load-path (concat user-emacs-directory "el-get/el-get"))
-(unless (require 'el-get nil t)
-  (url-retrieve
-   "https://raw.github.com/dimitri/el-get/master/el-get-install.el"
-   (lambda (s)
-     ;; (end-of-buffer)
-     (goto-char (point-max))
-     (eval-print-last-sexp))))
+;; ;; El-get! ____________________________________________________________________
 
-;; REMEMBER to put your el-get installed packages here, if you want to use this .emacs on another machine
-(setq my-packages
-      (append
-       '(linum-off smart-tab php-mode-improved haml-mode cperl-mode tail)
-       (mapcar 'el-get-source-name el-get-sources)))
+;; (setq el-get-dir (concat user-emacs-directory "el-get/"))
+;; (add-to-list 'load-path (concat user-emacs-directory "el-get/el-get"))
+;; (unless (require 'el-get nil t)
+;;   (url-retrieve
+;;    "https://raw.github.com/dimitri/el-get/master/el-get-install.el"
+;;    (lambda (s)
+;;      ;; (end-of-buffer)
+;;      (goto-char (point-max))
+;;      (eval-print-last-sexp))))
 
-;; (declare-function tabbar-mode "tabbar.el")
-(declare-function el-get "el-get.el")
-(el-get 'sync my-packages)
+;; ;; REMEMBER to put your el-get installed packages here, if you want to use this .emacs on another machine
+;; (setq my-packages
+;;       (append
+;;        '(linum-off php-mode-improved haml-mode cperl-mode tail)
+;;        (mapcar 'el-get-source-name el-get-sources)))
 
-;; Server
+;; ;; (declare-function tabbar-mode "tabbar.el")
+;; (declare-function el-get "el-get.el")
+;; (el-get 'sync my-packages)
+
+;; Server! ____________________________________________________________________
+
 (server-start)
 (defun ff/raise-frame-and-give-focus ()
   (when window-system
@@ -82,7 +85,7 @@
 (add-hook 'server-switch-hook 'ff/raise-frame-and-give-focus)
 
 
-;; Functions
+;; Functions! ____________________________________________________________________
 
 (defun this-buffer-is-visible (buffer)
   "Test if BUFFER is actually on screen"
@@ -255,7 +258,8 @@ inside html tags."
   )
 
 
-;; Modes
+;; Modes! ______________________________________________________________________
+
 ;; (set-fringe-mode '(1 . 1))
 (tabbar-mode t)
 (show-paren-mode t)
@@ -289,7 +293,9 @@ inside html tags."
 (add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)
 
 (setq-default cursor-type 'bar)
-;; Vars
+
+;; Vars! ______________________________________________________________________
+
 (setq
  iswitchb-buffer-ignore '("^ " "*.")
  ;; scroll-preserve-screen-position t
@@ -416,7 +422,7 @@ inside html tags."
 		     (session-restore-px)))))
 
 
-;; Keys !!
+;; Keys! ______________________________________________________________________
 (define-key global-map [(meta up)] '(lambda() (interactive) (scroll-other-window -1)))
 (define-key global-map [(meta down)] '(lambda() (interactive) (scroll-other-window 1)))
 
@@ -504,7 +510,7 @@ Emacs buffer are those starting with “*”."
 ;; Toggle gnus
 (define-key global-map [(meta f1)]
   '(lambda() (interactive)
-     (defvar px-no-gnus-window-configuration (current-window-configuration))
+     (setq px-no-gnus-window-configuration (current-window-configuration))
      (if (get-buffer "*Group*")
 	 (progn
 	   (set-window-configuration px-gnus-window-configuration)
@@ -512,7 +518,7 @@ Emacs buffer are those starting with “*”."
 	   (scroll-bar-mode -1))
        (gnus-unplugged))))
 
-(if (boundp 'abracadabra)
+(if (boundp 'plouz)
     (message "plop"))
 
 (eval-after-load "gnus-group"
@@ -589,7 +595,8 @@ The optional second argument indicates whether to kill internal buffers too."
  '(recentf-save-file "~/.bkp/recentf"))
 
 
-;; Help
+;; Help ______________________________________________________________________
+
 (defun help-px ()
   (interactive)
   (princ "* My EMACS cheat cheet
@@ -649,7 +656,7 @@ select 'this' or <that> (enclosed)  s-SPC
 (message "Everything is UP, %s" user-login-name)
 
 
-;; Garbage ;;
+;; Garbage ______________________________________________________________________
 
 ;; (setq yas/root-directory "~/.emacs.d/el-get/yasnippet/snippets")
 ;; (add-hook 'php-mode-hook 'yas/global-mode)
@@ -672,13 +679,7 @@ select 'this' or <that> (enclosed)  s-SPC
 ;;           '(lambda ()
 ;;             (define-key yas/minor-mode-map yas/trigger-key 'yas/expand)))
 
-
-
-(if (eq window-system 'x)
-(progn (set-background-color "black")
-(message "we are running in x")
-))
-
+;; Faces ______________________________________________________________________
 
 (if (eq window-system 'x)
     (progn
@@ -709,39 +710,6 @@ select 'this' or <that> (enclosed)  s-SPC
 (if (>= emacs-major-version 23)
 (set-default-font "Monospace-12"))
 
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(default ((t (:background "#2e3436" :foreground "#eeeeec"))))
-;;  '(cursor ((t (:background "#fce94f" :foreground "#2e3436"))))
-;;  '(font-lock-builtin-face ((t (:foreground "#ad7fa8"))))
-;;  '(font-lock-comment-face ((t (:foreground "#73d216"))))
-;;  '(font-lock-constant-face ((t (:foreground "#e6a8df"))))
-;;  '(font-lock-function-name-face ((t (:foreground "#fce84f"))))
-;;  '(font-lock-keyword-face ((t (:foreground "#8cc4ff"))))
-;;  '(font-lock-string-face ((t (:foreground "#e9b96e"))))
-;;  '(font-lock-type-face ((t (:foreground "#a5ff4d"))))
-;;  '(font-lock-variable-name-face ((t (:foreground "#fcaf3e"))))
-;;  '(font-lock-warning-face ((t (:foreground "#ef2929"))))
-;;  '(fringe ((t (:background "#2c2c2c"))))
-;;  '(gnus-summary-normal-unread ((t (:weight bold))))
-;;  '(gnus-summary-selected ((t (:background "dark red" :weight bold))))
-;;  '(gnus-summary-selected-face ((t (:bold t))) t)
-;;  '(header-line ((t (:background "#555753" :foreground "#ffffff"))))
-;;  '(isearch ((t (:background "#ce5c00" :foreground "#ffffff"))))
-;;  '(lazy-highlight ((t (:background "#8f5902"))))
-;;  '(link ((t (:foreground "#729fcf" :underline t))))
-;;  '(link-visited ((t (:foreground "#3465a4" :underline t))))
-;;  '(minibuffer-prompt ((t (:foreground "#fce94f"))))
-;;  '(mode-line ((t (:background "#777777" :foreground "#000000"))))
-;;  '(mode-line-inactive ((t (:background "#555753" :foreground "#ffffff"))))
-;;  '(my-tushi-face ((t (:foreground "goldenrod" :weight ultra-bold))) t)
-;;  '(region ((t (:background "#555753")))))
-
-
-;; Tabbar faces
 (set-face-attribute 'tabbar-default nil
 		    :inherit nil
 		    :height 110
@@ -776,12 +744,5 @@ select 'this' or <that> (enclosed)  s-SPC
 		    :inherit 'tabbar-default
 		    :box nil)
 
-;; (set-face-attribute 'tabbar-separator nil
-;; 		    :background "grey50"
-;;  		    :foreground "grey50"
-;; 		    :height 1.0)
-
 ;; (setq tabbar-separator '(1)) ;; set tabbar-separator size to 1 pixel
 (message "%s loaded" (buffer-file-name))
-;; (switch-to-buffer (create-file-buffer "untitled.el"))
-(setq backbuffer (buffer-name))
