@@ -1,9 +1,6 @@
 #!/bin/bash
-e_user=$(whoami)
-if ps aux | grep $e_user | grep 'emacs ' | grep -Ev 'grep' &>/dev/null; then
-# if [ "$(pidof emacs)" ] ; then
+if ps aux | grep $(whoami) | grep 'emacs ' | grep -Ev 'grep' &>/dev/null ; then
     emacsclient "$@"
 else
-	# echo "plop"
     emacs -mm $@ 2>1&
 fi

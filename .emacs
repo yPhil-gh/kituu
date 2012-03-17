@@ -1,24 +1,24 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Fri 16-Mar-2012 17:10:27>
+;; Time-stamp: <.emacs - Sat 17-Mar-2012 08:17:58>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
+
+;; plop
 
 ;; Init! ______________________________________________________________________
 
 ;; (setq user-emacs-directory "~/.lisp/")
-(eval-when-compile
   ;; (let ((default-directory "~/.emacs.d/px-lisp/"))
   ;;   (normal-top-level-add-subdirs-to-load-path))
+(eval-and-compile
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 (add-to-list 'load-path "~/.emacs.d/lisp/tabbar/")
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/bbdb/")
-)
 
-(eval-when-compile
 (require 'tabbar)
-(require 'cl)
 (require 'px-org-conf)
 (tabbar-mode t))
+(require 'cl)
 
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
@@ -74,6 +74,7 @@
 ;; (declare-function el-get "el-get.el")
 ;; (el-get 'sync my-packages)
 
+
 ;; Server! ____________________________________________________________________
 
 (server-start)
@@ -86,7 +87,7 @@
 (add-hook 'server-switch-hook 'ff/raise-frame-and-give-focus)
 
 
-;; Functions! ____________________________________________________________________
+;; Functions! _________________________________________________________________
 
 (defun this-buffer-is-visible (buffer)
   "Test if BUFFER is actually on screen"
@@ -260,6 +261,33 @@ inside html tags."
   )
 
 
+(defun saved-session ()
+  (file-exists-p (concat desktop-dirname "/" desktop-base-file-name)))
+
+(defun Session-restore-px ()
+  "Restore a saved emacs session."
+  (interactive)
+  (if (saved-session)
+      (desktop-read)
+    (message "No desktop file found.")))
+
+(defun Session-save-px ()
+  "Save an emacs session."
+  (interactive)
+  (if (saved-session)
+      (if (y-or-n-p "Overwrite existing desktop file? ")
+	  (desktop-save-in-desktop-dir)
+	(message "Session not saved."))
+  (desktop-save-in-desktop-dir)))
+
+;; This will only work for one session
+(add-hook 'after-init-hook
+	  '(lambda ()
+	     (if (saved-session)
+		 (if (y-or-n-p "Restore session? ")
+		     (Session-restore-px)))))
+
+
 ;; Modes! ______________________________________________________________________
 
 ;; (set-fringe-mode '(1 . 1))
@@ -298,6 +326,7 @@ inside html tags."
 ;; Vars! ______________________________________________________________________
 
 (setq
+ vc-make-backup-files t
  iswitchb-buffer-ignore '("^ " "*.")
  ;; scroll-preserve-screen-position t
  ;; scroll-up-aggressively 0.1
@@ -326,7 +355,7 @@ inside html tags."
 (setq yas/trigger-key (kbd "TAB"))
 ;; (global-set-key (kbd "C-²") 'yas/expand-from-trigger-key)
 
-;; use only one desktop
+;; Desktop
 (setq desktop-path '("~/.bkp/"))
 (setq desktop-dirname "~/.bkp/")
 (setq desktop-base-file-name "emacs-desktop")
@@ -342,14 +371,14 @@ inside html tags."
 					    (abbreviate-file-name (buffer-file-name))
 					  "%b")) " [%*]"))
 
-
 ;; Time-stamp
 (setq time-stamp-active t
       time-stamp-warn-inactive t
       time-stamp-format "%f - %3a %02d-%3b-%:y %02H:%02M:%02S")
 
 
-;; Hooks
+;; Hooks! _____________________________________________________________________
+
 (defun text-mode-hook-px ()
 (tabbar-mode t)
 (menu-bar-mode -1))
@@ -395,33 +424,6 @@ inside html tags."
 ;; 	     (setq desktop-dirname-tmp desktop-dirname)
 ;; 	     (desktop-remove)
 ;; 	     (setq desktop-dirname desktop-dirname-tmp)))
-
-(defun saved-session ()
-  (file-exists-p (concat desktop-dirname "/" desktop-base-file-name)))
-
-(defun session-restore-px ()
-  "Restore a saved emacs session."
-  (interactive)
-  (if (saved-session)
-      (desktop-read)
-    (message "No desktop file found.")))
-
-(defun session-save-px ()
-  "Save an emacs session."
-  (interactive)
-  (if (saved-session)
-      (if (y-or-n-p "Overwrite existing desktop file? ")
-	  (desktop-save-in-desktop-dir)
-	(message "Session not saved."))
-  (desktop-save-in-desktop-dir)))
-
-;; This will only work for one session
-(add-hook 'after-init-hook
-	  '(lambda ()
-	     (if (saved-session)
-		 (if (y-or-n-p "Restore session? ")
-		     (session-restore-px)))))
-
 
 ;; Keys! ______________________________________________________________________
 (define-key global-map [(meta up)] '(lambda() (interactive) (scroll-other-window -1)))
