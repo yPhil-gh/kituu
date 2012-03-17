@@ -19,12 +19,11 @@
     -cd ~/
     -git clone git://github.com/xaccrocheur/kituu.git .kituu && .kituu/scripts/kituu-setup.sh
     -bash
-    -e&
 
 ***** This will :
     -Clone a repository at ~/.kituu/
     -Backup your existing ~/dotfiles as ~/dotfile.orig
-    -Symlink ~/.kituu/* in ~/
+    -Symlink ~/.kituu/* in ~/*
     -Now you have a new dir, ~/script/ and it's in your $PATH
     -From now on you can put files in your .emacs.d/, when you run "kituu-setup.sh" it's existing components will be updated, and new one will be installed in the same way outlined above.
     -Remember that if a release breaks anything you can always roll-back to a previous one. And bug-report, please.
