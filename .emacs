@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Sat 17-Mar-2012 08:54:41>
+;; Time-stamp: <.emacs - Sat 17-Mar-2012 09:17:06>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -538,6 +538,8 @@ Emacs buffer are those starting with “*”."
 (setq px-minibuffer-history (concat user-emacs-directory "px-minibuffer-history"))
 (setq savehist-file px-minibuffer-history)
 (when (functionp 'savehist-mode) (savehist-mode 1))
+
+;; (cdr (car backup-directory-alist))
 
 (defun kill-boring-buffers-px (regexp &optional internal-too)
   "Kill buffers whose name matches the specified REGEXP.
