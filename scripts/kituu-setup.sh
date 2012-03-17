@@ -52,6 +52,7 @@ else
     cd $scriptsdir/offlineimap/ && git pull
 fi
 
+echo -e $sep"Perl man pages"
 if [ -e $scriptsdir/offlineimap/ ] ; then
     sudo urpmi perl-doc
 fi
