@@ -172,10 +172,11 @@ until ($quit) {
 		    # `wget -c '$_' -P $mydir` ;
 		    $my_real_file = uri_unescape($base);
 		    print $my_real_file, ": \n";
-		    `curl -# -C -L '$_' > '$my_real_file'`
+		    exec("curl -# -C - -o '$my_real_file' '$_' 2\>&");
+		    `curl -# -C - -o '$my_real_file' '$_'`
 		}
-		$quit = 1;
 	    }
+	    $quit = 1;
 	} else {
 	    print "\n### $mydir does not exist, create it? (Y/n) ";
 	    chomp(my $input = <STDIN>);
