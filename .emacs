@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Sat 17-Mar-2012 09:08:08>
+;; Time-stamp: <.emacs - Sat 17-Mar-2012 09:17:06>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -49,7 +49,7 @@
 
 (defvar gnus-bury-window-configuration)
 (defvar gnus-bury-window-configuration)
-;; (defvar px-minibuffer-history)
+(defvar px-minibuffer-history)
 (defvar savehist-file)
 
 
@@ -535,9 +535,11 @@ Emacs buffer are those starting with “*”."
 	  (scroll-bar-mode -1)))))
 
 ;; Save the minibuffer history
-(;; setq px-minibuffer-history (concat user-emacs-directory "px-minibuffer-history"))
-;; (setq savehist-file px-minibuffer-history)
-;; (when (functionp 'savehist-mode) (savehist-mode 1))
+(setq px-minibuffer-history (concat user-emacs-directory "px-minibuffer-history"))
+(setq savehist-file px-minibuffer-history)
+(when (functionp 'savehist-mode) (savehist-mode 1))
+
+;; (cdr (car backup-directory-alist))
 
 (defun kill-boring-buffers-px (regexp &optional internal-too)
   "Kill buffers whose name matches the specified REGEXP.
