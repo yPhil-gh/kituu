@@ -1,6 +1,6 @@
 * Kituu
 
-**  Fully configured/able Work / play environment
+**  Fully configured/able environment
 
 *** BASH Features
     -Two-lines solid display
