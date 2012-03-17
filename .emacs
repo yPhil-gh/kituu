@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Sat 17-Mar-2012 08:17:58>
+;; Time-stamp: <.emacs - Sat 17-Mar-2012 08:54:41>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -19,6 +19,7 @@
 (require 'px-org-conf)
 (tabbar-mode t))
 (require 'cl)
+
 
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
