@@ -170,8 +170,9 @@ until ($quit) {
 		    $dir  = dirname($_);
 		    ($base, $dir, $ext) = fileparse($_);
 		    # `wget -c '$_' -P $mydir` ;
-		    print uri_unescape($base), ": \n";
-		    `curl -# -L '$_' > /tmp/plop.mp3`
+		    $my_real_file = uri_unescape($base);
+		    print $my_real_file, ": \n";
+		    `curl -# -C -L '$_' > '$my_real_file'`
 		}
 		$quit = 1;
 	    }
