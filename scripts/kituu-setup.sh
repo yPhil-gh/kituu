@@ -18,7 +18,7 @@ echo -e $sep"Found $kituudir, so"
 fi
 
 for i in * ; do
-if [[ "${i}" != ".git" && "${i}" != "README.org" && "${i}" != "." && "${i}" != ".." && ! -L ~/$i ]] ; then
+if [[ "${i}" != ".git" && "${i}" != "README.org" && "${i}" != "." && "${i}" != ".." && ! -L ~/$i && "${i}" != "*.elc" ]] ; then
 if [[ -e ~/$i ]] ; then
 mv -v ~/$i ~/$i.orig
 ln -sv $kituudir/$i ~/
@@ -52,4 +52,7 @@ else
     cd $scriptsdir/offlineimap/ && git pull
 fi
 
+if [ -e $scriptsdir/offlineimap/ ] ; then
+    sudo urpmi perl-doc
+fi
 echo -e $sep"...Done."
