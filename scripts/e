@@ -1,4 +1,7 @@
 #!/bin/bash
+
+
+
 if ps aux | grep $(whoami) | grep 'emacs ' | grep -Ev 'grep' &>/dev/null ; then
     emacsclient "$@"
 else
