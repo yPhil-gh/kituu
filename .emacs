@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Sat 17-Mar-2012 09:17:06>
+;; Time-stamp: <.emacs - Sat 17-Mar-2012 10:25:23>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -379,6 +379,10 @@ inside html tags."
 
 
 ;; Hooks! _____________________________________________________________________
+
+(add-hook 'cperl-mode-hook
+	  (lambda ()
+	    (local-set-key (kbd "C-h f") 'cperl-perldoc)))
 
 (defun text-mode-hook-px ()
 (tabbar-mode t)
