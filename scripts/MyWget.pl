@@ -22,15 +22,14 @@ $num_args = $#ARGV + 1;
 if ($num_args != 3) {
     &$sep(' USAGE');
 
-    print "
-  -Where <page> is a full url, and <ext> the extension of the file(s) you wish to get.
+    print "  -Where <page> is a full url, and <ext> the extension of the file(s) you wish to get.
   -Don't forget the quotes if your new dir has spaces in its name.
-  -If the intermediate directories don't exist they will be created as well.";
+  -If the intermediate directories don't exist they will be created as well.
+";
 
     &$sep(' EXAMPLE');
 
-    print "
-  $0 http://site.org/sfa.html&a=guerilla mp3 'Music/Pop/Super furry Animals/Guerilla (2009)'
+    print " \$$0 http://site.org/scorn.html&a=colossus mp3 'Music/Dub/Colossus (1991)'
 ";
     exit;
 }
@@ -69,7 +68,10 @@ for (sort keys %seen) {
 my $quit = 0;
 
 until ($quit) {
-    print colored ("\n### DL those files in $ARGV[2]/? (Y/n) ", 'bold');
+    print colored ("\n### DL those files in ", 'bold');
+    print color "reset";
+    print colored ("$ARGV[2]/", 'bold blue');
+    print colored ("? (Y/n) ", 'bold');
     print color "reset";
     # print "\n### DL those files in $ARGV[2]/? (Y/n) ";
     chomp(my $input = <STDIN>);
@@ -92,7 +94,11 @@ until ($quit) {
 	    }
 	    $quit = 1;
 	} else {
-	    print colored ("\n### $mydir/ does not exist, create it? (Y/n) ", 'bold');
+	    print color "reset";
+	    print colored ("\n### ", 'bold');
+	    print colored ("$mydir/ ", 'bold blue');
+
+	    print colored ("does not exist, create it? (Y/n) ", 'bold');
 	    print color "reset";
 	    # print "\n### $mydir/ does not exist, create it? (Y/n) ";
 	    chomp(my $input = <STDIN>);
