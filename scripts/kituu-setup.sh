@@ -32,14 +32,13 @@ done
 
 if [ ! -e $scriptsdir/git-completion.bash ]
   then
-echo -e $sep"Installing Git completion..."
+echo -e $sep"Git completion ($scriptsdir/git-completion.bash)"
     curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptsdir/git-completion.bash
 fi
 
 echo -e $sep"Tabbar ($lispdir/tabbar/)"
 if [ ! -e $lispdir/tabbar/ ] ; then
     cd $lispdir && git clone https://github.com/dholm/tabbar.git
-    # rm -rf tabbar/.git/* && rm -rfv $lispdir/tabbar/.git/
 else
     cd $lispdir/tabbar/ && git pull
 fi
@@ -47,9 +46,8 @@ fi
 echo -e $sep"Smart-tab ($lispdir/smart-tab/)"
 if [ ! -e $lispdir/smart-tab/ ] ; then
     cd $lispdir && git clone https://github.com/genehack/smart-tab.git
-    # rm -rf tabbar/.git/* && rm -rfv $lispdir/tabbar/.git/
 else
-    cd $lispdir/tabbar/ && git pull
+    cd $lispdir/smart-tab/ && git pull
 fi
 
 echo -e $sep"Offlineimap ($scriptsdir/offlineimap/)"
