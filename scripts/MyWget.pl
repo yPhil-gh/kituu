@@ -22,23 +22,25 @@ $num_args = $#ARGV + 1;
 if ($num_args != 3) {
     &$sep(' USAGE');
 
-    print "  -Where <page> is a full url, and <ext> the extension of the file(s) you wish to get.
-  -Don't forget the quotes if your new dir has spaces in its name.
-  -If the intermediate directories don't exist they will be created as well.
+    print "\t$0 {uri} {ext} {dir}
+
+\t-If there are spaces in your new dir name, enclose it with quotes.
+\t-If the intermediate directories don't exist they will be created as well.
+\t-If your URI has spaces in it (feh) encode them (replace with %20) or enclose the URI in quotes.
 ";
 
     &$sep(' EXAMPLE');
 
-    print " \$$0 http://site.org/scorn.html&a=colossus mp3 'Music/Dub/Colossus (1991)'
+    print "\t\$$0 http://site.org:81/scorn.html&a=colossus mp3 'Music/Dub/Colossus (1991)'
 ";
     exit;
 }
 
 $basic_url = $ARGV[0];
-$base_url = uri_unescape($basic_url);
+# $base_url = uri_unescape($basic_url);
 
-$parser = HTML::LinkExtor->new(undef, $base_url);
-$parser->parse(get($base_url))->eof;
+$parser = HTML::LinkExtor->new(undef, $basic_url);
+$parser->parse(get($basic_url))->eof;
 @links = $parser->links;
 foreach $linkarray (@links) {
   local(@element) = @$linkarray;
@@ -83,13 +85,35 @@ until ($quit) {
 	    `ls -la`;
 	    for (sort keys %seen) {
 		if($_ =~ m/(.*?)\.$ARGV[1]/ && $_ !~ m/m3u/) {
-		    $base = uri_unescape(basename($_));
-		    $dir  = dirname($_);
-		    ($base, $dir, $ext) = fileparse($_);
-		    $my_real_file = uri_unescape($base);
-		    print colored ("$my_real_file", 'bold green'), "\n";
-		    print color "reset";
-		    `curl -# -C - -o '$my_real_file' '$_'`;
+
+		    my $url = URI->new( $_ );
+		    my $scheme = $url->scheme;
+		    my $domain = $url->host . ":";
+		    my $port = $url->port;
+		    my $rest = $url->path;
+		    $myfulluri = $scheme . "://" . $domain . $port . uri_escape($rest, "][");
+		    print $myfulluri . "\n\n";
+
+		    # $base = uri_unescape(basename($_));
+		    # $dir  = dirname($_);
+		    # ($base, $dir, $ext) = fileparse($_);
+		    # $my_real_file = uri_unescape($base);
+		    # print colored ("\n$my_real_file", 'bold green'), "\n";
+		    # print color "reset";
+		    # $real_uri = uri_unescape($_);
+		    # # print "(", $dir, ")\n\n";
+		    # `curl -# -C - -o '$my_real_file' '$real_uri'`;
+		    # system(curl -# -C - -o '$my_real_file' '$real_uri');
+		    # @args = ("curl -L ", "'$real_uri'", "'$my_real_file' ");
+		    # @myurl = ($dir, uri_escape($real_uri, "]["), $ext);
+		    # # exec(@args) || die $!;
+		    # # print @args;
+		    # print "\n\n";
+		    # # print $dir;
+		    # print $_;
+		    # print "\n\n";
+		    # # or die "system @args failed: $?"
+
 		}
 	    }
 	    $quit = 1;
@@ -112,9 +136,10 @@ until ($quit) {
 		    ($base, $dir, $ext) = fileparse($_);
 		    # `wget -c '$_' -P $mydir` ;
 		    $my_real_file = uri_unescape($base);
-		    print colored ("$my_real_file", 'bold green'), "\n";
+		    $my_real_uri = uri_unescape($_);
+		    print colored ("$my_real_uri", 'bold green'), "\n";
 		    print color "reset";
-		    `curl -# -C - -o '$my_real_file' '$_'`;
+		    `curl -# -C - -o '$base' $my_real_uri`;
 		    }
 		}
 		$quit = 1;
@@ -131,3 +156,7 @@ until ($quit) {
         print "Please anwser to proceed.\n";
     }
 }
+
+# http://studio.parisson.com:8888/Music2/Pablo%20Moses/Pave%20the%20Way%20%5BDub%5D%20Disc%201/01%20Proverbs%20Extractions.mp3
+
+# http://studio.parisson.com:8888/Music0/25%20ans%20de%20radio%20Nova/1981/01%20-%20Jingle%20-%201981.mp3
