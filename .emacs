@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Sun 18-Mar-2012 20:14:32>
+;; Time-stamp: <.emacs - Sun 18-Mar-2012 21:02:51>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -7,18 +7,20 @@
 
 ;; Init! ______________________________________________________________________
 
-;; (setq user-emacs-directory "~/.lisp/")
-  ;; (let ((default-directory "~/.emacs.d/px-lisp/"))
-  ;;   (normal-top-level-add-subdirs-to-load-path))
-(eval-and-compile
-(add-to-list 'load-path "~/.emacs.d/lisp/")
-(add-to-list 'load-path "~/.emacs.d/lisp/tabbar/")
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/bbdb/")
+;; (setq user-emacs-directory "~/.emacs/")
+(eval-when-compile
+  (let ((default-directory "~/.emacs.d/lisp/"))
+    (normal-top-level-add-subdirs-to-load-path))
+;;(require 'px-org-conf)
+)
 
-(require 'tabbar)
-(require 'px-org-conf)
-(tabbar-mode t))
+;; (eval-and-compile
+;; (add-to-list 'load-path "~/.emacs.d/lisp/")
+;; (add-to-list 'load-path "~/.emacs.d/lisp/tabbar/")
+;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/bbdb/")
+
 (require 'cl)
+(require 'tabbar)
 (require 'smart-tab)
 
 (defvar iswitchb-mode-map)
@@ -291,6 +293,7 @@ inside html tags."
 
 ;; Modes! ______________________________________________________________________
 
+(tabbar-mode t)
 ;; (set-fringe-mode '(1 . 1))
 (show-paren-mode t)
 (menu-bar-mode -1)

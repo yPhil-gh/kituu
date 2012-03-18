@@ -107,7 +107,9 @@ until ($quit) {
 	    for (sort keys %seen) {
 		if($_ =~ m/(.*?)\.$ARGV[1]/ && $_ !~ m/m3u/) {
 		    $myuri = canonicalize($_);
-		    print $myuri . "\n\n";
+		    $prettyname = prettyname($_);
+		    # print $prettyname
+		    print $myuri . "\n";
 
 		    ($base, $dir, $ext) = fileparse($_);
 		    $my_real_file = uri_unescape($base);
