@@ -14,7 +14,7 @@ echo -e $sep"No existing $kituudir, so"
     cd && git clone git@github.com:xaccrocheur/kituu.git
 else
 echo -e $sep"Found $kituudir, so"
-    cd $kituudir && git fetch && git reset --hard origin/master
+    cd $kituudir && git pull
 fi
 
 for i in * ; do
