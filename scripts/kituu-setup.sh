@@ -44,6 +44,14 @@ else
     cd $lispdir/tabbar/ && git pull
 fi
 
+echo -e $sep"Smart-tab ($lispdir/smart-tab/)"
+if [ ! -e $lispdir/smart-tab/ ] ; then
+    cd $lispdir && git clone https://github.com/genehack/smart-tab.git
+    # rm -rf tabbar/.git/* && rm -rfv $lispdir/tabbar/.git/
+else
+    cd $lispdir/tabbar/ && git pull
+fi
+
 echo -e $sep"Offlineimap ($scriptsdir/offlineimap/)"
 if [ ! -e $scriptsdir/offlineimap/ ] ; then
     cd $scriptsdir && git clone https://github.com/spaetz/offlineimap.git

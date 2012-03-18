@@ -18,6 +18,27 @@ sub sep {
     print color "reset";
 }
 
+sub canonicalize {
+    my $uri = shift;
+    # my $type = shift;
+
+    my $url = URI->new( $uri );
+    my $scheme = $url->scheme;
+    my $domain = $url->host . ":";
+    my $port = $url->port;
+    my $rest = $url->path;
+    $myfulluri = $scheme . "://" . $domain . $port . uri_escape($rest, "][");
+    return $myfulluri;
+}
+
+sub prettyname {
+    my $name = shift;
+    (my $base, my $dir, my $ext) = fileparse($_);
+    my $prettyname = uri_unescape($base);
+    print colored ("\n$prettyname", 'bold green'), "\n";
+    print color "reset";
+}
+
 $num_args = $#ARGV + 1;
 if ($num_args != 3) {
     &$sep(' USAGE');
@@ -85,35 +106,15 @@ until ($quit) {
 	    `ls -la`;
 	    for (sort keys %seen) {
 		if($_ =~ m/(.*?)\.$ARGV[1]/ && $_ !~ m/m3u/) {
+		    $myuri = canonicalize($_);
+		    print $myuri . "\n\n";
 
-		    my $url = URI->new( $_ );
-		    my $scheme = $url->scheme;
-		    my $domain = $url->host . ":";
-		    my $port = $url->port;
-		    my $rest = $url->path;
-		    $myfulluri = $scheme . "://" . $domain . $port . uri_escape($rest, "][");
-		    print $myfulluri . "\n\n";
+		    ($base, $dir, $ext) = fileparse($_);
+		    $my_real_file = uri_unescape($base);
+		    print colored ("\n$my_real_file", 'bold green'), "\n";
+		    print color "reset";
 
-		    # $base = uri_unescape(basename($_));
-		    # $dir  = dirname($_);
-		    # ($base, $dir, $ext) = fileparse($_);
-		    # $my_real_file = uri_unescape($base);
-		    # print colored ("\n$my_real_file", 'bold green'), "\n";
-		    # print color "reset";
-		    # $real_uri = uri_unescape($_);
-		    # # print "(", $dir, ")\n\n";
-		    # `curl -# -C - -o '$my_real_file' '$real_uri'`;
-		    # system(curl -# -C - -o '$my_real_file' '$real_uri');
-		    # @args = ("curl -L ", "'$real_uri'", "'$my_real_file' ");
-		    # @myurl = ($dir, uri_escape($real_uri, "]["), $ext);
-		    # # exec(@args) || die $!;
-		    # # print @args;
-		    # print "\n\n";
-		    # # print $dir;
-		    # print $_;
-		    # print "\n\n";
-		    # # or die "system @args failed: $?"
-
+		    `curl -# -C - -o '$my_real_file' $myuri`;
 		}
 	    }
 	    $quit = 1;

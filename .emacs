@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Sat 17-Mar-2012 10:25:23>
+;; Time-stamp: <.emacs - Sun 18-Mar-2012 20:14:32>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -19,7 +19,7 @@
 (require 'px-org-conf)
 (tabbar-mode t))
 (require 'cl)
-
+(require 'smart-tab)
 
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
@@ -296,7 +296,7 @@ inside html tags."
 (menu-bar-mode -1)
 (global-linum-mode 1)
 ;; (global-undo-tree-mode 1)
-;;(global-smart-tab-mode 1)
+(global-smart-tab-mode 1)
 (global-font-lock-mode t)
 (tool-bar-mode 0)
 (set-scroll-bar-mode `right)
@@ -380,7 +380,7 @@ inside html tags."
 
 ;; Hooks! _____________________________________________________________________
 
-(add-hook 'cperl-mode-hook
+(add-hook 'perl-mode-hook
 	  (lambda ()
 	    (local-set-key (kbd "C-h f") 'cperl-perldoc)))
 
