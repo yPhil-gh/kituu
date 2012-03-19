@@ -1,7 +1,7 @@
 # ===================================================================
 # Kituu - the mildly over the top bash prompt - GPL3
 # pX <hallucinet@online.fr>
-# Time-stamp: <.bashrc - Mon 19-Mar-2012 15:35:01>
+# Time-stamp: <.bashrc - Mon 19-Mar-2012 15:41:09>
 # ===================================================================
 
 # If not running interactively, don't do anything
@@ -22,7 +22,7 @@ GIT_PS1_SHOWDIRTYSTATE=true
 kituu_user=$(whoami)
 kituu_processes=$(ps ax | wc -l | tr -d " ")
 
-export ALTERNATE_EDITOR=emacs EDITOR=emacs
+export EDITOR=emacs ALTERNATE_EDITOR=vi
 
 # Try to escape busybox
 if [ -n "${BASH+x}" ] ; then
@@ -76,7 +76,7 @@ alias screen="screen -h 5000"
 alias Commit="git commit -am"
 alias Push="git push origin"
 alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
-
+alias Screen="screen -r $newest"
 
 # if hash vim 2>&- ; then
 #     alias vi="vim"
@@ -91,7 +91,8 @@ Screen () {
     newest=`ls -1t $sessdir | head -1`
 # Kill all sessions but newest
     # ls -1t $sessdir| sed 1d | while read sess; do screen -m -S $sess -X quit; done
-    screen -r $newest
+    # screen -r $newest
+    echo $newest
 }
 
 pss () {
