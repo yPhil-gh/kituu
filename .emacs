@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Mon 19-Mar-2012 00:14:37>
+;; Time-stamp: <.emacs - Mon 19-Mar-2012 12:15:30>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -299,7 +299,7 @@ inside html tags."
 (menu-bar-mode -1)
 (global-linum-mode 1)
 ;; (global-undo-tree-mode 1)
-(global-smart-tab-mode 1)
+;; (global-smart-tab-mode 1)
 (global-font-lock-mode t)
 (tool-bar-mode 0)
 (set-scroll-bar-mode `right)

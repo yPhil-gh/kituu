@@ -73,10 +73,23 @@ foreach $linkarray (@links) {
   }
 }
 
+# %myhash = %seen;
+# while (defined ($key = each %plop)) {
+#     $myhash{$key}++;
+# }
+# %uniq = keys %seen;
+
+# use Data::Dumper;
+# print Dumper(\%seen);
+# print Dumper(\@uniq);
+
+# plop.mp3.info
+# plop.mp3
+
 &$sep('### Found :');
 # for (sort keys %seen) { print $_, "\n"}
 for (sort keys %seen) {
-    if($_ =~ m/(.*?)\.$ARGV[1]/ && $_ !~ m/m3u/) {
+    if($_ =~ m/(.*?)\.$ARGV[1]$/) {
 	$base = basename($_);
 	$dir  = dirname($_);
 	($base, $dir, $ext) = fileparse($_);
@@ -91,10 +104,10 @@ for (sort keys %seen) {
 my $quit = 0;
 
 until ($quit) {
-    print colored ("\n### DL those files in ", 'bold');
+    print colored ("\n### DL those files in [", 'bold');
     print color "reset";
-    print colored ("$ARGV[2]/", 'bold blue');
-    print colored ("? (Y/n) ", 'bold');
+    print colored ("$ARGV[2]", 'bold blue');
+    print colored ("]? (Y/n) ", 'bold');
     print color "reset";
     # print "\n### DL those files in $ARGV[2]/? (Y/n) ";
     chomp(my $input = <STDIN>);
@@ -105,15 +118,12 @@ until ($quit) {
 	    chdir($mydir);
 	    `ls -la`;
 	    for (sort keys %seen) {
-		if($_ =~ m/(.*?)\.$ARGV[1]/ && $_ !~ m/m3u/) {
+		if ( $_ =~ m/(.*?)\.$ARGV[1]$/ ) {
 		    $myuri = canonicalize($_);
 		    $prettyname = prettyname($_);
-		    # print $prettyname
-		    print $myuri . "\n";
 
 		    ($base, $dir, $ext) = fileparse($_);
 		    $my_real_file = uri_unescape($base);
-		    print colored ("\n$my_real_file", 'bold green'), "\n";
 		    print color "reset";
 
 		    `curl -# -C - -o '$my_real_file' $myuri`;
@@ -122,10 +132,10 @@ until ($quit) {
 	    $quit = 1;
 	} else {
 	    print color "reset";
-	    print colored ("\n### ", 'bold');
-	    print colored ("$mydir/ ", 'bold blue');
+	    print colored ("\n### [", 'bold');
+	    print colored ("$mydir", 'bold blue');
 
-	    print colored ("does not exist, create it? (Y/n) ", 'bold');
+	    print colored ("] does not exist, create it? (Y/n) ", 'bold');
 	    print color "reset";
 	    # print "\n### $mydir/ does not exist, create it? (Y/n) ";
 	    chomp(my $input = <STDIN>);
@@ -133,16 +143,15 @@ until ($quit) {
 		`mkdir -p '$mydir'`;
 		chdir($mydir);
 		for (sort keys %seen) {
-		    if($_ =~ m/(.*?)\.$ARGV[1]/ && $_ !~ m/m3u/) {
-		    $base = uri_unescape(basename($_));
-		    $dir  = dirname($_);
+		    if ( $_ =~ m/(.*?)\.$ARGV[1]$/ ) {
+		    $myuri = canonicalize($_);
+		    $prettyname = prettyname($_);
+
 		    ($base, $dir, $ext) = fileparse($_);
-		    # `wget -c '$_' -P $mydir` ;
 		    $my_real_file = uri_unescape($base);
-		    $my_real_uri = uri_unescape($_);
-		    print colored ("$my_real_uri", 'bold green'), "\n";
 		    print color "reset";
-		    `curl -# -C - -o '$base' $my_real_uri`;
+
+		    `curl -# -C - -o '$my_real_file' $myuri`;
 		    }
 		}
 		$quit = 1;
