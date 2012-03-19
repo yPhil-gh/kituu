@@ -140,6 +140,8 @@ until ($quit) {
 	    # print "\n### $mydir/ does not exist, create it? (Y/n) ";
 	    chomp(my $input = <STDIN>);
 	    if ($input =~ /^[Y]?$/i) {
+		my $h = "'$ENV{HOME}'";
+		$mydir =~ s/~/$h/ee;
 		`mkdir -p '$mydir'`;
 		chdir($mydir);
 		for (sort keys %seen) {
