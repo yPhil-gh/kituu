@@ -1,7 +1,7 @@
 # ===================================================================
 # Kituu - the mildly over the top bash prompt - GPL3
 # pX <hallucinet@online.fr>
-# Time-stamp: <.bashrc - Mon 19-Mar-2012 15:47:55>
+# Time-stamp: <.bashrc - Mon 19-Mar-2012 15:50:52>
 # ===================================================================
 
 # If not running interactively, don't do anything
@@ -84,10 +84,10 @@ alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
 
 Screen () {
 # session directory
-    # sessdir=`screen -ls | sed -ne 's/.*Sockets* in \(.*\)\.$/\1/p'`
-    screen -ls | sed -ne 's/.*Sockets* in \(.*\)\.$/\1/p'
+    sessdir=`screen -ls | sed -ne 's/.*Sockets* in \(.*\)\.$/\1/p'`
+    # screen -ls | sed -ne 's/.*Sockets* in \(.*\)\.$/\1/p'
 # display age of sessions:
-    # ls -l $sessdir
+    ls -l $sessdir
 # newest session
     # newest=`ls -1t $sessdir | head -1`
 # Kill all sessions but newest
