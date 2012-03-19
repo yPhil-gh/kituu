@@ -1,7 +1,7 @@
 # ===================================================================
 # Kituu - the mildly over the top bash prompt - GPL3
 # pX <hallucinet@online.fr>
-# Time-stamp: <.bashrc - Mon 19-Mar-2012 15:50:52>
+# Time-stamp: <.bashrc - Mon 19-Mar-2012 18:02:26>
 # ===================================================================
 
 # If not running interactively, don't do anything
@@ -72,7 +72,7 @@ alias rssi="rpm -qil"
 alias MSG="sudo tail -f -n 40 /var/log/messages"
 alias MSGh="sudo tail -f -n 40 /var/log/httpd/error_log"
 alias U="urpmi"
-alias screen="screen -h 5000"
+# alias screen="screen -h 5000"
 alias Commit="git commit -am"
 alias Push="git push origin"
 alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
@@ -84,10 +84,11 @@ alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
 
 Screen () {
 # session directory
+
     sessdir=`screen -ls | sed -ne 's/.*Sockets* in \(.*\)\.$/\1/p'`
     # screen -ls | sed -ne 's/.*Sockets* in \(.*\)\.$/\1/p'
 # display age of sessions:
-    ls -l $sessdir
+    # ls -l $sessdir
 # newest session
     # newest=`ls -1t $sessdir | head -1`
 # Kill all sessions but newest

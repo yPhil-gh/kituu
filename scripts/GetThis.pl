@@ -27,9 +27,21 @@ sub canonicalize {
     my $domain = $url->host . ":";
     my $port = $url->port;
     my $rest = $url->path;
-    $myfulluri = $scheme . "://" . $domain . $port . uri_escape($rest, "][");
+    $myfulluri = $scheme . "://" . $domain . $port . uri_escape($rest, "'\\|(\\|)\\|\\[\\|\\]");
     return $myfulluri;
 }
+
+
+    $mydir = $ARGV[2];
+    my $h = "'$ENV{HOME}'";
+    $mydir =~ s/~/$h/ee;
+
+# '\\|(\\|)\\|\\[\\|\\]
+
+# I'm a bitch
+# yo (plop)
+
+# gah [rgte]
 
 sub prettyname {
     my $name = shift;
@@ -101,19 +113,22 @@ for (sort keys %seen) {
 }
 
 
+$mydir = $ARGV[2];
+my $h = "'$ENV{HOME}'";
+$mydir =~ s/~/$h/ee;
+
 my $quit = 0;
 
 until ($quit) {
     print colored ("\n### DL those files in [", 'bold');
     print color "reset";
-    print colored ("$ARGV[2]", 'bold blue');
+    print colored ("$mydir", 'bold blue');
     print colored ("]? (Y/n) ", 'bold');
     print color "reset";
     # print "\n### DL those files in $ARGV[2]/? (Y/n) ";
     chomp(my $input = <STDIN>);
 
     if ($input =~ /^[Y]?$/i) {
-	$mydir = $ARGV[2];
 	if (-r $mydir) {
 	    chdir($mydir);
 	    `ls -la`;
@@ -121,12 +136,12 @@ until ($quit) {
 		if ( $_ =~ m/(.*?)\.$ARGV[1]$/ ) {
 		    $myuri = canonicalize($_);
 		    $prettyname = prettyname($_);
-
+		    # print $myuri . "\n";
 		    ($base, $dir, $ext) = fileparse($_);
 		    $my_real_file = uri_unescape($base);
 		    print color "reset";
 
-		    `curl -# -C - -o '$my_real_file' $myuri`;
+		    `curl -# -C - -o "$my_real_file" $myuri`;
 		}
 	    }
 	    $quit = 1;
@@ -140,8 +155,6 @@ until ($quit) {
 	    # print "\n### $mydir/ does not exist, create it? (Y/n) ";
 	    chomp(my $input = <STDIN>);
 	    if ($input =~ /^[Y]?$/i) {
-		my $h = "'$ENV{HOME}'";
-		$mydir =~ s/~/$h/ee;
 		`mkdir -p '$mydir'`;
 		chdir($mydir);
 		for (sort keys %seen) {
@@ -153,7 +166,7 @@ until ($quit) {
 		    $my_real_file = uri_unescape($base);
 		    print color "reset";
 
-		    `curl -# -C - -o '$my_real_file' $myuri`;
+		    `curl -# -C - -o "$my_real_file" $myuri`;
 		    }
 		}
 		$quit = 1;
