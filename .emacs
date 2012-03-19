@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Mon 19-Mar-2012 12:15:30>
+;; Time-stamp: <.emacs - Mon 19-Mar-2012 12:39:16>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -21,6 +21,7 @@
 
 (require 'cl)
 (require 'tabbar)
+;; wtf?
 (require 'smart-tab)
 
 (defvar iswitchb-mode-map)
