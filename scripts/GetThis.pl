@@ -8,6 +8,7 @@ use File::Path;
 use URI::Escape;
 # use strict;
 use Term::ANSIColor;
+use List::Util 'max';
 
 my $sep = "sep";
 
@@ -20,7 +21,6 @@ sub sep {
 
 sub canonicalize {
     my $uri = shift;
-    # my $type = shift;
 
     my $url = URI->new( $uri );
     my $scheme = $url->scheme;
@@ -68,28 +68,33 @@ foreach $linkarray (@links) {
     local($attr_name, $attr_value) = splice (@element, 0, 2);
     # print $attr_value;
     @myarray = $seen{$attr_value}++;
-    $seen{$attr_value}++;
+    $plop{$attr_value}++;
   }
 }
 
 
-
-my %unique = ();
-foreach my $item (@myarray)
-{
-    $unique{$item}++;
+%seen = ();
+while (defined ($key = each %plop)) {
+    $seen{$key}++;
 }
-my @myuniquearray = keys %unique;
+%uniq = keys %seen;
 
+# @uniq = keys %seen;
 
-# $size = sort keys %seen;
-# print "(" . $size . ")\n";
+for (sort keys %uniq) {
+    if($_ =~ m/(.*?)\.$ARGV[1]/ && $_ !~ m/m3u/) {
+	print "\n(" . $_ . ")\n\n";
+    }
+}
 
-print "(" . @myuniquearray;
+# use Data::Dumper;
+# print Dumper(\@uniq);
+print "size of hash:  " . %uniq . ".\n";
+# print "We got " . (scalar @uniq) . " elements";
 
 &$sep('### Found $size files');
 # for (sort keys %seen) { print $_, "\n"}
-for (sort keys %seen) {
+for (sort keys %uniq) {
     if($_ =~ m/(.*?)\.$ARGV[1]/ && $_ !~ m/m3u/) {
 	$base = basename($_);
 	$dir  = dirname($_);
@@ -140,7 +145,7 @@ until ($quit) {
 	if (-r $mydir) {
 	    chdir($mydir);
 	    `ls -la`;
-	    for (sort keys %seen) {
+	    for (sort keys %uniq) {
 		if($_ =~ m/(.*?)\.$ARGV[1]/ && $_ !~ m/m3u/) {
 		    $myuri = canonicalize($_);
 		    $prettyname = prettyname($_);
@@ -171,7 +176,7 @@ until ($quit) {
 	    if ($input =~ /^[Y]?$/i) {
 		`mkdir -p '$mydir'`;
 		chdir($mydir);
-		for (sort keys %seen) {
+		for (sort keys %uniq) {
 		    if($_ =~ m/(.*?)\.$ARGV[1]/ && $_ !~ m/m3u/) {
 		    $myuri = canonicalize($_);
 		    $prettyname = prettyname($_);
