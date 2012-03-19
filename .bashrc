@@ -1,7 +1,7 @@
 # ===================================================================
 # Kituu - the mildly over the top bash prompt - GPL3
 # pX <hallucinet@online.fr>
-# Time-stamp: <.bashrc - Mon 19-Mar-2012 15:42:45>
+# Time-stamp: <.bashrc - Mon 19-Mar-2012 15:46:27>
 # ===================================================================
 
 # If not running interactively, don't do anything
@@ -82,18 +82,18 @@ alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
 #     alias vi="vim"
 # fi
 
-Screen () {
-# session directory
-    sessdir=`screen -ls | sed -ne 's/.*Sockets* in \(.*\)\.$/\1/p'`
-# display age of sessions:
-    # ls -l $sessdir
-# newest session
-    newest=`ls -1t $sessdir | head -1`
-# Kill all sessions but newest
-    # ls -1t $sessdir| sed 1d | while read sess; do screen -m -S $sess -X quit; done
-    # screen -r $newest
-    echo $newest
-}
+# Screen () {
+# # session directory
+#     sessdir=`screen -ls | sed -ne 's/.*Sockets* in \(.*\)\.$/\1/p'`
+# # display age of sessions:
+#     # ls -l $sessdir
+# # newest session
+#     newest=`ls -1t $sessdir | head -1`
+# # Kill all sessions but newest
+#     # ls -1t $sessdir| sed 1d | while read sess; do screen -m -S $sess -X quit; done
+#     # screen -r $newest
+#     echo $newest
+# }
 
 pss () {
     ps aux | grep "[${1:0:1}]${1:1}"
