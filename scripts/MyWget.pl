@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# # MyWget.pl (based off wget-queue.pl (Based off of wget-queue.sh) (C) 2004 C. Maloey) (c) 2012 C.M. Coatmeur
+# # GetThis.pl (c) 2012 C.M. Coatmeur
 
 use HTML::LinkExtor;
 use LWP::Simple;
@@ -27,7 +27,7 @@ sub canonicalize {
     my $domain = $url->host . ":";
     my $port = $url->port;
     my $rest = $url->path;
-    $myfulluri = $scheme . "://" . $domain . $port . uri_escape($rest, "][");
+    $myfulluri = $scheme . "://" . $domain . $port . uri_escape($rest, "][|)(");
     return $myfulluri;
 }
 
@@ -35,8 +35,6 @@ sub prettyname {
     my $name = shift;
     (my $base, my $dir, my $ext) = fileparse($_);
     my $prettyname = uri_unescape($base);
-    print colored ("\n$prettyname", 'bold green'), "\n";
-    print color "reset";
 }
 
 $num_args = $#ARGV + 1;
@@ -69,11 +67,27 @@ foreach $linkarray (@links) {
   while (@element) {
     local($attr_name, $attr_value) = splice (@element, 0, 2);
     # print $attr_value;
+    @myarray = $seen{$attr_value}++;
     $seen{$attr_value}++;
   }
 }
 
-&$sep('### Found :');
+
+
+my %unique = ();
+foreach my $item (@myarray)
+{
+    $unique{$item}++;
+}
+my @myuniquearray = keys %unique;
+
+
+# $size = sort keys %seen;
+# print "(" . $size . ")\n";
+
+print "(" . @myuniquearray;
+
+&$sep('### Found $size files');
 # for (sort keys %seen) { print $_, "\n"}
 for (sort keys %seen) {
     if($_ =~ m/(.*?)\.$ARGV[1]/ && $_ !~ m/m3u/) {
@@ -87,20 +101,42 @@ for (sort keys %seen) {
     }
 }
 
+# my $i = 0;
+# for (sort keys %seen) {
+#     if($_ =~ m/(.*?)\.$ARGV[1]/ && $_ !~ m/m3u/) {
+# 	$myhash{$_}++;
+# 	# print $i++ . ">" . $_ . "\n\n";
+#     }
+# }
+
+# # my %saw = ();
+# # my @unique = grep { ! $saw{ $_ }++ } %myhash;
+
+# # # my @unique = uniq(%seen);
+
+# # print @unique;
+
+# $size = keys %seen;
+# $hashish = $size / 2;
+# print ">" . $size;
 
 my $quit = 0;
 
 until ($quit) {
-    print colored ("\n### DL those files in ", 'bold');
+    print colored ("\n### DL those files in [", 'bold');
     print color "reset";
-    print colored ("$ARGV[2]/", 'bold blue');
-    print colored ("? (Y/n) ", 'bold');
+    print colored ("$ARGV[2]", 'bold blue');
+    print colored ("]? (Y/n) ", 'bold');
     print color "reset";
     # print "\n### DL those files in $ARGV[2]/? (Y/n) ";
     chomp(my $input = <STDIN>);
 
     if ($input =~ /^[Y]?$/i) {
 	$mydir = $ARGV[2];
+	# if ($sentence =~ /~/);
+	$string = $mydir;
+	$string =~ s/~/zob/g;
+	print "(" . $string . ")\n\n";
 	if (-r $mydir) {
 	    chdir($mydir);
 	    `ls -la`;
@@ -108,24 +144,27 @@ until ($quit) {
 		if($_ =~ m/(.*?)\.$ARGV[1]/ && $_ !~ m/m3u/) {
 		    $myuri = canonicalize($_);
 		    $prettyname = prettyname($_);
-		    # print $prettyname
-		    print $myuri . "\n";
-
-		    ($base, $dir, $ext) = fileparse($_);
-		    $my_real_file = uri_unescape($base);
-		    print colored ("\n$my_real_file", 'bold green'), "\n";
+		    print colored ("\n$prettyname", 'bold green'), "\n";
 		    print color "reset";
 
-		    `curl -# -C - -o '$my_real_file' $myuri`;
+
+		    # use IPC::Open3;
+		    # use File::Spec;
+		    # use Symbol qw(gensym);
+		    # open(NULL, ">", File::Spec->devnull);
+		    # my $pid = open3(gensym, \*PH, ">&NULL", "curl -# -C - -o $prettyname $myuri");
+		    # while( <PH> ) { }
+		    # waitpid($pid, 0);
+		    `curl -# -C - -o "$prettyname" $myuri`;
 		}
 	    }
 	    $quit = 1;
 	} else {
 	    print color "reset";
-	    print colored ("\n### ", 'bold');
-	    print colored ("$mydir/ ", 'bold blue');
+	    print colored ("\n### [", 'bold');
+	    print colored ("$mydir", 'bold blue');
 
-	    print colored ("does not exist, create it? (Y/n) ", 'bold');
+	    print colored ("] does not exist, create it? (Y/n) ", 'bold');
 	    print color "reset";
 	    # print "\n### $mydir/ does not exist, create it? (Y/n) ";
 	    chomp(my $input = <STDIN>);
@@ -134,15 +173,12 @@ until ($quit) {
 		chdir($mydir);
 		for (sort keys %seen) {
 		    if($_ =~ m/(.*?)\.$ARGV[1]/ && $_ !~ m/m3u/) {
-		    $base = uri_unescape(basename($_));
-		    $dir  = dirname($_);
-		    ($base, $dir, $ext) = fileparse($_);
-		    # `wget -c '$_' -P $mydir` ;
-		    $my_real_file = uri_unescape($base);
-		    $my_real_uri = uri_unescape($_);
-		    print colored ("$my_real_uri", 'bold green'), "\n";
+		    $myuri = canonicalize($_);
+		    $prettyname = prettyname($_);
+		    print colored ("\n$prettyname", 'bold green'), "\n";
 		    print color "reset";
-		    `curl -# -C - -o '$base' $my_real_uri`;
+		    `curl -# -C - -o '$prettyname' $myuri`;
+		    print "beeeuuuarh \n\n";
 		    }
 		}
 		$quit = 1;
@@ -163,3 +199,4 @@ until ($quit) {
 # http://studio.parisson.com:8888/Music2/Pablo%20Moses/Pave%20the%20Way%20%5BDub%5D%20Disc%201/01%20Proverbs%20Extractions.mp3
 
 # http://studio.parisson.com:8888/Music0/25%20ans%20de%20radio%20Nova/1981/01%20-%20Jingle%20-%201981.mp3
+# http://studio.parisson.com:8888/Music2/Pablo Moses/Pave the Way [Dub] Disc 01/

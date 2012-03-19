@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Sun 18-Mar-2012 21:02:51>
+;; Time-stamp: <.emacs - Mon 19-Mar-2012 00:14:37>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -548,8 +548,8 @@ Emacs buffer are those starting with “*”."
 
 ;; (cdr (car backup-directory-alist))
 
-(defun kill-boring-buffers-px (regexp &optional internal-too)
-  "Kill buffers whose name matches the specified REGEXP.
+(defun Kill-boring-buffers-px (regexp &optional internal-too)
+  "Kill buffers whose name matches REGEXP.
 The optional second argument indicates whether to kill internal buffers too."
   ;; (interactive "sKill buffers matching this regular expression: \nP")
   (dolist (buffer (buffer-list))
@@ -560,9 +560,7 @@ The optional second argument indicates whether to kill internal buffers too."
         (kill-buffer buffer)))))
 
 
-(defun kill-boring-buffers ()
-(interactive)
-(kill-boring-buffers-px "*Completions*\\|*Compile-Log*\\|*.*trace\\|*Help*\\|*RE-Builder*\\|Customize\\|\\.newsrc-dribble\\|*olimap*\\|.*el\\.gz"))
+(Kill-boring-buffers-px "*Completions*\\|*Compile\-Log*\\|*.*trace\\|*Help*\\|*RE-Builder*\\|Customize\\|\\.newsrc-dribble\\|*olimap*\\|.*el\\.gz")
 
 ;; ;; Kill & copy lines
 (defadvice kill-ring-save (before slick-copy activate compile)
