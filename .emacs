@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Tue 20-Mar-2012 18:45:26>
+;; Time-stamp: <.emacs - Tue 20-Mar-2012 19:06:50>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -40,51 +40,6 @@
 (defvar desktop-path)
 (defvar desktop-dirname)
 (defvar desktop-base-file-name)
-;; (defvar px-no-gnus-window-configuration (current-window-configuration))
-
-(defun px-no-gnus-prefs nil
-  (message "no gnus!")
-  (tabbar-mode t)
-  (scroll-bar-mode t)
-  (linum-mode t))
-
-(defun px-gnus-prefs nil
-  (message "gnus!")
-  (tabbar-mode -1)
-  (scroll-bar-mode -1)
-  (linum-mode 0))
-
-;; Toggle gnus
-(define-key global-map [(meta f1)]
-  '(lambda() (interactive)
-     (if
-	 (and (search "*Group*" (buffer-name))
-	      (not (get-buffer "*Summary")))
-	 (message "we are ALMOST in gnus")
-       (if (get-buffer "*Group*")
-	   (progn
-	     (setq px-no-gnus-window-configuration (current-window-configuration))
-	     (px-gnus-prefs)
-	     (set-window-configuration px-gnus-window-configuration))
-	 (progn
-	   (setq px-no-gnus-window-configuration (current-window-configuration))
-	   (px-gnus-prefs)
-	   (gnus))))))
-
-(eval-after-load "gnus"
-  '(progn
-     (define-key gnus-summary-mode-map [(meta f1)]
-       '(lambda() (interactive)
-	  (message "we are in gnus")
-	  (if
-	      (and (search "*Group*" (buffer-name))
-		   (not (get-buffer "*Summary")))
-	      (message "Enter a group 1st")
-	    (progn
-	      ;; (defvar px-gnus-window-configuration (current-window-configuration))
-	      (setq px-gnus-window-configuration (current-window-configuration))
-	      (set-window-configuration px-no-gnus-window-configuration)
-	      (px-no-gnus-prefs)))))))
 
 ;; (defvar el-get-dir)
 ;; (defvar el-get-sources)
@@ -320,7 +275,8 @@ inside html tags."
   "Restore a saved emacs session."
   (interactive)
   (if (px-saved-session)
-      (desktop-read)
+      (progn (desktop-read)
+	     (recenter-top-bottom 15))
     (message "No desktop (session) file found.")))
 
 (defun Session-save-px ()
@@ -337,8 +293,7 @@ inside html tags."
 	  '(lambda ()
 	     (if (px-saved-session)
 		 (if (y-or-n-p "Restore session? ")
-		     (progn (Session-restore-px)
-			    (recenter-top-bottom 15))))))
+		     (Session-restore-px)))))
 
 (add-hook 'kill-emacs-hook
 	  '(lambda ()
@@ -692,31 +647,55 @@ select 'this' or <that> (enclosed)  s-SPC
 (put 'upcase-region 'disabled nil)
 
 
-(message "Everything is UP, %s" user-login-name)
+;; ;; Toggle gnus! _________________________________________________________________
 
+(defun px-no-gnus-prefs nil
+  (message "no gnus!")
+  (tabbar-mode t)
+  (scroll-bar-mode t)
+  (linum-mode t))
 
-;; Garbage ______________________________________________________________________
+(defun px-gnus-prefs nil
+  (message "gnus!")
+  (tabbar-mode -1)
+  (scroll-bar-mode -1)
+  (linum-mode 0))
 
-;; (setq yas/root-directory "~/.emacs.d/el-get/yasnippet/snippets")
-;; (add-hook 'php-mode-hook 'yas/global-mode)
+(defun px-exit-gnus nil
+  (set-window-configuration px-no-gnus-window-configuration)
+  (px-no-gnus-prefs))
 
-;; Buffer name (file path) and status in window title
-;; (setq frame-title-format
-;;   '("emacs%@" (:eval (system-name)) ": " (:eval (if (buffer-file-name)
-;;                 (abbreviate-file-name (buffer-file-name))
-;;                   "%b")) " [%*]"))
+(define-key global-map [(meta f1)]
+  '(lambda() (interactive)
+     (if
+	 (and (search "*Group*" (buffer-name))
+	      (not (get-buffer "*Summary")))
+	 (message "we are ALMOST in gnus")
+       (if (get-buffer "*Group*")
+	   (progn
+	     (setq px-no-gnus-window-configuration (current-window-configuration))
+	     (px-gnus-prefs)
+	     (set-window-configuration px-gnus-window-configuration))
+	 (progn
+	   (setq px-no-gnus-window-configuration (current-window-configuration))
+	   (px-gnus-prefs)
+	   (gnus))))))
 
-;; Interactive function skeleton
-;; (defun foo (str bool)
-;;   (interactive
-;;    (list (read-string "Some text: ")
-;; 	 (y-or-n-p "Do the thing? ")))
-;;   (some-func str)
-;;   (if bool (some-other-func str)))
-
-;; (add-hook 'yas/minor-mode-on-hook
-;;           '(lambda ()
-;;             (define-key yas/minor-mode-map yas/trigger-key 'yas/expand)))
+(eval-after-load "gnus"
+  '(progn
+     (add-hook 'gnus-after-exiting-gnus-hook 'px-exit-gnus)
+     (define-key gnus-summary-mode-map [(meta f1)]
+       '(lambda() (interactive)
+	  (message "we are in gnus")
+	  (if
+	      (and (search "*Group*" (buffer-name))
+		   (not (get-buffer "*Summary")))
+	      (message "Enter a group 1st")
+	    (progn
+	      ;; (defvar px-gnus-window-configuration (current-window-configuration))
+	      (setq px-gnus-window-configuration (current-window-configuration))
+	      (set-window-configuration px-no-gnus-window-configuration)
+	      (px-no-gnus-prefs)))))))
 
 ;; Faces ______________________________________________________________________
 
@@ -809,3 +788,9 @@ select 'this' or <that> (enclosed)  s-SPC
  '(gnus-read-active-file nil)
  '(inhibit-startup-echo-area-message (user-login-name))
  '(recentf-save-file "~/.bkp/recentf"))
+
+
+;; Garbage ______________________________________________________________________
+
+;; (setq yas/root-directory "~/.emacs.d/el-get/yasnippet/snippets")
+;; (add-hook 'php-mode-hook 'yas/global-mode)
