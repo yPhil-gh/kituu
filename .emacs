@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Tue 20-Mar-2012 15:18:17>
+;; Time-stamp: <.emacs - Tue 20-Mar-2012 16:51:42>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -42,29 +42,34 @@
 (defvar desktop-base-file-name)
 ;; (defvar px-no-gnus-window-configuration (current-window-configuration))
 
+(defun px-no-gnus-prefs nil
+  (message "no gnus!")
+  (tabbar-mode t)
+  (scroll-bar-mode t)
+  (linum-mode t))
+
+(defun px-gnus-prefs nil
+  (message "gnus!")
+  (tabbar-mode -1)
+  (scroll-bar-mode -1)
+  (linum-mode 0))
+
 ;; Toggle gnus
 (define-key global-map [(meta f1)]
   '(lambda() (interactive)
-     (message "we are NOT in gnus")
      (if
 	 (and (search "*Group*" (buffer-name))
 	      (not (get-buffer "*Summary")))
-	 (message "get lost")
+	 (message "we are ALMOST in gnus")
        (if (get-buffer "*Group*")
 	   (progn
 	     (setq px-no-gnus-window-configuration (current-window-configuration))
-	     (set-window-configuration px-gnus-window-configuration)
-	     (tabbar-mode -1)
-	     (scroll-bar-mode -1))
+	     (px-gnus-prefs)
+	     (set-window-configuration px-gnus-window-configuration))
 	 (progn
 	   (setq px-no-gnus-window-configuration (current-window-configuration))
+	   (px-gnus-prefs)
 	   (gnus))))))
-
-(if (boundp 'plouz)
-    (message "plop"))
-
-(eval-after-load "gnus"
-(message "yo, gnus"))
 
 (eval-after-load "gnus"
   '(progn
@@ -74,13 +79,12 @@
 	  (if
 	      (and (search "*Group*" (buffer-name))
 		   (not (get-buffer "*Summary")))
-	      (message "get lost")
+	      (message "Enter a group 1st")
 	    (progn
 	      ;; (defvar px-gnus-window-configuration (current-window-configuration))
 	      (setq px-gnus-window-configuration (current-window-configuration))
 	      (set-window-configuration px-no-gnus-window-configuration)
-	      (tabbar-mode t)
-	      (scroll-bar-mode -1)))))))
+	      (px-no-gnus-prefs)))))))
 
 ;; (defvar el-get-dir)
 ;; (defvar el-get-sources)

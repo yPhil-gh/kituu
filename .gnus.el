@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Tue 20-Mar-2012 12:16:28>
+;; Time-stamp: <.gnus.el - Tue 20-Mar-2012 17:52:52>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -105,22 +105,29 @@
       '(lambda ()
 	 (if (this-buffer-is-visible "*Group*")
 	     (progn
-	       (sit-for 0.5)
-	       (gnus-group-list-groups)))))
+	       ;; (sit-for 2)
+	       (gnus-group-list-groups)
+	       (message "oy")))))
 
-(setq gnus-article-prepare-hook
-      '(lambda ()
-	 (if (this-buffer-is-visible "*Group*")
-	     (gnus-group-list-groups))))
+(defun Refraich nil
+  (interactive)
+  (message "hey")
+  ;; (gnus-group-setup-buffer)
+  ;; (gnus-group-position-point)
+  (gnus-group-list-groups)
+  ;; (gnus-group-prepare-flat 5000 t nil)
+  ;; (gnus-update-format-specifications nil 'group 'group-mode)
+  )
+
+;; (setq gnus-article-prepare-hook
+;;       '(lambda ()
+;; 	 (if (this-buffer-is-visible "*Group*")
+;; 	     (gnus-group-list-groups))))
 
 (setq gnus-select-article-hook
       '(lambda ()
 	 (if (this-buffer-is-visible "*Group*")
-	     (progn
-	       (message "hookin")
-	       (tabbar-mode -1)
-	       (sit-for 0.1)
-	       (gnus-group-get-new-news)))))
+	     (gnus-group-list-groups))))
 
 (defadvice gnus-topic-select-group (before save-buffer-now activate)
   (when buffer-file-name (save-buffer)))
@@ -322,7 +329,7 @@
  ;; user-mail-address "philippe.coatmeur@gmail.com"
  ;; user-full-name "Philippe M. Coatmeur"
  gnus-always-force-window-configuration t
- gnus-read-active-file nil
+ gnus-read-active-file 'some
  mm-inline-large-images t
  gnus-always-read-dribble-file nil
  gnus-show-threads t
@@ -347,7 +354,9 @@
   "A nice gnus session"
   ;; (menu-bar-mode)
   (scroll-bar-mode -1)
-  (tabbar-mode -1))
+  (tabbar-mode -1)
+  (linum-mode -1)
+)
 
 (setq gnus-Select-group-hook
       '(lambda ()
