@@ -69,6 +69,9 @@
   "This hook is invoked before jumping to a gnus group with unread messages.
                    Each hook should take a single argument - the GROUP to be selected")
 
+;; (add-hook 'gnus-notify-jump-to-group-hook
+;; 	  '(lambda (group)
+;; 	    (message "%s" group)))
 
 (add-hook 'gnus-exit-gnus-hook
 	  (lambda ()
@@ -177,7 +180,6 @@
 (add-hook 'gnus-summary-exit-hook
 	  'gnus-mst-show-groups-with-new-messages)
 
-(message "%s loaded" (buffer-file-name))
 (provide 'gnus-notify-)
 
 ;;; gnus-notify.el ends here

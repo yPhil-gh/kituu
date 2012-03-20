@@ -1,11 +1,11 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Tue 20-Mar-2012 18:08:17>
+;; Time-stamp: <.gnus.el - Tue 20-Mar-2012 22:40:06>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
 ;; (load-library "smtpmail")
 (gnus-demon-init)
-(gnus-demon-add-handler 'chk-all 5 nil) ; 5 minutes
+(gnus-demon-add-handler 'Chk-mail-px 5 nil) ; 5 minutes
 ;; (gnus-demon-add-rescan)
 
 
@@ -35,12 +35,6 @@
 ;; (set-face-attribute 'gnus-summary-selected-face nil :weight 'bold)
 (set-face-attribute 'gnus-summary-selected nil :underline nil :background "dark red" :weight 'bold)
 (set-face-attribute 'gnus-summary-normal-unread nil :weight 'bold)
-
-(defun chk-all ()
-  "Let gnus read the msgs fetched by offlineimap"
-  (interactive)
-  (message "Chkng...")
-  (olimap-run))
 
 (defun full-frame-iswitchb ()
   "*full frame"
@@ -104,10 +98,12 @@
 (setq gnus-select-group-hook
       '(lambda ()
 	 (if (this-buffer-is-visible "*Group*")
-	     (progn
+	     ;; (progn
 	       ;; (sit-for 2)
 	       (gnus-group-list-groups)
-	       (message "oy")))))
+	       (message "oy")
+	       (px-gnus-prefs))))
+;; )
 
 (defun Refraich nil
   (interactive)
@@ -478,12 +474,18 @@ If all article have been seen, on the subject line of the last article."
 (setq gnus-auto-select-subject 'jidanni-gnus-summary-first-unseen-or-last-subject)
 
 (defun Chk-mail-px ()
-  "Sync IMAP, Get new mails, update modeline"
+  "Let gnus read the msgs fetched by offlineimap"
   (interactive)
-  ;; (gnus-group-get-new-news)
-  (gnus-summary-rescan-group 'all)
-  ;; (gnus-mst-show-groups-with-new-messages)
-  )
+  (message "Chkng...")
+  (olimap-run))
+
+;; (defun Chk-mail-px ()
+;;   "Sync IMAP, Get new mails, update modeline"
+;;   (interactive)
+;;   ;; (gnus-group-get-new-news)
+;;   (gnus-summary-rescan-group 'all)
+;;   ;; (gnus-mst-show-groups-with-new-messages)
+;;   )
 
 ;; tells gnus to get new mail and also display all old mail
 (define-key gnus-summary-mode-map (kbd "s-m") 'Chk-mail-px)
@@ -565,20 +567,28 @@ If all article have been seen, on the subject line of the last article."
                          (article 1.0)))))
 
 (gnus-add-configuration
+ '(message
+   (horizontal 1.0
+               (vertical 22 (group 1.0))
+               (vertical 1.0
+                         (summary 0.35)
+                         (message 1.0 point)))))
+
+(gnus-add-configuration
  '(reply
    (horizontal 1.0
                (vertical 22 (group 1.0))
                (vertical 1.0
                          (summary 0.35)
-                         (reply 1.0 point)))))
+                         (message 1.0 point)))))
 
-;; (gnus-add-configuration
-;;  '(reply-yank
-;;    (horizontal 1.0
-;;                (vertical 22 (group 1.0))
-;;                (vertical 1.0
-;;                          (summary 0.35)
-;;                          (reply-yank 1.0 point)))))
+(gnus-add-configuration
+ '(reply-yank
+   (horizontal 1.0
+               (vertical 22 (group 1.0))
+               (vertical 1.0
+                         (summary 0.35)
+                         (message 1.0 point)))))
 
 (gnus-add-configuration
  '(forward
@@ -586,7 +596,7 @@ If all article have been seen, on the subject line of the last article."
                (vertical 22 (group 1.0))
                (vertical 1.0
                          (summary 0.35)
-                         (forward 1.0 point)))))
+                         (message 1.0 point)))))
 
 
 (message "%s loaded" (buffer-file-name))

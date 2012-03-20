@@ -1,7 +1,8 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Tue 20-Mar-2012 19:49:16>
+;; Time-stamp: <.emacs - Tue 20-Mar-2012 22:33:47>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
+
 
 ;; plop
 
@@ -31,7 +32,7 @@
 
 ;; ;; DBus! ____________________________________________________________________
 
-(defun send-desktop-notification (summary body timeout)
+(defun px-send-desktop-notification (summary body timeout)
   "call notification-daemon method METHOD with ARGS over dbus"
   (dbus-call-method
     :session                        ; use the session (not system) bus
@@ -52,7 +53,7 @@
 
 ;; (setq compilation-finish-function 'pw/compile-notify)
 
-(send-desktop-notification "emacs compile" "plop" 0)
+;; (px-send-desktop-notification "test" "plip" 0)
 
 
 (defvar iswitchb-mode-map)
@@ -138,7 +139,7 @@
 
 (defun my-emacs-lisp-mode-hook ()
   ;; (if (string-equal buffer-file-name user-init-file)
-  (if (search ".emacs" buffer-file-name)
+  (if (search ".emacs" (buffer-name))
       (message "compiling %s" buffer-file-name)
       (progn (add-hook 'after-save-hook 'compile-init-file-px t t)
     	     )))
