@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Tue 20-Mar-2012 16:51:42>
+;; Time-stamp: <.emacs - Tue 20-Mar-2012 18:38:01>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -321,13 +321,13 @@ inside html tags."
   (interactive)
   (if (saved-session)
       (desktop-read)
-    (message "No desktop file found.")))
+    (message "No desktop (session) file found.")))
 
 (defun Session-save-px ()
   "Save an emacs session."
   (interactive)
   (if (saved-session)
-      (if (y-or-n-p "Overwrite existing desktop file? ")
+      (if (y-or-n-p "Save session? ")
 	  (desktop-save-in-desktop-dir)
 	(message "Session not saved."))
   (desktop-save-in-desktop-dir)))
@@ -339,6 +339,15 @@ inside html tags."
 		 (if (y-or-n-p "Restore session? ")
 		     (Session-restore-px)))))
 
+(add-hook 'kill-emacs-hook
+	  '(lambda ()
+	     (Session-save-px)))
+
+;; ;; Save desktop + Prevent pussy questions
+;; (defadvice save-buffers-kill-emacs (around no-y-or-n activate)
+;;   (flet ((yes-or-no-p (&rest args) t)
+;;          (y-or-n-p (&rest args) t))
+;;     ad-do-it))
 
 ;; Modes! ______________________________________________________________________
 
