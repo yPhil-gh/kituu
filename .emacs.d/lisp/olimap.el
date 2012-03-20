@@ -46,10 +46,14 @@
 	    (progn
 	      (string-match "\\[acc:.*\\]" ol-output-line)
 	      (setq mysweetvar (match-string 0 ol-output-line))))
-      (if
-	  (require 'el-get nil 'noerror)
-	  (el-get-notify "New Mail!" (format "Received at %s \n %s %s" time-received mailbox-name account-name))
+      (if (>= emacs-major-version 23)
+	  (px-send-desktop-notification "New Mail!"
+					(format "Received at %s \n %s %s"
+						time-received mailbox-name account-name) 0)
 	(message "Mail received at %s on %s %s" time-received mailbox-name account-name)))))
+
+;; (px-send-desktop-notification "New Mail!" (format "Received at %s \n %s %s" time-received mailbox-name account-name) 0)
+
 
 (defconst *argx* "-umachineui")
 

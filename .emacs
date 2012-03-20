@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Tue 20-Mar-2012 19:06:50>
+;; Time-stamp: <.emacs - Tue 20-Mar-2012 19:49:16>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -26,6 +26,34 @@
 (require 'tabbar)
 ;; wtf?
 (require 'smart-tab)
+(require 'dbus)
+
+
+;; ;; DBus! ____________________________________________________________________
+
+(defun send-desktop-notification (summary body timeout)
+  "call notification-daemon method METHOD with ARGS over dbus"
+  (dbus-call-method
+    :session                        ; use the session (not system) bus
+    "org.freedesktop.Notifications" ; service name
+    "/org/freedesktop/Notifications"   ; path name
+    "org.freedesktop.Notifications" "Notify" ; Method
+    "emacs"
+    0
+    ""
+    summary
+    body
+    '(:array)
+    '(:array :signature "{sv}")
+    ':int32 timeout))
+
+;; (defun pw/compile-notify (buffer message)
+  ;; (send-desktop-notification "emacs compile" message 0))
+
+;; (setq compilation-finish-function 'pw/compile-notify)
+
+(send-desktop-notification "emacs compile" "plop" 0)
+
 
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
@@ -311,9 +339,10 @@ inside html tags."
 ;; (set-fringe-mode '(1 . 1))
 (show-paren-mode t)
 (menu-bar-mode -1)
-(global-linum-mode 1)
+;; (global-linum-mode 1)
 ;; (global-undo-tree-mode 1)
 ;; (global-smart-tab-mode 1)
+(smart-tab-mode t)
 (global-font-lock-mode t)
 (tool-bar-mode 0)
 (set-scroll-bar-mode `right)
