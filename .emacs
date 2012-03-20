@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Tue 20-Mar-2012 18:38:01>
+;; Time-stamp: <.emacs - Tue 20-Mar-2012 18:45:26>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -313,20 +313,20 @@ inside html tags."
   )
 
 
-(defun saved-session ()
+(defun px-saved-session ()
   (file-exists-p (concat desktop-dirname "/" desktop-base-file-name)))
 
 (defun Session-restore-px ()
   "Restore a saved emacs session."
   (interactive)
-  (if (saved-session)
+  (if (px-saved-session)
       (desktop-read)
     (message "No desktop (session) file found.")))
 
 (defun Session-save-px ()
   "Save an emacs session."
   (interactive)
-  (if (saved-session)
+  (if (px-saved-session)
       (if (y-or-n-p "Save session? ")
 	  (desktop-save-in-desktop-dir)
 	(message "Session not saved."))
@@ -335,9 +335,10 @@ inside html tags."
 ;; This will only work for one session
 (add-hook 'after-init-hook
 	  '(lambda ()
-	     (if (saved-session)
+	     (if (px-saved-session)
 		 (if (y-or-n-p "Restore session? ")
-		     (Session-restore-px)))))
+		     (progn (Session-restore-px)
+			    (recenter-top-bottom 15))))))
 
 (add-hook 'kill-emacs-hook
 	  '(lambda ()
