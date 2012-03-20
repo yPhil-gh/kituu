@@ -3,5 +3,6 @@
 if ps aux | grep $(whoami) | grep 'emacs ' | grep -Ev 'grep' &>/dev/null ; then
     emacsclient "$@"
 else
+    rm -f ~/.bkp/.emacs.desktop.lock
     emacs -mm $@ 2>1&
 fi

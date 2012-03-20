@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Tue 20-Mar-2012 17:52:52>
+;; Time-stamp: <.gnus.el - Tue 20-Mar-2012 18:08:17>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -7,6 +7,7 @@
 (gnus-demon-init)
 (gnus-demon-add-handler 'chk-all 5 nil) ; 5 minutes
 ;; (gnus-demon-add-rescan)
+
 
 (require 'olimap)
 (require 'gnus-notify-)
@@ -20,7 +21,6 @@
   "Function to be added to `message-send-hook' to notice records when sending messages" t)
 
 (add-hook 'message-send-hook 'bbdb/send-hook) ; If you use Gnus
-
 
 (defface my-tushi-face
   '((t
