@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Mon 19-Mar-2012 12:39:16>
+;; Time-stamp: <.emacs - Tue 20-Mar-2012 15:18:17>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -7,17 +7,20 @@
 
 ;; Init! ______________________________________________________________________
 
-;; (setq user-emacs-directory "~/.emacs/")
-(eval-when-compile
-  (let ((default-directory "~/.emacs.d/lisp/"))
-    (normal-top-level-add-subdirs-to-load-path))
-;;(require 'px-org-conf)
-)
+;; ;; (setq user-emacs-directory "~/.emacs/")
+;; ;; (eval-when-compile
+;;   (let ((default-directory "~/.emacs.d/lisp/"))
+;;     (normal-top-level-add-subdirs-to-load-path))
+;; ;;(require 'px-org-conf)
+;; ;; )
+(let ((default-directory "~/.emacs.d/lisp/"))
+  (normal-top-level-add-to-load-path '("."))
+  (normal-top-level-add-subdirs-to-load-path))
 
 ;; (eval-and-compile
 ;; (add-to-list 'load-path "~/.emacs.d/lisp/")
 ;; (add-to-list 'load-path "~/.emacs.d/lisp/tabbar/")
-;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/bbdb/")
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/bbdb/")
 
 (require 'cl)
 (require 'tabbar)
@@ -37,10 +40,51 @@
 (defvar desktop-path)
 (defvar desktop-dirname)
 (defvar desktop-base-file-name)
+;; (defvar px-no-gnus-window-configuration (current-window-configuration))
 
-(defvar el-get-dir)
-(defvar el-get-sources)
-(defvar my-packages)
+;; Toggle gnus
+(define-key global-map [(meta f1)]
+  '(lambda() (interactive)
+     (message "we are NOT in gnus")
+     (if
+	 (and (search "*Group*" (buffer-name))
+	      (not (get-buffer "*Summary")))
+	 (message "get lost")
+       (if (get-buffer "*Group*")
+	   (progn
+	     (setq px-no-gnus-window-configuration (current-window-configuration))
+	     (set-window-configuration px-gnus-window-configuration)
+	     (tabbar-mode -1)
+	     (scroll-bar-mode -1))
+	 (progn
+	   (setq px-no-gnus-window-configuration (current-window-configuration))
+	   (gnus))))))
+
+(if (boundp 'plouz)
+    (message "plop"))
+
+(eval-after-load "gnus"
+(message "yo, gnus"))
+
+(eval-after-load "gnus"
+  '(progn
+     (define-key gnus-summary-mode-map [(meta f1)]
+       '(lambda() (interactive)
+	  (message "we are in gnus")
+	  (if
+	      (and (search "*Group*" (buffer-name))
+		   (not (get-buffer "*Summary")))
+	      (message "get lost")
+	    (progn
+	      ;; (defvar px-gnus-window-configuration (current-window-configuration))
+	      (setq px-gnus-window-configuration (current-window-configuration))
+	      (set-window-configuration px-no-gnus-window-configuration)
+	      (tabbar-mode t)
+	      (scroll-bar-mode -1)))))))
+
+;; (defvar el-get-dir)
+;; (defvar el-get-sources)
+;; (defvar my-packages)
 
 (defvar px-newName)
 
@@ -50,8 +94,8 @@
 (defvar ediff-split-window-function)
 (defvar tabbar-buffer-groups-function)
 
-(defvar gnus-bury-window-configuration)
-(defvar gnus-bury-window-configuration)
+;; (defvar gnus-bury-window-configuration)
+;; (defvar gnus-bury-window-configuration)
 (defvar px-minibuffer-history)
 (defvar savehist-file)
 
@@ -384,7 +428,9 @@ inside html tags."
 
 ;; Hooks! _____________________________________________________________________
 
-(add-hook 'perl-mode-hook
+(add-hook 'perl-mode-hook 'cperl-mode)
+
+(add-hook 'cperl-mode-hook
 	  (lambda ()
 	    (local-set-key (kbd "C-h f") 'cperl-perldoc)))
 
@@ -518,29 +564,9 @@ Emacs buffer are those starting with “*”."
 
 (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
 
-
-;; Toggle gnus
-(define-key global-map [(meta f1)]
-  '(lambda() (interactive)
-     (setq px-no-gnus-window-configuration (current-window-configuration))
-     (if (get-buffer "*Group*")
-	 (progn
-	   (set-window-configuration px-gnus-window-configuration)
-	   (tabbar-mode -1)
-	   (scroll-bar-mode -1))
-       (gnus-unplugged))))
-
-(if (boundp 'plouz)
-    (message "plop"))
-
-(eval-after-load "gnus-group"
-  '(progn
-     (define-key gnus-summary-mode-map [(meta f1)]
-       '(lambda() (interactive)
-	  (defvar px-gnus-window-configuration (current-window-configuration))
-	  (set-window-configuration px-no-gnus-window-configuration)
-	  (tabbar-mode t)
-	  (scroll-bar-mode -1)))))
+;; (if (not (search "*Group*" (buffer-name)))
+;;      (setq px-no-gnus-window-configuration (current-window-configuration))
+;;   (set-window-configuration px-no-gnus-window-configuration))
 
 ;; Save the minibuffer history
 (setq px-minibuffer-history (concat user-emacs-directory "px-minibuffer-history"))
@@ -592,20 +618,6 @@ The optional second argument indicates whether to kill internal buffers too."
 	     (comment-dwim nil)) ;; go down one line
     (comment-dwim nil)) ;; [un]comment
   (deactivate-mark)) ;; don't mess with selection
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(auto-save-file-name-transforms (quote ((".*" "~/.bkp/\\1" t))))
- '(backup-directory-alist (quote ((".*" . "~/.bkp/"))))
- '(canlock-password "cf5f7a7261c5832898abfc7ea08ba333a36ed78c")
- '(display-time-use-mail-icon t)
- '(gnus-group-highlight (quote (((this-buffer-is-visible (concat "*Summary " group "*")) . gnus-summary-selected) ((and mailp (= unread 0) (eq level 1)) . gnus-group-mail-1-empty) ((and mailp (eq level 1)) . gnus-group-mail-1) ((and mailp (= unread 0) (eq level 2)) . gnus-group-mail-2-empty) ((and mailp (eq level 2)) . gnus-group-mail-2) ((and mailp (= unread 0) (eq level 3)) . gnus-group-mail-3-empty) ((and mailp (eq level 3)) . gnus-group-mail-3) ((and mailp (= unread 0)) . gnus-group-mail-low-empty) ((and mailp) . gnus-group-mail-low) ((and (= unread 0) (eq level 1)) . gnus-group-news-1-empty) ((and (eq level 1)) . gnus-group-news-1) ((and (= unread 0) (eq level 2)) . gnus-group-news-2-empty) ((and (eq level 2)) . gnus-group-news-2) ((and (= unread 0) (eq level 3)) . gnus-group-news-3-empty) ((and (eq level 3)) . gnus-group-news-3) ((and (= unread 0) (eq level 4)) . gnus-group-news-4-empty) ((and (eq level 4)) . gnus-group-news-4) ((and (= unread 0) (eq level 5)) . gnus-group-news-5-empty) ((and (eq level 5)) . gnus-group-news-5) ((and (= unread 0) (eq level 6)) . gnus-group-news-6-empty) ((and (eq level 6)) . gnus-group-news-6) ((and (= unread 0)) . gnus-group-news-low-empty) (t . gnus-group-news-low))))
- '(gnus-read-active-file nil)
- '(inhibit-startup-echo-area-message (user-login-name))
- '(recentf-save-file "~/.bkp/recentf"))
 
 
 ;; Help ______________________________________________________________________
@@ -757,5 +769,29 @@ select 'this' or <that> (enclosed)  s-SPC
 		    :inherit 'tabbar-default
 		    :box nil)
 
+;; Custom ______________________________________________________________________
+
 ;; (setq tabbar-separator '(1)) ;; set tabbar-separator size to 1 pixel
 (message "%s loaded" (buffer-file-name))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(cperl-array-face ((t (:foreground "#fcaf3e" :weight bold))))
+ '(cperl-hash-face ((t (:foreground "#fcaf3e" :slant italic :weight bold)))))
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(auto-save-file-name-transforms (quote ((".*" "~/.bkp/\\1" t))))
+ '(backup-directory-alist (quote ((".*" . "~/.bkp/"))))
+ '(bbdb-use-pop-up (quote (quote horiz)))
+ '(canlock-password "cf5f7a7261c5832898abfc7ea08ba333a36ed78c")
+ '(display-time-use-mail-icon t)
+ '(gnus-group-highlight (quote (((this-buffer-is-visible (concat "*Summary " group "*")) . gnus-summary-selected) ((and mailp (= unread 0) (eq level 1)) . gnus-group-mail-1-empty) ((and mailp (eq level 1)) . gnus-group-mail-1) ((and mailp (= unread 0) (eq level 2)) . gnus-group-mail-2-empty) ((and mailp (eq level 2)) . gnus-group-mail-2) ((and mailp (= unread 0) (eq level 3)) . gnus-group-mail-3-empty) ((and mailp (eq level 3)) . gnus-group-mail-3) ((and mailp (= unread 0)) . gnus-group-mail-low-empty) ((and mailp) . gnus-group-mail-low) ((and (= unread 0) (eq level 1)) . gnus-group-news-1-empty) ((and (eq level 1)) . gnus-group-news-1) ((and (= unread 0) (eq level 2)) . gnus-group-news-2-empty) ((and (eq level 2)) . gnus-group-news-2) ((and (= unread 0) (eq level 3)) . gnus-group-news-3-empty) ((and (eq level 3)) . gnus-group-news-3) ((and (= unread 0) (eq level 4)) . gnus-group-news-4-empty) ((and (eq level 4)) . gnus-group-news-4) ((and (= unread 0) (eq level 5)) . gnus-group-news-5-empty) ((and (eq level 5)) . gnus-group-news-5) ((and (= unread 0) (eq level 6)) . gnus-group-news-6-empty) ((and (eq level 6)) . gnus-group-news-6) ((and (= unread 0)) . gnus-group-news-low-empty) (t . gnus-group-news-low))))
+ '(gnus-read-active-file nil)
+ '(inhibit-startup-echo-area-message (user-login-name))
+ '(recentf-save-file "~/.bkp/recentf"))

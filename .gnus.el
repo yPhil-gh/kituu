@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Fri 16-Mar-2012 03:50:30>
+;; Time-stamp: <.gnus.el - Tue 20-Mar-2012 12:16:28>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -11,9 +11,15 @@
 (require 'olimap)
 (require 'gnus-notify-)
 (require 'nnir)
-(require 'px-bbdb-conf)
-
+(require 'bbdb)
+(require 'moy-bbdb)
+(bbdb-initialize)
 ;; (setq gnus-topic-topology '(("Adamweb" visible nil nil) (("News" visible nil nil) (("Perso" visible nil nil))) (("Local" visible nil nil))))
+
+(autoload 'bbdb/send-hook "moy-bbdb"
+  "Function to be added to `message-send-hook' to notice records when sending messages" t)
+
+(add-hook 'message-send-hook 'bbdb/send-hook) ; If you use Gnus
 
 
 (defface my-tushi-face
@@ -34,8 +40,7 @@
   "Let gnus read the msgs fetched by offlineimap"
   (interactive)
   (message "Chkng...")
-  (olimap-run)
-  )
+  (olimap-run))
 
 (defun full-frame-iswitchb ()
   "*full frame"
@@ -558,13 +563,13 @@ If all article have been seen, on the subject line of the last article."
                          (summary 0.35)
                          (reply 1.0 point)))))
 
-(gnus-add-configuration
- '(reply-yank
-   (horizontal 1.0
-               (vertical 22 (group 1.0))
-               (vertical 1.0
-                         (summary 0.35)
-                         (reply-yank 1.0 point)))))
+;; (gnus-add-configuration
+;;  '(reply-yank
+;;    (horizontal 1.0
+;;                (vertical 22 (group 1.0))
+;;                (vertical 1.0
+;;                          (summary 0.35)
+;;                          (reply-yank 1.0 point)))))
 
 (gnus-add-configuration
  '(forward
