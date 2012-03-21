@@ -30,6 +30,11 @@ else
     fi
 done
 
+echo -e $sep"Various binary packages"
+if [ -e $scriptsdir/offlineimap/ ] ; then
+    sudo urpmi perl-doc bzr
+fi
+
 if [ ! -e $scriptsdir/git-completion.bash ]
   then
 echo -e $sep"Git completion ($scriptsdir/git-completion.bash)"
@@ -43,12 +48,19 @@ else
     cd $lispdir/tabbar/ && git pull
 fi
 
-echo -e $sep"Smart-tab ($lispdir/smart-tab/)"
-if [ ! -e $lispdir/smart-tab/ ] ; then
-    cd $lispdir && git clone https://github.com/genehack/smart-tab.git
+echo -e $sep"nXhtml ($lispdir/nxhtml/)"
+if [ ! -e $lispdir/nxhtml/ ] ; then
+    cd $lispdir && bzr branch lp:nxhtml
 else
-    cd $lispdir/smart-tab/ && git pull
+    cd $lispdir/tabbar/ && bzr pull
 fi
+
+# echo -e $sep"Smart-tab ($lispdir/smart-tab/)"
+# if [ ! -e $lispdir/smart-tab/ ] ; then
+#     cd $lispdir && git clone https://github.com/genehack/smart-tab.git
+# else
+#     cd $lispdir/smart-tab/ && git pull
+# fi
 
 echo -e $sep"Offlineimap ($scriptsdir/offlineimap/)"
 if [ ! -e $scriptsdir/offlineimap/ ] ; then
@@ -58,8 +70,4 @@ else
     cd $scriptsdir/offlineimap/ && git pull
 fi
 
-echo -e $sep"Perl man pages"
-if [ -e $scriptsdir/offlineimap/ ] ; then
-    sudo urpmi perl-doc
-fi
 echo -e $sep"...Done."

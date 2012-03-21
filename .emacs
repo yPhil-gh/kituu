@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Tue 20-Mar-2012 22:33:47>
+;; Time-stamp: <.emacs - Wed 21-Mar-2012 01:46:27>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -23,10 +23,12 @@
 ;; (add-to-list 'load-path "~/.emacs.d/lisp/tabbar/")
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/bbdb/")
 
+(load "~/.emacs.d/lisp/nxhtml/autostart.el")
+
 (require 'cl)
 (require 'tabbar)
 ;; wtf?
-(require 'smart-tab)
+;; (require 'smart-tab)
 (require 'dbus)
 
 
@@ -132,18 +134,36 @@
 	  t
 	nil)))
 
-(defun compile-init-file-px ()
+(defun byte-compile-user-init-file-px ()
   (let ((byte-compile-warnings '(unresolved)))
+    ;; in case compilation fails, don't leave the old .elc around:
+    (when (file-exists-p (concat user-init-file ".elc"))
+      (delete-file (concat user-init-file ".elc")))
     (byte-compile-file user-init-file)
-    (message "%s saved and compiled." user-init-file)))
+    (message "%s compiled" user-init-file)
+    ))
+
 
 (defun my-emacs-lisp-mode-hook ()
-  ;; (if (string-equal buffer-file-name user-init-file)
-  (if (search ".emacs" (buffer-name))
-      (message "compiling %s" buffer-file-name)
-      (progn (add-hook 'after-save-hook 'compile-init-file-px t t)
-    	     )))
+  (when (search ".emacs" (buffer-name))
+    (add-hook 'after-save-hook 'byte-compile-user-init-file-px t t)))
+
+
+
 (add-hook 'emacs-lisp-mode-hook 'my-emacs-lisp-mode-hook)
+
+;; (defun compile-init-file-px ()
+;;   (let ((byte-compile-warnings '(unresolved)))
+;;     (byte-compile-file user-init-file)
+;;     (message "%s saved and compiled." user-init-file)))
+
+;; (defun my-emacs-lisp-mode-hook ()
+;;   ;; (if (string-equal buffer-file-name user-init-file)
+;;   (if (search ".emacs" (buffer-name))
+;;       (message "compiling %s" buffer-file-name)
+;;       (progn (add-hook 'after-save-hook 'compile-init-file-px t t)
+;;     	     )))
+;; (add-hook 'emacs-lisp-mode-hook 'my-emacs-lisp-mode-hook)
 
 
 (defun switch-buffer-px ()
@@ -343,7 +363,7 @@ inside html tags."
 ;; (global-linum-mode 1)
 ;; (global-undo-tree-mode 1)
 ;; (global-smart-tab-mode 1)
-(smart-tab-mode t)
+;; (smart-tab-mode t)
 (global-font-lock-mode t)
 (tool-bar-mode 0)
 (set-scroll-bar-mode `right)
@@ -817,7 +837,8 @@ select 'this' or <that> (enclosed)  s-SPC
  '(gnus-group-highlight (quote (((this-buffer-is-visible (concat "*Summary " group "*")) . gnus-summary-selected) ((and mailp (= unread 0) (eq level 1)) . gnus-group-mail-1-empty) ((and mailp (eq level 1)) . gnus-group-mail-1) ((and mailp (= unread 0) (eq level 2)) . gnus-group-mail-2-empty) ((and mailp (eq level 2)) . gnus-group-mail-2) ((and mailp (= unread 0) (eq level 3)) . gnus-group-mail-3-empty) ((and mailp (eq level 3)) . gnus-group-mail-3) ((and mailp (= unread 0)) . gnus-group-mail-low-empty) ((and mailp) . gnus-group-mail-low) ((and (= unread 0) (eq level 1)) . gnus-group-news-1-empty) ((and (eq level 1)) . gnus-group-news-1) ((and (= unread 0) (eq level 2)) . gnus-group-news-2-empty) ((and (eq level 2)) . gnus-group-news-2) ((and (= unread 0) (eq level 3)) . gnus-group-news-3-empty) ((and (eq level 3)) . gnus-group-news-3) ((and (= unread 0) (eq level 4)) . gnus-group-news-4-empty) ((and (eq level 4)) . gnus-group-news-4) ((and (= unread 0) (eq level 5)) . gnus-group-news-5-empty) ((and (eq level 5)) . gnus-group-news-5) ((and (= unread 0) (eq level 6)) . gnus-group-news-6-empty) ((and (eq level 6)) . gnus-group-news-6) ((and (= unread 0)) . gnus-group-news-low-empty) (t . gnus-group-news-low))))
  '(gnus-read-active-file nil)
  '(inhibit-startup-echo-area-message (user-login-name))
- '(recentf-save-file "~/.bkp/recentf"))
+ '(recentf-save-file "~/.bkp/recentf")
+ '(web-vcs-default-download-directory (quote site-lisp-dir)))
 
 
 ;; Garbage ______________________________________________________________________
