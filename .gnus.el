@@ -1,5 +1,5 @@
 ;; ==========================================================================
-;; Time-stamp: <.gnus.el - Tue 20-Mar-2012 22:40:06>
+;; Time-stamp: <.gnus.el - Wed 21-Mar-2012 22:42:51>
 ;; ===========================================================================
 ;; Remember to install gnutls!!
 (load "starttls")
@@ -151,6 +151,13 @@
 )
 
 (setq gnus-topic-line-format "%i%u&topic-line; %v\n")
+
+(setq gnus-article-mode-line-format "%p [%A / %U]")
+(setq gnus-summary-mode-line-format "")
+(setq gnus-group-mode-line-format "")
+
+;; (eval-after-load "message"
+;;   '(define-key message-mode-map [(meta f1)] 'px-no-gnus))
 
 ;; this corresponds to a topic line format of "%n %A"
 (defun gnus-user-format-function-topic-line (dummy)

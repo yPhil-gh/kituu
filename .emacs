@@ -1,10 +1,7 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Wed 21-Mar-2012 01:46:27>
+;; Time-stamp: <.emacs - Wed 21-Mar-2012 22:48:21>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
-
-
-;; plop
 
 ;; Init! ______________________________________________________________________
 
@@ -144,11 +141,12 @@
     ))
 
 
+(if (string-match "\\.emacs" (buffer-name))
+(message "plop"))
+
 (defun my-emacs-lisp-mode-hook ()
-  (when (search ".emacs" (buffer-name))
+  (when (string-match "\\.emacs" (buffer-name))
     (add-hook 'after-save-hook 'byte-compile-user-init-file-px t t)))
-
-
 
 (add-hook 'emacs-lisp-mode-hook 'my-emacs-lisp-mode-hook)
 
@@ -697,55 +695,53 @@ select 'this' or <that> (enclosed)  s-SPC
 (put 'upcase-region 'disabled nil)
 
 
-;; ;; Toggle gnus! _________________________________________________________________
+;; ;; Toggling gnus! _________________________________________________________________
 
-(defun px-no-gnus-prefs nil
-  (message "no gnus!")
-  (tabbar-mode t)
-  (scroll-bar-mode t)
-  (linum-mode t))
+"Key used to switch to gnus and back"
+(setq px-toggle-gnus-key [(meta f1)])
 
-(defun px-gnus-prefs nil
-  (message "gnus!")
-  (tabbar-mode -1)
-  (scroll-bar-mode -1)
-  (linum-mode 0))
+(defun px-prefs (arg)
+  "toggle pref bits"
+  (tabbar-mode arg)
+  (scroll-bar-mode arg)
+  (linum-mode arg))
 
 (defun px-exit-gnus nil
+  "called after exiting gnus"
   (set-window-configuration px-no-gnus-window-configuration)
-  (px-no-gnus-prefs))
+  (px-prefs -1))
 
-(define-key global-map [(meta f1)]
-  '(lambda() (interactive)
-     (if
-	 (and (search "*Group*" (buffer-name))
-	      (not (get-buffer "*Summary")))
-	 (message "we are ALMOST in gnus")
-       (if (get-buffer "*Group*")
-	   (progn
-	     (setq px-no-gnus-window-configuration (current-window-configuration))
-	     (px-gnus-prefs)
-	     (set-window-configuration px-gnus-window-configuration))
-	 (progn
-	   (setq px-no-gnus-window-configuration (current-window-configuration))
-	   (px-gnus-prefs)
-	   (gnus))))))
+(defun px-go-gnus nil
+  "switch to gnus or launch it"
+  (interactive)
+  (if (get-buffer "*Group*")
+      (progn
+	(setq px-no-gnus-window-configuration (current-window-configuration))
+	(px-prefs -1)
+	(set-window-configuration px-gnus-window-configuration))
+    (progn
+      (setq px-no-gnus-window-configuration (current-window-configuration))
+      (px-prefs -1)
+      (gnus))))
+
+(defun px-no-gnus nil
+  "switch back from gnus"
+  (interactive)
+  ;; (defvar px-gnus-window-configuration (current-window-configuration))
+  (setq px-gnus-window-configuration (current-window-configuration))
+  (set-window-configuration px-no-gnus-window-configuration)
+      (px-prefs t))
+
+(define-key global-map px-toggle-gnus-key 'px-go-gnus)
 
 (eval-after-load "gnus"
   '(progn
-     (add-hook 'gnus-after-exiting-gnus-hook 'px-exit-gnus)
-     (define-key gnus-summary-mode-map [(meta f1)]
-       '(lambda() (interactive)
-	  (message "we are in gnus")
-	  (if
-	      (and (search "*Group*" (buffer-name))
-		   (not (get-buffer "*Summary")))
-	      (message "Enter a group 1st")
-	    (progn
-	      ;; (defvar px-gnus-window-configuration (current-window-configuration))
-	      (setq px-gnus-window-configuration (current-window-configuration))
-	      (set-window-configuration px-no-gnus-window-configuration)
-	      (px-no-gnus-prefs)))))))
+     (define-key gnus-summary-mode-map px-toggle-gnus-key 'px-no-gnus)
+     (define-key gnus-group-mode-map px-toggle-gnus-key 'px-no-gnus)
+     (define-key gnus-article-mode-map px-toggle-gnus-key 'px-no-gnus)))
+
+(eval-after-load "message"
+  '(define-key message-mode-map px-toggle-gnus-key 'px-no-gnus))
 
 ;; Faces ______________________________________________________________________
 

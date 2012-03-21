@@ -18,15 +18,15 @@ echo -e $sep"Found $kituudir, so"
 fi
 
 for i in * ; do
-if [[ "${i}" != ".git" && "${i}" != "README.org" && "${i}" != "." && "${i}" != ".." && ! -L ~/$i && "${i}" != "*.elc" ]] ; then
-if [[ -e ~/$i ]] ; then
-mv -v ~/$i ~/$i.orig
-ln -sv $kituudir/$i ~/
-else
-ln -sv $kituudir/$i ~/
-fi
-else
-[[ "${i}" != ".git" ]] && [[ "${i}" != "README.org" ]] && echo -e " \033[1m$i\033[0m \t > \t is already a symlink"
+    if [[ "${i}" != ".git" && "${i}" != "README.org" && "${i}" != "." && "${i}" != ".." && ! -L ~/$i && "${i}" != "*.elc" ]] ; then
+	if [[ -e ~/$i ]] ; then
+	    mv -v ~/$i ~/$i.orig
+	    ln -sv $kituudir/$i ~/
+	else
+	    ln -sv $kituudir/$i ~/
+	fi
+    else
+	[[ "${i}" != ".git" ]] && [[ "${i}" != "README.org" ]] && echo -e " \033[1m$i\033[0m \t > \t is already a symlink"
     fi
 done
 
