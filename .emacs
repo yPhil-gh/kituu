@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Wed 21-Mar-2012 22:48:21>
+;; Time-stamp: <.emacs - Thu 22-Mar-2012 18:34:46>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -19,8 +19,11 @@
 ;; (add-to-list 'load-path "~/.emacs.d/lisp/")
 ;; (add-to-list 'load-path "~/.emacs.d/lisp/tabbar/")
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/bbdb/")
+(autoload 'wl "wl" "Wanderlust" t)
+(autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
+(autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
 
-(load "~/.emacs.d/lisp/nxhtml/autostart.el")
+;; (load "~/.emacs.d/lisp/nxhtml/autostart.el")
 
 (require 'cl)
 (require 'tabbar)
@@ -695,7 +698,10 @@ select 'this' or <that> (enclosed)  s-SPC
 (put 'upcase-region 'disabled nil)
 
 
-;; ;; Toggling gnus! _________________________________________________________________
+;; ;; Toggling email! _________________________________________________________________
+
+;; Mail client
+(setq px-mail-client "wl")
 
 "Key used to switch to gnus and back"
 (setq px-toggle-gnus-key [(meta f1)])
@@ -834,7 +840,9 @@ select 'this' or <that> (enclosed)  s-SPC
  '(gnus-read-active-file nil)
  '(inhibit-startup-echo-area-message (user-login-name))
  '(recentf-save-file "~/.bkp/recentf")
- '(web-vcs-default-download-directory (quote site-lisp-dir)))
+ '(web-vcs-default-download-directory (quote site-lisp-dir))
+ '(wl-folder-summary-line-format-alist nil)
+ '(wl-summary-line-format "%M/%D(%W)%h:%m %t%[%17(%c %f%) %] %s"))
 
 
 ;; Garbage ______________________________________________________________________
