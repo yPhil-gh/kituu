@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Thu 22-Mar-2012 18:34:46>
+;; Time-stamp: <.emacs - Thu 22-Mar-2012 21:48:11>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -700,11 +700,16 @@ select 'this' or <that> (enclosed)  s-SPC
 
 ;; ;; Toggling email! _________________________________________________________________
 
-;; Mail client
-(setq px-mail-client "wl")
+"Key used to switch to mail and back"
+(setq px-toggle-mail-key [(meta f1)])
 
-"Key used to switch to gnus and back"
-(setq px-toggle-gnus-key [(meta f1)])
+"Mail client"
+(setq mail-client "wl")
+
+(defun px-mail-client (mail-client)
+  (if (string-equal mail-client "gnus")
+      (gnus)
+    (wl)))
 
 (defun px-prefs (arg)
   "toggle pref bits"
@@ -712,42 +717,51 @@ select 'this' or <that> (enclosed)  s-SPC
   (scroll-bar-mode arg)
   (linum-mode arg))
 
-(defun px-exit-gnus nil
-  "called after exiting gnus"
-  (set-window-configuration px-no-gnus-window-configuration)
+(defun px-exit-mail nil
+  "called after exiting mail"
+  (set-window-configuration px-no-mail-window-configuration)
   (px-prefs -1))
 
-(defun px-go-gnus nil
-  "switch to gnus or launch it"
+(defun px-go-mail nil
+  "switch to mail or launch it"
   (interactive)
-  (if (get-buffer "*Group*")
+  (if (or (get-buffer "Folder")		; Wanderlust
+	  (get-buffer "*Group*"))	; Gnus
       (progn
-	(setq px-no-gnus-window-configuration (current-window-configuration))
-	(px-prefs -1)
-	(set-window-configuration px-gnus-window-configuration))
+	(setq px-no-mail-window-configuration (current-window-configuration))
+	(px-prefs 0)
+	(set-window-configuration px-mail-window-configuration))
     (progn
-      (setq px-no-gnus-window-configuration (current-window-configuration))
-      (px-prefs -1)
-      (gnus))))
+      (setq px-no-mail-window-configuration (current-window-configuration))
+      (px-prefs 0)
+      (px-mail-client mail-client))))
 
-(defun px-no-gnus nil
-  "switch back from gnus"
+(defun px-no-mail nil
+  "switch back from mail"
   (interactive)
-  ;; (defvar px-gnus-window-configuration (current-window-configuration))
-  (setq px-gnus-window-configuration (current-window-configuration))
-  (set-window-configuration px-no-gnus-window-configuration)
-      (px-prefs t))
+  (setq px-mail-window-configuration (current-window-configuration))
+  (set-window-configuration px-no-mail-window-configuration)
+  (px-prefs t))
 
-(define-key global-map px-toggle-gnus-key 'px-go-gnus)
+(eval-after-load "wl-folder"
+  '(define-key wl-folder-mode-map px-toggle-mail-key 'px-no-mail))
+
+(eval-after-load "wl-summary"
+  '(define-key wl-summary-mode-map px-toggle-mail-key 'px-no-mail))
+
+(eval-after-load "wl-draft"
+  '(define-key wl-draft-mode-map px-toggle-mail-key 'px-no-mail))
 
 (eval-after-load "gnus"
   '(progn
-     (define-key gnus-summary-mode-map px-toggle-gnus-key 'px-no-gnus)
-     (define-key gnus-group-mode-map px-toggle-gnus-key 'px-no-gnus)
-     (define-key gnus-article-mode-map px-toggle-gnus-key 'px-no-gnus)))
+     (define-key gnus-summary-mode-map px-toggle-mail-key 'px-no-mail)
+     (define-key gnus-group-mode-map px-toggle-mail-key 'px-no-mail)
+     (define-key gnus-article-mode-map px-toggle-mail-key 'px-no-mail)))
 
 (eval-after-load "message"
-  '(define-key message-mode-map px-toggle-gnus-key 'px-no-gnus))
+  '(define-key message-mode-map px-toggle-mail-key 'px-no-mail))
+
+(define-key global-map px-toggle-mail-key 'px-go-mail)
 
 ;; Faces ______________________________________________________________________
 
@@ -841,8 +855,9 @@ select 'this' or <that> (enclosed)  s-SPC
  '(inhibit-startup-echo-area-message (user-login-name))
  '(recentf-save-file "~/.bkp/recentf")
  '(web-vcs-default-download-directory (quote site-lisp-dir))
- '(wl-folder-summary-line-format-alist nil)
- '(wl-summary-line-format "%M/%D(%W)%h:%m %t%[%17(%c %f%) %] %s"))
+ ;; '(wl-folder-summary-line-format-alist nil)
+ ;; '(wl-summary-line-format "%M/%D(%W)%h:%m %t%[%17(%c %f%) %] %s")
+)
 
 
 ;; Garbage ______________________________________________________________________
