@@ -2,7 +2,7 @@
 ;; (setq wl-user-mail-address-list (quote ("philippe.coatmeur@gmail.com" "contact@adamweb.net")))
 ;; (define-key wl-summary-mode-map px-toggle-mail-key 'px-no-mail)
 ;; (define-key wl-folder-mode-map px-toggle-mail-key 'px-no-mail)
-
+(setq wl-from "Phil CM <philippe.coatmeur@gmail.net>")
 (setq wl-stay-folder-window t)
 (setq
  wl-summary-always-sticky-folder-list t
@@ -25,25 +25,88 @@
    "^Date"
    "^To"
    "^Cc")
- )
 
+ elmo-nntp-default-server "news.eternal-september.org"
+ elmo-nntp-default-user "PhilippeCM"
+)
+(setq wl-nntp-posting-server elmo-nntp-default-server)
+
+
+;; %n  message number
+;; %T  temporary mark
+;; %P  persistent mark
+;; %Y  year
+;; %M  month
+;; %D  day
+;; %W  day of week
+;; %h  hour
+;; %m  minute
+;; %t  branch of the thread
+;; %[  [ (< for re-connected child)
+;; %]  ] (> for re-connected child)
+;; %f  sender
+;; %s  subject
+;; %S  size
+;; %c  +number-of-children: (display only for opened thread)
+;; %C  [+number-of-children] (display only for opened thread)
+;; %#  mailing list information (`(' ML-name [ ` ' ML-number ] `)')
+;; %l  number in the mailing list
+;; %@ `@' only if the first MIME part is multipart/mixed
+;; %~  ` ' only if previous column is empty
+
+;; (setq wl-auto-save-drafts-interval nil) And/or change you draft folder
+;; to local: (setq wl-draft-folder "+draft").
+
+;; > Also, when I check the inbox after some idle time, WL will become
+;; > dead ! It seems the problem of IMAP.
+
+;; Set elmo-network-session-idle-timeout to some reasonable value (60
+;; seconds, for example)
+
+
+(setq wl-folder-summary-line-format-alist
+      '(("^%" . "%T%P%M/%D(%W)%h:%m %t[%17(%c %f%) ] %s")
+        ("^-" . "%Y/%M/%D (%W) %[%17(%f %c%)%]%t %s")))
+;;elmo-network-session-idle-timeout 30
 ;; Change format of thread view
 ;; (setq wl-thread-indent-level 2)
+
 (setq
 
- ;; wl-thread-insert-opened t
- ;; wl-thread-indent-level 1
- ;; wl-thread-have-younger-brother-str "y"
- ;; wl-thread-youngest-child-str       "z"
- ;; wl-thread-vertical-str             "|"
- ;; wl-thread-horizontal-str           "x"
- ;; wl-thread-space-str                "w"
+ ;; Offline and synchronization
+ wl-plugged t
+ elmo-imap4-use-modified-utf7 t
+ elmo-imap4-use-cache t
+ elmo-nntp-use-cache t
+ elmo-pop3-use-cache t
+ wl-ask-range nil
 
- wl-thread-have-younger-brother-str "◯ "
+ elmo-message-fetch-confirm t
+ elmo-message-fetch-threshold 250000
+
+ elmo-network-session-idle-timeout 60
+
+ wl-thread-insert-opened t
+ wl-thread-indent-level 1
+
+ ;; wl-thread-have-younger-brother-str "+"
+ ;; wl-thread-youngest-child-str       "+"
+ ;; wl-thread-vertical-str             "|"
+ ;; wl-thread-horizontal-str           "-"
+ ;; wl-thread-space-str                " "
+
+ wl-thread-have-younger-brother-str "├►"
  wl-thread-youngest-child-str       "╰►"
  wl-thread-vertical-str             "│ "
- wl-thread-horizontal-str           ""
+ wl-thread-horizontal-str           "──"
  wl-thread-space-str                "  "
+
+;; This kinda works
+ ;; wl-thread-have-younger-brother-str "◎"
+ ;; wl-thread-youngest-child-str       "╰►"
+ ;; wl-thread-vertical-str             "│ "
+ ;; wl-thread-horizontal-str           "z "
+ ;; wl-thread-space-str                "d "
 
  ;; wl-thread-insert-opened t
  ;; wl-thread-indent-level 2
@@ -66,7 +129,6 @@
  ;; gnus-sum-thread-tree-leaf-with-other "├─► "
  ;; gnus-sum-thread-tree-vertical        "│ "
  ;; gnus-sum-thread-tree-single-leaf     "╰─► "
-
 
 ;; (setq elmo-enable-disconnected-operation t)
 
@@ -95,8 +157,8 @@
 	     ))
 
 ;; notify mail arrival
-;(setq wl-biff-check-folder-list '("%inbox"))
-;(setq wl-biff-notify-hook '(ding))
+(setq wl-biff-check-folder-list '("%inbox"))
+(setq wl-biff-notify-hook '(ding))
 
 ;; ;; How messages with disposal mark ("d") are to be handled.
 ;; ;; remove = instant removal (same as "D"), thrash = move to wl-trash-folder

@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Thu 22-Mar-2012 21:48:11>
+;; Time-stamp: <.emacs - Fri 23-Mar-2012 20:03:32>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -763,6 +763,99 @@ select 'this' or <that> (enclosed)  s-SPC
 
 (define-key global-map px-toggle-mail-key 'px-go-mail)
 
+(defun Reset-prefs nil
+  "reset my fucking prefs"
+  (interactive)
+  (px-prefs 0))
+
+(add-hook 'wl-mail-setup-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-toggle-disp-off-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-toggle-disp-on-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-toggle-disp-off-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-toggle-disp-folder-on-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-toggle-disp-folder-off-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-toggle-disp-folder-message-resumed-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-mode-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-prepared-pre-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-prepared-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-sync-updated-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-unread-message-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-edit-addresses-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-buffer-message-saved-hook 'Reset-prefs)
+
+;; (add-hook 'bbdb-wl-get-update-record-hook 'Reset-prefs)
+;; (add-hook 'elmo-archive-load-hook 'Reset-prefs)
+;; (add-hook 'elmo-nntp-opened-hook 'Reset-prefs)
+;; (add-hook 'elmo-pipe-drained-hook 'Reset-prefs)
+;; (add-hook 'elmo-msg-appended-hook 'Reset-prefs)
+;; (add-hook 'elmo-msg-deleted-hook 'Reset-prefs)
+;; (add-hook 'elmo-nntp-post-pre-hook 'Reset-prefs)
+;; (add-hook 'wl-ps-preprint-hook 'Reset-prefs)
+;; (add-hook 'wl-ps-print-hook 'Reset-prefs)
+;; (add-hook 'wl-folder-mode-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-toggle-disp-on-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-toggle-disp-off-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-toggle-disp-folder-on-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-toggle-disp-folder-off-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-toggle-disp-folder-message-resumed-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-mode-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-prepared-pre-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-prepared-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-sync-updated-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-unread-message-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-edit-addresses-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-buffer-message-saved-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-buffer-mark-saved-hook 'Reset-prefs)
+;; (add-hook 'wl-init-hook 'Reset-prefs)
+;; (add-hook 'wl-hook 'Reset-prefs)
+;; (add-hook 'wl-draft-reply-hook 'Reset-prefs)
+;; (add-hook 'wl-draft-forward-hook 'Reset-prefs)
+;; (add-hook 'wl-draft-kill-pre-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-reply-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-forward-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-resend-hook 'Reset-prefs)
+;; (add-hook 'wl-mail-setup-hook 'Reset-prefs)
+;; (add-hook 'wl-draft-reedit-hook 'Reset-prefs)
+
+(add-hook 'wl-draft-send-hook 'Reset-prefs)
+(add-hook 'wl-mail-send-pre-hook 'Reset-prefs)
+(add-hook 'wl-news-send-pre-hook 'Reset-prefs)
+(add-hook 'wl-message-buffer-created-hook 'Reset-prefs)
+(add-hook 'wl-message-redisplay-hook 'Reset-prefs)
+(add-hook 'wl-message-exit-hook 'Reset-prefs)
+(add-hook 'wl-summary-exit-pre-hook 'Reset-prefs)
+(add-hook 'wl-summary-exit-hook 'Reset-prefs)
+
+;; (add-hook 'wl-highlight-headers-hook 'Reset-prefs)
+;; (add-hook 'wl-highlight-message-hook 'Reset-prefs)
+;; (add-hook 'wl-save-hook 'Reset-prefs)
+;; (add-hook 'wl-exit-hook 'Reset-prefs)
+;; (add-hook 'wl-folder-suspend-hook 'Reset-prefs)
+;; (add-hook 'wl-biff-notify-hook 'Reset-prefs)
+;; (add-hook 'wl-biff-unnotify-hook 'Reset-prefs)
+;; (add-hook 'wl-auto-check-folder-pre-hook 'Reset-prefs)
+;; (add-hook 'wl-auto-check-folder-hook 'Reset-prefs)
+;; (add-hook 'wl-folder-check-entity-pre-hook 'Reset-prefs)
+;; (add-hook 'wl-folder-check-entity-hook 'Reset-prefs)
+;; (add-hook 'wl-draft-config-exec-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-expire-pre-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-expire-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-archive-pre-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-archive-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-line-inserted-hook 'Reset-prefs)
+;; (add-hook 'wl-summary-insert-headers-hook 'Reset-prefs)
+;; (add-hook 'wl-message-display-internal-hook 'Reset-prefs)
+;; (add-hook 'wl-thread-update-children-number-hook 'Reset-prefs)
+;; (add-hook 'wl-folder-update-access-group-hook 'Reset-prefs)
+;; (add-hook 'wl-draft-cited-hook 'Reset-prefs)
+;; (add-hook 'wl-draft-insert-x-face-field-hook 'Reset-prefs)
+;; (add-hook 'wl-template-mode-hook 'Reset-prefs)
+;; (add-hook 'wl-score-mode-hook 'Reset-prefs)
+;; (add-hook 'wl-make-plugged-hook 'Reset-prefs)
+;; (add-hook 'wl-plugged-exit-hook 'Reset-prefs)
+;; (add-hook 'wl-plugged-hook 'Reset-prefs)
+;; (add-hook 'wl-unplugged-hook 'Reset-prefs)
+
 ;; Faces ______________________________________________________________________
 
 (if (eq window-system 'x)
@@ -838,7 +931,9 @@ select 'this' or <that> (enclosed)  s-SPC
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(cperl-array-face ((t (:foreground "#fcaf3e" :weight bold))))
- '(cperl-hash-face ((t (:foreground "#fcaf3e" :slant italic :weight bold)))))
+ '(cperl-hash-face ((t (:foreground "#fcaf3e" :slant italic :weight bold))))
+ '(wl-highlight-folder-path-face ((t (:background "dark red" :foreground "white" :weight bold))))
+ '(wl-highlight-summary-displaying-face ((t (:background "dark red" :foreground "white" :weight bold)))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -855,9 +950,9 @@ select 'this' or <that> (enclosed)  s-SPC
  '(inhibit-startup-echo-area-message (user-login-name))
  '(recentf-save-file "~/.bkp/recentf")
  '(web-vcs-default-download-directory (quote site-lisp-dir))
- ;; '(wl-folder-summary-line-format-alist nil)
- ;; '(wl-summary-line-format "%M/%D(%W)%h:%m %t%[%17(%c %f%) %] %s")
-)
+ '(wl-fldmgr-folders-indent "\" \"")
+ '(wl-folder-window-width 25)
+ '(wl-subscribed-mailing-list (quote ("wl@lists.airs.net"))))
 
 
 ;; Garbage ______________________________________________________________________
