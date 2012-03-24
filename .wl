@@ -2,10 +2,48 @@
 ;; (setq wl-user-mail-address-list (quote ("philippe.coatmeur@gmail.com" "contact@adamweb.net")))
 ;; (define-key wl-summary-mode-map px-toggle-mail-key 'px-no-mail)
 ;; (define-key wl-folder-mode-map px-toggle-mail-key 'px-no-mail)
-(setq wl-from "Phil CM <philippe.coatmeur@gmail.net>")
+;; (setq wl-from "Phil CM <philippe.coatmeur@gmail.net>")
+
+;; Vars! ______________________________________________________________________
+
 (setq wl-stay-folder-window t)
 (setq
+
+ ;; Offline and synchronization
+ wl-plugged t
+ elmo-imap4-use-modified-utf7 t
+ elmo-imap4-use-cache t
+ elmo-nntp-use-cache t
+ elmo-pop3-use-cache t
+ wl-ask-range nil
+ wl-auto-flush-queue t
+
+ elmo-message-fetch-confirm t
+ elmo-message-fetch-threshold 250000
+ elmo-network-session-idle-timeout 60
+
+;; Threading
+ wl-thread-insert-opened t
+ wl-thread-indent-level 1
+
+ wl-thread-have-younger-brother-str "├►"
+ wl-thread-youngest-child-str       "╰►"
+ wl-thread-vertical-str             "│ "
+ wl-thread-horizontal-str           "──"
+ wl-thread-space-str                "  "
+
+;; Visual
  wl-summary-always-sticky-folder-list t
+ wl-folder-summary-line-format-alist
+      '(("^%" . "%T%P%M/%D(%W)%h:%m %t[%17(%c %f%) ] %s")
+        ("^-" . "%Y/%M/%D (%W) %[%17(%f %c%)%]%t %s"))
+
+      wl-message-window-size '(4 . 6)
+      wl-auto-select-first t
+
+)
+
+(setq
  wl-message-ignored-field-list '("^.*:")
  wl-message-visible-field-list
  '("^\\(To\\|Cc\\):"
@@ -31,148 +69,18 @@
 )
 (setq wl-nntp-posting-server elmo-nntp-default-server)
 
+(require 'bbdb-wl)
+(bbdb-wl-setup)
 
-;; %n  message number
-;; %T  temporary mark
-;; %P  persistent mark
-;; %Y  year
-;; %M  month
-;; %D  day
-;; %W  day of week
-;; %h  hour
-;; %m  minute
-;; %t  branch of the thread
-;; %[  [ (< for re-connected child)
-;; %]  ] (> for re-connected child)
-;; %f  sender
-;; %s  subject
-;; %S  size
-;; %c  +number-of-children: (display only for opened thread)
-;; %C  [+number-of-children] (display only for opened thread)
-;; %#  mailing list information (`(' ML-name [ ` ' ML-number ] `)')
-;; %l  number in the mailing list
-;; %@ `@' only if the first MIME part is multipart/mixed
-;; %~  ` ' only if previous column is empty
-
-;; (setq wl-auto-save-drafts-interval nil) And/or change you draft folder
-;; to local: (setq wl-draft-folder "+draft").
-
-;; > Also, when I check the inbox after some idle time, WL will become
-;; > dead ! It seems the problem of IMAP.
-
-;; Set elmo-network-session-idle-timeout to some reasonable value (60
-;; seconds, for example)
-
-
-(setq wl-folder-summary-line-format-alist
-      '(("^%" . "%T%P%M/%D(%W)%h:%m %t[%17(%c %f%) ] %s")
-        ("^-" . "%Y/%M/%D (%W) %[%17(%f %c%)%]%t %s")))
-;;elmo-network-session-idle-timeout 30
-;; Change format of thread view
-;; (setq wl-thread-indent-level 2)
-
+;; i don't want to store addresses from my mailing folders
 (setq
+  bbdb-wl-folder-regexp    ;; get addresses only from these folders
+  "sent")    ;;
 
- ;; Offline and synchronization
- wl-plugged t
- elmo-imap4-use-modified-utf7 t
- elmo-imap4-use-cache t
- elmo-nntp-use-cache t
- elmo-pop3-use-cache t
- wl-ask-range nil
+;; Keys! ______________________________________________________________________
 
- elmo-message-fetch-confirm t
- elmo-message-fetch-threshold 250000
-
- elmo-network-session-idle-timeout 60
-
- wl-thread-insert-opened t
- wl-thread-indent-level 1
-
- ;; wl-thread-have-younger-brother-str "+"
- ;; wl-thread-youngest-child-str       "+"
- ;; wl-thread-vertical-str             "|"
- ;; wl-thread-horizontal-str           "-"
- ;; wl-thread-space-str                " "
-
- wl-thread-have-younger-brother-str "├►"
- wl-thread-youngest-child-str       "╰►"
- wl-thread-vertical-str             "│ "
- wl-thread-horizontal-str           "──"
- wl-thread-space-str                "  "
-
-;; This kinda works
- ;; wl-thread-have-younger-brother-str "◎"
- ;; wl-thread-youngest-child-str       "╰►"
- ;; wl-thread-vertical-str             "│ "
- ;; wl-thread-horizontal-str           "z "
- ;; wl-thread-space-str                "d "
-
- ;; wl-thread-insert-opened t
- ;; wl-thread-indent-level 2
- ;; wl-thread-have-younger-brother-str "●"
- ;; wl-thread-youngest-child-str       "◎"
- ;; wl-thread-vertical-str             "|"
- ;; wl-thread-horizontal-str           "◯"
- ;; wl-thread-space-str                "►"
-
-)
-
-(setq wl-message-window-size '(4 . 6))
-(setq wl-auto-select-first t)
-
-(message "plop loaded")
- ;; gnus-sum-thread-tree-indent          "  "
- ;; gnus-sum-thread-tree-root            "● "
- ;; gnus-sum-thread-tree-false-root      "◎ "
- ;; gnus-sum-thread-tree-single-indent   "◯ "
- ;; gnus-sum-thread-tree-leaf-with-other "├─► "
- ;; gnus-sum-thread-tree-vertical        "│ "
- ;; gnus-sum-thread-tree-single-leaf     "╰─► "
-
-;; (setq elmo-enable-disconnected-operation t)
-
-;; Store draft message in queue folder if message is sent in unplugged status.
-(setq wl-draft-enable-queuing t)
-;; when plug status is changed from unplugged to plugged,
-;; queued message is flushed automatically.
-(setq wl-auto-flush-queue t)
-
-;; offline at startup.
-;(setq wl-plugged nil)
-;; change plug status by server or port at startup.
-;(add-hook 'wl-make-plugged-hook
-;	  '(lambda ()
-;	     ;; Add or Change plug status for SERVER and PORT.
-;	     (elmo-set-plugged plugged(t/nil) server port)
-;	     ;; When omit port, SEVERS all port was changes.
-;	     ;; (Can't add plug status without PORT)
-;	     (elmo-set-plugged plugged(t/nil) server)
-;	     ))
-
-;; open unread group folder after checking.
-(add-hook 'wl-folder-check-entity-hook
-	  '(lambda ()
-	     (wl-folder-open-unread-folder entity)
-	     ))
-
-;; notify mail arrival
-(setq wl-biff-check-folder-list '("%inbox"))
-(setq wl-biff-notify-hook '(ding))
-
-;; ;; How messages with disposal mark ("d") are to be handled.
-;; ;; remove = instant removal (same as "D"), thrash = move to wl-trash-folder
-;; ;; string = move to string.
-;; (setq wl-dispose-folder-alist
-;;       '(
-;;         ;;("^-" . remove) ;;default    ;;I don't know what this is?
-;;         ;;("^@" . remove) ;;default    ;;I don't know what this is?
-;;         ("\.\*company\\.com" . "%INBOX.Trash:\"myname@company.com\"/clear@mail.company.com")
-;;         ("\.\*gmail\\.com" . "%[Gmail]/Trash:myname/clear@imap.gmail.com:993!")
-;;         ))
-
-;;Name of top-folder, default "Desktop".
-;; (setq wl-folder-desktop-name "plop")
+(define-key wl-draft-mode-map (kbd "<tab>") 'bbdb-complete-name)
+(define-key wl-draft-mode-map (kbd "<C-return>") 'wl-draft-send-and-exit)
 
 ;;select correct email address when we _start_ writing a draft.
 (add-hook 'wl-mail-setup-hook 'wl-draft-config-exec)
@@ -187,6 +95,28 @@
          (template . "gmail")
          )))
 
+;; xprmt
+;; IMAP, gmail:
+(setq
+ elmo-imap4-default-server "imap.gmail.com"
+ elmo-imap4-default-user "philippe.coatmeur@gmail.com"
+ elmo-imap4-default-authenticate-type 'clear
+ elmo-imap4-default-port '993
+ elmo-imap4-default-stream-type 'ssl
+
+ ;;for non ascii-characters in folder-names
+ elmo-imap4-use-modified-utf7 t)
+
+;; SMTP
+(setq
+ wl-smtp-connection-type 'starttls
+ wl-smtp-posting-port 587
+ wl-smtp-authenticate-type "plain"
+ wl-smtp-posting-user "philippe.coatmeur"
+ wl-smtp-posting-server "smtp.gmail.com"
+ wl-local-domain "gmail.com"
+ wl-message-id-domain "smtp.gmail.com")
+
 ;;choose template with C-c C-j
 (setq wl-template-alist
       '(("gmail"
@@ -198,27 +128,35 @@
          (wl-smtp-connection-type . 'starttls)
          (wl-smtp-posting-port . 587)
          (wl-local-domain . "gmail.com")
-         (wl-message-id-domain . "smtp.gmail.com")
+         (wl-message-id-domain . "smtp.gmail.com"))
 
-
-         (wl-fcc . "%[Gmail]/Sent:philippe.coatmeur/clear@imap.gmail.com:993!")
-         (wl-draft-folder . "%[Gmail]/Draft:philippe.coatmeur/clear@imap.gmail.com:993!")
-         )
         ("work"
          (wl-from . "Adamweb <contact@adamweb.net>")
          ("From" . wl-from)
          (wl-smtp-posting-user . "contact@adamweb.net")
          (wl-smtp-posting-server . "mail.gandi.net")
-
          (wl-smtp-authenticate-type ."plain")
          (wl-smtp-connection-type . 'starttls)
          (wl-smtp-posting-port . 587)
-
          (wl-local-domain . "mail.gandi.net")
+         (wl-message-id-domain . "mail.gandi.net"))))
 
-         (wl-fcc . "%INBOX.Sent:\"contact@adamweb.net\"/clear@mail.company.com")
-         (wl-draft-folder . "%INBOX.Drafts:\"contact@adamweb.net\"/clear@mail.gandi.net"))
-        ))
+;; open unread group folder after checking.
+(add-hook 'wl-folder-check-entity-hook
+	  '(lambda ()
+	     (wl-folder-open-unread-folder entity)
+	     ))
+
+;; notify mail arrival
+(setq wl-biff-check-folder-list '(".Inbox"))
+;; Set mail-icon to be shown universally in the modeline.
+;; (setq global-mode-string
+;;       (cons
+;;        '(wl-modeline-biff-status
+;;          wl-modeline-biff-state-on
+;;          wl-modeline-biff-state-off)
+;;        global-mode-string))
+
 
 ;; Use different signature files based on From: address
 (setq signature-file-alist
@@ -226,14 +164,23 @@
 	(("From" . "myname@gmail.com") . ,(expand-file-name "~/.philippe.coatmeur@gmail.com.sig"))))
 
 ;;Cycle through templates with arrow keys
-(define-key wl-template-mode-map (kbd "<right>") 'wl-template-next)
-(define-key wl-template-mode-map (kbd "<left>") 'wl-template-prev)
+(define-key wl-template-mode-map (kbd "<C-i>") 'wl-template-next)
+(define-key wl-template-mode-map (kbd "<C-o>") 'wl-template-prev)
+
+(setq
+ wl-biff-use-idle-timer t
+ wl-biff-check-interval 5)
+
+(setq wl-biff-notify-hook '(message "plop! New mail"))
+
+(setq display-time-mail-function
+'(lambda () wl-modeline-biff-status))
 
 ;;default folder name auto completion:
 (setq wl-default-spec "%")
 
 ;; mark sent messages (folder carbon copy) as read.
-(setq wl-fcc-force-as-read    t)
+;; (setq wl-fcc-force-as-read    t)
 
 ;;Only save draft when I tell it to! (C-x C-s or C-c C-s):
 ;;(arg: seconds of idle time untill auto-save).
@@ -275,3 +222,79 @@
 ;;       'wl-draft-send
 ;;       'wl-draft-kill
 ;;       'mail-send-hook))
+
+
+
+;; %n  message number
+;; %T  temporary mark
+;; %P  persistent mark
+;; %Y  year
+;; %M  month
+;; %D  day
+;; %W  day of week
+;; %h  hour
+;; %m  minute
+;; %t  branch of the thread
+;; %[  [ (< for re-connected child)
+;; %]  ] (> for re-connected child)
+;; %f  sender
+;; %s  subject
+;; %S  size
+;; %c  +number-of-children: (display only for opened thread)
+;; %C  [+number-of-children] (display only for opened thread)
+;; %#  mailing list information (`(' ML-name [ ` ' ML-number ] `)')
+;; %l  number in the mailing list
+;; %@ `@' only if the first MIME part is multipart/mixed
+;; %~  ` ' only if previous column is empty
+
+;; (setq wl-auto-save-drafts-interval nil) And/or change you draft folder
+;; to local: (setq wl-draft-folder "+draft").
+
+;; > Also, when I check the inbox after some idle time, WL will become
+;; > dead ! It seems the problem of IMAP.
+
+;; Set elmo-network-session-idle-timeout to some reasonable value (60
+;; seconds, for example)
+
+;; offline at startup.
+;(setq wl-plugged nil)
+;; change plug status by server or port at startup.
+;(add-hook 'wl-make-plugged-hook
+;	  '(lambda ()
+;	     ;; Add or Change plug status for SERVER and PORT.
+;	     (elmo-set-plugged plugged(t/nil) server port)
+;	     ;; When omit port, SEVERS all port was changes.
+;	     ;; (Can't add plug status without PORT)
+;	     (elmo-set-plugged plugged(t/nil) server)
+;	     ))
+
+;; ;; How messages with disposal mark ("d") are to be handled.
+;; ;; remove = instant removal (same as "D"), thrash = move to wl-trash-folder
+;; ;; string = move to string.
+;; (setq wl-dispose-folder-alist
+;;       '(
+;;         ;;("^-" . remove) ;;default    ;;I don't know what this is?
+;;         ;;("^@" . remove) ;;default    ;;I don't know what this is?
+;;         ("\.\*company\\.com" . "%INBOX.Trash:\"myname@company.com\"/clear@mail.company.com")
+;;         ("\.\*gmail\\.com" . "%[Gmail]/Trash:myname/clear@imap.gmail.com:993!")
+;;         ))
+
+;;Name of top-folder, default "Desktop".
+;; (setq wl-folder-desktop-name "plop")
+
+;; (setq
+;;  wl-from "My Name <myname@gmail.com>"
+
+;;  ;;all system folders (draft, trash, spam, etc) are placed in the
+;;  ;;[Gmail]-folder, except inbox. "%" means it's an IMAP-folder
+;;  wl-default-folder "%inbox"
+;;  wl-draft-folder   "%[Gmail]/Drafts"
+;;  wl-trash-folder   "%[Gmail]/Trash"
+;;  wl-fcc            "%[Gmail]/Sent Mail"
+
+;;  ;; mark sent messages as read (sent messages get sent back to you and
+;;  ;; placed in the folder specified by wl-fcc)
+;;  wl-fcc-force-as-read    t
+
+;;  ;;for when auto-compleating foldernames
+;;  wl-default-spec "%")

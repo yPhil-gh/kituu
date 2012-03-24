@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Fri 23-Mar-2012 20:03:32>
+;; Time-stamp: <.emacs - Sat 24-Mar-2012 03:19:45>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -29,10 +29,42 @@
 (require 'tabbar)
 ;; wtf?
 ;; (require 'smart-tab)
-(require 'dbus)
 
+;; ;; Bbdb! ____________________________________________________________________
+
+(setq bbdb-file "~/.emacs.d/bbdb")           ;; keep ~/ clean; set before loading
+(require 'bbdb)
+(bbdb-initialize)
+
+(setq
+    bbdb-offer-save 1                        ;; 1 means save-without-asking
+
+    bbdb-use-pop-up t                        ;; allow popups for addresses
+    bbdb-electric-p t                        ;; be disposable with SPC
+    bbdb-popup-target-lines  1               ;; very small
+    bbdb-dwim-net-address-allow-redundancy t ;; always use full name
+    bbdb-quiet-about-name-mismatches 2       ;; show name-mismatches 2 secs
+    bbdb-always-add-address t                ;; add new addresses to existing...
+                                             ;; ...contacts automatically
+    bbdb-canonicalize-redundant-nets-p t     ;; x@foo.bar.cx => x@bar.cx
+    bbdb-completion-type nil                 ;; complete on anything
+    bbdb-complete-name-allow-cycling t       ;; cycle through matches
+                                             ;; this only works partially
+    bbbd-message-caching-enabled t           ;; be fast
+    bbdb-use-alternate-names t               ;; use AKA
+    bbdb-elided-display t                    ;; single-line addresses
+
+    ;; auto-create addresses from mail
+    bbdb/mail-auto-create-p 'bbdb-ignore-some-messages-hook
+    bbdb-ignore-some-messages-alist ;; don't ask about fake addresses
+    ;; NOTE: there can be only one entry per header (such as To, From)
+    ;; http://flex.ee.uec.ac.jp/texi/bbdb/bbdb_11.html
+
+    '(( "From" . "no.?reply\\|DAEMON\\|daemon\\|facebookmail\\|twitter")))
 
 ;; ;; DBus! ____________________________________________________________________
+
+(require 'dbus)
 
 (defun px-send-desktop-notification (summary body timeout)
   "call notification-daemon method METHOD with ARGS over dbus"
@@ -356,7 +388,7 @@ inside html tags."
 ;;     ad-do-it))
 
 ;; Modes! ______________________________________________________________________
-
+(display-time-mode t)
 (tabbar-mode t)
 ;; (set-fringe-mode '(1 . 1))
 (show-paren-mode t)
@@ -715,7 +747,8 @@ select 'this' or <that> (enclosed)  s-SPC
   "toggle pref bits"
   (tabbar-mode arg)
   (scroll-bar-mode arg)
-  (linum-mode arg))
+  (linum-mode arg)
+  (fringe-mode arg))
 
 (defun px-exit-mail nil
   "called after exiting mail"
@@ -767,8 +800,7 @@ select 'this' or <that> (enclosed)  s-SPC
   "reset my fucking prefs"
   (interactive)
   (px-prefs 0))
-
-(add-hook 'wl-mail-setup-hook 'Reset-prefs)
+;; wl-draft-send-and-exit
 ;; (add-hook 'wl-summary-toggle-disp-off-hook 'Reset-prefs)
 ;; (add-hook 'wl-summary-toggle-disp-on-hook 'Reset-prefs)
 ;; (add-hook 'wl-summary-toggle-disp-off-hook 'Reset-prefs)
@@ -817,6 +849,8 @@ select 'this' or <that> (enclosed)  s-SPC
 ;; (add-hook 'wl-mail-setup-hook 'Reset-prefs)
 ;; (add-hook 'wl-draft-reedit-hook 'Reset-prefs)
 
+;; This is sufficient apart from exiting
+(add-hook 'wl-mail-setup-hook 'Reset-prefs)
 (add-hook 'wl-draft-send-hook 'Reset-prefs)
 (add-hook 'wl-mail-send-pre-hook 'Reset-prefs)
 (add-hook 'wl-news-send-pre-hook 'Reset-prefs)
@@ -826,6 +860,7 @@ select 'this' or <that> (enclosed)  s-SPC
 (add-hook 'wl-summary-exit-pre-hook 'Reset-prefs)
 (add-hook 'wl-summary-exit-hook 'Reset-prefs)
 
+;; ;; Test
 ;; (add-hook 'wl-highlight-headers-hook 'Reset-prefs)
 ;; (add-hook 'wl-highlight-message-hook 'Reset-prefs)
 ;; (add-hook 'wl-save-hook 'Reset-prefs)
@@ -932,8 +967,13 @@ select 'this' or <that> (enclosed)  s-SPC
  ;; If there is more than one, they won't work right.
  '(cperl-array-face ((t (:foreground "#fcaf3e" :weight bold))))
  '(cperl-hash-face ((t (:foreground "#fcaf3e" :slant italic :weight bold))))
+ '(wl-highlight-folder-few-face ((t (:foreground "orange" :weight bold))))
  '(wl-highlight-folder-path-face ((t (:background "dark red" :foreground "white" :weight bold))))
- '(wl-highlight-summary-displaying-face ((t (:background "dark red" :foreground "white" :weight bold)))))
+ '(wl-highlight-folder-unread-face ((t (:foreground "orange" :weight bold))))
+ '(wl-highlight-folder-zero-face ((t (:foreground "orange"))))
+ '(wl-highlight-summary-answered-face ((t (:foreground "khaki" :weight bold))))
+ '(wl-highlight-summary-displaying-face ((t (:background "dark red" :foreground "white" :weight bold))))
+ '(wl-highlight-summary-new-face ((t (:foreground "white" :weight ultra-bold)))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -950,8 +990,13 @@ select 'this' or <that> (enclosed)  s-SPC
  '(inhibit-startup-echo-area-message (user-login-name))
  '(recentf-save-file "~/.bkp/recentf")
  '(web-vcs-default-download-directory (quote site-lisp-dir))
- '(wl-fldmgr-folders-indent "\" \"")
+ '(wl-default-folder "%INBOX")
+ '(wl-demo nil)
+ '(wl-demo-display-logo nil)
+ '(wl-folder-desktop-name #("Desktop" 0 7 (wl-folder-entity-id 0 wl-folder-is-group is-group)))
  '(wl-folder-window-width 25)
+ '(wl-from "Philippe M. Coatmeur <philippe.coatmeur@gmail.com>")
+ '(wl-plugged nil)
  '(wl-subscribed-mailing-list (quote ("wl@lists.airs.net"))))
 
 
