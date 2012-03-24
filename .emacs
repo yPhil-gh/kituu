@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Sat 24-Mar-2012 05:37:20>
+;; Time-stamp: <.emacs - Sat 24-Mar-2012 19:19:51>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -29,6 +29,13 @@
 (require 'tabbar)
 ;; wtf?
 ;; (require 'smart-tab)
+
+
+(require 'gmail-notifier)
+(setq gmail-notifier-username "philippe.coatmeur@gmail.com"
+      gmail-notifier-password "Amiga520")
+(gmail-notifier-start)
+
 
 ;; ;; Bbdb! ____________________________________________________________________
 
@@ -81,6 +88,26 @@
     '(:array)
     '(:array :signature "{sv}")
     ':int32 timeout))
+
+
+;;
+
+(defun djcb-popup (title msg &optional icon sound)
+  "Show a popup if we're on X, or echo it otherwise; TITLE is the title
+of the message, MSG is the context. Optionally, you can provide an ICON and
+a sound to be played"
+
+  (interactive)
+  (when sound (shell-command
+                (concat "mplayer -really-quiet " sound " 2> /dev/null")))
+  (if (eq window-system 'x)
+    (shell-command (concat "notify-send "
+
+                     (if icon (concat "-i " icon) "")
+                     " '" title "' '" msg "'"))
+    ;; text only version
+
+    (message (concat title ": " msg))))
 
 ;; (defun pw/compile-notify (buffer message)
   ;; (send-desktop-notification "emacs compile" message 0))
@@ -388,7 +415,7 @@ inside html tags."
 ;;     ad-do-it))
 
 ;; Modes! ______________________________________________________________________
-(display-time-mode t)
+;; (display-time-mode t)
 (tabbar-mode t)
 ;; (set-fringe-mode '(1 . 1))
 (show-paren-mode t)
@@ -511,7 +538,7 @@ inside html tags."
 (add-hook 'write-file-hooks 'time-stamp)
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-(add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
+;; (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
 (add-hook 'display-time-hook
           (lambda () (setq gnus-mode-non-string-length
                            (+ 21
@@ -990,13 +1017,9 @@ select 'this' or <that> (enclosed)  s-SPC
  '(inhibit-startup-echo-area-message (user-login-name))
  '(recentf-save-file "~/.bkp/recentf")
  '(web-vcs-default-download-directory (quote site-lisp-dir))
- ;; '(wl-default-folder "%INBOX")
- ;; '(wl-demo nil)
- ;; '(wl-demo-display-logo nil)
- ;; '(wl-folder-desktop-name #("Desktop" 0 7 (wl-folder-entity-id 0 wl-folder-is-group is-group)))
- ;; '(wl-folder-window-width 25)
- ;; '(wl-from "Philippe M. Coatmeur <philippe.coatmeur@gmail.com>")
- ;; '(wl-plugged nil)
+ '(wl-draft-add-in-reply-to nil)
+ '(wl-draft-buffer-style (quote keep))
+ '(wl-draft-reply-buffer-style (quote keep))
  '(wl-subscribed-mailing-list (quote ("wl@lists.airs.net"))))
 
 

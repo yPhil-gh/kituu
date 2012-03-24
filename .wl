@@ -45,8 +45,8 @@
  wl-folder-window-width 25
  wl-summary-always-sticky-folder-list t
  wl-folder-summary-line-format-alist
- '(("^%" . "%T%P%M/%D(%W)%h:%m %t[%17(%c %f%) ] %s")
-   ("^-" . "%Y/%M/%D (%W) %[%17(%f %c%)%]%t %s"))
+ '(("^%" . "%T%P%Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s")
+   ("^-" . "%T%P%Y/%M/%D (%W) %h:%m %[%17(%f %c%)%] %t%s"))
 
  wl-message-window-size '(4 . 6)
  wl-auto-select-first t
@@ -91,6 +91,10 @@
 
 ;; Keys! ______________________________________________________________________
 
+;; Make mouse work (sheesh)
+(local-set-key [down-mouse-1] 'wl-summary-click)
+(define-key wl-summary-mode-map [down-mouse-1] 'wl-summary-click)
+
 (define-key wl-draft-mode-map (kbd "<tab>") 'bbdb-complete-name)
 (define-key wl-draft-mode-map (kbd "<C-return>") 'wl-draft-send-and-exit)
 
@@ -116,6 +120,9 @@
  elmo-imap4-default-port '993
  elmo-imap4-default-stream-type 'ssl
 
+
+ wl-generate-mailer-string-function 'wl-generate-user-agent-string-1
+
  ;;for non ascii-characters in folder-names
  elmo-imap4-use-modified-utf7 t)
 
@@ -127,7 +134,9 @@
  wl-smtp-posting-user "philippe.coatmeur"
  wl-smtp-posting-server "smtp.gmail.com"
  wl-local-domain "gmail.com"
- wl-message-id-domain "smtp.gmail.com")
+ wl-message-id-domain "smtp.gmail.com"
+
+)
 
 ;;choose template with C-c C-j
 (setq
@@ -160,18 +169,25 @@
  wl-draft-always-delete-myself t
  )
 
-;; open unread group folder after checking.
-(add-hook 'wl-folder-check-entity-hook
-	  '(lambda ()
-	     (wl-folder-open-unread-folder entity)))
+;; ;; open unread group folder after checking.
+;; (add-hook 'wl-folder-check-entity-hook
+;; 	  '(lambda ()
+;; 	     (wl-folder-open-unread-folder entity)))
 
 ;; notify mail arrival
 (setq
- wl-biff-check-folder-list '(".Inbox")
+ wl-biff-check-folder-list '("%Inbox")
  wl-biff-use-idle-timer t
  wl-biff-check-interval 5
- wl-biff-notify-hook '(message "plop! New mail"))
-;; Set mail-icon to be shown universally in the modeline.
+ wl-biff-notify-hook '(px-send-desktop-notification "WL" "New Mail!" 0))
+
+(add-hook 'wl-biff-notify-hook
+    (lambda()
+      (djcb-popup "Wanderlust" "You have new mail!"
+        "/usr/share/icons/gnome/32x32/status/mail-unread.png"
+        "/usr/share/sounds/ubuntu/stereo/phone-incoming-call.ogg")))
+
+;; ;; Set mail-icon to be shown universally in the modeline.
 ;; (setq global-mode-string
 ;;       (cons
 ;;        '(wl-modeline-biff-status
@@ -179,6 +195,11 @@
 ;;          wl-modeline-biff-state-off)
 ;;        global-mode-string))
 
+;; (setq global-mode-string
+;; "plop"
+;; global-mode-string)
+
+;; (force-mode-line-update)
 
 ;; Use different signature files based on From: address
 (setq signature-file-alist
