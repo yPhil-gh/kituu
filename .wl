@@ -6,8 +6,16 @@
 
 ;; Vars! ______________________________________________________________________
 
-(setq wl-stay-folder-window t)
 (setq
+
+ wl-from "Philippe M. Coatmeur <philippe.coatmeur@gmail.com>"
+
+ wl-default-folder "%INBOX"
+ wl-demo nil
+ wl-demo-display-logo nil
+ ;; wl-folder-desktop-name #("Desktop" 0 7 (wl-folder-entity-id 0 wl-folder-is-group is-group))
+ ;; wl-subscribed-mailing-list (quote ("wl@lists.airs.net"))
+
 
  ;; Offline and synchronization
  wl-plugged t
@@ -33,36 +41,40 @@
  wl-thread-space-str                "  "
 
 ;; Visual
+ wl-stay-folder-window t
+ wl-folder-window-width 25
  wl-summary-always-sticky-folder-list t
  wl-folder-summary-line-format-alist
-      '(("^%" . "%T%P%M/%D(%W)%h:%m %t[%17(%c %f%) ] %s")
-        ("^-" . "%Y/%M/%D (%W) %[%17(%f %c%)%]%t %s"))
+ '(("^%" . "%T%P%M/%D(%W)%h:%m %t[%17(%c %f%) ] %s")
+   ("^-" . "%Y/%M/%D (%W) %[%17(%f %c%)%]%t %s"))
 
-      wl-message-window-size '(4 . 6)
-      wl-auto-select-first t
+ wl-message-window-size '(4 . 6)
+ wl-auto-select-first t
 
 )
 
 (setq
  wl-message-ignored-field-list '("^.*:")
  wl-message-visible-field-list
- '("^\\(To\\|Cc\\):"
-   "^Subject:"
+ '(
    "^\\(From\\|Reply-To\\):"
-   "^Organization:"
-   "^Message-Id:"
+   "^\\(To\\|Cc\\):"
    "^\\(Posted\\|Date\\):"
+   "^Subject:"
+   "^Organization:"
+   ;; "^Message-Id:"
    "^[xX]-[Ff]ace:"
    )
+
  wl-message-sort-field-list
  '("^From"
-
+   "^To"
+   "^Date"
+   "^Subject"
    "^Organization:"
    "^X-Attribution:"
-   "^Subject"
-   "^Date"
-   "^To"
-   "^Cc")
+   ;; "^Cc"
+)
 
  elmo-nntp-default-server "news.eternal-september.org"
  elmo-nntp-default-user "PhilippeCM"
@@ -118,37 +130,47 @@
  wl-message-id-domain "smtp.gmail.com")
 
 ;;choose template with C-c C-j
-(setq wl-template-alist
-      '(("gmail"
-         (wl-from . "Philippe M. Coatmeur <philippe.coatmeur@gmail.com>")
-         ("From" . wl-from)
-         (wl-smtp-posting-user . "philippe.coatmeur")
-         (wl-smtp-posting-server . "smtp.gmail.com")
-         (wl-smtp-authenticate-type ."plain")
-         (wl-smtp-connection-type . 'starttls)
-         (wl-smtp-posting-port . 587)
-         (wl-local-domain . "gmail.com")
-         (wl-message-id-domain . "smtp.gmail.com"))
+(setq
+ wl-template-alist
+ '(("gmail"
+    (wl-from . "Philippe M. Coatmeur <philippe.coatmeur@gmail.com>")
+    ("From" . wl-from)
+    ("Cc" . "")
+    (body . "Hello ;\n")
+    (wl-smtp-posting-user . "philippe.coatmeur")
+    (wl-smtp-posting-server . "smtp.gmail.com")
+    (wl-smtp-authenticate-type ."plain")
+    (wl-smtp-connection-type . 'starttls)
+    (wl-smtp-posting-port . 587)
+    (wl-local-domain . "gmail.com")
+    ;; (wl-message-id-domain . "smtp.gmail.com")
+    )
 
-        ("work"
-         (wl-from . "Adamweb <contact@adamweb.net>")
-         ("From" . wl-from)
-         (wl-smtp-posting-user . "contact@adamweb.net")
-         (wl-smtp-posting-server . "mail.gandi.net")
-         (wl-smtp-authenticate-type ."plain")
-         (wl-smtp-connection-type . 'starttls)
-         (wl-smtp-posting-port . 587)
-         (wl-local-domain . "mail.gandi.net")
-         (wl-message-id-domain . "mail.gandi.net"))))
+   ("work"
+    (wl-from . "Adamweb <contact@adamweb.net>")
+    ("From" . wl-from)
+    (wl-smtp-posting-user . "contact@adamweb.net")
+    (wl-smtp-posting-server . "mail.gandi.net")
+    (wl-smtp-authenticate-type ."plain")
+    (wl-smtp-connection-type . 'starttls)
+    (wl-smtp-posting-port . 587)
+    (wl-local-domain . "mail.gandi.net")
+    ;; (wl-message-id-domain . "mail.gandi.net")
+    ))
+ wl-draft-always-delete-myself t
+ )
 
 ;; open unread group folder after checking.
 (add-hook 'wl-folder-check-entity-hook
 	  '(lambda ()
-	     (wl-folder-open-unread-folder entity)
-	     ))
+	     (wl-folder-open-unread-folder entity)))
 
 ;; notify mail arrival
-(setq wl-biff-check-folder-list '(".Inbox"))
+(setq
+ wl-biff-check-folder-list '(".Inbox")
+ wl-biff-use-idle-timer t
+ wl-biff-check-interval 5
+ wl-biff-notify-hook '(message "plop! New mail"))
 ;; Set mail-icon to be shown universally in the modeline.
 ;; (setq global-mode-string
 ;;       (cons
@@ -167,17 +189,11 @@
 (define-key wl-template-mode-map (kbd "<C-i>") 'wl-template-next)
 (define-key wl-template-mode-map (kbd "<C-o>") 'wl-template-prev)
 
-(setq
- wl-biff-use-idle-timer t
- wl-biff-check-interval 5)
-
-(setq wl-biff-notify-hook '(message "plop! New mail"))
-
 (setq display-time-mail-function
 '(lambda () wl-modeline-biff-status))
 
 ;;default folder name auto completion:
-(setq wl-default-spec "%")
+;; (setq wl-default-spec "%")
 
 ;; mark sent messages (folder carbon copy) as read.
 ;; (setq wl-fcc-force-as-read    t)

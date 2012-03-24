@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Sat 24-Mar-2012 03:19:45>
+;; Time-stamp: <.emacs - Sat 24-Mar-2012 05:37:20>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -990,13 +990,13 @@ select 'this' or <that> (enclosed)  s-SPC
  '(inhibit-startup-echo-area-message (user-login-name))
  '(recentf-save-file "~/.bkp/recentf")
  '(web-vcs-default-download-directory (quote site-lisp-dir))
- '(wl-default-folder "%INBOX")
- '(wl-demo nil)
- '(wl-demo-display-logo nil)
- '(wl-folder-desktop-name #("Desktop" 0 7 (wl-folder-entity-id 0 wl-folder-is-group is-group)))
- '(wl-folder-window-width 25)
- '(wl-from "Philippe M. Coatmeur <philippe.coatmeur@gmail.com>")
- '(wl-plugged nil)
+ ;; '(wl-default-folder "%INBOX")
+ ;; '(wl-demo nil)
+ ;; '(wl-demo-display-logo nil)
+ ;; '(wl-folder-desktop-name #("Desktop" 0 7 (wl-folder-entity-id 0 wl-folder-is-group is-group)))
+ ;; '(wl-folder-window-width 25)
+ ;; '(wl-from "Philippe M. Coatmeur <philippe.coatmeur@gmail.com>")
+ ;; '(wl-plugged nil)
  '(wl-subscribed-mailing-list (quote ("wl@lists.airs.net"))))
 
 
