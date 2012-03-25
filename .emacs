@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Sun 25-Mar-2012 14:42:42>
+;; Time-stamp: <.emacs - Sun 25-Mar-2012 14:43:24>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -30,11 +30,7 @@
 ;; wtf?
 ;; (require 'smart-tab)
 
-
-
 (require 'gmail-notifier)
-;; (setq gmail-notifier-username "philippe.coatmeur@gmail.com"
-      ;; gmail-notifier-password "Amiga520")
 (gmail-notifier-start)
 
 
