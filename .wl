@@ -176,16 +176,14 @@
 
 ;; notify mail arrival
 (setq
- wl-biff-check-folder-list '("%Inbox")
+ wl-biff-check-folder-list '("%INBOX:")
  wl-biff-use-idle-timer t
  wl-biff-check-interval 5
  wl-biff-notify-hook '(px-send-desktop-notification "WL" "New Mail!" 0))
 
 (add-hook 'wl-biff-notify-hook
-    (lambda()
-      (djcb-popup "Wanderlust" "You have new mail!"
-        "/usr/share/icons/gnome/32x32/status/mail-unread.png"
-        "/usr/share/sounds/ubuntu/stereo/phone-incoming-call.ogg")))
+	  (lambda()
+	    (px-send-desktop-notification "test" "plip" 0)))
 
 ;; ;; Set mail-icon to be shown universally in the modeline.
 ;; (setq global-mode-string

@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Sat 24-Mar-2012 19:19:51>
+;; Time-stamp: <.emacs - Sun 25-Mar-2012 14:41:45>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -23,7 +23,7 @@
 (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
 (autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
 
-;; (load "~/.emacs.d/lisp/nxhtml/autostart.el")
+(load "~/.emacs.d/lisp/nxhtml/autostart.el")
 
 (require 'cl)
 (require 'tabbar)
@@ -32,8 +32,8 @@
 
 
 (require 'gmail-notifier)
-(setq gmail-notifier-username "philippe.coatmeur@gmail.com"
-      gmail-notifier-password "Amiga520")
+;; (setq gmail-notifier-username "philippe.coatmeur@gmail.com"
+      ;; gmail-notifier-password "Amiga520")
 (gmail-notifier-start)
 
 

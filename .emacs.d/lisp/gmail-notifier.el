@@ -65,7 +65,7 @@
   :type 'list
   :group 'gmail-notifier)
 
-(defcustom gmail-notifier-timer-interval 10
+(defcustom gmail-notifier-timer-interval 300
   "Interval(in seconds) for checking gmail."
   :type 'number
   :group 'gmail-notifier)
