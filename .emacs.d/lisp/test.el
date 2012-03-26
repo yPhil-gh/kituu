@@ -26,12 +26,30 @@
     (force-mode-line-update)
     (kill-buffer)))
 
+(defun count-words-in-list ()
+  "Return the number of words and symbols in a defun."
+  (beginning-of-defun)
+  (let ((count 0)
+	(end (save-excursion (end-of-defun) (point))))
+    (while
+	(and (< (point) end)
+	     (re-search-forward
+	      "\\(\\w\\|\\s_\\)+[^ \t\n]*[ \t\n]*"
+	      end t))
+      (setq count (1+ count)))
+    count))
 
 ;; copied from twittering-mode
 (defun read-output-buffer (buffer)
   "Read and parse BUFFER"
   (with-current-buffer buffer
     (message "I'm %s" buffer)
+
+     (goto-char (point-min))
+     (while (re-search-forward "^\"" nil t)
+       (setq lengths-list
+             (cons (count-words-in-defun) lengths-list)))
+
     ;; (let ((mystring
     ;; 	   '(buffer-substring (point-min) (point-max))))
     ;;   mystring)
