@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Sun 25-Mar-2012 14:43:24>
+;; Time-stamp: <.emacs - Sun 25-Mar-2012 20:49:37>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -30,8 +30,8 @@
 ;; wtf?
 ;; (require 'smart-tab)
 
-(require 'gmail-notifier)
-(gmail-notifier-start)
+;; (require 'gmail-notifier)
+;; (gmail-notifier-start)
 
 
 ;; ;; Bbdb! ____________________________________________________________________
