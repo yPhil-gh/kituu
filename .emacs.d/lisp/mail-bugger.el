@@ -1,6 +1,6 @@
 (defvar mail-bugger-unread-entries nil)
 
-(defconst mail-modeline-logo-image
+(defconst mail-bugger-logo-image
   (when (image-type-available-p 'xpm)
     '(image :type xpm
 	    :ascent center
@@ -35,33 +35,33 @@ static char * gmail_xpm[] = {
 "))
   "Image for gmail logo.")
 
-(defconst mail-modeline-logo
-  (if mail-modeline-logo-image
-      (apply 'propertize " " `(display ,mail-modeline-logo-image))
+(defconst mail-bugger-logo
+  (if mail-bugger-logo-image
+      (apply 'propertize " " `(display ,mail-bugger-logo-image))
     "G"))
 
-(defvar mail-modeline-timer nil)
+(defvar mail-bugger-timer nil)
 
-(defcustom mail-modeline-timer-interval 300
+(defcustom mail-bugger-timer-interval 300
   "Interval(in seconds) for checking gmail."
 )
 
 ;;;###autoload
-(defun mail-modeline-start ()
+(defun mail-bugger-start ()
   (interactive)
 
   (add-to-list 'global-mode-string
-               '(:eval (mail-modeline-make-unread-string)) t)
+               '(:eval (mail-bugger-make-unread-string)) t)
 
-  (setq mail-modeline-timer
+  (setq mail-bugger-timer
         (run-with-timer 0
-                        mail-modeline-timer-interval
-                        'mail-modeline-check)))
+                        mail-bugger-timer-interval
+                        'mail-bugger-check)))
 
 
-(defmacro mail-modeline-shell-command (cmd callback)
+(defmacro mail-bugger-shell-command (cmd callback)
   "Run CMD asynchronously in a buffer"
-  `(let* ((buf (generate-new-buffer "mail-modeline"))
+  `(let* ((buf (generate-new-buffer "mail-bugger"))
           (p (start-process-shell-command ,cmd buf ,cmd)))
      (set-process-sentinel
       p
@@ -74,22 +74,22 @@ static char * gmail_xpm[] = {
               (if (zerop err)
 		  (funcall, callback)
                   ;; (message "God exists")
-                (error "(mail-modeline) error: %d" err)))))))))
+                (error "(mail-bugger) error: %d" err)))))))))
 
 (defun callback ()
   (message "There are %d mails, 1st subject: %s, second : %s" (list-length lines) first-subject second-subject)
   ;; (message "i'm the callback")
   (let* ((header-str (read-output-buffer (current-buffer))))
 
-    (setq mail-modeline-unread-entries lines)
-    (mail-modeline-make-unread-string)
+    (setq mail-bugger-unread-entries lines)
+    (mail-bugger-make-unread-string)
 
     (force-mode-line-update)
     (kill-buffer)))
 
 
-(defun mail-modeline-make-unread-string ()
-  (if (null mail-modeline-unread-entries)
+(defun mail-bugger-make-unread-string ()
+  (if (null mail-bugger-unread-entries)
       ""
     (let ((s (format "(%d) " (length lines)))
           (map (make-sparse-keymap))
@@ -98,25 +98,25 @@ static char * gmail_xpm[] = {
         `(lambda (e)
            (interactive "e")
            (browse-url ,url)
-           (setq mail-modeline-unread-entries nil)))
+           (setq mail-bugger-unread-entries nil)))
       (add-text-properties 0 (length s)
                            `(local-map ,map mouse-face mode-line-highlight
                                        uri ,url help-echo
                                        ,(concat
-                                         (mail-modeline-make-preview-string)
+                                         (mail-bugger-make-preview-string)
                                          "\nmouse-2: View mail"))
                            s)
-      (concat " " mail-modeline-logo s))))
+      (concat " " mail-bugger-logo s))))
 
 
-(defun mail-modeline-make-preview-string ()
+(defun mail-bugger-make-preview-string ()
   (mapconcat
    (lambda (entry)
      (let ((s (format "%s - %s - %s"
 		      (list-length lines) first-subject second-subject
 		      )))
        s))
-   mail-modeline-unread-entries
+   mail-bugger-unread-entries
    "\n"))
 
 
@@ -145,10 +145,10 @@ static char * gmail_xpm[] = {
 )
 
 
-(defun mail-modeline-check ()
+(defun mail-bugger-check ()
   "Check unread mail now."
   (interactive)
-  (mail-modeline-shell-command (format "php /var/www/html/test/index.php") 'callback))
+  (mail-bugger-shell-command (format "php /var/www/html/test/index.php") 'callback))
 
 (defun parse-quote-buffer(b)
   "Parse the buffer for quotes"
@@ -198,7 +198,8 @@ static char * gmail_xpm[] = {
       (message
        "The definition has %d words or symbols." count)))))
 
-(let ((words '("fight" "foo" "for" "food!")))
-  words)
-;; ==> ("bar" "fight" "foo" "for" "food!")
 (message "%s loaded" (or load-file-name buffer-file-name))
+
+
+(provide 'mail-bugger)
+;;; mail-modeline.el ends here
