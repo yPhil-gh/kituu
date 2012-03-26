@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Sun 25-Mar-2012 20:49:37>
+;; Time-stamp: <.emacs - Mon 26-Mar-2012 01:37:10>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -23,12 +23,12 @@
 (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
 (autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
 
-(load "~/.emacs.d/lisp/nxhtml/autostart.el")
+;; (load "~/.emacs.d/lisp/nxhtml/autostart.el")
 
 (require 'cl)
 (require 'tabbar)
 ;; wtf?
-;; (require 'smart-tab)
+(require 'smart-tab)
 
 ;; (require 'gmail-notifier)
 ;; (gmail-notifier-start)
@@ -983,7 +983,7 @@ select 'this' or <that> (enclosed)  s-SPC
 ;; Custom ______________________________________________________________________
 
 ;; (setq tabbar-separator '(1)) ;; set tabbar-separator size to 1 pixel
-(message "%s loaded" (buffer-file-name))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -1024,3 +1024,4 @@ select 'this' or <that> (enclosed)  s-SPC
 
 ;; (setq yas/root-directory "~/.emacs.d/el-get/yasnippet/snippets")
 ;; (add-hook 'php-mode-hook 'yas/global-mode)
+(message "%s loaded" (or load-file-name buffer-file-name))
