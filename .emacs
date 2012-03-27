@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Mon 26-Mar-2012 17:47:25>
+;; Time-stamp: <.emacs - Tue 27-Mar-2012 02:06:54>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -23,7 +23,7 @@
 (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
 (autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
 
-;; (load "~/.emacs.d/lisp/nxhtml/autostart.el")
+(load "~/.emacs.d/lisp/nxhtml/autostart.el")
 
 (require 'cl)
 (require 'tabbar)

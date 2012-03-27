@@ -87,9 +87,10 @@ machine <host> login <login> port <port> password <password>
 
 (defvar mail-bugger-unread-entries nil)
 
-(defconst mail-bugger-icon
+(defcustom mail-bugger-icon
   (when (image-type-available-p 'xpm)
     '(image :type xpm
+	    ;; :file "~/.emacs.d/xpm/perso.xpm"
 	    :ascent center
 	    :data
             "/* XPM */
@@ -120,8 +121,10 @@ static char * perso_xpm[] = {
 \"     #****&.    \",
 \"      #**#.     \",
 \"       ..       \"};
-"))
-  "My mail icon.")
+"
+))
+  "Icon for the first account."
+  :group 'mail-bugger)
 
 (defconst mail-bugger-logo
   (if mail-bugger-icon
@@ -132,6 +135,7 @@ static char * perso_xpm[] = {
 
 ;;;###autoload
 (defun mail-bugger-start ()
+"Init"
   (interactive)
   (add-to-list 'global-mode-string
                '(:eval (mail-bugger-make-unread-string)) t)
@@ -142,7 +146,7 @@ static char * perso_xpm[] = {
 
 (defmacro mail-bugger-shell-command (cmd callback)
   "Run CMD asynchronously in a buffer"
-  `(let* ((buf (generate-new-buffer "mail-bugger"))
+  `(let* ((buf (generate-new-buffer "*mail-bugger*"))
           (p (start-process-shell-command ,cmd buf ,cmd)))
      (set-process-sentinel
       p
@@ -158,6 +162,7 @@ static char * perso_xpm[] = {
                 (error "(mail-bugger) error: %d" err)))))))))
 
 (defun mail-bugger-shell-command-callback ()
+  "Now we're talking"
   (let* ((header-str (read-output-buffer (current-buffer))))
     (setq mail-bugger-unread-entries lines)
     (unless (null mail-bugger-unread-entries)
@@ -169,7 +174,7 @@ static char * perso_xpm[] = {
 (defun mail-bugger-make-unread-string ()
   (if (null mail-bugger-unread-entries)
       ""
-    (let ((s (format ":%d]" (length lines)))
+    (let ((s (format "%d " (length lines)))
           (map (make-sparse-keymap))
           (url "https://mail.google.com"))
       (define-key map (vector 'mode-line 'mouse-2)
@@ -184,7 +189,7 @@ static char * perso_xpm[] = {
                                          (mail-bugger-make-preview-string)
                                          "\n\nmouse-2: View mail"))
                            s)
-      (concat " [" mail-bugger-logo s))))
+      (concat " " mail-bugger-logo ":" s))))
 
 
 
@@ -208,43 +213,21 @@ static char * perso_xpm[] = {
 
 
 (defun mail-bugger-make-preview-string ()
-
+  "loop through the mail headers and build the hover tooltip"
   (mapconcat
    (lambda (x)
      (let
 	 ((s
-	    (format "%s\n%s\n--------------\n%s\n"
-		    (car (nthcdr 1 x))
-		    (nthcdr 2 x)
-		    (car x))
-	    ))
+	   (format "%s\n%s\n--------------\n%s\n"
+		   (car (nthcdr 1 x))
+		   (nthcdr 2 x)
+		   (car x))
+	   ))
        s))
    mail-bugger-unread-entries
    "\n"))
 
 (format "%s" (substring "(Mon, 26 Mar 2012 12:55:42 +0000)" 1 26))
-
-  ;; (mapconcat
-  ;;  (setq d
-  ;; 	 (mapcar
-  ;; 	  (lambda (x)
-  ;; 	    (format "From: %s\nSubject: %s\nDate: %s\n\n" (car (nthcdr 1 x)) (car x) (nthcdr 2 x)) )
-  ;; 	  mylist))
-  ;;  mail-bugger-unread-entries
-  ;;  "\n\n")
-
-
-
-  ;; (mapconcat
-  ;;  (lambda (entry)
-  ;;    (let ((s (format "%s\n%s\n----------------\n%s"
-  ;; 		      mail-bugger-mail-from mail-bugger-mail-date mail-bugger-mail-subject
-  ;; 		      )))
-  ;;      s))
-  ;;  mail-bugger-unread-entries
-  ;;  "\n\n")
-
-
 
 (defun buffer-to-list-of-lists (buf)
   "make & return a list (of lists) LINES from lines in a buffer BUF"
@@ -290,30 +273,3 @@ static char * perso_xpm[] = {
 
 (provide 'mail-bugger)
 ;;; mail-bugger.el ends here
-
-;; (loop for i on
-;; '(("1st" "Adamweb <contact@adamweb.net>" "Mon, 26 Mar 2012 12:55:18 +0000")
-;;  ("2nd" "Adamweb <contact@adamweb.net>" "Mon, 26 Mar 2012 12:55:42 +0000")) do (return (car (car (cdr i)))))
-
-
-;; (setq mylist '(("1st" "Adamweb <contact@adamweb.net>" "Mon, 26 Mar 2012 12:55:18 +0000")
-;;  ("2nd" "Adamweb <contact@adamweb.net>" "Mon, 26 Mar 2012 12:55:42 +0000")))
-
-;; (mapcar '((format "%s" car) mylist)
-;; (mapcar '(nthcdr 1) mylist)
-
-;; (mapcar 'car (nthcdr 1 mylist))
-
-;; (setq c '(23.0 47.8 52.1 35.6))
-
-;; (setq d (mapcar
-;; 	 '(lambda (x)
-;; 	    (format "From: %s\nSubject: %s\nDate: %s\n\n" (car (nthcdr 1 x)) (car x) (nthcdr 2 x)) )
-;; 	 lines))
-
-;; (setq d (mapcar
-;; 	 '(lambda (x)
-;; 	    (format "Subject: %s" x))
-;; 	 mylist))
-
-;; This function will convert all the angles in the list c to radians and store them in variable d.
