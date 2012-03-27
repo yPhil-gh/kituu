@@ -26,11 +26,11 @@
 ;; `G' could be the gmail logo if your emacs supports image.
 ;; To setup:
 ;;   (require 'mail-bugger)
-;;   (mail-bugger-start)
 ;;
-;; Store your login and password in `~/.authinfo.gpg'.
 
 ;;; Code:
+
+
 
 (require 'auth-source)
 (require 'dbus)
@@ -88,6 +88,16 @@ machine <host> login <login> port <port> password <password>
 
 (defvar mail-bugger-unread-entries nil)
 
+(defcustom mail-bugger-new-mail-sound "/usr/share/sounds/KDE-Im-New-Mail.ogg"
+  "Sound for new mail notification."
+  :type 'string
+  :group 'mail-bugger)
+
+(defcustom mail-bugger-new-mail-icon "/usr/share/icons/Revenge/128x128/apps/emacs.png"
+  "Icon for new mail notification."
+  :type 'string
+  :group 'mail-bugger)
+
 (defcustom mail-bugger-icon
   (when (image-type-available-p 'xpm)
     '(image :type xpm
@@ -104,7 +114,7 @@ machine <host> login <login> port <port> password <password>
 (defvar mail-bugger-timer nil)
 
 ;;;###autoload
-(defun mail-bugger-desktop-notification (summary body timeout sound icon)
+(defun mail-bugger-desktop-notification (summary body timeout)
   "call notification-daemon method METHOD with ARGS over dbus"
   (dbus-call-method
     :session                        ; use the session (not system) bus
@@ -114,20 +124,20 @@ machine <host> login <login> port <port> password <password>
     "GNU Emacs"
     0
     ;; "/usr/share/icons/gnuitar.png"
-    icon
+    mail-bugger-new-mail-icon
     summary
     body
     '(:array)
     '(:array :signature "{sv}")
     ':int32 timeout)
 
-  (when sound (shell-command
-                (concat "mplayer -really-quiet " sound " 2> /dev/null")))
-)
+(if mail-bugger-new-mail-sound
+  (shell-command
+   (concat "mplayer -really-quiet " mail-bugger-new-mail-sound " 2> /dev/null"))))
 
 ;; (px-send-desktop-notification "Test" "Plip" 2000 "/usr/share/sounds/KDE-Im-New-Mail.ogg" "/usr/share/icons/Revenge/128x128/apps/emacs.png")
 
-(defun mail-bugger-start ()
+(defun mail-bugger-init ()
 "Init"
   (interactive)
   (add-to-list 'global-mode-string
@@ -197,8 +207,14 @@ machine <host> login <login> port <port> password <password>
 	   (progn
 	     (if
 		 (not (member x mail-bugger-advertised-mails))
-		 (progn (message "Message number %s advertised!" (car (nthcdr 3 x)))
-			(add-to-list 'mail-bugger-advertised-mails x))))
+		 (progn
+		   (mail-bugger-desktop-notification "<h2 style='color:red;text-align:left;'>New mail!</h2>"
+						     (format "<h3>%s</h3><h4>%s</h4><hr>%s"
+							     (car (nthcdr 1 x))
+							     (nthcdr 2 x)
+							     (car x)
+							     ) 2 )
+		   (add-to-list 'mail-bugger-advertised-mails x))))
 	   ))
        s)
      )
