@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Mon 26-Mar-2012 01:37:10>
+;; Time-stamp: <.emacs - Mon 26-Mar-2012 17:47:25>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -30,9 +30,11 @@
 ;; wtf?
 (require 'smart-tab)
 
-;; (require 'gmail-notifier)
-;; (gmail-notifier-start)
+(require 'mail-bugger)
+(mail-bugger-start)
 
+;; Required by my iswitchb hack
+(require 'edmacro)
 
 ;; ;; Bbdb! ____________________________________________________________________
 
