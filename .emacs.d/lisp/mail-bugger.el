@@ -90,39 +90,8 @@ machine <host> login <login> port <port> password <password>
 (defcustom mail-bugger-icon
   (when (image-type-available-p 'xpm)
     '(image :type xpm
-	    ;; :file "~/.emacs.d/xpm/perso.xpm"
-	    :ascent center
-	    :data
-            "/* XPM */
-static char * perso_xpm[] = {
-\"16 16 9 1\",
-\" 	c None\",
-\".	c #070C06\",
-\"+	c #3F1826\",
-\"@	c #90044E\",
-\"#	c #153914\",
-\"$	c #C00068\",
-\"%	c #3A3225\",
-\"&	c #236621\",
-\"*	c #2F982E\",
-\"      #&&&#     \",
-\"   #&******&#   \",
-\"  #**********#  \",
-\" #************# \",
-\" &************& \",
-\" **************.\",
-\".&+#&******&#...\",
-\" #$$@%****%@$$+.\",
-\" #@$$$+**%$$$@. \",
-\" .%$$$@#*@$$$+. \",
-\"  #%@$$+&$$@+.  \",
-\"   #&%+.&+%&#   \",
-\"    &******&    \",
-\"     #****&.    \",
-\"      #**#.     \",
-\"       ..       \"};
-"
-))
+	    :file "~/.emacs.d/xpm/perso.xpm"
+	    :ascent center))
   "Icon for the first account."
   :group 'mail-bugger)
 
@@ -138,7 +107,7 @@ static char * perso_xpm[] = {
 "Init"
   (interactive)
   (add-to-list 'global-mode-string
-               '(:eval (mail-bugger-make-unread-string)) t)
+               '(:eval (mail-bugger-mode-line)) t)
   (setq mail-bugger-timer
         (run-with-timer 0
                         mail-bugger-timer-interval
@@ -167,11 +136,14 @@ static char * perso_xpm[] = {
     (setq mail-bugger-unread-entries lines)
     (unless (null mail-bugger-unread-entries)
       (run-hooks 'mail-bugger-new-mails-hook))
-    (mail-bugger-make-unread-string)
+    (mail-bugger-mode-line)
+
+    (store-last-5-read-mails)
+
     (force-mode-line-update)
     (kill-buffer)))
 
-(defun mail-bugger-make-unread-string ()
+(defun mail-bugger-mode-line ()
   (if (null mail-bugger-unread-entries)
       ""
     (let ((s (format "%d " (length lines)))
@@ -186,50 +158,52 @@ static char * perso_xpm[] = {
                            `(local-map ,map mouse-face mode-line-highlight
                                        uri ,url help-echo
                                        ,(concat
-                                         (mail-bugger-make-preview-string)
+                                         (mail-bugger-tooltip)
                                          "\n\nmouse-2: View mail"))
                            s)
       (concat " " mail-bugger-logo ":" s))))
 
+(setq mail-bugger-advertised-mails '())
 
+(defun store-last-5-read-mails ()
+  (mapcar
+   (lambda (x)
+     (let
+	 ((s
+	   (progn (message "%s stored!" (car (nthcdr 3 x)))
+		  (add-to-list 'mail-bugger-advertised-mails (car (nthcdr 3 x))))
+	   ))
+       s)
+     )
+   mail-bugger-unread-entries))
 
-(defun mail-modeline-make-preview-string ()
-  (mapconcat
-   (lambda (entry)
-     (let ((s (format "%s - %s - %s"
-                      (cadr (assoc 'author entry))
-                      (let ((title (cadr (assoc 'title entry))))
-                        (substring title 0 (min (length title) 20)))
-                      (let ((summary (cadr (assoc 'summary entry))))
-                        (substring summary 0 (min (length summary) 20)))
-		      )))
-       ;; (add-text-properties 0 (length s)
-       ;;                      `(mouse-face mode-line-highlight
-       ;;                                   uri ,(cadr (assoc 'link entry)))
-       ;;                      s)
-       s))
-   mail-modeline-unread-entries
-   "\n"))
+  ;; (add-to-list 'mail-bugger-advertised-mails (car (nthcdr 3 x)))
 
+(if (not (memq 5 '(1 2 3)))
+(progn (message "nope!")))
 
-(defun mail-bugger-make-preview-string ()
+;; (if (not (member 5 '(1 2 3)))
+;; (message "nope!"))
+
+(defun mail-bugger-tooltip ()
   "loop through the mail headers and build the hover tooltip"
   (mapconcat
    (lambda (x)
      (let
 	 ((s
-	   (format "%s\n%s\n--------------\n%s\n"
+	   (format "%s\n%s -%s- \n--------------\n%s\n"
 		   (car (nthcdr 1 x))
 		   (nthcdr 2 x)
-		   (car x))
-	   ))
-       s))
+		   (car (nthcdr 3 x))
+		   (car x)
+		   )))
+       s)
+     )
    mail-bugger-unread-entries
-   "\n"))
+   "\n")
+  )
 
-(format "%s" (substring "(Mon, 26 Mar 2012 12:55:42 +0000)" 1 26))
-
-(defun buffer-to-list-of-lists (buf)
+(defun mail-bugger-buffer-to-list (buf)
   "make & return a list (of lists) LINES from lines in a buffer BUF"
   (with-current-buffer buf
     (save-excursion
@@ -244,12 +218,7 @@ static char * perso_xpm[] = {
 
 (defun read-output-buffer (buffer)
   "Read and parse BUFFER"
-    (setq lines (buffer-to-list-of-lists buffer))
-    (setq mail-bugger-number-of-unread-mails (list-length lines))
-    (setq mail-bugger-mail-subject (car (car lines)))
-    (setq mail-bugger-mail-date (nthcdr 2 (car (cdr lines))))
-    (setq mail-bugger-mail-from (car (nthcdr 1 (car (cdr lines)))))
-)
+  (setq lines (mail-bugger-buffer-to-list buffer)))
 
 (defun mail-bugger-check ()
   "Check unread mail now."
@@ -273,3 +242,14 @@ static char * perso_xpm[] = {
 
 (provide 'mail-bugger)
 ;;; mail-bugger.el ends here
+
+
+;; (car (nthcdr 1 lines))
+;; (nthcdr 2 lines)
+;; (car (nthcdr 3 lines))
+;; (car lines)
+
+
+;; (setq list3 '())
+
+;; (add-to-list 'list3 (+ 1 1))

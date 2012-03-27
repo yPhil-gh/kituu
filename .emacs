@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Tue 27-Mar-2012 02:06:54>
+;; Time-stamp: <.emacs - Tue 27-Mar-2012 15:20:01>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -23,7 +23,8 @@
 (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
 (autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
 
-(load "~/.emacs.d/lisp/nxhtml/autostart.el")
+;; (load "~/.emacs.d/lisp/nxhtml/autostart.el")
+
 
 (require 'cl)
 (require 'tabbar)
@@ -72,26 +73,55 @@
 
 (require 'dbus)
 
-(defun px-send-desktop-notification (summary body timeout)
+(defun px-send-desktop-notification (summary body timeout &optional sound)
   "call notification-daemon method METHOD with ARGS over dbus"
   (dbus-call-method
     :session                        ; use the session (not system) bus
     "org.freedesktop.Notifications" ; service name
     "/org/freedesktop/Notifications"   ; path name
     "org.freedesktop.Notifications" "Notify" ; Method
-    "emacs"
+    "GNU Emacs"
     0
-    ""
+    "/usr/share/icons/gnuitar.png"
     summary
     body
     '(:array)
     '(:array :signature "{sv}")
-    ':int32 timeout))
+    ':int32 timeout)
+
+  (when sound (shell-command
+                (concat "mplayer -really-quiet " sound " 2> /dev/null")))
+)
+
+(defun my-rcirc-dbus-notification (proc sender response target text)
+  (when (and (string-match (rcirc-nick proc) text)
+	     (not (string= (rcirc-nick proc) sender))
+	     (not (string= (rcirc-server-name proc) sender))
+	     (not (fsm-frame-x-active-window-p (selected-frame))))
+    (push
+     (list
+      (dbus-call-method
+       :session                         ;; bus
+       "org.freedesktop.Notifications"  ;; service
+       "/org/freedesktop/Notifications" ;; path
+       "org.freedesktop.Notifications"  ;; interface
+       "Notify"			 ;; method
+       "GNU Emacs"			 ;; Application name
+       0 ;; No replacement of other notifications.
+       "/usr/share/icons/hicolor/48x48/apps/emacs.png" ;; Icon
+       (format "%s: IRC activity" target)		;; Summary.
+       (format "%s" text)				;; Body.
+       '(:array) ;; No actions
+       '(:array :signature "{sv}") ;; No hints
+       ':int32 -1)                 ;; Default timeout.
+      proc
+      target)
+     my-rcirc-dbus-notification-ids)))
 
 
-;;
+(px-send-desktop-notification "test" "plip" 2000 "/usr/share/sounds/KDE-Im-New-Mail.ogg")
 
-(defun djcb-popup (title msg &optional icon sound)
+(defun px-popup (title msg &optional icon sound)
   "Show a popup if we're on X, or echo it otherwise; TITLE is the title
 of the message, MSG is the context. Optionally, you can provide an ICON and
 a sound to be played"
@@ -113,8 +143,8 @@ a sound to be played"
 
 ;; (setq compilation-finish-function 'pw/compile-notify)
 
-;; (px-send-desktop-notification "test" "plip" 0)
-
+;; (px-send-desktop-notification "test" "plip" 2)
+;; (px-popup "Warning" "The end is near")
 
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
@@ -201,9 +231,6 @@ a sound to be played"
     (message "%s compiled" user-init-file)
     ))
 
-
-(if (string-match "\\.emacs" (buffer-name))
-(message "plop"))
 
 (defun my-emacs-lisp-mode-hook ()
   (when (string-match "\\.emacs" (buffer-name))
