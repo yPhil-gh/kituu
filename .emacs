@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Tue 27-Mar-2012 15:20:01>
+;; Time-stamp: <.emacs - Tue 27-Mar-2012 17:11:01>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -73,7 +73,7 @@
 
 (require 'dbus)
 
-(defun px-send-desktop-notification (summary body timeout &optional sound)
+(defun px-send-desktop-notification (summary body timeout sound icon)
   "call notification-daemon method METHOD with ARGS over dbus"
   (dbus-call-method
     :session                        ; use the session (not system) bus
@@ -82,7 +82,8 @@
     "org.freedesktop.Notifications" "Notify" ; Method
     "GNU Emacs"
     0
-    "/usr/share/icons/gnuitar.png"
+    ;; "/usr/share/icons/gnuitar.png"
+    icon
     summary
     body
     '(:array)
@@ -92,6 +93,8 @@
   (when sound (shell-command
                 (concat "mplayer -really-quiet " sound " 2> /dev/null")))
 )
+
+;; (px-send-desktop-notification "Test" "  Plip" 2000 "/usr/share/sounds/KDE-Im-New-Mail.ogg" "/usr/share/icons/Revenge/128x128/apps/emacs.png")
 
 (defun my-rcirc-dbus-notification (proc sender response target text)
   (when (and (string-match (rcirc-nick proc) text)
@@ -108,7 +111,7 @@
        "Notify"			 ;; method
        "GNU Emacs"			 ;; Application name
        0 ;; No replacement of other notifications.
-       "/usr/share/icons/hicolor/48x48/apps/emacs.png" ;; Icon
+       "~/.emacs.d/img/emacs.png" ;; Icon
        (format "%s: IRC activity" target)		;; Summary.
        (format "%s" text)				;; Body.
        '(:array) ;; No actions
@@ -119,7 +122,6 @@
      my-rcirc-dbus-notification-ids)))
 
 
-(px-send-desktop-notification "test" "plip" 2000 "/usr/share/sounds/KDE-Im-New-Mail.ogg")
 
 (defun px-popup (title msg &optional icon sound)
   "Show a popup if we're on X, or echo it otherwise; TITLE is the title

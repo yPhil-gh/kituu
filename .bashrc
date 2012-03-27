@@ -1,7 +1,7 @@
 # ===================================================================
 # Kituu - the mildly over the top bash prompt - GPL3
 # pX <hallucinet@online.fr>
-# Time-stamp: <.bashrc - Mon 19-Mar-2012 18:02:26>
+# Time-stamp: <.bashrc - Tue 27-Mar-2012 16:01:07>
 # ===================================================================
 
 # If not running interactively, don't do anything
@@ -66,7 +66,7 @@ alias la="ls -A"
 alias lss="ls -la | grep $1"
 alias hss="history | grep $1"
 alias mss="sudo cat /var/log/messages | grep $1"
-alias uss="urpmq -y --summary"
+alias uss="urpmq -Y --summary"
 alias rss="rpm -qa|grep -i"
 alias rssi="rpm -qil"
 alias MSG="sudo tail -f -n 40 /var/log/messages"
@@ -95,6 +95,10 @@ Screen () {
     # ls -1t $sessdir| sed 1d | while read sess; do screen -m -S $sess -X quit; done
     # screen -r $newest
     # echo $newest
+}
+
+Find-this-and-do-that () {
+    find . -name $1 -exec ls -l \{} \;
 }
 
 pss () {

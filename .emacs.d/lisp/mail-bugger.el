@@ -33,6 +33,7 @@
 ;;; Code:
 
 (require 'auth-source)
+(require 'dbus)
 
 (defgroup mail-bugger nil
   "Mail notifier."
@@ -90,7 +91,7 @@ machine <host> login <login> port <port> password <password>
 (defcustom mail-bugger-icon
   (when (image-type-available-p 'xpm)
     '(image :type xpm
-	    :file "~/.emacs.d/xpm/perso.xpm"
+	    :file "~/.emacs.d/img/perso.xpm"
 	    :ascent center))
   "Icon for the first account."
   :group 'mail-bugger)
@@ -103,6 +104,29 @@ machine <host> login <login> port <port> password <password>
 (defvar mail-bugger-timer nil)
 
 ;;;###autoload
+(defun mail-bugger-desktop-notification (summary body timeout sound icon)
+  "call notification-daemon method METHOD with ARGS over dbus"
+  (dbus-call-method
+    :session                        ; use the session (not system) bus
+    "org.freedesktop.Notifications" ; service name
+    "/org/freedesktop/Notifications"   ; path name
+    "org.freedesktop.Notifications" "Notify" ; Method
+    "GNU Emacs"
+    0
+    ;; "/usr/share/icons/gnuitar.png"
+    icon
+    summary
+    body
+    '(:array)
+    '(:array :signature "{sv}")
+    ':int32 timeout)
+
+  (when sound (shell-command
+                (concat "mplayer -really-quiet " sound " 2> /dev/null")))
+)
+
+;; (px-send-desktop-notification "Test" "Plip" 2000 "/usr/share/sounds/KDE-Im-New-Mail.ogg" "/usr/share/icons/Revenge/128x128/apps/emacs.png")
+
 (defun mail-bugger-start ()
 "Init"
   (interactive)
@@ -170,17 +194,39 @@ machine <host> login <login> port <port> password <password>
    (lambda (x)
      (let
 	 ((s
-	   (progn (message "%s stored!" (car (nthcdr 3 x)))
-		  (add-to-list 'mail-bugger-advertised-mails (car (nthcdr 3 x))))
+	   (progn
+	     (if
+		 (not (member x mail-bugger-advertised-mails))
+		 (progn (message "Message number %s advertised!" (car (nthcdr 3 x)))
+			(add-to-list 'mail-bugger-advertised-mails x))))
 	   ))
        s)
      )
    mail-bugger-unread-entries))
 
+;; (defun store-last-5-read-mails ()
+;;   (mapcar
+;;    (lambda (x)
+;;      (let
+;; 	 ((s
+;; 	   (progn
+;; 	     (add-to-list 'mail-bugger-advertised-mails x)
+;; 	     (if
+;; 		 (member x 'mail-bugger-advertised-mails)
+;; 		 (progn (message "%s advertised!" (car (nthcdr 3 x)))
+;; 			(delete 'x mail-bugger-advertised-mails))))
+;; 	   ))
+;;        s)
+;;      )
+;;    mail-bugger-unread-entries))
+
   ;; (add-to-list 'mail-bugger-advertised-mails (car (nthcdr 3 x)))
 
-(if (not (memq 5 '(1 2 3)))
-(progn (message "nope!")))
+;; (setq mylist '("plip" "plop"))
+
+;; (if (member "plip" mylist)
+;;     (message "yeap!")
+;;   (message "nope!"))
 
 ;; (if (not (member 5 '(1 2 3)))
 ;; (message "nope!"))
@@ -218,7 +264,9 @@ machine <host> login <login> port <port> password <password>
 
 (defun read-output-buffer (buffer)
   "Read and parse BUFFER"
-  (setq lines (mail-bugger-buffer-to-list buffer)))
+  (setq lines (mail-bugger-buffer-to-list buffer))
+  ;; (setq mail-bugger-unadvertised-mails (mail-bugger-buffer-to-list buffer))
+)
 
 (defun mail-bugger-check ()
   "Check unread mail now."
