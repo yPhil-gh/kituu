@@ -1,7 +1,4 @@
-;; ===========================================================================
-;; Time-stamp: <.emacs - Wed 28-Mar-2012 04:53:19>
-;; ===========================================================================
-;; See https://github.com/xaccrocheur/kituu/
+;;; See https://github.com/xaccrocheur/kituu/
 
 ;; Init! ______________________________________________________________________
 
@@ -151,9 +148,6 @@ a sound to be played"
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
 (defvar show-paren-delay)
-(defvar time-stamp-active)
-(defvar time-stamp-warn-inactive)
-(defvar time-stamp-format)
 (defvar recentf-max-saved-items)
 (defvar recentf-max-menu-items)
 (defvar ispell-dictionary)
@@ -406,11 +400,13 @@ inside html tags."
 	  '(lambda ()
 	     (Session-save-px)))
 
+
 ;; Modes! ______________________________________________________________________
 ;; (display-time-mode t)
 (tabbar-mode t)
 (show-paren-mode t)
 (menu-bar-mode -1)
+(global-linum-mode t)
 ;; (global-smart-tab-mode 1)
 ;; (smart-tab-mode t)
 (global-font-lock-mode t)
@@ -484,12 +480,6 @@ inside html tags."
 					    (abbreviate-file-name (buffer-file-name))
 					  "%b")) " [%*]"))
 
-;; Time-stamp
-(setq time-stamp-active t
-      time-stamp-warn-inactive t
-      time-stamp-format "%f - %3a %02d-%3b-%:y %02H:%02M:%02S")
-
-
 ;; Hooks! _____________________________________________________________________
 
 (add-hook 'perl-mode-hook 'cperl-mode)
@@ -519,8 +509,6 @@ inside html tags."
 (add-hook 'lisp-mode-hook 'info-mode-hook-px)
 
 (add-hook 'flyspell-mode-hook 'flyspell-prog-mode)
-
-(add-hook 'write-file-hooks 'time-stamp)
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 ;; (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
