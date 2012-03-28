@@ -16,13 +16,12 @@
 
 (eval-and-compile
 (require 'tabbar nil t)
-;; (require 'mail-bugger nil t)
+(require 'mail-bugger nil t)
 (require 'bbdb nil t)
 (require 'php-mode nil t)
 (require 'tabkey2 nil t)
 (require 'cl))
 
-(require 'mail-bugger)
 (mail-bugger-init)
 
 ;; Required by my iswitchb hack

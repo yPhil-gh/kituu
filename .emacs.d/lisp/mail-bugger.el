@@ -46,16 +46,13 @@
 ;;   :prefix "mail-bugger-accounts"
 ;;   :group 'mail-bugger)
 
-(defvar mail-bugger-shell-script-command "~/scripts/unread.php"
-  "Full command line. Can't touch that.")
-
-(defcustom mail-bugger-host "imap.gmail.com"
+(defcustom mail-bugger-host "mail.gandi.net"
   "Mail host.
 Example : imap.gmail.com"
   :type 'string
   :group 'mail-bugger)
 
-(defcustom mail-bugger-protocol "993/imap/ssl"
+(defcustom mail-bugger-protocol "143"
   "Port number and (optional) protocol path.
 Example : 993/imap/ssl"
   :type 'string
@@ -80,18 +77,6 @@ Put your user name & password in ~/authinfo.gpg like this :
 machine <host> login <login> port <port> password <password>"
   :type 'string
   :group 'mail-bugger)
-
-(defcustom mail-bugger-new-mails-hook nil
-  "Hooks to run on new mail arrival."
-  :type 'list
-  :group 'mail-bugger)
-
-(defcustom mail-bugger-timer-interval 300
-  "Interval(in seconds) for mail check."
-  :type 'number
-  :group 'mail-bugger)
-
-(defvar mail-bugger-unseen-mails nil)
 
 (defcustom mail-bugger-new-mail-sound "/usr/share/sounds/KDE-Im-New-Mail.ogg"
   "Sound for new mail notification.
@@ -120,9 +105,17 @@ Must be an XPM (use Gimp)."
     "G"))
 
 (defvar mail-bugger-timer nil)
-
+(defvar mail-bugger-unseen-mails nil)
 (defvar mail-bugger-advertised-mails '())
 ;; (setq mail-bugger-advertised-mails '())
+
+(defvar mail-bugger-shell-script-command "~/scripts/unread.php"
+  "Full command line. Can't touch that.")
+
+(defcustom mail-bugger-timer-interval 300
+  "Interval(in seconds) for mail check."
+  :type 'number
+  :group 'mail-bugger)
 
 ;;;###autoload
 (defun mail-bugger-init ()
@@ -160,30 +153,31 @@ Must be an XPM (use Gimp)."
             (let ((inhibit-read-only t)
                   (err (process-exit-status process)))
               (if (zerop err)
-		  (funcall, callback)
-                (error "mail-bugger (%s) error: %d" account err)))))))))
+		  (funcall, callback, account)
+                (error "mail-bugger (%s) error: %d", account err)))))))))
 
-(defun mail-bugger-shell-command-callback ()
+(defun mail-bugger-shell-command-callback (account)
   "Now we're talking"
+  ;; (message "This is account %s" account)
   (setq mail-bugger-unseen-mails (mail-bugger-buffer-to-list (current-buffer)))
-  (unless (null mail-bugger-unseen-mails)
-    (run-hooks 'mail-bugger-new-mails-hook))
   (mail-bugger-mode-line)
   (mail-bugger-desktop-notify)
   (force-mode-line-update))
 
 (defun mail-bugger-mode-line ()
+  "Construct the emacs modeline object"
   (if (null mail-bugger-unseen-mails)
       ""
-    (let ((s (format "%d " (length mail-bugger-unseen-mails)))
+    (let ((s
+	   (format "%d " (length mail-bugger-unseen-mails)))
           (map (make-sparse-keymap))
           (url "https://mail.google.com"))
+
       (define-key map (vector 'mode-line 'mouse-2)
         `(lambda (e)
            (interactive "e")
-           (browse-url ,url)
-           ;; (setq mail-bugger-unseen-mails nil)
-))
+           (browse-url ,url)))
+
       (add-text-properties 0 (length s)
                            `(local-map ,map mouse-face mode-line-highlight
                                        uri ,url help-echo
@@ -192,21 +186,6 @@ Must be an XPM (use Gimp)."
                                          "\n\nmouse-2: View mail"))
                            s)
       (concat " " mail-bugger-logo ":" s))))
-
-(defun mail-bugger-desktop-notify ()
-  (mapcar
-   (lambda (x)
-       (if (not (member x mail-bugger-advertised-mails))
-	   (progn
-	     (mail-bugger-desktop-notification
-	      "<h3 style='color:red;'>New mail!</h3>"
-	      (format "<h4>%s</h4><h5>%s</h5><hr>%s"
-		      (car (nthcdr 1 x))
-		      (nthcdr 2 x)
-		      (car x))
-	      1)
-	     (add-to-list 'mail-bugger-advertised-mails x))))
-   mail-bugger-unseen-mails))
 
 (defun mail-bugger-tooltip ()
   "Loop through the mail headers and build the hover tooltip"
@@ -237,6 +216,21 @@ Must be an XPM (use Gimp)."
                 lines)
           (beginning-of-line 2))
 	lines))))
+
+(defun mail-bugger-desktop-notify ()
+  (mapcar
+   (lambda (x)
+       (if (not (member x mail-bugger-advertised-mails))
+	   (progn
+	     (mail-bugger-desktop-notification
+	      "<h3 style='color:red;'>New mail!</h3>"
+	      (format "<h4>%s</h4><h5>%s</h5><hr>%s"
+		      (car (nthcdr 1 x))
+		      (nthcdr 2 x)
+		      (car x))
+	      1)
+	     (add-to-list 'mail-bugger-advertised-mails x))))
+   mail-bugger-unseen-mails))
 
 (defun mail-bugger-desktop-notification (summary body timeout)
   "Call notification-daemon method with ARGS over dbus"
