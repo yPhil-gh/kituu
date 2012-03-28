@@ -1,4 +1,4 @@
-;;; mail-bugger.el --- Notify of unread mail on mode line &DBus
+;;; mail-bugger.el --- Notify of unread mails on mode line & DBus
 
 ;; Copyright (C) 2012 Phil CM
 

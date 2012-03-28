@@ -1,5 +1,5 @@
 ;; ===========================================================================
-;; Time-stamp: <.emacs - Tue 27-Mar-2012 18:19:30>
+;; Time-stamp: <.emacs - Wed 28-Mar-2012 04:53:19>
 ;; ===========================================================================
 ;; See https://github.com/xaccrocheur/kituu/
 
@@ -35,6 +35,7 @@
 (mail-bugger-init)
 ;; Required by my iswitchb hack
 (require 'edmacro)
+(require 'php-mode)
 
 ;; ;; Bbdb! ____________________________________________________________________
 
@@ -253,12 +254,6 @@ a sound to be played"
 ;; (add-hook 'emacs-lisp-mode-hook 'my-emacs-lisp-mode-hook)
 
 
-(defun switch-buffer-px ()
-  (interactive)
-  (switch-to-buffer (other-buffer (current-buffer) 1)))
-
-(global-set-key (kbd "s-²") 'switch-buffer-px)
-
 (defun make-backup-dir-px (dirname)
   "create backup dir"
   (interactive)
@@ -361,33 +356,13 @@ inside html tags."
 (defun insert-pair-dbquotes () (interactive) (insert-bracket-pair "\"" "\"") )
 ;; Thanks Xah Lee, my favorite usenet freak, for those last two
 
-(defun frigo-kill-px () (interactive)
-  "Cut the current region, paste it in frigo.txt with a time tag, and save this file"
-  (unless (use-region-p) (error "No region selected"))
-  (let ((bn (file-name-nondirectory (buffer-file-name))))
-    (kill-region (region-beginning) (region-end))
-    (with-current-buffer (find-file-noselect "~/.frigo.txt")
-      (goto-char (point-max))
-      (insert "\n")
-      (insert "######################################################################\n")
-      (insert "\n"
-              (format-time-string "%Y %b %d %H:%M:%S" (current-time))
-              " (from "
-              bn
-              ")\n\n")
-      (yank)
-      (save-buffer)
-      (message "Region refrigerated!")
-      )
-    )
-  )
-
-(defun frigo-px () (interactive)
+(defun Frigo-px ()
+  (interactive)
   "Copy the current region, paste it in frigo.txt with a time tag, and save this file"
   (unless (use-region-p) (error "No region selected"))
   (let ((bn (file-name-nondirectory (buffer-file-name))))
     (copy-region-as-kill (region-beginning) (region-end))
-    (with-current-buffer (find-file-noselect "~/.frigo.txt")
+    (with-current-buffer (find-file-noselect "~/.bkp/Frigo.txt")
       (goto-char (point-max))
       (insert "\n")
       (insert "######################################################################\n")
@@ -398,11 +373,7 @@ inside html tags."
               ")\n\n")
       (yank)
       (save-buffer)
-      (message "Region refrigerated!")
-      )
-    )
-  )
-
+      (message "Region refrigerated!"))))
 
 (defun px-saved-session ()
   (file-exists-p (concat desktop-dirname "/" desktop-base-file-name)))
@@ -435,20 +406,11 @@ inside html tags."
 	  '(lambda ()
 	     (Session-save-px)))
 
-;; ;; Save desktop + Prevent pussy questions
-;; (defadvice save-buffers-kill-emacs (around no-y-or-n activate)
-;;   (flet ((yes-or-no-p (&rest args) t)
-;;          (y-or-n-p (&rest args) t))
-;;     ad-do-it))
-
 ;; Modes! ______________________________________________________________________
 ;; (display-time-mode t)
 (tabbar-mode t)
-;; (set-fringe-mode '(1 . 1))
 (show-paren-mode t)
 (menu-bar-mode -1)
-;; (global-linum-mode 1)
-;; (global-undo-tree-mode 1)
 ;; (global-smart-tab-mode 1)
 ;; (smart-tab-mode t)
 (global-font-lock-mode t)
@@ -456,10 +418,6 @@ inside html tags."
 (set-scroll-bar-mode `right)
 (delete-selection-mode t)
 (auto-fill-mode t)
-;; (setq-default fill-column 99999)
-;; (setq fill-column 99999)
-;; (setq set-mark-command-repeat-pop t)
-;; (setq word-wrap t)
 (recentf-mode 1)
 (mouse-avoidance-mode 'cat-and-mouse)
 (iswitchb-mode t)
@@ -587,52 +545,38 @@ inside html tags."
 ;; 	     (setq desktop-dirname desktop-dirname-tmp)))
 
 ;; Keys! ______________________________________________________________________
+
+(global-set-key (kbd "²") 'hippie-expand) ; Hippie-expand everywhere
+
 (define-key global-map [(meta up)] '(lambda() (interactive) (scroll-other-window -1)))
 (define-key global-map [(meta down)] '(lambda() (interactive) (scroll-other-window 1)))
 
 (define-key global-map [f1] 'delete-other-windows)
 (define-key global-map [S-f1] 'px-help-emacs)
-;; (define-key global-map [M-f1] 'delete-window)
-(define-key global-map [M-f2] 'swap-buffers-in-windows)
 (define-key global-map [f2] 'other-window)
-(define-key global-map [f11] 'Fullscreen-px)
-
-(define-key global-map [s-kp-0] 'zzzap)
-
-(defun zzzap ()
-(interactive)
-(other-window 1))
-
+(define-key global-map [M-f2] 'swap-buffers-in-windows)
 (define-key global-map [f3] 'isearch-forward)
-
 (define-key global-map [f4] 'split-window-horizontally)
 (define-key global-map [f5] 'iswitchb-buffer) ;new way
 (define-key global-map [f7] 'flyspell-buffer)
 (define-key global-map [M-f7] 'flyspell-mode)
 (define-key global-map [f10] 'toggle-truncate-lines)
+(define-key global-map [f11] 'Fullscreen-px)
 
 (global-set-key (kbd "s-g") 'goto-line)
-(global-set-key (kbd "C-r") 'replace-string)
+(global-set-key (kbd "s-r") 'replace-string)
+(global-set-key (kbd "s-²") (kbd "C-x b <return>")) ; Keyboard macro!
+(global-set-key (kbd "s-t") 'sgml-tag)
+
 (global-set-key (kbd "C-f") 'isearch-forward)
-;; (global-set-key (kbd "C-d") 'isearch-forward) ; I kept deleting stuff
-(global-set-key (kbd "C-S-s") 'isearch-backward)
-(global-set-key (kbd "C-S-f") 'isearch-backward)
-(global-set-key (kbd "C-c b") (kbd "C-x b <return>"))
+(global-set-key (kbd "C-d") nil)	; I kept deleting stuff
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
 (global-set-key (kbd "C-o") 'find-file)
 (global-set-key (kbd "C-S-o") 'desktop-read)
-;; (global-set-key (kbd "C-S-<delete>") 'kill-paragraph)
 (global-set-key (kbd "C-S-<mouse-1>") 'flyspell-correct-word)
 (global-set-key (kbd "C-z") 'undo)
 (global-set-key (kbd "<C-next>") 'forward-page)
 (global-set-key (kbd "<C-prior>") 'backward-page)
-
-(global-set-key (kbd "M-s") 'save-buffer) ; Meta+s saves !! (see C-h b for all bindings, and C-h k + keystroke(s) for help)
-;; (global-set-key "C-b" 'match-paren) ; Match brace
-(global-set-key (kbd "M-DEL") 'kill-word)
-(global-set-key (kbd "M-<backspace>") 'backward-kill-word)
-(global-set-key (kbd "M-o") 'recentf-open-files)
-(global-set-key (kbd "M-d") 'comment-out)
 (global-set-key (kbd "C-<tab>") 'tabbar-forward)
 (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
 (global-set-key (kbd "C-\"") 'insert-pair-dbquotes)		;""
@@ -641,13 +585,12 @@ inside html tags."
 (global-set-key (kbd "C-'") 'insert-pair-brace)			;{}
 (global-set-key (kbd "C-(") 'insert-pair-bracket)		;[]
 (global-set-key (kbd "C-<") 'insert-pair-single-angle)		;<>
-;; (global-set-key (kbd "C-'") 'insert-pair-single-straight-quote) ;''
-(global-set-key (kbd "s-t") 'sgml-tag)
 
-(global-set-key (kbd "C-ù") 'forward-sexp)
-(global-set-key (kbd "C-%") 'backward-sexp)
-
-(global-set-key (kbd "M-²") 'hippie-expand)
+(global-set-key (kbd "M-s") 'save-buffer) ; Meta+s saves !! (see C-h b for all bindings, and C-h k + keystroke(s) for help)
+(global-set-key (kbd "M-DEL") 'kill-word)
+(global-set-key (kbd "M-<backspace>") 'backward-kill-word)
+(global-set-key (kbd "M-o") 'recentf-open-files)
+(global-set-key (kbd "M-d") 'px-toggle-comments)
 
 (defun tabbar-buffer-groups ()
   "Return the list of group names the current buffer belongs to.
@@ -712,19 +655,17 @@ The optional second argument indicates whether to kill internal buffers too."
      (list (line-beginning-position)
            (line-beginning-position 2)))))
 
-;; Comment-Out
-(defun comment-out () ;; function definition
-  "If region is set, [un]comments it. Otherwise [un]comments current line." ;; description for help file
+(defun px-toggle-comments () ;; function definition
+  "If region is set, [un]comments it. Otherwise [un]comments current line."
   (interactive) ;; apparently I need this line so it can move the cursor
   ;; (save-excursion ;; don't mess with mark
-  (if (eq mark-active nil) ;; if the variable "mark-active" is nil, there's no region active
-      (progn (beginning-of-line 1) ;; go to beginning of current line
-	     (set-mark (point)) ;; set the mark there
+  (if (eq mark-active nil) ;; no region active
+      (progn (beginning-of-line 1)
+	     (set-mark (point))
 	     (forward-line)
-	     (comment-dwim nil)) ;; go down one line
+	     (comment-dwim nil))
     (comment-dwim nil)) ;; [un]comment
   (deactivate-mark)) ;; don't mess with selection
-
 
 ;; Help ______________________________________________________________________
 

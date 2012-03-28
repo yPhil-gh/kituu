@@ -31,8 +31,8 @@ for i in * ; do
 done
 
 echo -e $sep"Various binary packages"
-if [ -e $scriptsdir/offlineimap/ ] ; then
-    sudo urpmi perl-doc bzr
+if [ command -v drakconf >/dev/null 2>&1 ] ; then
+    sudo urpmi perl-doc sox
 fi
 
 if [ ! -e $scriptsdir/git-completion.bash ]
@@ -48,26 +48,11 @@ else
     cd $lispdir/tabbar/ && git pull
 fi
 
-echo -e $sep"nXhtml ($lispdir/nxhtml/)"
-if [ ! -e $lispdir/nxhtml/ ] ; then
-    cd $lispdir && bzr branch lp:nxhtml
+echo -e $sep"Php-mode ($lispdir/php-mode/)"
+if [ ! -e $lispdir/php-mode/ ] ; then
+    cd $lispdir && git clone https://github.com/ejmr/php-mode.git
 else
-    cd $lispdir/tabbar/ && bzr pull
-fi
-
-# echo -e $sep"Smart-tab ($lispdir/smart-tab/)"
-# if [ ! -e $lispdir/smart-tab/ ] ; then
-#     cd $lispdir && git clone https://github.com/genehack/smart-tab.git
-# else
-#     cd $lispdir/smart-tab/ && git pull
-# fi
-
-echo -e $sep"Offlineimap ($scriptsdir/offlineimap/)"
-if [ ! -e $scriptsdir/offlineimap/ ] ; then
-    cd $scriptsdir && git clone https://github.com/spaetz/offlineimap.git
-    ln -sv offlineimap/offlineimap.py .
-else
-    cd $scriptsdir/offlineimap/ && git pull
+    cd $lispdir/php-mode/ && git pull
 fi
 
 echo -e $sep"...Done."
