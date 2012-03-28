@@ -46,7 +46,7 @@
 ;;   :prefix "mail-bugger-accounts"
 ;;   :group 'mail-bugger)
 
-(defvar mail-bugger-shell-script-command "php ~/scripts/unread.php"
+(defvar mail-bugger-shell-script-command "~/scripts/unread.php"
   "Full command line. Can't touch that.")
 
 (defcustom mail-bugger-host "imap.gmail.com"
@@ -126,7 +126,7 @@ Must be an XPM (use Gimp)."
 
 ;;;###autoload
 (defun mail-bugger-init ()
-"Init"
+  "Init"
   (interactive)
   (add-to-list 'global-mode-string
                '(:eval (mail-bugger-mode-line)) t)
@@ -134,6 +134,19 @@ Must be an XPM (use Gimp)."
         (run-with-timer 0
                         mail-bugger-timer-interval
                         'mail-bugger-check)))
+
+(defun mail-bugger-check ()
+  "Check unread mail."
+  (interactive)
+  (mail-bugger-shell-command
+   (format "%s %s %s %s %s %s"
+           mail-bugger-shell-script-command
+	   mail-bugger-host
+	   mail-bugger-protocol
+	   mail-bugger-imap-box
+	   (auth-source-user-or-password "login" mail-bugger-host mail-bugger-protocol)
+	   (auth-source-user-or-password "password" mail-bugger-host mail-bugger-protocol))
+   'mail-bugger-shell-command-callback mail-bugger-host))
 
 (defmacro mail-bugger-shell-command (cmd callback account)
   "Run CMD asynchronously, then run CALLBACK"
@@ -152,37 +165,17 @@ Must be an XPM (use Gimp)."
 
 (defun mail-bugger-shell-command-callback ()
   "Now we're talking"
-  (let* ((header-str (mail-bugger-read-output-buffer (current-buffer))))
-    (setq mail-bugger-unseen-mails lines)
-    (unless (null mail-bugger-unseen-mails)
-      (run-hooks 'mail-bugger-new-mails-hook))
-    (mail-bugger-mode-line)
-    (mail-bugger-desktop-notify)
-    (force-mode-line-update)))
-
-(defun mail-bugger-desktop-notification (summary body timeout)
-  "Call notification-daemon method with ARGS over dbus"
-  (dbus-call-method-non-blocking
-   :session                                 ; use the session (not system) bus
-   "org.freedesktop.Notifications"          ; service name
-   "/org/freedesktop/Notifications"         ; path name
-   "org.freedesktop.Notifications" "Notify" ; Method
-   "GNU Emacs"				    ; Application
-   0					    ; Timeout
-   mail-bugger-new-mail-icon
-   summary
-   body
-   '(:array)
-   '(:array :signature "{sv}")
-   ':int32 timeout)
-  (if mail-bugger-new-mail-sound
-      (shell-command
-       (concat "mplayer -really-quiet " mail-bugger-new-mail-sound " 2> /dev/null"))))
+  (setq mail-bugger-unseen-mails (mail-bugger-buffer-to-list (current-buffer)))
+  (unless (null mail-bugger-unseen-mails)
+    (run-hooks 'mail-bugger-new-mails-hook))
+  (mail-bugger-mode-line)
+  (mail-bugger-desktop-notify)
+  (force-mode-line-update))
 
 (defun mail-bugger-mode-line ()
   (if (null mail-bugger-unseen-mails)
       ""
-    (let ((s (format "%d " (length lines)))
+    (let ((s (format "%d " (length mail-bugger-unseen-mails)))
           (map (make-sparse-keymap))
           (url "https://mail.google.com"))
       (define-key map (vector 'mode-line 'mouse-2)
@@ -215,16 +208,6 @@ Must be an XPM (use Gimp)."
 	     (add-to-list 'mail-bugger-advertised-mails x))))
    mail-bugger-unseen-mails))
 
-(defun mail-bugger-wordwrap (s N)
-  "Hard wrap string S on 2 lines to N chars"
-  (if (< N (length s))
-      (concat (subseq s 0 N) "\n" (subseq s N (+ N N)) "...")
-    s))
-
-(defun mail-bugger-format-time (s)
-  "Clean Time string S"
-  (subseq (car s) 0 -6))
-
 (defun mail-bugger-tooltip ()
   "Loop through the mail headers and build the hover tooltip"
   (mapconcat
@@ -255,25 +238,43 @@ Must be an XPM (use Gimp)."
           (beginning-of-line 2))
 	lines))))
 
-(defun mail-bugger-read-output-buffer (buffer)
-  "Read and parse BUFFER"
-  (setq lines (mail-bugger-buffer-to-list buffer)))
+(defun mail-bugger-desktop-notification (summary body timeout)
+  "Call notification-daemon method with ARGS over dbus"
+  (dbus-call-method-non-blocking
+   :session                                 ; use the session (not system) bus
+   "org.freedesktop.Notifications"          ; service name
+   "/org/freedesktop/Notifications"         ; path name
+   "org.freedesktop.Notifications" "Notify" ; Method
+   "GNU Emacs"				    ; Application
+   0					    ; Timeout
+   mail-bugger-new-mail-icon
+   summary
+   body
+   '(:array)
+   '(:array :signature "{sv}")
+   ':int32 timeout)
+  (if mail-bugger-new-mail-sound
+      (shell-command
+       (concat "mplayer -really-quiet " mail-bugger-new-mail-sound " 2> /dev/null"))))
 
-(defun mail-bugger-check ()
-  "Check unread mail."
-  (interactive)
-  (mail-bugger-shell-command
-   (format "%s %s %s %s %s %s"
-           mail-bugger-shell-script-command
-	   mail-bugger-host
-	   mail-bugger-protocol
-	   mail-bugger-imap-box
-	   (auth-source-user-or-password "login" mail-bugger-host mail-bugger-protocol)
-	   (auth-source-user-or-password "password" mail-bugger-host mail-bugger-protocol))
-   'mail-bugger-shell-command-callback mail-bugger-host))
+;; Utilities
+(defun mail-bugger-wordwrap (s N)
+  "Hard wrap string S on 2 lines to N chars"
+  (if (< N (length s))
+      (concat (subseq s 0 N) "\n" (subseq s N (+ N N)) "...")
+    s))
+
+(defun mail-bugger-format-time (s)
+  "Clean Time string S"
+  (subseq (car s) 0 -6))
 
 (message "%s loaded" (or load-file-name buffer-file-name))
-
-
 (provide 'mail-bugger)
 ;;; mail-bugger.el ends here
+
+;; (setq one "uno")
+;; (setq two "dos")
+
+;; (setq var-one (concat "var-" one))
+
+;; (format "var-one is %s" var-one)
