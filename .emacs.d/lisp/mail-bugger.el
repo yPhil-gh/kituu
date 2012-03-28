@@ -22,9 +22,9 @@
 
 ;;; Commentary:
 
-;; Show unread mail count on mode line, and a desktop notification for
-;; new mails
-;; To enable it put this in your .emacs :
+;; Show unread mails count on mode line (and details in tooltip on
+;; mouse over) and a desktop notification for new mails.
+;; To enable it, put this in your .emacs :
 
 ;; (require 'mail-bugger)
 ;; (mail-bugger-init)
@@ -41,11 +41,13 @@
   :prefix "mail-bugger-"
   :group 'mail)
 
-(defcustom mail-bugger-shell-script-command "php ~/scripts/unread.php"
-  "Full command line.
-Don't touch it."
-  :type 'string
-  :group 'mail-bugger)
+;; (defgroup mail-bugger-accounts nil
+;;   "Mail notifier."
+;;   :prefix "mail-bugger-accounts"
+;;   :group 'mail-bugger)
+
+(defvar mail-bugger-shell-script-command "php ~/scripts/unread.php"
+  "Full command line. Can't touch that.")
 
 (defcustom mail-bugger-host "imap.gmail.com"
   "Mail host.
@@ -80,7 +82,7 @@ machine <host> login <login> port <port> password <password>"
   :group 'mail-bugger)
 
 (defcustom mail-bugger-new-mails-hook nil
-  "Hooks to run when new mails arrive."
+  "Hooks to run on new mail arrival."
   :type 'list
   :group 'mail-bugger)
 
@@ -89,7 +91,7 @@ machine <host> login <login> port <port> password <password>"
   :type 'number
   :group 'mail-bugger)
 
-(defvar mail-bugger-unread-entries nil)
+(defvar mail-bugger-unseen-mails nil)
 
 (defcustom mail-bugger-new-mail-sound "/usr/share/sounds/KDE-Im-New-Mail.ogg"
   "Sound for new mail notification.
@@ -119,6 +121,9 @@ Must be an XPM (use Gimp)."
 
 (defvar mail-bugger-timer nil)
 
+(defvar mail-bugger-advertised-mails '())
+;; (setq mail-bugger-advertised-mails '())
+
 ;;;###autoload
 (defun mail-bugger-init ()
 "Init"
@@ -130,35 +135,30 @@ Must be an XPM (use Gimp)."
                         mail-bugger-timer-interval
                         'mail-bugger-check)))
 
-(defmacro mail-bugger-shell-command (cmd callback)
-  "Run CMD asynchronously in a buffer"
-  `(let* ((buf (generate-new-buffer "*mail-bugger*"))
+(defmacro mail-bugger-shell-command (cmd callback account)
+  "Run CMD asynchronously, then run CALLBACK"
+  `(let* ((buf (generate-new-buffer  (concat "*mail-bugger-" ,account "*")))
           (p (start-process-shell-command ,cmd buf ,cmd)))
      (set-process-sentinel
       p
       (lambda (process event)
         (with-current-buffer (process-buffer process)
-
           (when (eq (process-status  process) 'exit)
             (let ((inhibit-read-only t)
                   (err (process-exit-status process)))
               (if (zerop err)
 		  (funcall, callback)
-                  ;; (message "God exists")
-                (error "(mail-bugger) error: %d" err)))))))))
+                (error "mail-bugger (%s) error: %d" account err)))))))))
 
 (defun mail-bugger-shell-command-callback ()
   "Now we're talking"
-  (let* ((header-str (read-output-buffer (current-buffer))))
-    (setq mail-bugger-unread-entries lines)
-    (unless (null mail-bugger-unread-entries)
+  (let* ((header-str (mail-bugger-read-output-buffer (current-buffer))))
+    (setq mail-bugger-unseen-mails lines)
+    (unless (null mail-bugger-unseen-mails)
       (run-hooks 'mail-bugger-new-mails-hook))
     (mail-bugger-mode-line)
-
     (mail-bugger-desktop-notify)
-
-    (force-mode-line-update)
-    (kill-buffer)))
+    (force-mode-line-update)))
 
 (defun mail-bugger-desktop-notification (summary body timeout)
   "Call notification-daemon method with ARGS over dbus"
@@ -167,21 +167,20 @@ Must be an XPM (use Gimp)."
    "org.freedesktop.Notifications"          ; service name
    "/org/freedesktop/Notifications"         ; path name
    "org.freedesktop.Notifications" "Notify" ; Method
-   "GNU Emacs"
-   0
+   "GNU Emacs"				    ; Application
+   0					    ; Timeout
    mail-bugger-new-mail-icon
    summary
    body
    '(:array)
    '(:array :signature "{sv}")
    ':int32 timeout)
-
   (if mail-bugger-new-mail-sound
       (shell-command
        (concat "mplayer -really-quiet " mail-bugger-new-mail-sound " 2> /dev/null"))))
 
 (defun mail-bugger-mode-line ()
-  (if (null mail-bugger-unread-entries)
+  (if (null mail-bugger-unseen-mails)
       ""
     (let ((s (format "%d " (length lines)))
           (map (make-sparse-keymap))
@@ -190,7 +189,8 @@ Must be an XPM (use Gimp)."
         `(lambda (e)
            (interactive "e")
            (browse-url ,url)
-           (setq mail-bugger-unread-entries nil)))
+           ;; (setq mail-bugger-unseen-mails nil)
+))
       (add-text-properties 0 (length s)
                            `(local-map ,map mouse-face mode-line-highlight
                                        uri ,url help-echo
@@ -199,9 +199,6 @@ Must be an XPM (use Gimp)."
                                          "\n\nmouse-2: View mail"))
                            s)
       (concat " " mail-bugger-logo ":" s))))
-
-(defvar mail-bugger-advertised-mails '())
-;; (setq mail-bugger-advertised-mails '())
 
 (defun mail-bugger-desktop-notify ()
   (mapcar
@@ -216,7 +213,7 @@ Must be an XPM (use Gimp)."
 		      (car x))
 	      1)
 	     (add-to-list 'mail-bugger-advertised-mails x))))
-   mail-bugger-unread-entries))
+   mail-bugger-unseen-mails))
 
 (defun mail-bugger-wordwrap (s N)
   "Hard wrap string S on 2 lines to N chars"
@@ -229,7 +226,7 @@ Must be an XPM (use Gimp)."
   (subseq (car s) 0 -6))
 
 (defun mail-bugger-tooltip ()
-  "loop through the mail headers and build the hover tooltip"
+  "Loop through the mail headers and build the hover tooltip"
   (mapconcat
    (lambda (x)
      (let
@@ -242,12 +239,11 @@ Must be an XPM (use Gimp)."
 		   )))
        tooltip-string)
      )
-   mail-bugger-unread-entries
-   "\n")
-  )
+   mail-bugger-unseen-mails
+   "\n"))
 
 (defun mail-bugger-buffer-to-list (buf)
-  "make & return a list (of lists) LINES from lines in a buffer BUF"
+  "Make & return a list (of lists) LINES from lines in a buffer BUF"
   (with-current-buffer buf
     (save-excursion
       (goto-char (point-min))
@@ -259,14 +255,12 @@ Must be an XPM (use Gimp)."
           (beginning-of-line 2))
 	lines))))
 
-(defun read-output-buffer (buffer)
+(defun mail-bugger-read-output-buffer (buffer)
   "Read and parse BUFFER"
-  (setq lines (mail-bugger-buffer-to-list buffer))
-  ;; (setq mail-bugger-unadvertised-mails (mail-bugger-buffer-to-list buffer))
-)
+  (setq lines (mail-bugger-buffer-to-list buffer)))
 
 (defun mail-bugger-check ()
-  "Check unread mail now."
+  "Check unread mail."
   (interactive)
   (mail-bugger-shell-command
    (format "%s %s %s %s %s %s"
@@ -274,14 +268,9 @@ Must be an XPM (use Gimp)."
 	   mail-bugger-host
 	   mail-bugger-protocol
 	   mail-bugger-imap-box
-
-	  (auth-source-user-or-password
-               "login"  mail-bugger-host mail-bugger-protocol)
-
-	  (auth-source-user-or-password
-               "password"  mail-bugger-host mail-bugger-protocol))
-
-   'mail-bugger-shell-command-callback))
+	   (auth-source-user-or-password "login" mail-bugger-host mail-bugger-protocol)
+	   (auth-source-user-or-password "password" mail-bugger-host mail-bugger-protocol))
+   'mail-bugger-shell-command-callback mail-bugger-host))
 
 (message "%s loaded" (or load-file-name buffer-file-name))
 
