@@ -22,15 +22,16 @@
 
 ;;; Commentary:
 
-;; Show unread mail count on mode line, it looks like this: G(2).
-;; `G' could be the gmail logo if your emacs supports image.
-;; To setup:
-;;   (require 'mail-bugger)
-;;
+;; Show unread mail count on mode line, and a desktop notification for
+;; new mails
+;; To enable it put this in your .emacs :
+
+;; (require 'mail-bugger)
+;; (mail-bugger-init)
+
+;; and enter your details at first init
 
 ;;; Code:
-
-
 
 (require 'auth-source)
 (require 'dbus)
@@ -41,7 +42,8 @@
   :group 'mail)
 
 (defcustom mail-bugger-shell-script-command "php ~/scripts/unread.php"
-  "Full command line."
+  "Full command line.
+Don't touch it."
   :type 'string
   :group 'mail-bugger)
 
@@ -52,7 +54,7 @@ Example : imap.gmail.com"
   :group 'mail-bugger)
 
 (defcustom mail-bugger-protocol "993/imap/ssl"
-  "Protocol name or number, as string.
+  "Port number and (optional) protocol path.
 Example : 993/imap/ssl"
   :type 'string
   :group 'mail-bugger)
@@ -65,14 +67,15 @@ Example : INBOX"
 
 (defcustom mail-bugger-username nil
   "Mail username.
-DONT't put your user name & password in here, put them in ~/authinfo.gpg like this :
-machine <host> login <login> port <port> password <password>
-"
+Put your user name & password in ~/authinfo.gpg like this :
+machine <host> login <login> port <port> password <password>"
   :type 'string
   :group 'mail-bugger)
 
 (defcustom mail-bugger-password nil
-  "Mail password."
+  "Mail password.
+Put your user name & password in ~/authinfo.gpg like this :
+machine <host> login <login> port <port> password <password>"
   :type 'string
   :group 'mail-bugger)
 
@@ -89,12 +92,14 @@ machine <host> login <login> port <port> password <password>
 (defvar mail-bugger-unread-entries nil)
 
 (defcustom mail-bugger-new-mail-sound "/usr/share/sounds/KDE-Im-New-Mail.ogg"
-  "Sound for new mail notification."
+  "Sound for new mail notification.
+Any format works."
   :type 'string
   :group 'mail-bugger)
 
 (defcustom mail-bugger-new-mail-icon "/usr/share/icons/Revenge/128x128/apps/emacs.png"
-  "Icon for new mail notification."
+  "Icon for new mail notification.
+PNG works."
   :type 'string
   :group 'mail-bugger)
 
@@ -103,7 +108,8 @@ machine <host> login <login> port <port> password <password>
     '(image :type xpm
 	    :file "~/.emacs.d/img/perso.xpm"
 	    :ascent center))
-  "Icon for the first account."
+  "Icon for the first account.
+Must be an XPM (use Gimp)."
   :group 'mail-bugger)
 
 (defconst mail-bugger-logo
@@ -114,29 +120,6 @@ machine <host> login <login> port <port> password <password>
 (defvar mail-bugger-timer nil)
 
 ;;;###autoload
-(defun mail-bugger-desktop-notification (summary body timeout)
-  "call notification-daemon method METHOD with ARGS over dbus"
-  (dbus-call-method
-    :session                        ; use the session (not system) bus
-    "org.freedesktop.Notifications" ; service name
-    "/org/freedesktop/Notifications"   ; path name
-    "org.freedesktop.Notifications" "Notify" ; Method
-    "GNU Emacs"
-    0
-    ;; "/usr/share/icons/gnuitar.png"
-    mail-bugger-new-mail-icon
-    summary
-    body
-    '(:array)
-    '(:array :signature "{sv}")
-    ':int32 timeout)
-
-(if mail-bugger-new-mail-sound
-  (shell-command
-   (concat "mplayer -really-quiet " mail-bugger-new-mail-sound " 2> /dev/null"))))
-
-;; (px-send-desktop-notification "Test" "Plip" 2000 "/usr/share/sounds/KDE-Im-New-Mail.ogg" "/usr/share/icons/Revenge/128x128/apps/emacs.png")
-
 (defun mail-bugger-init ()
 "Init"
   (interactive)
@@ -172,10 +155,30 @@ machine <host> login <login> port <port> password <password>
       (run-hooks 'mail-bugger-new-mails-hook))
     (mail-bugger-mode-line)
 
-    (store-last-5-read-mails)
+    (mail-bugger-desktop-notify)
 
     (force-mode-line-update)
     (kill-buffer)))
+
+(defun mail-bugger-desktop-notification (summary body timeout)
+  "Call notification-daemon method with ARGS over dbus"
+  (dbus-call-method-non-blocking
+   :session                                 ; use the session (not system) bus
+   "org.freedesktop.Notifications"          ; service name
+   "/org/freedesktop/Notifications"         ; path name
+   "org.freedesktop.Notifications" "Notify" ; Method
+   "GNU Emacs"
+   0
+   mail-bugger-new-mail-icon
+   summary
+   body
+   '(:array)
+   '(:array :signature "{sv}")
+   ':int32 timeout)
+
+  (if mail-bugger-new-mail-sound
+      (shell-command
+       (concat "mplayer -really-quiet " mail-bugger-new-mail-sound " 2> /dev/null"))))
 
 (defun mail-bugger-mode-line ()
   (if (null mail-bugger-unread-entries)
@@ -197,69 +200,47 @@ machine <host> login <login> port <port> password <password>
                            s)
       (concat " " mail-bugger-logo ":" s))))
 
-(setq mail-bugger-advertised-mails '())
+(defvar mail-bugger-advertised-mails '())
+;; (setq mail-bugger-advertised-mails '())
 
-(defun store-last-5-read-mails ()
+(defun mail-bugger-desktop-notify ()
   (mapcar
    (lambda (x)
-     (let
-	 ((s
+       (if (not (member x mail-bugger-advertised-mails))
 	   (progn
-	     (if
-		 (not (member x mail-bugger-advertised-mails))
-		 (progn
-		   (mail-bugger-desktop-notification "<h2 style='color:red;text-align:left;'>New mail!</h2>"
-						     (format "<h3>%s</h3><h4>%s</h4><hr>%s"
-							     (car (nthcdr 1 x))
-							     (nthcdr 2 x)
-							     (car x)
-							     ) 2 )
-		   (add-to-list 'mail-bugger-advertised-mails x))))
-	   ))
-       s)
-     )
+	     (mail-bugger-desktop-notification
+	      "<h3 style='color:red;'>New mail!</h3>"
+	      (format "<h4>%s</h4><h5>%s</h5><hr>%s"
+		      (car (nthcdr 1 x))
+		      (nthcdr 2 x)
+		      (car x))
+	      1)
+	     (add-to-list 'mail-bugger-advertised-mails x))))
    mail-bugger-unread-entries))
 
-;; (defun store-last-5-read-mails ()
-;;   (mapcar
-;;    (lambda (x)
-;;      (let
-;; 	 ((s
-;; 	   (progn
-;; 	     (add-to-list 'mail-bugger-advertised-mails x)
-;; 	     (if
-;; 		 (member x 'mail-bugger-advertised-mails)
-;; 		 (progn (message "%s advertised!" (car (nthcdr 3 x)))
-;; 			(delete 'x mail-bugger-advertised-mails))))
-;; 	   ))
-;;        s)
-;;      )
-;;    mail-bugger-unread-entries))
+(defun mail-bugger-wordwrap (s N)
+  "Hard wrap string S on 2 lines to N chars"
+  (if (< N (length s))
+      (concat (subseq s 0 N) "\n" (subseq s N (+ N N)) "...")
+    s))
 
-  ;; (add-to-list 'mail-bugger-advertised-mails (car (nthcdr 3 x)))
-
-;; (setq mylist '("plip" "plop"))
-
-;; (if (member "plip" mylist)
-;;     (message "yeap!")
-;;   (message "nope!"))
-
-;; (if (not (member 5 '(1 2 3)))
-;; (message "nope!"))
+(defun mail-bugger-format-time (s)
+  "Clean Time string S"
+  (subseq (car s) 0 -6))
 
 (defun mail-bugger-tooltip ()
   "loop through the mail headers and build the hover tooltip"
   (mapconcat
    (lambda (x)
      (let
-	 ((s
-	   (format "%s\n%s -%s- \n--------------\n%s\n"
+	 ((tooltip-string
+	   (format "%s\n%s \n--------------\n%s\n"
 		   (car (nthcdr 1 x))
-		   (nthcdr 2 x)
-		   (car (nthcdr 3 x))
-		   (car x)
+		   ;; (nthcdr 2 x)
+		   (mail-bugger-format-time (nthcdr 2 x))
+		   (mail-bugger-wordwrap (car x) 35)
 		   )))
-       s)
+       tooltip-string)
      )
    mail-bugger-unread-entries
    "\n")
@@ -306,14 +287,3 @@ machine <host> login <login> port <port> password <password>
 
 (provide 'mail-bugger)
 ;;; mail-bugger.el ends here
-
-
-;; (car (nthcdr 1 lines))
-;; (nthcdr 2 lines)
-;; (car (nthcdr 3 lines))
-;; (car lines)
-
-
-;; (setq list3 '())
-
-;; (add-to-list 'list3 (+ 1 1))
