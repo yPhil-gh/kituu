@@ -274,7 +274,6 @@ Must be an XPM (use Gimp)."
 
 (message "%s loaded" (or load-file-name buffer-file-name))
 
-plop
 
 (provide 'mail-bugger)
 ;;; mail-bugger.el ends here

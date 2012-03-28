@@ -1,20 +1,12 @@
 ;;; See https://github.com/xaccrocheur/kituu/
+;; Keep it under 1k lines ;p
 
 ;; Init! ______________________________________________________________________
 
-;; ;; (setq user-emacs-directory "~/.emacs/")
-;; ;; (eval-when-compile
-;;   (let ((default-directory "~/.emacs.d/lisp/"))
-;;     (normal-top-level-add-subdirs-to-load-path))
-;; ;;(require 'px-org-conf)
-;; ;; )
 (let ((default-directory "~/.emacs.d/lisp/"))
   (normal-top-level-add-to-load-path '("."))
   (normal-top-level-add-subdirs-to-load-path))
 
-;; (eval-and-compile
-;; (add-to-list 'load-path "~/.emacs.d/lisp/")
-;; (add-to-list 'load-path "~/.emacs.d/lisp/tabbar/")
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/bbdb/")
 (autoload 'wl "wl" "Wanderlust" t)
 (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
@@ -23,127 +15,18 @@
 ;; (load "~/.emacs.d/lisp/nxhtml/autostart.el")
 
 
-(require 'cl)
-(require 'tabbar)
-;; wtf?
-(require 'smart-tab)
+(eval-when-compile
+(require 'tabbar nil t)
+(require 'mail-bugger nil t)
+(require 'bbdb nil t)
+(require 'tabkey2 nil t)
+(require 'cl))
 
-(require 'mail-bugger)
 (mail-bugger-init)
+
 ;; Required by my iswitchb hack
 (require 'edmacro)
-(require 'php-mode)
-
-;; ;; Bbdb! ____________________________________________________________________
-
-(setq bbdb-file "~/.emacs.d/bbdb")           ;; keep ~/ clean; set before loading
-(require 'bbdb)
-(bbdb-initialize)
-
-(setq
-    bbdb-offer-save 1                        ;; 1 means save-without-asking
-
-    bbdb-use-pop-up t                        ;; allow popups for addresses
-    bbdb-electric-p t                        ;; be disposable with SPC
-    bbdb-popup-target-lines  1               ;; very small
-    bbdb-dwim-net-address-allow-redundancy t ;; always use full name
-    bbdb-quiet-about-name-mismatches 2       ;; show name-mismatches 2 secs
-    bbdb-always-add-address t                ;; add new addresses to existing...
-                                             ;; ...contacts automatically
-    bbdb-canonicalize-redundant-nets-p t     ;; x@foo.bar.cx => x@bar.cx
-    bbdb-completion-type nil                 ;; complete on anything
-    bbdb-complete-name-allow-cycling t       ;; cycle through matches
-                                             ;; this only works partially
-    bbbd-message-caching-enabled t           ;; be fast
-    bbdb-use-alternate-names t               ;; use AKA
-    bbdb-elided-display t                    ;; single-line addresses
-
-    ;; auto-create addresses from mail
-    bbdb/mail-auto-create-p 'bbdb-ignore-some-messages-hook
-    bbdb-ignore-some-messages-alist ;; don't ask about fake addresses
-    ;; NOTE: there can be only one entry per header (such as To, From)
-    ;; http://flex.ee.uec.ac.jp/texi/bbdb/bbdb_11.html
-
-    '(( "From" . "no.?reply\\|DAEMON\\|daemon\\|facebookmail\\|twitter")))
-
-;; ;; DBus! ____________________________________________________________________
-
-(require 'dbus)
-
-(defun px-send-desktop-notification (summary body timeout sound icon)
-  "call notification-daemon method METHOD with ARGS over dbus"
-  (dbus-call-method
-    :session                        ; use the session (not system) bus
-    "org.freedesktop.Notifications" ; service name
-    "/org/freedesktop/Notifications"   ; path name
-    "org.freedesktop.Notifications" "Notify" ; Method
-    "GNU Emacs"
-    0
-    ;; "/usr/share/icons/gnuitar.png"
-    icon
-    summary
-    body
-    '(:array)
-    '(:array :signature "{sv}")
-    ':int32 timeout)
-
-  (when sound (shell-command
-                (concat "mplayer -really-quiet " sound " 2> /dev/null")))
-)
-
-;; (px-send-desktop-notification "Test" "  Plip" 2000 "/usr/share/sounds/KDE-Im-New-Mail.ogg" "/usr/share/icons/Revenge/128x128/apps/emacs.png")
-
-(defun my-rcirc-dbus-notification (proc sender response target text)
-  (when (and (string-match (rcirc-nick proc) text)
-	     (not (string= (rcirc-nick proc) sender))
-	     (not (string= (rcirc-server-name proc) sender))
-	     (not (fsm-frame-x-active-window-p (selected-frame))))
-    (push
-     (list
-      (dbus-call-method
-       :session                         ;; bus
-       "org.freedesktop.Notifications"  ;; service
-       "/org/freedesktop/Notifications" ;; path
-       "org.freedesktop.Notifications"  ;; interface
-       "Notify"			 ;; method
-       "GNU Emacs"			 ;; Application name
-       0 ;; No replacement of other notifications.
-       "~/.emacs.d/img/emacs.png" ;; Icon
-       (format "%s: IRC activity" target)		;; Summary.
-       (format "%s" text)				;; Body.
-       '(:array) ;; No actions
-       '(:array :signature "{sv}") ;; No hints
-       ':int32 -1)                 ;; Default timeout.
-      proc
-      target)
-     my-rcirc-dbus-notification-ids)))
-
-
-
-(defun px-popup (title msg &optional icon sound)
-  "Show a popup if we're on X, or echo it otherwise; TITLE is the title
-of the message, MSG is the context. Optionally, you can provide an ICON and
-a sound to be played"
-
-  (interactive)
-  (when sound (shell-command
-                (concat "mplayer -really-quiet " sound " 2> /dev/null")))
-  (if (eq window-system 'x)
-    (shell-command (concat "notify-send "
-
-                     (if icon (concat "-i " icon) "")
-                     " '" title "' '" msg "'"))
-    ;; text only version
-
-    (message (concat title ": " msg))))
-
-;; (defun pw/compile-notify (buffer message)
-  ;; (send-desktop-notification "emacs compile" message 0))
-
-;; (setq compilation-finish-function 'pw/compile-notify)
-
-;; (px-send-desktop-notification "test" "plip" 2)
-;; (px-popup "Warning" "The end is near")
+(autoload 'php-mode "php-mode" t)
 
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
@@ -554,6 +437,7 @@ inside html tags."
 (global-set-key (kbd "s-g") 'goto-line)
 (global-set-key (kbd "s-r") 'replace-string)
 (global-set-key (kbd "s-²") (kbd "C-x b <return>")) ; Keyboard macro!
+(global-set-key (kbd "<C-kp-add>") 'kmacro-end-and-call-macro) ; Keyboard macro!
 (global-set-key (kbd "s-t") 'sgml-tag)
 
 (global-set-key (kbd "C-f") 'isearch-forward)
@@ -713,13 +597,47 @@ select 'this' or <that> (enclosed)  s-SPC
 (put 'upcase-region 'disabled nil)
 
 
-;; ;; Toggling email! _________________________________________________________________
+;; ;; Bbdb! ____________________________________________________________________
+
+(setq bbdb-file "~/.emacs.d/bbdb") ;; keep ~/ clean; set before loading
+(bbdb-initialize)
+
+(setq
+    bbdb-offer-save 1 ;; 1 means save-without-asking
+
+    bbdb-use-pop-up t ;; allow popups for addresses
+    bbdb-electric-p t ;; be disposable with SPC
+    bbdb-popup-target-lines 1 ;; very small
+    bbdb-dwim-net-address-allow-redundancy t ;; always use full name
+    bbdb-quiet-about-name-mismatches 2 ;; show name-mismatches 2 secs
+    bbdb-always-add-address t ;; add new addresses to existing...
+                                             ;; ...contacts automatically
+    bbdb-canonicalize-redundant-nets-p t ;; x@foo.bar.cx => x@bar.cx
+    bbdb-completion-type nil ;; complete on anything
+    bbdb-complete-name-allow-cycling t ;; cycle through matches
+                                             ;; this only works partially
+    bbbd-message-caching-enabled t ;; be fast
+    bbdb-use-alternate-names t ;; use AKA
+    bbdb-elided-display t ;; single-line addresses
+
+    ;; auto-create addresses from mail
+    bbdb/mail-auto-create-p 'bbdb-ignore-some-messages-hook
+    bbdb-ignore-some-messages-alist ;; don't ask about fake addresses
+    ;; NOTE: there can be only one entry per header (such as To, From)
+    ;; http://flex.ee.uec.ac.jp/texi/bbdb/bbdb_11.html
+
+    '(( "From" . "no.?reply\\|DAEMON\\|daemon\\|facebookmail\\|twitter")))
+
+
+;; ;; Toggling email! _____________________________________________________________
 
 "Key used to switch to mail and back"
-(setq px-toggle-mail-key [(meta f1)])
+(defvar px-toggle-mail-key [(meta f1)])
 
 "Mail client"
-(setq mail-client "wl")
+(defvar mail-client "wl")
+(defvar px-no-mail-window-configuration nil)
+(defvar px-mail-window-configuration nil)
 
 (defun px-mail-client (mail-client)
   (if (string-equal mail-client "gnus")
@@ -783,6 +701,7 @@ select 'this' or <that> (enclosed)  s-SPC
   "reset my fucking prefs"
   (interactive)
   (px-prefs 0))
+
 ;; wl-draft-send-and-exit
 ;; (add-hook 'wl-summary-toggle-disp-off-hook 'Reset-prefs)
 ;; (add-hook 'wl-summary-toggle-disp-on-hook 'Reset-prefs)
@@ -977,7 +896,6 @@ select 'this' or <that> (enclosed)  s-SPC
  '(wl-draft-buffer-style (quote keep))
  '(wl-draft-reply-buffer-style (quote keep))
  '(wl-subscribed-mailing-list (quote ("wl@lists.airs.net"))))
-
 
 ;; Garbage ______________________________________________________________________
 
