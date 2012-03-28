@@ -46,13 +46,13 @@
 ;;   :prefix "mail-bugger-accounts"
 ;;   :group 'mail-bugger)
 
-(defcustom mail-bugger-host "mail.gandi.net"
+(defcustom mail-bugger-host "imap.gmail.com"
   "Mail host.
 Example : imap.gmail.com"
   :type 'string
   :group 'mail-bugger)
 
-(defcustom mail-bugger-protocol "143"
+(defcustom mail-bugger-protocol "993/imap/ssl"
   "Port number and (optional) protocol path.
 Example : 993/imap/ssl"
   :type 'string
@@ -104,7 +104,6 @@ Must be an XPM (use Gimp)."
       (apply 'propertize " " `(display ,mail-bugger-icon))
     "G"))
 
-(defvar mail-bugger-timer nil)
 (defvar mail-bugger-unseen-mails nil)
 (defvar mail-bugger-advertised-mails '())
 ;; (setq mail-bugger-advertised-mails '())
@@ -123,10 +122,9 @@ Must be an XPM (use Gimp)."
   (interactive)
   (add-to-list 'global-mode-string
                '(:eval (mail-bugger-mode-line)) t)
-  (setq mail-bugger-timer
-        (run-with-timer 0
-                        mail-bugger-timer-interval
-                        'mail-bugger-check)))
+  (run-with-timer 0
+		  mail-bugger-timer-interval
+		  'mail-bugger-check))
 
 (defun mail-bugger-check ()
   "Check unread mail."
@@ -161,13 +159,15 @@ Must be an XPM (use Gimp)."
   ;; (message "This is account %s" account)
   (setq mail-bugger-unseen-mails (mail-bugger-buffer-to-list (current-buffer)))
   (mail-bugger-mode-line)
-  (mail-bugger-desktop-notify)
+  (add-to-list 'global-mode-string
+               '(:eval   (mail-bugger-mode-line (mail-bugger-buffer-to-list (current-buffer)))) t)
+  ;; (mail-bugger-desktop-notify)
   (force-mode-line-update))
 
 (defun mail-bugger-mode-line ()
-  "Construct the emacs modeline object"
+  "Construct an emacs modeline object"
   (if (null mail-bugger-unseen-mails)
-      ""
+      (concat " " mail-bugger-logo)
     (let ((s
 	   (format "%d " (length mail-bugger-unseen-mails)))
           (map (make-sparse-keymap))
@@ -179,13 +179,20 @@ Must be an XPM (use Gimp)."
            (browse-url ,url)))
 
       (add-text-properties 0 (length s)
-                           `(local-map ,map mouse-face mode-line-highlight
-                                       uri ,url help-echo
-                                       ,(concat
-                                         (mail-bugger-tooltip)
-                                         "\n\nmouse-2: View mail"))
+                           `(local-map,
+			     map mouse-face mode-line-highlight
+			     uri, url help-echo,
+			     (concat
+			      ;; "disabled"
+			      (mail-bugger-tooltip)
+			      "\n\nmouse-2: View mail"))
                            s)
       (concat " " mail-bugger-logo ":" s))))
+
+;; (defun mail-bugger-mode-line-two (&optional plop)
+;;   "Construct the emacs modeline object"
+;; (setq message "plop"))
+
 
 (defun mail-bugger-tooltip ()
   "Loop through the mail headers and build the hover tooltip"
@@ -197,7 +204,8 @@ Must be an XPM (use Gimp)."
 		   (car (nthcdr 1 x))
 		   ;; (nthcdr 2 x)
 		   (mail-bugger-format-time (nthcdr 2 x))
-		   (mail-bugger-wordwrap (car x) 35)
+		   (mail-bugger-wordwrap (car x) 50)
+		   ;; (car x)
 		   )))
        tooltip-string)
      )
@@ -212,7 +220,7 @@ Must be an XPM (use Gimp)."
       (let ((lines '()))
         (while (not (eobp))
           (push (split-string
-                 (buffer-substring (point) (point-at-eol)) "|")
+                 (buffer-substring (point) (point-at-eol)) "\|_\|")
                 lines)
           (beginning-of-line 2))
 	lines))))
@@ -272,3 +280,12 @@ Must be an XPM (use Gimp)."
 ;; (setq var-one (concat "var-" one))
 
 ;; (format "var-one is %s" var-one)
+
+
+;; mouse-2: View mail")))) s) (concat " " mail-bugger-logo ":" s)))) 0)
+;; Error during redisplay: (wrong-number-of-arguments (lambda (mail-bugger-unseen-mails) "Construct the emacs modeline object" (if (null mail-bugger-unseen-mails) "" (let ((s (format "%d " (length mail-bugger-unseen-mails))) (map (make-sparse-keymap)) (url "https://mail.google.com")) (define-key map (vector (quote mode-line) (quote mouse-2)) (\` (lambda (e) (interactive "e") (browse-url (\, url))))) (add-text-properties 0 (length s) (\` (local-map (\, map) mouse-face mode-line-highlight uri (\, url) help-echo (\, (concat (mail-bugger-tooltip) "
+
+
+;; Its value is
+;; (("Forward: Envoi d'un message?: Photo0145.jpg" "Adamweb <contact@adamweb.net>" "Wed, 28 Mar 2012 18:01:05 +0000")
+;;  ("juste un_underscore" "Adamweb <contact@adamweb.net>" "Wed, 28 Mar 2012 18:17:30 +0000"))
