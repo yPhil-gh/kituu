@@ -258,6 +258,35 @@ Must be an XPM (use Gimp)."
    (generate-new-buffer "MBOLIC"))
   (switch-to-buffer "MBOLIC"))
 
+(defun mbolic (maillist)
+  (interactive)
+  (switch-to-buffer "MBOLIC")
+  (let ((inhibit-read-only t))
+    (erase-buffer))
+  (let ((all (overlay-lists)))
+    ;; Delete all the overlays.
+    (mapcar 'delete-overlay (car all))
+    (mapcar 'delete-overlay (cdr all)))
+  (mapconcat
+   (lambda (x)
+     (let
+	 ((tooltip-string
+	   (progn
+	     (widget-create 'push-button
+			    :notify (lambda (&rest ignore &optional x)
+				      (message "Poop! Hu Ha! %s" (car (car (car x)))))
+			    (format "%s\n%s \n--------------\n%s"
+				    (car (nthcdr 1 x))
+				    (mail-bugger-format-time (nthcdr 2 x))
+				    (mail-bugger-wordwrap (car x) 50)
+				    (cdr (nthcdr 2 x))
+				    ))
+	     (use-local-map widget-keymap))))
+       tooltip-string))
+   maillist
+   "plop")
+  (widget-setup))
+
 (defun mail-bugger-mode-line ()
   "Construct an emacs modeline object"
 (concat
@@ -281,7 +310,7 @@ Must be an XPM (use Gimp)."
       (define-key map (vector 'mode-line 'mouse-3)
         `(lambda (e)
            (interactive "e")
-	   (mail-bugger-own-little-imap-client mail-bugger-unseen-mails-one)))
+	   (mbolic mail-bugger-unseen-mails-one)))
 
       (add-text-properties 0 (length s)
                            `(local-map,
