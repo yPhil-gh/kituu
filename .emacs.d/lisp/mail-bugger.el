@@ -203,6 +203,7 @@ Must be an XPM (use Gimp)."
 	   box
 	   ;; mail-bugger-protocol
 	   ;; mail-bugger-imap-box
+
 	   (auth-source-user-or-password "login" host protocol)
 	   (auth-source-user-or-password "password" host protocol))
    'mail-bugger-shell-command-callback host))
