@@ -648,7 +648,7 @@ select 'this' or <that> (enclosed)  s-SPC
   "toggle pref bits"
   (tabbar-mode arg)
   (scroll-bar-mode arg)
-  (linum-mode arg)
+  (global-linum-mode arg)
   (fringe-mode arg))
 
 (defun px-exit-mail nil
@@ -766,7 +766,7 @@ select 'this' or <that> (enclosed)  s-SPC
 ;; (add-hook 'wl-highlight-headers-hook 'Reset-prefs)
 ;; (add-hook 'wl-highlight-message-hook 'Reset-prefs)
 ;; (add-hook 'wl-save-hook 'Reset-prefs)
-;; (add-hook 'wl-exit-hook 'Reset-prefs)
+(add-hook 'wl-exit-hook 'Reset-prefs)
 ;; (add-hook 'wl-folder-suspend-hook 'Reset-prefs)
 ;; (add-hook 'wl-biff-notify-hook 'Reset-prefs)
 ;; (add-hook 'wl-biff-unnotify-hook 'Reset-prefs)
@@ -815,8 +815,9 @@ select 'this' or <that> (enclosed)  s-SPC
       (set-face-attribute 'link nil :foreground "#729fcf" :underline t)
       (set-face-attribute 'link-visited nil :foreground "#3465a4" :underline t)
       (set-face-attribute 'minibuffer-prompt nil :foreground "#fce94f")
-      (set-face-attribute 'mode-line nil :background "#777777" :foreground "#000000")
+      (set-face-attribute 'mode-line nil :background "gray15" :foreground "#eeeeee")
       (set-face-attribute 'mode-line-inactive nil :background "#555753" :foreground "#ffffff")
+      (set-face-attribute 'mode-line-highlight nil :inverse-video t)
       (set-face-attribute 'region nil :background "#555753")
 )
   (set-face-attribute 'default nil :background "black" :foreground "white"))
@@ -869,11 +870,12 @@ select 'this' or <that> (enclosed)  s-SPC
  ;; If there is more than one, they won't work right.
  '(cperl-array-face ((t (:foreground "#fcaf3e" :weight bold))))
  '(cperl-hash-face ((t (:foreground "#fcaf3e" :slant italic :weight bold))))
+ '(mode-line-highlight ((t (:inverse-video t))))
  '(wl-highlight-folder-few-face ((t (:foreground "orange" :weight bold))))
  '(wl-highlight-folder-path-face ((t (:background "dark red" :foreground "white" :weight bold))))
  '(wl-highlight-folder-unread-face ((t (:foreground "orange" :weight bold))))
  '(wl-highlight-folder-zero-face ((t (:foreground "orange"))))
- '(wl-highlight-summary-answered-face ((t (:foreground "khaki" :weight bold))))
+ '(wl-highlight-summary-answered-face ((t (:foreground "khaki"))))
  '(wl-highlight-summary-displaying-face ((t (:background "dark red" :foreground "white" :weight bold))))
  '(wl-highlight-summary-new-face ((t (:foreground "white" :weight ultra-bold)))))
 
@@ -895,7 +897,9 @@ select 'this' or <that> (enclosed)  s-SPC
  '(wl-draft-add-in-reply-to nil)
  '(wl-draft-buffer-style (quote keep))
  '(wl-draft-reply-buffer-style (quote keep))
- '(wl-subscribed-mailing-list (quote ("wl@lists.airs.net"))))
+ '(wl-message-mode-line-format "")
+ '(wl-subscribed-mailing-list (quote ("wl@lists.airs.net")))
+ '(wl-summary-mode-line-format ""))
 
 ;; Garbage ______________________________________________________________________
 
@@ -962,7 +966,7 @@ select 'this' or <that> (enclosed)  s-SPC
 ;;     ))
 
 
-(setq-default mode-line-format mode-line-format)
+;; (setq-default mode-line-format mode-line-format)
 ;; Original emacs mode-line-format :
 
 ;; ("%e"

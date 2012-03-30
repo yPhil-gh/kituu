@@ -46,8 +46,11 @@
  wl-folder-window-width 25
  wl-summary-always-sticky-folder-list t
  wl-folder-summary-line-format-alist
- '(("^%" . "%T%P%Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s")
-   ("^-" . "%T%P%Y/%M/%D (%W) %h:%m %[%17(%f %c%)%] %t%s"))
+ '(
+   ;; ("^%" . "%T%P%Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s")
+   ("^%" . "%P│ %Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s")
+   ("^-" . "%T%P%Y/%M/%D (%W) %h:%m %[%17(%f %c%)%] %t%s")
+)
 
  wl-message-window-size '(4 . 6)
  wl-auto-select-first t
@@ -170,35 +173,10 @@
  wl-draft-always-delete-myself t
  )
 
-;; ;; open unread group folder after checking.
-;; (add-hook 'wl-folder-check-entity-hook
-;; 	  '(lambda ()
-;; 	     (wl-folder-open-unread-folder entity)))
-
-;; notify mail arrival
-(setq
- wl-biff-check-folder-list '("%INBOX:")
- wl-biff-use-idle-timer t
- wl-biff-check-interval 5
- wl-biff-notify-hook '(px-send-desktop-notification "WL" "New Mail!" 0))
-
-(add-hook 'wl-biff-notify-hook
-	  (lambda()
-	    (px-send-desktop-notification "test" "plip" 0)))
-
-;; ;; Set mail-icon to be shown universally in the modeline.
-;; (setq global-mode-string
-;;       (cons
-;;        '(wl-modeline-biff-status
-;;          wl-modeline-biff-state-on
-;;          wl-modeline-biff-state-off)
-;;        global-mode-string))
-
-;; (setq global-mode-string
-;; "plop"
-;; global-mode-string)
-
-;; (force-mode-line-update)
+;; open unread group folder after checking.
+(add-hook 'wl-folder-check-entity-hook
+	  '(lambda ()
+	     (wl-folder-open-unread-folder entity)))
 
 ;; Use different signature files based on From: address
 (setq signature-file-alist
@@ -336,4 +314,7 @@
 ;;  wl-default-spec "%")
 
 ;; wl default mode-line
-;; mail (%f) / %n %F>> [%m]
+;; Wanderlust: << %f / %n %F>> [%m]
+;; mail (%f) / %n %F [%m]
+;; summary:
+;; mail (%f) %n (%u) / %a [%m] [%t]
