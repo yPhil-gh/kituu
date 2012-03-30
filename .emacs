@@ -292,6 +292,7 @@ inside html tags."
 (global-linum-mode t)
 ;; (global-smart-tab-mode 1)
 ;; (smart-tab-mode t)
+(tabkey2-mode t)
 (global-font-lock-mode t)
 (tool-bar-mode 0)
 (set-scroll-bar-mode `right)

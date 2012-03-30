@@ -37,7 +37,7 @@
 (require 'dbus)
 
 (defgroup mail-bugger nil
-  "Mail notifier."
+  "Universal mail notifier."
   :prefix "mail-bugger-"
   :group 'mail)
 
@@ -46,6 +46,13 @@
 Example : wl"
   :type 'string
   :group 'mail-bugger)
+
+(defun mail-bugger-launch-client ()
+  (if (string-equal mail-bugger-launch-client-command "gnus")
+      (gnus)
+    (if (string-equal mail-bugger-launch-client-command "wl")
+	(wl))
+    (px-go-mail)))
 
 (defgroup mail-bugger-account-one nil
   "Details for account one."
@@ -113,7 +120,7 @@ Any format works."
   :type 'string
   :group 'mail-bugger)
 
-(defcustom mail-bugger-new-mail-icon-one "/usr/share/icons/oxygen/128x128/apps/yakuake.png"
+(defcustom mail-bugger-new-mail-icon-one "/usr/share/icons/oxygen/128x128/actions/configure.png"
   "Icon for new mail notification.
 PNG works."
   :type 'string
@@ -227,7 +234,28 @@ Must be an XPM (use Gimp)."
   (force-mode-line-update))
 
 
-;; (mail-bugger-launch-client-command)
+
+
+(defun mail-bugger-own-little-imap-client (maillist)
+  (interactive)
+  (princ
+   (mapconcat
+   (lambda (x)
+     (let
+	 ((tooltip-string
+	   (format "%s\n%s \n--------------\n%s\n"
+		   (car (nthcdr 1 x))
+		   ;; (nthcdr 2 x)
+		   (mail-bugger-format-time (nthcdr 2 x))
+		   (mail-bugger-wordwrap (car x) 50)
+		   ;; (car x)
+		   )))
+       tooltip-string)
+     )
+   maillist
+   "\n")
+   (generate-new-buffer "MBOLIC"))
+  (switch-to-buffer "MBOLIC"))
 
 (defun mail-bugger-mode-line ()
   "Construct an emacs modeline object"
@@ -242,12 +270,17 @@ Must be an XPM (use Gimp)."
       (define-key map (vector 'mode-line 'mouse-1)
         `(lambda (e)
            (interactive "e")
-           (px-go-mail)))
+	   (mail-bugger-launch-client)))
 
       (define-key map (vector 'mode-line 'mouse-2)
         `(lambda (e)
            (interactive "e")
            (browse-url ,url)))
+
+      (define-key map (vector 'mode-line 'mouse-3)
+        `(lambda (e)
+           (interactive "e")
+	   (mail-bugger-own-little-imap-client mail-bugger-unseen-mails-one)))
 
       (add-text-properties 0 (length s)
                            `(local-map,
@@ -255,8 +288,10 @@ Must be an XPM (use Gimp)."
 			     uri, url help-echo,
 			     (concat
 			      (mail-bugger-tooltip-one)
-			      (format "\n--------------\nmouse-1: View mail in wl
-\nmouse-2: View mail on %s" mail-bugger-host-one)))
+			      (format "
+\n--------------\nmouse-1: View mail in wl
+\nmouse-2: View mail on %s
+\nmouse-3: View mail on MBOLIC" mail-bugger-launch-client-command mail-bugger-host-one)))
                            s)
       (concat mail-bugger-logo-one ":" s)))
 " "
@@ -270,12 +305,17 @@ Must be an XPM (use Gimp)."
       (define-key map (vector 'mode-line 'mouse-1)
         `(lambda (e)
            (interactive "e")
-           (px-go-mail)))
+	   (mail-bugger-launch-client)))
 
       (define-key map (vector 'mode-line 'mouse-2)
         `(lambda (e)
            (interactive "e")
            (browse-url ,url)))
+
+      (define-key map (vector 'mode-line 'mouse-3)
+        `(lambda (e)
+           (interactive "e")
+	   (mail-bugger-own-little-imap-client mail-bugger-unseen-mails-two)))
 
       (add-text-properties 0 (length s)
                            `(local-map,
@@ -283,11 +323,12 @@ Must be an XPM (use Gimp)."
 			     uri, url help-echo,
 			     (concat
 			      (mail-bugger-tooltip-two)
-			      (format "\nmouse-1: View mail in wl
-\nmouse-2: View mail on %s" mail-bugger-host-two)))
+			      (format "
+\n--------------\nmouse-1: View mail in wl
+\nmouse-2: View mail on %s
+\nmouse-3: View mail on MBOLIC" mail-bugger-launch-client-command mail-bugger-host-two)))
                            s)
-      (concat mail-bugger-logo-two ":" s)))
-))
+      (concat mail-bugger-logo-two ":" s)))))
 
 (defun mail-bugger-tooltip-one ()
   "Loop through the mail headers and build the hover tooltip"
@@ -324,19 +365,6 @@ Must be an XPM (use Gimp)."
      )
    mail-bugger-unseen-mails-two
    "\n"))
-
-(defun mail-bugger-buffer-to-list (buf)
-  "Make & return a list (of lists) LINES from lines in a buffer BUF"
-  (with-current-buffer buf
-    (save-excursion
-      (goto-char (point-min))
-      (let ((lines '()))
-        (while (not (eobp))
-          (push (split-string
-                 (buffer-substring (point) (point-at-eol)) "\|_\|")
-                lines)
-          (beginning-of-line 2))
-	lines))))
 
 (defun mail-bugger-desktop-notify-one ()
   (mapcar
@@ -387,9 +415,21 @@ Must be an XPM (use Gimp)."
    '(:array :signature "{sv}")
    ':int32 timeout))
 
-;; (mail-bugger-desktop-notification "plop" "plip" 5 "/usr/share/icons/xkill.png")
-
 ;; Utilities
+
+(defun mail-bugger-buffer-to-list (buf)
+  "Make & return a list (of lists) LINES from lines in a buffer BUF"
+  (with-current-buffer buf
+    (save-excursion
+      (goto-char (point-min))
+      (let ((lines '()))
+        (while (not (eobp))
+          (push (split-string
+                 (buffer-substring (point) (point-at-eol)) "\|_\|")
+                lines)
+          (beginning-of-line 2))
+	lines))))
+
 (defun mail-bugger-wordwrap (s N)
   "Hard wrap string S on 2 lines to N chars"
   (if (< N (length s))
