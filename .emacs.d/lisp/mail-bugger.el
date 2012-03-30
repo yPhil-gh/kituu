@@ -233,9 +233,6 @@ Must be an XPM (use Gimp)."
   (mail-bugger-desktop-notify-two)
   (force-mode-line-update))
 
-
-
-
 (defun mail-bugger-own-little-imap-client (maillist)
   (interactive)
   (princ
@@ -248,6 +245,7 @@ Must be an XPM (use Gimp)."
 		   ;; (nthcdr 2 x)
 		   (mail-bugger-format-time (nthcdr 2 x))
 		   (mail-bugger-wordwrap (car x) 50)
+		   (cdr (nthcdr 2 x))
 		   ;; (car x)
 		   )))
        tooltip-string)
@@ -289,9 +287,9 @@ Must be an XPM (use Gimp)."
 			     (concat
 			      (mail-bugger-tooltip-one)
 			      (format "
-\n--------------\nmouse-1: View mail in wl
+\n--------------\nmouse-1: View mail in %s
 \nmouse-2: View mail on %s
-\nmouse-3: View mail on MBOLIC" mail-bugger-launch-client-command mail-bugger-host-one)))
+\nmouse-3: View mail in MBOLIC" mail-bugger-launch-client-command mail-bugger-host-one mail-bugger-host-one)))
                            s)
       (concat mail-bugger-logo-one ":" s)))
 " "
@@ -324,9 +322,9 @@ Must be an XPM (use Gimp)."
 			     (concat
 			      (mail-bugger-tooltip-two)
 			      (format "
-\n--------------\nmouse-1: View mail in wl
+\n--------------\nmouse-1: View mail in %s
 \nmouse-2: View mail on %s
-\nmouse-3: View mail on MBOLIC" mail-bugger-launch-client-command mail-bugger-host-two)))
+\nmouse-3: View mail in MBOLIC" mail-bugger-launch-client-command mail-bugger-host-two mail-bugger-host-two)))
                            s)
       (concat mail-bugger-logo-two ":" s)))))
 

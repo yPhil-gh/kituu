@@ -33,8 +33,8 @@ if ($emails) {
     $overview = imap_fetch_overview($inbox,$email_number,0);
     print mb_imap_to_utf8($overview[0]->subject) . $sep;
     print mb_imap_to_utf8(str_replace ('"', '', $overview[0]->from)) . $sep;
-    print mb_imap_to_utf8($overview[0]->date);
-    echo "\n";
+    print mb_imap_to_utf8($overview[0]->date) . $sep . "\n";
+    /* print mb_imap_to_utf8(imap_fetchbody($inbox,$email_number,1)) . "\n"; */
   }
 }
 imap_close($inbox);
