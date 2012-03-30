@@ -683,8 +683,8 @@ select 'this' or <that> (enclosed)  s-SPC
 (eval-after-load "wl-summary"
   '(define-key wl-summary-mode-map px-toggle-mail-key 'px-no-mail))
 
-(eval-after-load "wl-draft"
-  '(define-key wl-draft-mode-map px-toggle-mail-key 'px-no-mail))
+;; (eval-after-load "wl-draft"
+;;   '(define-key wl-draft-mode-map px-toggle-mail-key 'px-no-mail))
 
 (eval-after-load "gnus"
   '(progn

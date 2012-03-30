@@ -1,4 +1,4 @@
-;;; mail-bugger.el --- Notify of unread mails on mode line & DBus
+;;; mail-bugger.el --- Notify of unread mails on mode line & on DBus
 
 ;; Copyright (C) 2012 Phil CM
 
@@ -28,8 +28,8 @@
 
 ;; (require 'mail-bugger)
 ;; (mail-bugger-init)
-
-;; and enter your details at first init
+;; Fill in your ~/authinfo according to the book
+;; and use M-x customize-group "mail-bugger" RET
 
 ;;; Code:
 
@@ -41,42 +41,71 @@
   :prefix "mail-bugger-"
   :group 'mail)
 
-;; (defgroup mail-bugger-accounts nil
-;;   "Mail notifier."
-;;   :prefix "mail-bugger-accounts"
-;;   :group 'mail-bugger)
+(defcustom mail-bugger-launch-client-command "px-go-mail"
+  "Mail client command.
+Example : wl"
+  :type 'string
+  :group 'mail-bugger)
 
-(defcustom mail-bugger-host "imap.gmail.com"
+(defgroup mail-bugger-account-one nil
+  "Details for account one."
+  :prefix "mail-bugger-accounts"
+  :group 'mail-bugger)
+
+(defgroup mail-bugger-account-two nil
+  "Details for account two."
+  :prefix "mail-bugger-accounts"
+  :group 'mail-bugger)
+
+(defcustom mail-bugger-host-one "imap.gmail.com"
   "Mail host.
 Example : imap.gmail.com"
   :type 'string
-  :group 'mail-bugger)
+  :group 'mail-bugger-account-one)
 
-(defcustom mail-bugger-protocol "993/imap/ssl"
+(defcustom mail-bugger-protocol-one "993/imap/ssl"
   "Port number and (optional) protocol path.
 Example : 993/imap/ssl"
   :type 'string
-  :group 'mail-bugger)
+  :group 'mail-bugger-account-one)
 
-(defcustom mail-bugger-imap-box "INBOX"
+(defcustom mail-bugger-imap-box-one "INBOX"
   "Name of the imap folder on the server.
 Example : INBOX"
   :type 'string
-  :group 'mail-bugger)
+  :group 'mail-bugger-account-one)
 
-(defcustom mail-bugger-username nil
-  "Mail username.
-Put your user name & password in ~/authinfo.gpg like this :
-machine <host> login <login> port <port> password <password>"
+(defcustom mail-bugger-host-two "mail.gandi.net"
+  "Mail host.
+Example : imap.gmail.com"
   :type 'string
-  :group 'mail-bugger)
+  :group 'mail-bugger-account-two)
 
-(defcustom mail-bugger-password nil
-  "Mail password.
-Put your user name & password in ~/authinfo.gpg like this :
-machine <host> login <login> port <port> password <password>"
+(defcustom mail-bugger-protocol-two "143"
+  "Port number and (optional) protocol path.
+Example : 993/imap/ssl"
   :type 'string
-  :group 'mail-bugger)
+  :group 'mail-bugger-account-two)
+
+(defcustom mail-bugger-imap-box-two "INBOX"
+  "Name of the imap folder on the server.
+Example : INBOX"
+  :type 'string
+  :group 'mail-bugger-account-two)
+
+;; (defcustom mail-bugger-username nil
+;;   "Mail username.
+;; Put your user name & password in ~/authinfo.gpg like this :
+;; machine <host> login <login> port <port> password <password>"
+;;   :type 'string
+;;   :group 'mail-bugger)
+
+;; (defcustom mail-bugger-password nil
+;;   "Mail password.
+;; Put your user name & password in ~/authinfo.gpg like this :
+;; machine <host> login <login> port <port> password <password>"
+;;   :type 'string
+;;   :group 'mail-bugger)
 
 (defcustom mail-bugger-new-mail-sound "/usr/share/sounds/KDE-Im-New-Mail.ogg"
   "Sound for new mail notification.
@@ -84,34 +113,54 @@ Any format works."
   :type 'string
   :group 'mail-bugger)
 
-(defcustom mail-bugger-new-mail-icon "/usr/share/icons/Revenge/128x128/apps/emacs.png"
+(defcustom mail-bugger-new-mail-icon-one "/usr/share/icons/oxygen/128x128/apps/yakuake.png"
   "Icon for new mail notification.
 PNG works."
   :type 'string
-  :group 'mail-bugger)
+  :group 'mail-bugger-account-one)
 
-(defcustom mail-bugger-icon
+(defcustom mail-bugger-new-mail-icon-two "/usr/share/icons/Revenge/128x128/apps/emacs.png"
+  "Icon for new mail notification.
+PNG works."
+  :type 'string
+  :group 'mail-bugger-account-two)
+
+(defcustom mail-bugger-icon-one
   (when (image-type-available-p 'xpm)
     '(image :type xpm
 	    :file "~/.emacs.d/img/perso.xpm"
 	    :ascent center))
   "Icon for the first account.
 Must be an XPM (use Gimp)."
-  :group 'mail-bugger)
+  :group 'mail-bugger-account-one)
 
-(defconst mail-bugger-logo
-  (if mail-bugger-icon
-      (apply 'propertize " " `(display ,mail-bugger-icon))
+(defcustom mail-bugger-icon-two
+  (when (image-type-available-p 'xpm)
+    '(image :type xpm
+	    :file "~/.emacs.d/img/adamweb.xpm"
+	    :ascent center))
+  "Icon for the second account.
+Must be an XPM (use Gimp)."
+  :group 'mail-bugger-account-two)
+
+(defconst mail-bugger-logo-one
+  (if mail-bugger-icon-one
+      (apply 'propertize " " `(display ,mail-bugger-icon-one))
+    "G"))
+
+(defconst mail-bugger-logo-two
+  (if mail-bugger-icon-two
+      (apply 'propertize " " `(display ,mail-bugger-icon-two))
     "G"))
 
 (defvar mail-bugger-unseen-mails nil)
-(defvar mail-bugger-advertised-mails '())
-;; (setq mail-bugger-advertised-mails '())
+(defvar mail-bugger-advertised-mails-one '())
+(defvar mail-bugger-advertised-mails-two '())
 
 (defvar mail-bugger-shell-script-command "~/scripts/unread.php"
   "Full command line. Can't touch that.")
 
-(defcustom mail-bugger-timer-interval 300
+(defcustom mail-bugger-timer-interval 150
   "Interval(in seconds) for mail check."
   :type 'number
   :group 'mail-bugger)
@@ -121,23 +170,35 @@ Must be an XPM (use Gimp)."
   "Init"
   (interactive)
   (add-to-list 'global-mode-string
-               '(:eval (mail-bugger-mode-line)) t)
+               '(:eval (mail-bugger-mode-line)))
   (run-with-timer 0
 		  mail-bugger-timer-interval
-		  'mail-bugger-check))
+		  'mail-bugger-check-all))
 
-(defun mail-bugger-check ()
-  "Check unread mail."
+(defun mail-bugger-check-all ()
+  "Check unread mail now."
   (interactive)
+  (if (get-buffer "*mail-bugger-mail.gandi.net*")
+      (kill-buffer "*mail-bugger-mail.gandi.net*"))
+  (if (get-buffer "*mail-bugger-imap.gmail.com*")
+      (kill-buffer "*mail-bugger-imap.gmail.com*"))
+  (mail-bugger-check mail-bugger-host-one mail-bugger-protocol-one mail-bugger-imap-box-one)
+  (mail-bugger-check mail-bugger-host-two mail-bugger-protocol-two mail-bugger-imap-box-two))
+
+(defun mail-bugger-check (host protocol box)
+  "Check unread mail."
+  ;; (message "%s %s %s" host protocol box)
   (mail-bugger-shell-command
    (format "%s %s %s %s %s %s"
            mail-bugger-shell-script-command
-	   mail-bugger-host
-	   mail-bugger-protocol
-	   mail-bugger-imap-box
-	   (auth-source-user-or-password "login" mail-bugger-host mail-bugger-protocol)
-	   (auth-source-user-or-password "password" mail-bugger-host mail-bugger-protocol))
-   'mail-bugger-shell-command-callback mail-bugger-host))
+	   host
+	   protocol
+	   box
+	   ;; mail-bugger-protocol
+	   ;; mail-bugger-imap-box
+	   (auth-source-user-or-password "login" host protocol)
+	   (auth-source-user-or-password "password" host protocol))
+   'mail-bugger-shell-command-callback host))
 
 (defmacro mail-bugger-shell-command (cmd callback account)
   "Run CMD asynchronously, then run CALLBACK"
@@ -151,27 +212,37 @@ Must be an XPM (use Gimp)."
             (let ((inhibit-read-only t)
                   (err (process-exit-status process)))
               (if (zerop err)
-		  (funcall, callback, account)
+		  (funcall, callback)
                 (error "mail-bugger (%s) error: %d", account err)))))))))
 
-(defun mail-bugger-shell-command-callback (account)
-  "Now we're talking"
-  ;; (message "This is account %s" account)
-  (setq mail-bugger-unseen-mails (mail-bugger-buffer-to-list (current-buffer)))
+(defun mail-bugger-shell-command-callback ()
+  "Construct the unread mails lists"
+  (setq mail-bugger-unseen-mails-one (mail-bugger-buffer-to-list "*mail-bugger-imap.gmail.com*"))
+  (setq mail-bugger-unseen-mails-two (mail-bugger-buffer-to-list "*mail-bugger-mail.gandi.net*"))
   (mail-bugger-mode-line)
-  (add-to-list 'global-mode-string
-               '(:eval   (mail-bugger-mode-line (mail-bugger-buffer-to-list (current-buffer)))) t)
-  ;; (mail-bugger-desktop-notify)
+  ;; (mail-bugger-desktop-notify mail-bugger-new-mail-icon-one)
+  ;; (mail-bugger-desktop-notify mail-bugger-new-mail-icon-two)
+  (mail-bugger-desktop-notify-one)
+  (mail-bugger-desktop-notify-two)
   (force-mode-line-update))
+
+
+;; (mail-bugger-launch-client-command)
 
 (defun mail-bugger-mode-line ()
   "Construct an emacs modeline object"
-  (if (null mail-bugger-unseen-mails)
-      (concat " " mail-bugger-logo)
+(concat
+  (if (null mail-bugger-unseen-mails-one)
+      (concat " " mail-bugger-logo-one)
     (let ((s
-	   (format "%d " (length mail-bugger-unseen-mails)))
+	   (format "%d" (length mail-bugger-unseen-mails-one)))
           (map (make-sparse-keymap))
-          (url "https://mail.google.com"))
+          (url (concat "http://" mail-bugger-host-one)))
+
+      (define-key map (vector 'mode-line 'mouse-1)
+        `(lambda (e)
+           (interactive "e")
+           (px-go-mail)))
 
       (define-key map (vector 'mode-line 'mouse-2)
         `(lambda (e)
@@ -183,18 +254,42 @@ Must be an XPM (use Gimp)."
 			     map mouse-face mode-line-highlight
 			     uri, url help-echo,
 			     (concat
-			      ;; "disabled"
-			      (mail-bugger-tooltip)
-			      "\n\nmouse-2: View mail"))
+			      (mail-bugger-tooltip-one)
+			      (format "\n--------------\nmouse-1: View mail in wl
+\nmouse-2: View mail on %s" mail-bugger-host-one)))
                            s)
-      (concat " " mail-bugger-logo ":" s))))
+      (concat mail-bugger-logo-one ":" s)))
+" "
+  (if (null mail-bugger-unseen-mails-two)
+      (concat " " mail-bugger-logo-two)
+    (let ((s
+	   (format "%d" (length mail-bugger-unseen-mails-two)))
+          (map (make-sparse-keymap))
+          (url (concat "http://" mail-bugger-host-two)))
 
-;; (defun mail-bugger-mode-line-two (&optional plop)
-;;   "Construct the emacs modeline object"
-;; (setq message "plop"))
+      (define-key map (vector 'mode-line 'mouse-1)
+        `(lambda (e)
+           (interactive "e")
+           (px-go-mail)))
 
+      (define-key map (vector 'mode-line 'mouse-2)
+        `(lambda (e)
+           (interactive "e")
+           (browse-url ,url)))
 
-(defun mail-bugger-tooltip ()
+      (add-text-properties 0 (length s)
+                           `(local-map,
+			     map mouse-face mode-line-highlight
+			     uri, url help-echo,
+			     (concat
+			      (mail-bugger-tooltip-two)
+			      (format "\nmouse-1: View mail in wl
+\nmouse-2: View mail on %s" mail-bugger-host-two)))
+                           s)
+      (concat mail-bugger-logo-two ":" s)))
+))
+
+(defun mail-bugger-tooltip-one ()
   "Loop through the mail headers and build the hover tooltip"
   (mapconcat
    (lambda (x)
@@ -209,7 +304,25 @@ Must be an XPM (use Gimp)."
 		   )))
        tooltip-string)
      )
-   mail-bugger-unseen-mails
+   mail-bugger-unseen-mails-one
+   "\n"))
+
+(defun mail-bugger-tooltip-two ()
+  "Loop through the mail headers and build the hover tooltip"
+  (mapconcat
+   (lambda (x)
+     (let
+	 ((tooltip-string
+	   (format "%s\n%s \n--------------\n%s\n"
+		   (car (nthcdr 1 x))
+		   ;; (nthcdr 2 x)
+		   (mail-bugger-format-time (nthcdr 2 x))
+		   (mail-bugger-wordwrap (car x) 50)
+		   ;; (car x)
+		   )))
+       tooltip-string)
+     )
+   mail-bugger-unseen-mails-two
    "\n"))
 
 (defun mail-bugger-buffer-to-list (buf)
@@ -225,67 +338,72 @@ Must be an XPM (use Gimp)."
           (beginning-of-line 2))
 	lines))))
 
-(defun mail-bugger-desktop-notify ()
+(defun mail-bugger-desktop-notify-one ()
   (mapcar
    (lambda (x)
-       (if (not (member x mail-bugger-advertised-mails))
+       (if (not (member x mail-bugger-advertised-mails-one))
 	   (progn
 	     (mail-bugger-desktop-notification
-	      "<h3 style='color:red;'>New mail!</h3>"
+	      "<h3 style='color:palegreen;'>New mail!</h3>"
 	      (format "<h4>%s</h4><h5>%s</h5><hr>%s"
 		      (car (nthcdr 1 x))
 		      (nthcdr 2 x)
 		      (car x))
-	      1)
-	     (add-to-list 'mail-bugger-advertised-mails x))))
-   mail-bugger-unseen-mails))
+	      1 mail-bugger-new-mail-icon-one)
+	     (add-to-list 'mail-bugger-advertised-mails-one x))))
+   mail-bugger-unseen-mails-one))
 
-(defun mail-bugger-desktop-notification (summary body timeout)
+(defun mail-bugger-desktop-notify-two ()
+  (mapcar
+   (lambda (z)
+       (if (not (member z mail-bugger-advertised-mails-two))
+	   (progn
+	     (mail-bugger-desktop-notification
+	      "<h3 style='color:red;'>New mail!</h3>"
+	      (format "<h4>%s</h4><h5>%s</h5><hr>%s"
+		      (car (nthcdr 1 z))
+		      (nthcdr 2 z)
+		      (car z))
+	      1 mail-bugger-new-mail-icon-two)
+	     (add-to-list 'mail-bugger-advertised-mails-two z))))
+   mail-bugger-unseen-mails-two))
+
+(defun mail-bugger-desktop-notification (summary body timeout icon)
   "Call notification-daemon method with ARGS over dbus"
+  ;; (if mail-bugger-new-mail-sound
+  ;;     (shell-command
+  ;;      (concat "mplayer -really-quiet " mail-bugger-new-mail-sound " 2> /dev/null")))
   (dbus-call-method-non-blocking
    :session                                 ; use the session (not system) bus
    "org.freedesktop.Notifications"          ; service name
    "/org/freedesktop/Notifications"         ; path name
    "org.freedesktop.Notifications" "Notify" ; Method
-   "GNU Emacs"				    ; Application
+   "GNU Emacs"			       	    ; Application
    0					    ; Timeout
-   mail-bugger-new-mail-icon
+   icon
    summary
    body
    '(:array)
    '(:array :signature "{sv}")
-   ':int32 timeout)
-  (if mail-bugger-new-mail-sound
-      (shell-command
-       (concat "mplayer -really-quiet " mail-bugger-new-mail-sound " 2> /dev/null"))))
+   ':int32 timeout))
+
+;; (mail-bugger-desktop-notification "plop" "plip" 5 "/usr/share/icons/xkill.png")
 
 ;; Utilities
 (defun mail-bugger-wordwrap (s N)
   "Hard wrap string S on 2 lines to N chars"
   (if (< N (length s))
-      (concat (subseq s 0 N) "\n" (subseq s N (+ N N)) "...")
+      (concat (subseq s 0 N) "\n" (subseq s N) "...")
     s))
 
 (defun mail-bugger-format-time (s)
   "Clean Time string S"
   (subseq (car s) 0 -6))
 
+(defun Rx ()
+(interactive)
+(setq mail-bugger-advertised-mails-one '())
+(setq mail-bugger-advertised-mails-two '()))
+
 (message "%s loaded" (or load-file-name buffer-file-name))
 (provide 'mail-bugger)
-;;; mail-bugger.el ends here
-
-;; (setq one "uno")
-;; (setq two "dos")
-
-;; (setq var-one (concat "var-" one))
-
-;; (format "var-one is %s" var-one)
-
-
-;; mouse-2: View mail")))) s) (concat " " mail-bugger-logo ":" s)))) 0)
-;; Error during redisplay: (wrong-number-of-arguments (lambda (mail-bugger-unseen-mails) "Construct the emacs modeline object" (if (null mail-bugger-unseen-mails) "" (let ((s (format "%d " (length mail-bugger-unseen-mails))) (map (make-sparse-keymap)) (url "https://mail.google.com")) (define-key map (vector (quote mode-line) (quote mouse-2)) (\` (lambda (e) (interactive "e") (browse-url (\, url))))) (add-text-properties 0 (length s) (\` (local-map (\, map) mouse-face mode-line-highlight uri (\, url) help-echo (\, (concat (mail-bugger-tooltip) "
-
-
-;; Its value is
-;; (("Forward: Envoi d'un message?: Photo0145.jpg" "Adamweb <contact@adamweb.net>" "Wed, 28 Mar 2012 18:01:05 +0000")
-;;  ("juste un_underscore" "Adamweb <contact@adamweb.net>" "Wed, 28 Mar 2012 18:17:30 +0000"))
