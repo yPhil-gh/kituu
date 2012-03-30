@@ -151,14 +151,16 @@ Must be an XPM (use Gimp)."
   :group 'mail-bugger-account-two)
 
 (defconst mail-bugger-logo-one
-  (if mail-bugger-icon-one
+  (if (and window-system
+	   mail-bugger-icon-two)
       (apply 'propertize " " `(display ,mail-bugger-icon-one))
-    "G"))
+    mail-bugger-host-one))
 
 (defconst mail-bugger-logo-two
-  (if mail-bugger-icon-two
+  (if (and window-system
+	   mail-bugger-icon-two)
       (apply 'propertize " " `(display ,mail-bugger-icon-two))
-    "G"))
+    mail-bugger-host-two))
 
 (defvar mail-bugger-unseen-mails nil)
 (defvar mail-bugger-advertised-mails-one '())
@@ -185,10 +187,10 @@ Must be an XPM (use Gimp)."
 (defun mail-bugger-check-all ()
   "Check unread mail now."
   (interactive)
-  (if (get-buffer "*mail-bugger-mail.gandi.net*")
-      (kill-buffer "*mail-bugger-mail.gandi.net*"))
-  (if (get-buffer "*mail-bugger-imap.gmail.com*")
-      (kill-buffer "*mail-bugger-imap.gmail.com*"))
+  (if (get-buffer  (concat "*mail-bugger-" mail-bugger-host-one "*"))
+      (kill-buffer (concat "*mail-bugger-" mail-bugger-host-one "*")))
+  (if (get-buffer  (concat "*mail-bugger-" mail-bugger-host-two "*"))
+      (kill-buffer (concat "*mail-bugger-" mail-bugger-host-two "*")))
   (mail-bugger-check mail-bugger-host-one mail-bugger-protocol-one mail-bugger-imap-box-one)
   (mail-bugger-check mail-bugger-host-two mail-bugger-protocol-two mail-bugger-imap-box-two))
 
@@ -225,8 +227,8 @@ Must be an XPM (use Gimp)."
 
 (defun mail-bugger-shell-command-callback ()
   "Construct the unread mails lists"
-  (setq mail-bugger-unseen-mails-one (mail-bugger-buffer-to-list "*mail-bugger-imap.gmail.com*"))
-  (setq mail-bugger-unseen-mails-two (mail-bugger-buffer-to-list "*mail-bugger-mail.gandi.net*"))
+  (setq mail-bugger-unseen-mails-one (mail-bugger-buffer-to-list (concat "*mail-bugger-" mail-bugger-host-one "*")))
+  (setq mail-bugger-unseen-mails-two (mail-bugger-buffer-to-list (concat "*mail-bugger-" mail-bugger-host-two "*")))
   (mail-bugger-mode-line)
   ;; (mail-bugger-desktop-notify mail-bugger-new-mail-icon-one)
   ;; (mail-bugger-desktop-notify mail-bugger-new-mail-icon-two)
@@ -260,7 +262,7 @@ Must be an XPM (use Gimp)."
   "Construct an emacs modeline object"
 (concat
   (if (null mail-bugger-unseen-mails-one)
-      (concat " " mail-bugger-logo-one)
+      (concat mail-bugger-logo-one "  ")
     (let ((s
 	   (format "%d" (length mail-bugger-unseen-mails-one)))
           (map (make-sparse-keymap))
@@ -286,7 +288,7 @@ Must be an XPM (use Gimp)."
 			     map mouse-face mode-line-highlight
 			     uri, url help-echo,
 			     (concat
-			      (mail-bugger-tooltip-one)
+			      (mail-bugger-tooltip "one")
 			      (format "
 \n--------------\nmouse-1: View mail in %s
 \nmouse-2: View mail on %s
@@ -295,7 +297,7 @@ Must be an XPM (use Gimp)."
       (concat mail-bugger-logo-one ":" s)))
 " "
   (if (null mail-bugger-unseen-mails-two)
-      (concat " " mail-bugger-logo-two)
+      (concat mail-bugger-logo-two "  ")
     (let ((s
 	   (format "%d" (length mail-bugger-unseen-mails-two)))
           (map (make-sparse-keymap))
@@ -321,7 +323,7 @@ Must be an XPM (use Gimp)."
 			     map mouse-face mode-line-highlight
 			     uri, url help-echo,
 			     (concat
-			      (mail-bugger-tooltip-two)
+			      (mail-bugger-tooltip "two")
 			      (format "
 \n--------------\nmouse-1: View mail in %s
 \nmouse-2: View mail on %s
@@ -329,47 +331,11 @@ Must be an XPM (use Gimp)."
                            s)
       (concat mail-bugger-logo-two ":" s)))))
 
-(defun mail-bugger-tooltip-one ()
-  "Loop through the mail headers and build the hover tooltip"
-  (mapconcat
-   (lambda (x)
-     (let
-	 ((tooltip-string
-	   (format "%s\n%s \n--------------\n%s\n"
-		   (car (nthcdr 1 x))
-		   ;; (nthcdr 2 x)
-		   (mail-bugger-format-time (nthcdr 2 x))
-		   (mail-bugger-wordwrap (car x) 50)
-		   ;; (car x)
-		   )))
-       tooltip-string)
-     )
-   mail-bugger-unseen-mails-one
-   "\n"))
-
-(defun mail-bugger-tooltip-two ()
-  "Loop through the mail headers and build the hover tooltip"
-  (mapconcat
-   (lambda (x)
-     (let
-	 ((tooltip-string
-	   (format "%s\n%s \n--------------\n%s\n"
-		   (car (nthcdr 1 x))
-		   ;; (nthcdr 2 x)
-		   (mail-bugger-format-time (nthcdr 2 x))
-		   (mail-bugger-wordwrap (car x) 50)
-		   ;; (car x)
-		   )))
-       tooltip-string)
-     )
-   mail-bugger-unseen-mails-two
-   "\n"))
-
 (defun mail-bugger-tooltip (list)
   "Loop through the mail headers and build the hover tooltip"
   (if (string-equal "one" list)
-      (setq zelist mail-bugger-unseen-mails-two)
-    (setq zelist mail-bugger-unseen-mails-one))
+      (setq zelist mail-bugger-unseen-mails-one)
+    (setq zelist mail-bugger-unseen-mails-two))
   (mapconcat
    (lambda (x)
      (let
@@ -418,22 +384,24 @@ Must be an XPM (use Gimp)."
 
 (defun mail-bugger-desktop-notification (summary body timeout icon)
   "Call notification-daemon method with ARGS over dbus"
-  ;; (if mail-bugger-new-mail-sound
-  ;;     (shell-command
-  ;;      (concat "mplayer -really-quiet " mail-bugger-new-mail-sound " 2> /dev/null")))
-  (dbus-call-method-non-blocking
-   :session                                 ; use the session (not system) bus
-   "org.freedesktop.Notifications"          ; service name
-   "/org/freedesktop/Notifications"         ; path name
-   "org.freedesktop.Notifications" "Notify" ; Method
-   "GNU Emacs"			       	    ; Application
-   0					    ; Timeout
-   icon
-   summary
-   body
-   '(:array)
-   '(:array :signature "{sv}")
-   ':int32 timeout))
+  (if (window-system)
+      ;; (if mail-bugger-new-mail-sound
+      ;;     (shell-command
+      ;;      (concat "mplayer -really-quiet " mail-bugger-new-mail-sound " 2> /dev/null")))
+      (dbus-call-method-non-blocking
+       :session                                 ; use the session (not system) bus
+       "org.freedesktop.Notifications"          ; service name
+       "/org/freedesktop/Notifications"         ; path name
+       "org.freedesktop.Notifications" "Notify" ; Method
+       "GNU Emacs"			       	    ; Application
+       0					    ; Timeout
+       icon
+       summary
+       body
+       '(:array)
+       '(:array :signature "{sv}")
+       ':int32 timeout)
+    (message "New mail!" )))
 
 ;; Utilities
 
@@ -467,3 +435,12 @@ Must be an XPM (use Gimp)."
 
 (message "%s loaded" (or load-file-name buffer-file-name))
 (provide 'mail-bugger)
+
+
+;; (defun dumb-f ()
+;;   (message "I'm a function"))
+
+;; (defvar my-function 'plopssss)
+
+;; (funcall my-function)
+;; ==> "I'm a function"

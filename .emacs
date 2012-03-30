@@ -508,7 +508,6 @@ The optional second argument indicates whether to kill internal buffers too."
                  (string-match regexp name))
         (kill-buffer buffer)))))
 
-
 (Kill-boring-buffers-px "*Completions*\\|*Compile\-Log*\\|*.*trace\\|*Help*\\|*RE-Builder*\\|Customize\\|\\.newsrc-dribble\\|*olimap*\\|.*el\\.gz")
 
 ;; ;; Kill & copy lines
@@ -796,7 +795,7 @@ select 'this' or <that> (enclosed)  s-SPC
 
 ;; Faces ______________________________________________________________________
 
-(if (eq window-system 'x)
+(if (window-system)
     (progn
       (set-face-attribute 'default nil :background "#2e3436" :foreground "#eeeeec")
       (set-face-attribute 'cursor nil :background "#fce94f" :foreground "#2e3436")
