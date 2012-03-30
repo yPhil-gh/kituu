@@ -92,7 +92,11 @@
 (add-hook 'server-switch-hook 'ff/raise-frame-and-give-focus)
 
 
-;; Functions! _________________________________________________________________
+;; Funcs! _________________________________________________________________
+
+(defun Scratch ()
+  (interactive)
+  (switch-to-buffer "*scratch*"))
 
 (defun this-buffer-is-visible (buffer)
   "Test if BUFFER is actually on screen"
@@ -815,12 +819,14 @@ select 'this' or <that> (enclosed)  s-SPC
       (set-face-attribute 'link nil :foreground "#729fcf" :underline t)
       (set-face-attribute 'link-visited nil :foreground "#3465a4" :underline t)
       (set-face-attribute 'minibuffer-prompt nil :foreground "#fce94f")
-      (set-face-attribute 'mode-line nil :background "gray15" :foreground "#eeeeee")
+      (set-face-attribute 'mode-line nil :background "gray10" :foreground "#eeeeee")
       (set-face-attribute 'mode-line-inactive nil :background "#555753" :foreground "#ffffff")
       (set-face-attribute 'mode-line-highlight nil :inverse-video t)
       (set-face-attribute 'region nil :background "#555753")
 )
-  (set-face-attribute 'default nil :background "black" :foreground "white"))
+  (set-face-attribute 'default nil :background "black" :foreground
+    "white")
+  (set-face-attribute 'mode-line nil :background "blue" :foreground "yellow"))
 
 (if (>= emacs-major-version 23)
 (set-frame-font "Monospace-12"))
@@ -870,6 +876,7 @@ select 'this' or <that> (enclosed)  s-SPC
  ;; If there is more than one, they won't work right.
  '(cperl-array-face ((t (:foreground "#fcaf3e" :weight bold))))
  '(cperl-hash-face ((t (:foreground "#fcaf3e" :slant italic :weight bold))))
+ '(mode-line ((t (:background "gray10" :foreground "#eeeeee"))))
  '(mode-line-highlight ((t (:inverse-video t))))
  '(wl-highlight-folder-few-face ((t (:foreground "orange" :weight bold))))
  '(wl-highlight-folder-path-face ((t (:background "dark red" :foreground "white" :weight bold))))

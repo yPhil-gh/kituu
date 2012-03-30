@@ -290,9 +290,10 @@ Must be an XPM (use Gimp)."
 			     (concat
 			      (mail-bugger-tooltip "one")
 			      (format "
-\n--------------\nmouse-1: View mail in %s
-\nmouse-2: View mail on %s
-\nmouse-3: View mail in MBOLIC" mail-bugger-launch-client-command mail-bugger-host-one mail-bugger-host-one)))
+--------------
+mouse-1: View mail in %s
+mouse-2: View mail on %s
+mouse-3: View mail in MBOLIC" mail-bugger-launch-client-command mail-bugger-host-one mail-bugger-host-one)))
                            s)
       (concat mail-bugger-logo-one ":" s)))
 " "
@@ -325,9 +326,10 @@ Must be an XPM (use Gimp)."
 			     (concat
 			      (mail-bugger-tooltip "two")
 			      (format "
-\n--------------\nmouse-1: View mail in %s
-\nmouse-2: View mail on %s
-\nmouse-3: View mail in MBOLIC" mail-bugger-launch-client-command mail-bugger-host-two mail-bugger-host-two)))
+--------------
+mouse-1: View mail in %s
+mouse-2: View mail on %s
+mouse-3: View mail in MBOLIC" mail-bugger-launch-client-command mail-bugger-host-two mail-bugger-host-two)))
                            s)
       (concat mail-bugger-logo-two ":" s)))))
 
@@ -340,7 +342,7 @@ Must be an XPM (use Gimp)."
    (lambda (x)
      (let
 	 ((tooltip-string
-	   (format "%s\n%s \n--------------\n%s\n"
+	   (format "%s\n%s \n-------\n%s"
 		   (car (nthcdr 1 x))
 		   ;; (nthcdr 2 x)
 		   (mail-bugger-format-time (nthcdr 2 x))
