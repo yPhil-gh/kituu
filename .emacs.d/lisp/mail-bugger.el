@@ -286,7 +286,7 @@ Must be an XPM (use Gimp)."
 			     map mouse-face mode-line-highlight
 			     uri, url help-echo,
 			     (concat
-			      (mail-bugger-tooltip "one")
+			      (mail-bugger-tooltip-one)
 			      (format "
 \n--------------\nmouse-1: View mail in %s
 \nmouse-2: View mail on %s
@@ -321,13 +321,49 @@ Must be an XPM (use Gimp)."
 			     map mouse-face mode-line-highlight
 			     uri, url help-echo,
 			     (concat
-			      (mail-bugger-tooltip "two")
+			      (mail-bugger-tooltip-two)
 			      (format "
 \n--------------\nmouse-1: View mail in %s
 \nmouse-2: View mail on %s
 \nmouse-3: View mail in MBOLIC" mail-bugger-launch-client-command mail-bugger-host-two mail-bugger-host-two)))
                            s)
       (concat mail-bugger-logo-two ":" s)))))
+
+(defun mail-bugger-tooltip-one ()
+  "Loop through the mail headers and build the hover tooltip"
+  (mapconcat
+   (lambda (x)
+     (let
+	 ((tooltip-string
+	   (format "%s\n%s \n--------------\n%s\n"
+		   (car (nthcdr 1 x))
+		   ;; (nthcdr 2 x)
+		   (mail-bugger-format-time (nthcdr 2 x))
+		   (mail-bugger-wordwrap (car x) 50)
+		   ;; (car x)
+		   )))
+       tooltip-string)
+     )
+   mail-bugger-unseen-mails-one
+   "\n"))
+
+(defun mail-bugger-tooltip-two ()
+  "Loop through the mail headers and build the hover tooltip"
+  (mapconcat
+   (lambda (x)
+     (let
+	 ((tooltip-string
+	   (format "%s\n%s \n--------------\n%s\n"
+		   (car (nthcdr 1 x))
+		   ;; (nthcdr 2 x)
+		   (mail-bugger-format-time (nthcdr 2 x))
+		   (mail-bugger-wordwrap (car x) 50)
+		   ;; (car x)
+		   )))
+       tooltip-string)
+     )
+   mail-bugger-unseen-mails-two
+   "\n"))
 
 (defun mail-bugger-tooltip (list)
   "Loop through the mail headers and build the hover tooltip"
