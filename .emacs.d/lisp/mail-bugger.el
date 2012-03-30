@@ -169,7 +169,7 @@ Must be an XPM (use Gimp)."
 (defvar mail-bugger-shell-script-command "~/scripts/unread.php"
   "Full command line. Can't touch that.")
 
-(defcustom mail-bugger-timer-interval 150
+(defcustom mail-bugger-timer-interval 300
   "Interval(in seconds) for mail check."
   :type 'number
   :group 'mail-bugger)

@@ -1,3 +1,4 @@
+;; -*- emacs-lisp -*-
 ;; You should set this variable if you use multiple e-mail addresses.
 ;; (setq wl-user-mail-address-list (quote ("philippe.coatmeur@gmail.com" "contact@adamweb.net")))
 ;; (define-key wl-summary-mode-map px-toggle-mail-key 'px-no-mail)
@@ -333,3 +334,6 @@
 
 ;;  ;;for when auto-compleating foldernames
 ;;  wl-default-spec "%")
+
+;; wl default mode-line
+;; mail (%f) / %n %F>> [%m]

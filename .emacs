@@ -902,3 +902,97 @@ select 'this' or <that> (enclosed)  s-SPC
 ;; (setq yas/root-directory "~/.emacs.d/el-get/yasnippet/snippets")
 ;; (add-hook 'php-mode-hook 'yas/global-mode)
 (message "%s loaded" (or load-file-name buffer-file-name))
+
+;; ;; use setq-default to set it for /all/ modes
+;; (setq mode-line-format
+;;   (list
+;;     ;; the buffer name; the file name as a tool tip
+;;     '(:eval (propertize "%b " 'face 'font-lock-keyword-face
+;;         'help-echo (buffer-file-name)))
+
+;;     ;; line and column
+;;     "(" ;; '%02' to set to 2 chars at least; prevents flickering
+;;       (propertize "%02l" 'face 'font-lock-type-face) ","
+;;       (propertize "%02c" 'face 'font-lock-type-face)
+;;     ") "
+
+;;     ;; relative position, size of file
+;;     "["
+;;     (propertize "%p" 'face 'font-lock-constant-face) ;; % above top
+;;     "/"
+;;     (propertize "%I" 'face 'font-lock-constant-face) ;; size
+;;     "] "
+
+;;     ;; the current major mode for the buffer.
+;;     "["
+
+;;     '(:eval (propertize "%m" 'face 'font-lock-string-face
+;;               'help-echo buffer-file-coding-system))
+;;     "] "
+
+
+;;     "[" ;; insert vs overwrite mode, input-method in a tooltip
+;;     '(:eval (propertize (if overwrite-mode "Ovr" "Ins")
+;;               'face 'font-lock-preprocessor-face
+;;               'help-echo (concat "Buffer is in "
+;;                            (if overwrite-mode "overwrite" "insert") " mode")))
+
+;;     ;; was this buffer modified since the last save?
+;;     '(:eval (when (buffer-modified-p)
+;;               (concat ","  (propertize "Mod"
+;;                              'face 'font-lock-warning-face
+;;                              'help-echo "Buffer has been modified"))))
+
+;;     ;; is this buffer read-only?
+;;     '(:eval (when buffer-read-only
+;;               (concat ","  (propertize "RO"
+;;                              'face 'font-lock-type-face
+;;                              'help-echo "Buffer is read-only"))))
+;;     "] "
+
+;;     ;; add the time, with the date and the emacs uptime in the tooltip
+;;     ;; '(:eval (propertize (format-time-string "%H:%M")
+;;     ;;           'help-echo
+;;     ;;           (concat (format-time-string "%c; ")
+;;     ;;                   (emacs-uptime "Uptime:%hh"))))
+;;     ;; " "
+;;     ;; i don't want to see minor-modes; but if you want, uncomment this:
+;;     ;; minor-mode-alist  ;; list of minor modes
+;;     ;; "%-" ;; fill with '-'
+;;     ))
+
+
+(setq-default mode-line-format mode-line-format)
+;; Original emacs mode-line-format :
+
+;; ("%e"
+;;  (:eval
+;;   (if
+;;       (display-graphic-p)
+;;       #(" " 0 1
+;; 	(help-echo "mouse-1: Select (drag to resize)\nmouse-2: Make current window occupy the whole frame\nmouse-3: Remove current window from display"))
+;;     #("-" 0 1
+;;       (help-echo "mouse-1: Select (drag to resize)\nmouse-2: Make current window occupy the whole frame\nmouse-3: Remove current window from display"))))
+;;  mode-line-mule-info mode-line-client mode-line-modified mode-line-remote mode-line-frame-identification mode-line-buffer-identification
+;;  #("   " 0 3
+;;    (help-echo "mouse-1: Select (drag to resize)\nmouse-2: Make current window occupy the whole frame\nmouse-3: Remove current window from display"))
+;;  mode-line-position
+;;  (vc-mode vc-mode)
+;;  #("  " 0 2
+;;    (help-echo "mouse-1: Select (drag to resize)\nmouse-2: Make current window occupy the whole frame\nmouse-3: Remove current window from display"))
+;;  mode-line-modes
+;;  (which-func-mode
+;;   ("" which-func-format
+;;    #(" " 0 1
+;;      (help-echo "mouse-1: Select (drag to resize)\nmouse-2: Make current window occupy the whole frame\nmouse-3: Remove current window from display"))))
+;;  (global-mode-string
+;;   ("" global-mode-string
+;;    #(" " 0 1
+;;      (help-echo "mouse-1: Select (drag to resize)\nmouse-2: Make current window occupy the whole frame\nmouse-3: Remove current window from display"))))
+;;  (:eval
+;;   (unless
+;;       (display-graphic-p)
+;;     #("-%-" 0 3
+;;       (help-echo "mouse-1: Select (drag to resize)\nmouse-2: Make
+;;  current window occupy the whole frame\nmouse-3: Remove current
+;;  window from display")))))
