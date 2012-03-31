@@ -254,11 +254,34 @@ Must be an XPM (use Gimp)."
        tooltip-string)
      )
    maillist
-   "\n")
+   "\n xxx \n")
    (generate-new-buffer "MBOLIC"))
   (switch-to-buffer "MBOLIC"))
 
 (defun mbolic (maillist)
+  (interactive)
+  (if (get-buffer "MBOLIC")
+      (kill-buffer "MBOLIC"))
+  (switch-to-buffer "MBOLIC")
+
+  (let ((inhibit-read-only t))
+    (erase-buffer))
+
+  (let ((all (overlay-lists)))
+    ;; Delete all the overlays.
+    (mapcar 'delete-overlay (car all))
+    (mapcar 'delete-overlay (cdr all)))
+
+  (widget-insert "\nSample button\n")
+  (widget-create 'push-button
+		 :notify (lambda (&rest ignore)
+			   (message "Poop! Ha Ha!"))
+		 "Don't !")
+  (use-local-map widget-keymap)
+
+  (widget-setup))
+
+(defun mbolich (maillist)
   (interactive)
   (switch-to-buffer "MBOLIC")
   (let ((inhibit-read-only t))
@@ -271,20 +294,24 @@ Must be an XPM (use Gimp)."
    (lambda (x)
      (let
 	 ((tooltip-string
-	   (progn
-	     (widget-create 'push-button
-			    :notify (lambda (&rest ignore &optional x)
-				      (message "Poop! Hu Ha! %s" (car (car (car x)))))
-			    (format "%s\n%s \n--------------\n%s"
-				    (car (nthcdr 1 x))
-				    (mail-bugger-format-time (nthcdr 2 x))
-				    (mail-bugger-wordwrap (car x) 50)
-				    (cdr (nthcdr 2 x))
-				    ))
-	     (use-local-map widget-keymap))))
-       tooltip-string))
+	   (format "%s\n%s \n--------------\n%s\n"
+		   (car (nthcdr 1 x))
+		   ;; (nthcdr 2 x)
+		   (mail-bugger-format-time (nthcdr 2 x))
+		   (mail-bugger-wordwrap (car x) 50)
+		   (cdr (nthcdr 2 x))
+		   ;; (car x)
+		   )))
+       (progn (widget-insert "\nSample button\n")
+       (widget-create 'push-button
+		      :notify (lambda (&rest ignore)
+				(message "Poop! Ha Ha!"))
+		      tooltip-string)
+       (use-local-map widget-keymap)
+       (widget-setup)))
+     )
    maillist
-   "plop")
+   "\n")
   (widget-setup))
 
 (defun mail-bugger-mode-line ()
@@ -310,7 +337,7 @@ Must be an XPM (use Gimp)."
       (define-key map (vector 'mode-line 'mouse-3)
         `(lambda (e)
            (interactive "e")
-	   (mbolic mail-bugger-unseen-mails-one)))
+	   (mail-bugger-own-little-imap-client mail-bugger-unseen-mails-one)))
 
       (add-text-properties 0 (length s)
                            `(local-map,
@@ -346,7 +373,7 @@ mouse-3: View mail in MBOLIC" mail-bugger-launch-client-command mail-bugger-host
       (define-key map (vector 'mode-line 'mouse-3)
         `(lambda (e)
            (interactive "e")
-	   (mail-bugger-own-little-imap-client mail-bugger-unseen-mails-two)))
+	   (mbolic mail-bugger-unseen-mails-two)))
 
       (add-text-properties 0 (length s)
                            `(local-map,
