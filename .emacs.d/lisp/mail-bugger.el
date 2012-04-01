@@ -272,13 +272,24 @@ Must be an XPM (use Gimp)."
     (mapcar 'delete-overlay (car all))
     (mapcar 'delete-overlay (cdr all)))
 
-  (widget-insert "\nSample button\n")
-  (widget-create 'push-button
-		 :notify (lambda (&rest ignore)
-			   (message "Poop! Ha Ha!"))
-		 "Don't !")
+  (mapcar
+   (lambda (x)
+     (let
+	 ((tooltip-string
+	   (car x)))
+       (progn
+	 (widget-insert (concat (car (nthcdr 1 x)) "\n"
+				(mail-bugger-format-time (nthcdr 2 x)) "\n"
+				(mail-bugger-wordwrap (car x) 50) "\n"))
+	 (widget-create 'push-button
+			:notify (lambda (&rest ignore)
+				  (widget-insert "\n")
+				  (widget-insert "plop"))
+			tooltip-string)
+	 (widget-insert "\n")))
+     )
+   maillist)
   (use-local-map widget-keymap)
-
   (widget-setup))
 
 (defun mbolich (maillist)
@@ -408,7 +419,7 @@ mouse-3: View mail in MBOLIC" mail-bugger-launch-client-command mail-bugger-host
        tooltip-string)
      )
    zelist
-   "\n"))
+   "\n\n"))
 
 (defun mail-bugger-desktop-notify-one ()
   (mapcar
