@@ -18,6 +18,8 @@ my $box = $ARGV[2];
 my $login = $ARGV[3];
 my $pass = $ARGV[4];
 my $sep = "|_|";
+my $msgid = $ARGV[5] if ( defined $ARGV[5] );
+
 
 sub decode_imap_subject {
 
@@ -61,25 +63,36 @@ my $imap = Mail::IMAPClient->new(
 				)
   or die "new(): $@";
 
-print "I'm authenticated\n" if $imap->IsAuthenticated();
-my @folders = $imap->folders();
-print join("\n* ", 'Foldeuz:', @folders), "\n";
+# print "I'm authenticated\n" if $imap->IsAuthenticated();
+# my @folders = $imap->folders();
+# print join("\n* ", 'Folders:', @folders), "\n";
 
-foreach my $f ($imap->folders) {
-  print "The $f folder has ",
-    $imap->unseen_count($f)||0, " unseen messages.\n";
-}
+# foreach my $f ($imap->folders) {
+#   print "The $f folder has ",
+#     $imap->unseen_count($f)||0, " unseen messages.\n";
+# }
 
 $imap->select($box);
 my @mails = ($imap->unseen);
-foreach my $id (@mails) {
-  my $from = $imap->get_header($id, "From");
-  my $date = $imap->get_header($id, "Date");
-  my $subject = decode('utf8', decode_imap_subject($imap->get_header($id, "Subject")));
-  # my $body = decode('utf8', decode_qp($imap->body_string($id)));
 
-  print "| $from " . "| $date " . "| $subject " . "\n";
-  # print "> $from " . " $date " . "\n$subject " . "\n$body";
+if ( defined $msgid ) {
+  foreach my $id (@mails) {
+    my $from = $imap->get_header($msgid, "From");
+    my $date = $imap->get_header($msgid, "Date");
+    my $subject = decode('utf8', decode_imap_subject($imap->get_header($msgid, "Subject")));
+    my $body = decode('utf8', decode_qp($imap->body_string($msgid)));
+
+    print "$from" . "$sep" . "$date" . "$sep" . "$subject" . "$sep" . "$id" . "$sep" . "$body" . "\n";
+  }
+} else {
+  foreach my $id (@mails) {
+    my $msgid = $imap->get_header($id, "Message-id");
+    my $from = $imap->get_header($id, "From");
+    my $date = $imap->get_header($id, "Date");
+    my $subject = decode('utf8', decode_imap_subject($imap->get_header($id, "Subject")));
+
+    print "$id" . "$sep" . "$from" . "$sep" . "$date" . "$sep" . "$subject" . "$sep" . "$id" . "\n";
+  }
 }
 
 # Say bye
