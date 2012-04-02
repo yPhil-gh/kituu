@@ -20,7 +20,6 @@ my $pass = $ARGV[4];
 my $sep = "|_|";
 my $msgid = $ARGV[5] if ( defined $ARGV[5] );
 
-
 sub decode_imap_subject {
 
 my $string=$_[0];
@@ -91,7 +90,7 @@ if ( defined $msgid ) {
     my $date = $imap->get_header($id, "Date");
     my $subject = decode('utf8', decode_imap_subject($imap->get_header($id, "Subject")));
 
-    print "$id" . "$sep" . "$from" . "$sep" . "$date" . "$sep" . "$subject" . "$sep" . "$id" . "\n";
+    print "$from" . "$sep" . "$date" . "$sep" . "$subject" . "$sep" . "$id" . "\n";
   }
 }
 

@@ -41,6 +41,16 @@
   :prefix "mail-bugger-"
   :group 'mail)
 
+(defgroup mail-bugger-account-one nil
+  "Details for account one."
+  :prefix "mail-bugger-accounts"
+  :group 'mail-bugger)
+
+(defgroup mail-bugger-account-two nil
+  "Details for account two."
+  :prefix "mail-bugger-accounts"
+  :group 'mail-bugger)
+
 (defcustom mail-bugger-launch-client-command "px-go-mail"
   "Mail client command.
 Example : wl"
@@ -54,25 +64,15 @@ Example : wl"
 	(wl))
     (px-go-mail)))
 
-(defgroup mail-bugger-account-one nil
-  "Details for account one."
-  :prefix "mail-bugger-accounts"
-  :group 'mail-bugger)
-
-(defgroup mail-bugger-account-two nil
-  "Details for account two."
-  :prefix "mail-bugger-accounts"
-  :group 'mail-bugger)
-
 (defcustom mail-bugger-host-one "imap.gmail.com"
   "Mail host.
 Example : imap.gmail.com"
   :type 'string
   :group 'mail-bugger-account-one)
 
-(defcustom mail-bugger-protocol-one "993/imap/ssl"
+(defcustom mail-bugger-port-one "993"
   "Port number and (optional) protocol path.
-Example : 993/imap/ssl"
+993 IS the default IMAP port"
   :type 'string
   :group 'mail-bugger-account-one)
 
@@ -88,9 +88,9 @@ Example : imap.gmail.com"
   :type 'string
   :group 'mail-bugger-account-two)
 
-(defcustom mail-bugger-protocol-two "143"
+(defcustom mail-bugger-port-two "993"
   "Port number and (optional) protocol path.
-Example : 993/imap/ssl"
+993 IS the default IMAP port"
   :type 'string
   :group 'mail-bugger-account-two)
 
@@ -99,20 +99,6 @@ Example : 993/imap/ssl"
 Example : INBOX"
   :type 'string
   :group 'mail-bugger-account-two)
-
-;; (defcustom mail-bugger-username nil
-;;   "Mail username.
-;; Put your user name & password in ~/authinfo.gpg like this :
-;; machine <host> login <login> port <port> password <password>"
-;;   :type 'string
-;;   :group 'mail-bugger)
-
-;; (defcustom mail-bugger-password nil
-;;   "Mail password.
-;; Put your user name & password in ~/authinfo.gpg like this :
-;; machine <host> login <login> port <port> password <password>"
-;;   :type 'string
-;;   :group 'mail-bugger)
 
 (defcustom mail-bugger-new-mail-sound "/usr/share/sounds/KDE-Im-New-Mail.ogg"
   "Sound for new mail notification.
@@ -166,7 +152,7 @@ Must be an XPM (use Gimp)."
 (defvar mail-bugger-advertised-mails-one '())
 (defvar mail-bugger-advertised-mails-two '())
 
-(defvar mail-bugger-shell-script-command "~/scripts/unread.php"
+(defvar mail-bugger-shell-script-command "~/scripts/mail-bug.pl"
   "Full command line. Can't touch that.")
 
 (defcustom mail-bugger-timer-interval 300
@@ -191,23 +177,23 @@ Must be an XPM (use Gimp)."
       (kill-buffer (concat "*mail-bugger-" mail-bugger-host-one "*")))
   (if (get-buffer  (concat "*mail-bugger-" mail-bugger-host-two "*"))
       (kill-buffer (concat "*mail-bugger-" mail-bugger-host-two "*")))
-  (mail-bugger-check mail-bugger-host-one mail-bugger-protocol-one mail-bugger-imap-box-one)
-  (mail-bugger-check mail-bugger-host-two mail-bugger-protocol-two mail-bugger-imap-box-two))
+  (mail-bugger-check mail-bugger-host-one mail-bugger-port-one mail-bugger-imap-box-one)
+  (mail-bugger-check mail-bugger-host-two mail-bugger-port-two mail-bugger-imap-box-two))
 
-(defun mail-bugger-check (host protocol box)
+(defun mail-bugger-check (host port box)
   "Check unread mail."
   ;; (message "%s %s %s" host protocol box)
   (mail-bugger-shell-command
    (format "%s %s %s %s %s %s"
            mail-bugger-shell-script-command
 	   host
-	   protocol
+	   port
 	   box
-	   ;; mail-bugger-protocol
+	   ;; mail-bugger-port
 	   ;; mail-bugger-imap-box
 
-	   (auth-source-user-or-password "login" host protocol)
-	   (auth-source-user-or-password "password" host protocol))
+	   (auth-source-user-or-password "login" host port)
+	   (auth-source-user-or-password "password" host port))
    'mail-bugger-shell-command-callback host))
 
 (defmacro mail-bugger-shell-command (cmd callback account)
@@ -223,7 +209,7 @@ Must be an XPM (use Gimp)."
                   (err (process-exit-status process)))
               (if (zerop err)
 		  (funcall, callback)
-                (error "mail-bugger (%s) error: %d", account err)))))))))
+                (error "mail-bugger error: %d" err)))))))))
 
 (defun mail-bugger-shell-command-callback ()
   "Construct the unread mails lists"
@@ -246,8 +232,8 @@ Must be an XPM (use Gimp)."
 	   (format "%s\n%s \n--------------\n%s\n"
 		   (car (nthcdr 1 x))
 		   ;; (nthcdr 2 x)
-		   (mail-bugger-format-time (nthcdr 2 x))
-		   (mail-bugger-wordwrap (car x) 50)
+		   (nthcdr 2 x)
+		   (mail-bugger-wordwrap (car x) 2)
 		   (cdr (nthcdr 2 x))
 		   ;; (car x)
 		   )))
@@ -279,8 +265,8 @@ Must be an XPM (use Gimp)."
 	   (car x)))
        (progn
 	 (widget-insert (concat (car (nthcdr 1 x)) "\n"
-				(mail-bugger-format-time (nthcdr 2 x)) "\n"
-				(mail-bugger-wordwrap (car x) 50) "\n"))
+				(nthcdr 2 x) "\n"
+				(mail-bugger-wordwrap (car x) 2) "\n"))
 	 (widget-create 'push-button
 			:notify (lambda (&rest ignore)
 				  (widget-insert "\n")
@@ -290,39 +276,6 @@ Must be an XPM (use Gimp)."
      )
    maillist)
   (use-local-map widget-keymap)
-  (widget-setup))
-
-(defun mbolich (maillist)
-  (interactive)
-  (switch-to-buffer "MBOLIC")
-  (let ((inhibit-read-only t))
-    (erase-buffer))
-  (let ((all (overlay-lists)))
-    ;; Delete all the overlays.
-    (mapcar 'delete-overlay (car all))
-    (mapcar 'delete-overlay (cdr all)))
-  (mapconcat
-   (lambda (x)
-     (let
-	 ((tooltip-string
-	   (format "%s\n%s \n--------------\n%s\n"
-		   (car (nthcdr 1 x))
-		   ;; (nthcdr 2 x)
-		   (mail-bugger-format-time (nthcdr 2 x))
-		   (mail-bugger-wordwrap (car x) 50)
-		   (cdr (nthcdr 2 x))
-		   ;; (car x)
-		   )))
-       (progn (widget-insert "\nSample button\n")
-       (widget-create 'push-button
-		      :notify (lambda (&rest ignore)
-				(message "Poop! Ha Ha!"))
-		      tooltip-string)
-       (use-local-map widget-keymap)
-       (widget-setup)))
-     )
-   maillist
-   "\n")
   (widget-setup))
 
 (defun mail-bugger-mode-line ()
@@ -348,7 +301,7 @@ Must be an XPM (use Gimp)."
       (define-key map (vector 'mode-line 'mouse-3)
         `(lambda (e)
            (interactive "e")
-	   (mail-bugger-own-little-imap-client mail-bugger-unseen-mails-one)))
+	   (mbolic mail-bugger-unseen-mails-one)))
 
       (add-text-properties 0 (length s)
                            `(local-map,
@@ -410,10 +363,10 @@ mouse-3: View mail in MBOLIC" mail-bugger-launch-client-command mail-bugger-host
      (let
 	 ((tooltip-string
 	   (format "%s\n%s \n-------\n%s"
-		   (car (nthcdr 1 x))
+		   (car x)
 		   ;; (nthcdr 2 x)
-		   (mail-bugger-format-time (nthcdr 2 x))
-		   (mail-bugger-wordwrap (car x) 50)
+		   (car (nthcdr 1 x))
+		   (nthcdr 2 x)
 		   ;; (car x)
 		   )))
        tooltip-string)
@@ -453,7 +406,7 @@ mouse-3: View mail in MBOLIC" mail-bugger-launch-client-command mail-bugger-host
 
 (defun mail-bugger-desktop-notification (summary body timeout icon)
   "Call notification-daemon method with ARGS over dbus"
-  (if (window-system)
+  (if (not (window-system))
       ;; (if mail-bugger-new-mail-sound
       ;;     (shell-command
       ;;      (concat "mplayer -really-quiet " mail-bugger-new-mail-sound " 2> /dev/null")))
