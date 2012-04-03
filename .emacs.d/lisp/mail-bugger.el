@@ -189,9 +189,6 @@ Must be an XPM (use Gimp)."
 	   host
 	   port
 	   box
-	   ;; mail-bugger-port
-	   ;; mail-bugger-imap-box
-
 	   (auth-source-user-or-password "login" host port)
 	   (auth-source-user-or-password "password" host port))
    'mail-bugger-shell-command-callback host))
@@ -233,8 +230,8 @@ Must be an XPM (use Gimp)."
 		   (car (nthcdr 1 x))
 		   ;; (nthcdr 2 x)
 		   (nthcdr 2 x)
-		   (mail-bugger-wordwrap (car x) 2)
-		   (cdr (nthcdr 2 x))
+		   (car x)
+		   (car (nthcdr 2 x))
 		   ;; (car x)
 		   )))
        tooltip-string)
@@ -243,40 +240,6 @@ Must be an XPM (use Gimp)."
    "\n xxx \n")
    (generate-new-buffer "MBOLIC"))
   (switch-to-buffer "MBOLIC"))
-
-(defun mbolic (maillist)
-  (interactive)
-  (if (get-buffer "MBOLIC")
-      (kill-buffer "MBOLIC"))
-  (switch-to-buffer "MBOLIC")
-
-  (let ((inhibit-read-only t))
-    (erase-buffer))
-
-  (let ((all (overlay-lists)))
-    ;; Delete all the overlays.
-    (mapcar 'delete-overlay (car all))
-    (mapcar 'delete-overlay (cdr all)))
-
-  (mapcar
-   (lambda (x)
-     (let
-	 ((tooltip-string
-	   (car x)))
-       (progn
-	 (widget-insert (concat (car (nthcdr 1 x)) "\n"
-				(nthcdr 2 x) "\n"
-				(mail-bugger-wordwrap (car x) 2) "\n"))
-	 (widget-create 'push-button
-			:notify (lambda (&rest ignore)
-				  (widget-insert "\n")
-				  (widget-insert "plop"))
-			tooltip-string)
-	 (widget-insert "\n")))
-     )
-   maillist)
-  (use-local-map widget-keymap)
-  (widget-setup))
 
 (defun mail-bugger-mode-line ()
   "Construct an emacs modeline object"
@@ -353,6 +316,46 @@ mouse-3: View mail in MBOLIC" mail-bugger-launch-client-command mail-bugger-host
                            s)
       (concat mail-bugger-logo-two ":" s)))))
 
+(defun mbolic-open-mail (mail-id)
+)
+
+(defun mbolic (maillist)
+  (interactive)
+  (if (get-buffer "MBOLIC")
+      (kill-buffer "MBOLIC"))
+  (switch-to-buffer "MBOLIC")
+
+  (let ((inhibit-read-only t))
+    (erase-buffer))
+
+  (let ((all (overlay-lists)))
+    ;; Delete all the overlays.
+    (mapcar 'delete-overlay (car all))
+    (mapcar 'delete-overlay (cdr all)))
+
+  (mapcar
+   (lambda (x)
+     (let
+	 ((tooltip-string
+	   (format " %s | %s | %s (%s)"
+
+			 (car (nthcdr 1 x)) ; date
+			 (car x)	    ; from
+			 (car (nthcdr 2 x)) ; subject
+			 (car (nthcdr 3 x)) ; id
+			 )))
+       (progn
+	 (widget-create 'push-button
+			:notify (lambda (&rest ignore)
+				  (widget-insert "\n")
+				  (widget-insert "plop"))
+			tooltip-string)
+	 (widget-insert "\n")))
+     )
+   maillist)
+  (use-local-map widget-keymap)
+  (widget-setup))
+
 (defun mail-bugger-tooltip (list)
   "Loop through the mail headers and build the hover tooltip"
   (if (string-equal "one" list)
@@ -364,10 +367,8 @@ mouse-3: View mail in MBOLIC" mail-bugger-launch-client-command mail-bugger-host
 	 ((tooltip-string
 	   (format "%s\n%s \n-------\n%s"
 		   (car x)
-		   ;; (nthcdr 2 x)
 		   (car (nthcdr 1 x))
-		   (nthcdr 2 x)
-		   ;; (car x)
+		   (car (nthcdr 2 x))
 		   )))
        tooltip-string)
      )
@@ -377,31 +378,31 @@ mouse-3: View mail in MBOLIC" mail-bugger-launch-client-command mail-bugger-host
 (defun mail-bugger-desktop-notify-one ()
   (mapcar
    (lambda (x)
-       (if (not (member x mail-bugger-advertised-mails-one))
-	   (progn
-	     (mail-bugger-desktop-notification
-	      "<h3 style='color:palegreen;'>New mail!</h3>"
-	      (format "<h4>%s</h4><h5>%s</h5><hr>%s"
-		      (car (nthcdr 1 x))
-		      (nthcdr 2 x)
-		      (car x))
-	      1 mail-bugger-new-mail-icon-one)
-	     (add-to-list 'mail-bugger-advertised-mails-one x))))
+     (if (not (member x mail-bugger-advertised-mails-one))
+	 (progn
+	   (mail-bugger-desktop-notification
+	    "<h3 style='color:palegreen;'>New mail!</h3>"
+	    (format "<h4>%s</h4><h5>%s</h5><hr>%s"
+		    '(car (car x))
+		    '(car (nthcdr 1 x))
+		    '(car (nthcdr 2 x)))
+	    1 mail-bugger-new-mail-icon-one)
+	   (add-to-list 'mail-bugger-advertised-mails-one x))))
    mail-bugger-unseen-mails-one))
 
 (defun mail-bugger-desktop-notify-two ()
   (mapcar
-   (lambda (z)
-       (if (not (member z mail-bugger-advertised-mails-two))
-	   (progn
-	     (mail-bugger-desktop-notification
-	      "<h3 style='color:red;'>New mail!</h3>"
-	      (format "<h4>%s</h4><h5>%s</h5><hr>%s"
-		      (car (nthcdr 1 z))
-		      (nthcdr 2 z)
-		      (car z))
-	      1 mail-bugger-new-mail-icon-two)
-	     (add-to-list 'mail-bugger-advertised-mails-two z))))
+   (lambda (x)
+     (if (not (member x mail-bugger-advertised-mails-two))
+	 (progn
+	   (mail-bugger-desktop-notification
+	    "<h3 style='color:red;'>New mail!</h3>"
+	    (format "<h4>%s</h4><h5>%s</h5><hr>%s"
+		    '(car (car x))
+		    '(car (nthcdr 1 x))
+		    '(car (nthcdr 2 x)))
+	    1 mail-bugger-new-mail-icon-two)
+	   (add-to-list 'mail-bugger-advertised-mails-two x))))
    mail-bugger-unseen-mails-two))
 
 (defun mail-bugger-desktop-notification (summary body timeout icon)
@@ -466,3 +467,7 @@ mouse-3: View mail in MBOLIC" mail-bugger-launch-client-command mail-bugger-host
 
 ;; (funcall my-function)
 ;; ==> "I'm a function"
+
+;; (setq zz '(("monique.marin2@free.fr" "Mon, 2 Apr 2012 13:52:39 +0000" "Départ " "1543")
+;;  ("\"agnes coatmeur-marin\" <agneslcm@gmx.fr>" "Mon, 02 Apr 2012 15:20:23 +0200" "Re : Quelle tuile ce plan pourri jet4you" "1542")
+;;  ("<contact@adamweb.net>" "Mon, 2 Apr 2012 14:15:42 +0200" "Re: un message en stupide français à la con" "1541")))q
