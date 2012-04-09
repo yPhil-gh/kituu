@@ -12,21 +12,19 @@
 (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
 (autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
 
-;; (load "~/.emacs.d/lisp/nxhtml/autostart.el")
+(load "~/.emacs.d/lisp/nxhtml/autostart.el")
 
 (eval-and-compile
 (require 'tabbar nil t)
-(require 'mail-bugger nil t)
+(require 'mail-bug nil t)
 (require 'bbdb nil t)
-(require 'php-mode nil t)
-(require 'tabkey2 nil t)
+;; (require 'php-mode nil t)
+;; (require 'tabkey2 nil t)
 (require 'cl))
-
-(mail-bugger-init)
 
 ;; Required by my iswitchb hack
 (require 'edmacro)
-(autoload 'php-mode "php-mode" t)
+;; (autoload 'php-mode "php-mode" t)
 
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
@@ -56,30 +54,6 @@
 (defvar px-minibuffer-history)
 (defvar savehist-file)
 
-
-;; ;; El-get! ____________________________________________________________________
-
-;; (setq el-get-dir (concat user-emacs-directory "el-get/"))
-;; (add-to-list 'load-path (concat user-emacs-directory "el-get/el-get"))
-;; (unless (require 'el-get nil t)
-;;   (url-retrieve
-;;    "https://raw.github.com/dimitri/el-get/master/el-get-install.el"
-;;    (lambda (s)
-;;      ;; (end-of-buffer)
-;;      (goto-char (point-max))
-;;      (eval-print-last-sexp))))
-
-;; ;; REMEMBER to put your el-get installed packages here, if you want to use this .emacs on another machine
-;; (setq my-packages
-;;       (append
-;;        '(linum-off php-mode-improved haml-mode cperl-mode tail)
-;;        (mapcar 'el-get-source-name el-get-sources)))
-
-;; ;; (declare-function tabbar-mode "tabbar.el")
-;; (declare-function el-get "el-get.el")
-;; (el-get 'sync my-packages)
-
-
 ;; Server! ____________________________________________________________________
 
 (server-start)
@@ -92,7 +66,11 @@
 (add-hook 'server-switch-hook 'ff/raise-frame-and-give-focus)
 
 
-;; Functions! _________________________________________________________________
+;; Funcs! _________________________________________________________________
+
+(defun Scratch ()
+  (interactive)
+  (switch-to-buffer "*scratch*"))
 
 (defun this-buffer-is-visible (buffer)
   "Test if BUFFER is actually on screen"
@@ -182,31 +160,8 @@
     (browse-url (concat "http://www.google.com/search?&q="
 			(url-hexify-string q)))))
 
-;; (autoload 'zap-up-to-char "misc"
-;;   "Kill up to, but not including ARGth occurrence of CHAR.
-;;   \(fn arg char)"
-;;   'interactive)
-
-(defun swap-buffers-in-windows-px ()
-  "Put the buffer from the selected window in next window, and vice versa"
-  (interactive)
-  (let* ((this (selected-window))
-	 (other (next-window))
-	 (this-buffer (window-buffer this))
-	 (other-buffer (window-buffer other)))
-    (set-window-buffer other this-buffer)
-    (set-window-buffer this other-buffer)
-    )
-  )
-
 (defun select-text-in-quote-px ()
-  "Select text between the nearest left and right delimiters.
-Delimiters are paired characters: For practical purposes, it also
-includes double straight quote , but not curly single quote
-matching pairs, because that is often used as apostrophy. It also
-consider both left and right angle brackets <> as either
-beginning or ending pair, so that it is easy to get content
-inside html tags."
+  "Select text between the nearest left and right delimiters."
   (interactive)
   (let (b1 b2)
     (skip-chars-backward "^<>([{“「『‹«（〈《〔【〖⦗〘⦅〚⦃\"")
@@ -418,7 +373,15 @@ inside html tags."
 
 ;; Keys! ______________________________________________________________________
 
-(global-set-key (kbd "²") 'hippie-expand) ; Hippie-expand everywhere
+(defvar px-keys-minor-mode-map (make-keymap) "px-keys-minor-mode keymap.")
+
+(define-key px-keys-minor-mode-map (kbd "²") 'hippie-expand) ; Hippie-expand everywhere
+
+(define-minor-mode px-keys-minor-mode
+  "A minor mode so that my key settings override annoying major modes."
+  t " px" 'px-keys-minor-mode-map)
+
+(px-keys-minor-mode 1)
 
 (define-key global-map [(meta up)] '(lambda() (interactive) (scroll-other-window -1)))
 (define-key global-map [(meta down)] '(lambda() (interactive) (scroll-other-window 1)))
@@ -484,7 +447,7 @@ Emacs buffer are those starting with “*”."
      )
     )))
 
-(setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
+;; (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
 
 ;; (if (not (search "*Group*" (buffer-name)))
 ;;      (setq px-no-gnus-window-configuration (current-window-configuration))
@@ -635,14 +598,9 @@ select 'this' or <that> (enclosed)  s-SPC
 (defvar px-toggle-mail-key [(meta f1)])
 
 "Mail client"
-(defvar mail-client "wl")
+(fset 'px-mail-client 'wl)
 (defvar px-no-mail-window-configuration nil)
 (defvar px-mail-window-configuration nil)
-
-(defun px-mail-client (mail-client)
-  (if (string-equal mail-client "gnus")
-      (gnus)
-    (wl)))
 
 (defun px-prefs (arg)
   "toggle pref bits"
@@ -668,7 +626,7 @@ select 'this' or <that> (enclosed)  s-SPC
     (progn
       (setq px-no-mail-window-configuration (current-window-configuration))
       (px-prefs 0)
-      (px-mail-client mail-client))))
+      (px-mail-client))))
 
 (defun px-no-mail nil
   "switch back from mail"
@@ -815,12 +773,14 @@ select 'this' or <that> (enclosed)  s-SPC
       (set-face-attribute 'link nil :foreground "#729fcf" :underline t)
       (set-face-attribute 'link-visited nil :foreground "#3465a4" :underline t)
       (set-face-attribute 'minibuffer-prompt nil :foreground "#fce94f")
-      (set-face-attribute 'mode-line nil :background "gray15" :foreground "#eeeeee")
+      (set-face-attribute 'mode-line nil :background "gray10" :foreground "#eeeeee")
       (set-face-attribute 'mode-line-inactive nil :background "#555753" :foreground "#ffffff")
       (set-face-attribute 'mode-line-highlight nil :inverse-video t)
       (set-face-attribute 'region nil :background "#555753")
 )
-  (set-face-attribute 'default nil :background "black" :foreground "white"))
+  (set-face-attribute 'default nil :background "black" :foreground
+    "white")
+  (set-face-attribute 'mode-line nil :background "blue" :foreground "yellow"))
 
 (if (>= emacs-major-version 23)
 (set-frame-font "Monospace-12"))
@@ -870,7 +830,10 @@ select 'this' or <that> (enclosed)  s-SPC
  ;; If there is more than one, they won't work right.
  '(cperl-array-face ((t (:foreground "#fcaf3e" :weight bold))))
  '(cperl-hash-face ((t (:foreground "#fcaf3e" :slant italic :weight bold))))
+ '(mode-line ((t (:background "gray10" :foreground "#eeeeee"))))
  '(mode-line-highlight ((t (:inverse-video t))))
+ '(mumamo-background-chunk-major ((t (:background "gray15"))))
+ '(mumamo-background-chunk-submode1 ((t (:background "gray16"))))
  '(wl-highlight-folder-few-face ((t (:foreground "orange" :weight bold))))
  '(wl-highlight-folder-path-face ((t (:background "dark red" :foreground "white" :weight bold))))
  '(wl-highlight-folder-unread-face ((t (:foreground "orange" :weight bold))))
@@ -888,9 +851,6 @@ select 'this' or <that> (enclosed)  s-SPC
  '(backup-directory-alist (quote ((".*" . "~/.bkp/"))))
  '(bbdb-use-pop-up (quote (quote horiz)))
  '(canlock-password "cf5f7a7261c5832898abfc7ea08ba333a36ed78c")
- '(display-time-use-mail-icon t)
- '(gnus-group-highlight (quote (((this-buffer-is-visible (concat "*Summary " group "*")) . gnus-summary-selected) ((and mailp (= unread 0) (eq level 1)) . gnus-group-mail-1-empty) ((and mailp (eq level 1)) . gnus-group-mail-1) ((and mailp (= unread 0) (eq level 2)) . gnus-group-mail-2-empty) ((and mailp (eq level 2)) . gnus-group-mail-2) ((and mailp (= unread 0) (eq level 3)) . gnus-group-mail-3-empty) ((and mailp (eq level 3)) . gnus-group-mail-3) ((and mailp (= unread 0)) . gnus-group-mail-low-empty) ((and mailp) . gnus-group-mail-low) ((and (= unread 0) (eq level 1)) . gnus-group-news-1-empty) ((and (eq level 1)) . gnus-group-news-1) ((and (= unread 0) (eq level 2)) . gnus-group-news-2-empty) ((and (eq level 2)) . gnus-group-news-2) ((and (= unread 0) (eq level 3)) . gnus-group-news-3-empty) ((and (eq level 3)) . gnus-group-news-3) ((and (= unread 0) (eq level 4)) . gnus-group-news-4-empty) ((and (eq level 4)) . gnus-group-news-4) ((and (= unread 0) (eq level 5)) . gnus-group-news-5-empty) ((and (eq level 5)) . gnus-group-news-5) ((and (= unread 0) (eq level 6)) . gnus-group-news-6-empty) ((and (eq level 6)) . gnus-group-news-6) ((and (= unread 0)) . gnus-group-news-low-empty) (t . gnus-group-news-low))))
- '(gnus-read-active-file nil)
  '(inhibit-startup-echo-area-message (user-login-name))
  '(recentf-save-file "~/.bkp/recentf")
  '(web-vcs-default-download-directory (quote site-lisp-dir))
@@ -1000,3 +960,5 @@ select 'this' or <that> (enclosed)  s-SPC
 ;;       (help-echo "mouse-1: Select (drag to resize)\nmouse-2: Make
 ;;  current window occupy the whole frame\nmouse-3: Remove current
 ;;  window from display")))))
+
+(mail-bug-init)

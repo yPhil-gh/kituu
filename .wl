@@ -17,7 +17,6 @@
  ;; wl-folder-desktop-name #("Desktop" 0 7 (wl-folder-entity-id 0 wl-folder-is-group is-group))
  ;; wl-subscribed-mailing-list (quote ("wl@lists.airs.net"))
 
-
  ;; Offline and synchronization
  wl-plugged t
  elmo-imap4-use-modified-utf7 t

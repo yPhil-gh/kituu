@@ -82,6 +82,16 @@ alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
 #     alias vi="vim"
 # fi
 
+# Console TTY special
+case "$TERM" in
+    xterm*|rxvt*|screen*|eterm-color)
+	zoblamouche="e"
+	;;
+    *)
+	alias e="e -nw -a"
+	;;
+esac
+
 Screen () {
 # session directory
 
@@ -123,7 +133,7 @@ kituu_threshold_load=4                # CPU-meter threshold
 
 kituu_host=$(hostname -s)
 
-Kituu_bash_prompt_commands() {
+Kituu_bash_prompt_commands () {
 
     local kituu_time=$(date +%H:%M:%S)
 
@@ -138,6 +148,7 @@ local myChar=$(echo -e "\xE2\x80\xA2") # (•)
 ;;
 *)
 local myChar="|"
+echo "plop"
 ;;
 esac
 
@@ -165,8 +176,8 @@ kituu_info_up2=${kituu_load_meter}
 
 # No git for root. Bad root.
 if [[ $UID != "0" && -e ~/scripts/git-completion.bash ]] ; then
-kituu_git_status=`echo $(__git_ps1) | sed 's/^ *//'`
-kituu_info_up3=${kituu_git_status}
+    kituu_git_status=`echo $(__git_ps1) | sed 's/^ *//'`
+    kituu_info_up3=${kituu_git_status}
 fi
 
 # The max. lengh of the pwd is half of the screen width - it should be automatically computed from the other elements (promptsize-path-some air)
@@ -174,37 +185,37 @@ if [ "${HOSTTYPE}" = "arm" ]; then
     pwdmaxlen=24
 else
     # let pwdmaxlen=${COLUMNS}/2
-(( pwdmaxlen = COLUMNS /2 ))
+    (( pwdmaxlen = COLUMNS /2 ))
 fi
 
 # Do not edit below or you are likely to be eaten by a grue - believe me lil buddy you'll think that everything works but it secretly will not ;p
 local dir=${PWD##*/}
-    pwdmaxlen=$(( ( pwdmaxlen < ${#dir} ) ? ${#dir} : pwdmaxlen ))
+pwdmaxlen=$(( ( pwdmaxlen < ${#dir} ) ? ${#dir} : pwdmaxlen ))
 
-    if [ "${BASH_VERSINFO}" -gt "3" ] ; then # We are using BASH > 4
-	kituu_live_pwd=${PWD/#$HOME/\~}
-    else
-	kituu_live_pwd=${PWD}
-    fi
+if [ "${BASH_VERSINFO}" -gt "3" ] ; then # We are using BASH > 4
+    kituu_live_pwd=${PWD/#$HOME/\~}
+else
+    kituu_live_pwd=${PWD}
+fi
 
-    local pwdoffset=$(( ${#kituu_live_pwd} - pwdmaxlen ))
+local pwdoffset=$(( ${#kituu_live_pwd} - pwdmaxlen ))
 
-    if [ ${pwdoffset} -gt "0" ]
-    then
-	kituu_live_pwd=${kituu_live_pwd:$pwdoffset:$pwdmaxlen}
-	kituu_live_pwd=${kituu_trunc_symbol}/${kituu_live_pwd#*/}
-    fi
+if [ ${pwdoffset} -gt "0" ]
+then
+    kituu_live_pwd=${kituu_live_pwd:$pwdoffset:$pwdmaxlen}
+    kituu_live_pwd=${kituu_trunc_symbol}/${kituu_live_pwd#*/}
+fi
 
-    promptsize=`echo -n "┌─($kituu_user@$kituu_host)($kituu_info_up1)($kituu_info_up2_size)$kituu_git_status($kituu_live_pwd)─┐"`
+promptsize=`echo -n "┌─($kituu_user@$kituu_host)($kituu_info_up1)($kituu_info_up2_size)$kituu_git_status($kituu_live_pwd)─┐"`
 
-    let fillsize=${COLUMNS}-${#promptsize}
-    kituu_fill=
+let fillsize=${COLUMNS}-${#promptsize}
+kituu_fill=
 
-    while [ "$fillsize" -gt "0" ]
-    do
-	kituu_fill=${kituu_fill}${kituu_line_char}
-	let fillsize=${fillsize}-1
-    done
+while [ "$fillsize" -gt "0" ]
+do
+    kituu_fill=${kituu_fill}${kituu_line_char}
+    let fillsize=${fillsize}-1
+done
 }
 
 kituu_bash_prompt() {
