@@ -12,21 +12,21 @@
 (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
 (autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
 
-;; (load "~/.emacs.d/lisp/nxhtml/autostart.el")
+(load "~/.emacs.d/lisp/nxhtml/autostart.el")
 
 (eval-and-compile
 (require 'tabbar nil t)
 (require 'mail-bugger nil t)
 (require 'bbdb nil t)
-(require 'php-mode nil t)
-(require 'tabkey2 nil t)
+;; (require 'php-mode nil t)
+;; (require 'tabkey2 nil t)
 (require 'cl))
 
 (mail-bugger-init)
 
 ;; Required by my iswitchb hack
 (require 'edmacro)
-(autoload 'php-mode "php-mode" t)
+;; (autoload 'php-mode "php-mode" t)
 
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
@@ -422,7 +422,15 @@ inside html tags."
 
 ;; Keys! ______________________________________________________________________
 
-(global-set-key (kbd "²") 'hippie-expand) ; Hippie-expand everywhere
+(defvar px-keys-minor-mode-map (make-keymap) "px-keys-minor-mode keymap.")
+
+(define-key px-keys-minor-mode-map (kbd "²") 'hippie-expand) ; Hippie-expand everywhere
+
+(define-minor-mode px-keys-minor-mode
+  "A minor mode so that my key settings override annoying major modes."
+  t " px" 'px-keys-minor-mode-map)
+
+(px-keys-minor-mode 1)
 
 (define-key global-map [(meta up)] '(lambda() (interactive) (scroll-other-window -1)))
 (define-key global-map [(meta down)] '(lambda() (interactive) (scroll-other-window 1)))
@@ -878,6 +886,8 @@ select 'this' or <that> (enclosed)  s-SPC
  '(cperl-hash-face ((t (:foreground "#fcaf3e" :slant italic :weight bold))))
  '(mode-line ((t (:background "gray10" :foreground "#eeeeee"))))
  '(mode-line-highlight ((t (:inverse-video t))))
+ '(mumamo-background-chunk-major ((t (:background "gray15"))))
+ '(mumamo-background-chunk-submode1 ((t (:background "gray16"))))
  '(wl-highlight-folder-few-face ((t (:foreground "orange" :weight bold))))
  '(wl-highlight-folder-path-face ((t (:background "dark red" :foreground "white" :weight bold))))
  '(wl-highlight-folder-unread-face ((t (:foreground "orange" :weight bold))))

@@ -195,7 +195,7 @@ Must be an XPM (use Gimp)."
 
 (defmacro mail-bugger-shell-command (cmd callback account)
   "Run CMD asynchronously, then run CALLBACK"
-  `(let* ((buf (generate-new-buffer  (concat "*mail-bugger-" ,account "*")))
+  `(let* ((buf (generate-new-buffer (concat "*mail-bugger-" ,account "*")))
           (p (start-process-shell-command ,cmd buf ,cmd)))
      (set-process-sentinel
       p
