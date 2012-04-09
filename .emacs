@@ -22,8 +22,6 @@
 ;; (require 'tabkey2 nil t)
 (require 'cl))
 
-(mail-bug-init)
-
 ;; Required by my iswitchb hack
 (require 'edmacro)
 ;; (autoload 'php-mode "php-mode" t)
@@ -161,23 +159,6 @@
   (let ((q (buffer-substring-no-properties start end)))
     (browse-url (concat "http://www.google.com/search?&q="
 			(url-hexify-string q)))))
-
-;; (autoload 'zap-up-to-char "misc"
-;;   "Kill up to, but not including ARGth occurrence of CHAR.
-;;   \(fn arg char)"
-;;   'interactive)
-
-(defun swap-buffers-in-windows-px ()
-  "Put the buffer from the selected window in next window, and vice versa"
-  (interactive)
-  (let* ((this (selected-window))
-	 (other (next-window))
-	 (this-buffer (window-buffer this))
-	 (other-buffer (window-buffer other)))
-    (set-window-buffer other this-buffer)
-    (set-window-buffer this other-buffer)
-    )
-  )
 
 (defun select-text-in-quote-px ()
   "Select text between the nearest left and right delimiters."
@@ -979,3 +960,5 @@ select 'this' or <that> (enclosed)  s-SPC
 ;;       (help-echo "mouse-1: Select (drag to resize)\nmouse-2: Make
 ;;  current window occupy the whole frame\nmouse-3: Remove current
 ;;  window from display")))))
+
+(mail-bug-init)
