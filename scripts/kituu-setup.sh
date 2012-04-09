@@ -50,11 +50,11 @@ fi
 
 if [ ! -e $lispdir/nxhtml/ ] ; then
     echo -e $sep"nXhtml ($lispdir/nxhtml/)"
-    cd $lispdir/nxhtml/ && wget http://ourcomments.org/Emacs/DL/elisp/nxhtml/zip/nxhtml-2.08-100425.zip && unzip nxhtml-2.08-100425.zip
+    cd $lispdir/ && wget http://ourcomments.org/Emacs/DL/elisp/nxhtml/zip/nxhtml-2.08-100425.zip && unzip nxhtml-2.08-100425.zip
 fi
 
-echo -e $sep"Tabbar ($lispdir/tabbar/)"
 if [ ! -e $lispdir/tabbar/ ] ; then
+    echo -e $sep"Tabbar ($lispdir/tabbar/)"
     cd $lispdir && git clone https://github.com/dholm/tabbar.git
 else
     cd $lispdir/tabbar/ && git pull

@@ -16,13 +16,13 @@
 
 (eval-and-compile
 (require 'tabbar nil t)
-(require 'mail-bugger nil t)
+(require 'mail-bug nil t)
 (require 'bbdb nil t)
 ;; (require 'php-mode nil t)
 ;; (require 'tabkey2 nil t)
 (require 'cl))
 
-(mail-bugger-init)
+(mail-bug-init)
 
 ;; Required by my iswitchb hack
 (require 'edmacro)
@@ -55,30 +55,6 @@
 ;; (defvar gnus-bury-window-configuration)
 (defvar px-minibuffer-history)
 (defvar savehist-file)
-
-
-;; ;; El-get! ____________________________________________________________________
-
-;; (setq el-get-dir (concat user-emacs-directory "el-get/"))
-;; (add-to-list 'load-path (concat user-emacs-directory "el-get/el-get"))
-;; (unless (require 'el-get nil t)
-;;   (url-retrieve
-;;    "https://raw.github.com/dimitri/el-get/master/el-get-install.el"
-;;    (lambda (s)
-;;      ;; (end-of-buffer)
-;;      (goto-char (point-max))
-;;      (eval-print-last-sexp))))
-
-;; ;; REMEMBER to put your el-get installed packages here, if you want to use this .emacs on another machine
-;; (setq my-packages
-;;       (append
-;;        '(linum-off php-mode-improved haml-mode cperl-mode tail)
-;;        (mapcar 'el-get-source-name el-get-sources)))
-
-;; ;; (declare-function tabbar-mode "tabbar.el")
-;; (declare-function el-get "el-get.el")
-;; (el-get 'sync my-packages)
-
 
 ;; Server! ____________________________________________________________________
 
@@ -204,13 +180,7 @@
   )
 
 (defun select-text-in-quote-px ()
-  "Select text between the nearest left and right delimiters.
-Delimiters are paired characters: For practical purposes, it also
-includes double straight quote , but not curly single quote
-matching pairs, because that is often used as apostrophy. It also
-consider both left and right angle brackets <> as either
-beginning or ending pair, so that it is easy to get content
-inside html tags."
+  "Select text between the nearest left and right delimiters."
   (interactive)
   (let (b1 b2)
     (skip-chars-backward "^<>([{“「『‹«（〈《〔【〖⦗〘⦅〚⦃\"")
@@ -496,7 +466,7 @@ Emacs buffer are those starting with “*”."
      )
     )))
 
-(setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
+;; (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
 
 ;; (if (not (search "*Group*" (buffer-name)))
 ;;      (setq px-no-gnus-window-configuration (current-window-configuration))
@@ -647,14 +617,9 @@ select 'this' or <that> (enclosed)  s-SPC
 (defvar px-toggle-mail-key [(meta f1)])
 
 "Mail client"
-(defvar mail-client "wl")
+(fset 'px-mail-client 'wl)
 (defvar px-no-mail-window-configuration nil)
 (defvar px-mail-window-configuration nil)
-
-(defun px-mail-client (mail-client)
-  (if (string-equal mail-client "gnus")
-      (gnus)
-    (wl)))
 
 (defun px-prefs (arg)
   "toggle pref bits"
@@ -680,7 +645,7 @@ select 'this' or <that> (enclosed)  s-SPC
     (progn
       (setq px-no-mail-window-configuration (current-window-configuration))
       (px-prefs 0)
-      (px-mail-client mail-client))))
+      (px-mail-client))))
 
 (defun px-no-mail nil
   "switch back from mail"
@@ -905,9 +870,6 @@ select 'this' or <that> (enclosed)  s-SPC
  '(backup-directory-alist (quote ((".*" . "~/.bkp/"))))
  '(bbdb-use-pop-up (quote (quote horiz)))
  '(canlock-password "cf5f7a7261c5832898abfc7ea08ba333a36ed78c")
- '(display-time-use-mail-icon t)
- '(gnus-group-highlight (quote (((this-buffer-is-visible (concat "*Summary " group "*")) . gnus-summary-selected) ((and mailp (= unread 0) (eq level 1)) . gnus-group-mail-1-empty) ((and mailp (eq level 1)) . gnus-group-mail-1) ((and mailp (= unread 0) (eq level 2)) . gnus-group-mail-2-empty) ((and mailp (eq level 2)) . gnus-group-mail-2) ((and mailp (= unread 0) (eq level 3)) . gnus-group-mail-3-empty) ((and mailp (eq level 3)) . gnus-group-mail-3) ((and mailp (= unread 0)) . gnus-group-mail-low-empty) ((and mailp) . gnus-group-mail-low) ((and (= unread 0) (eq level 1)) . gnus-group-news-1-empty) ((and (eq level 1)) . gnus-group-news-1) ((and (= unread 0) (eq level 2)) . gnus-group-news-2-empty) ((and (eq level 2)) . gnus-group-news-2) ((and (= unread 0) (eq level 3)) . gnus-group-news-3-empty) ((and (eq level 3)) . gnus-group-news-3) ((and (= unread 0) (eq level 4)) . gnus-group-news-4-empty) ((and (eq level 4)) . gnus-group-news-4) ((and (= unread 0) (eq level 5)) . gnus-group-news-5-empty) ((and (eq level 5)) . gnus-group-news-5) ((and (= unread 0) (eq level 6)) . gnus-group-news-6-empty) ((and (eq level 6)) . gnus-group-news-6) ((and (= unread 0)) . gnus-group-news-low-empty) (t . gnus-group-news-low))))
- '(gnus-read-active-file nil)
  '(inhibit-startup-echo-area-message (user-login-name))
  '(recentf-save-file "~/.bkp/recentf")
  '(web-vcs-default-download-directory (quote site-lisp-dir))
