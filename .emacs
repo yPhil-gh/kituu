@@ -247,14 +247,14 @@
 (global-linum-mode t)
 ;; (global-smart-tab-mode 1)
 ;; (smart-tab-mode t)
-(tabkey2-mode t)
+;; (tabkey2-mode t)
 (global-font-lock-mode t)
 (tool-bar-mode 0)
 (set-scroll-bar-mode `right)
 (delete-selection-mode t)
 (auto-fill-mode t)
 (recentf-mode 1)
-(mouse-avoidance-mode 'cat-and-mouse)
+;; (mouse-avoidance-mode 'cat-and-mouse)
 (iswitchb-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -270,6 +270,9 @@
 (add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)
 
 (setq-default cursor-type 'bar)
+
+(setq c-default-style "bsd"
+      c-basic-offset 4)
 
 ;; Vars! ______________________________________________________________________
 
@@ -599,7 +602,7 @@ select 'this' or <that> (enclosed)  s-SPC
 
 "Mail client"
 (fset 'px-mail-client 'wl)
-(defvar px-no-mail-window-configuration nil)
+(defvar px-no-mail-window-configuration (current-window-configuration))
 (defvar px-mail-window-configuration nil)
 
 (defun px-prefs (arg)
@@ -620,10 +623,12 @@ select 'this' or <that> (enclosed)  s-SPC
   (if (or (get-buffer "Folder")		; Wanderlust
 	  (get-buffer "*Group*"))	; Gnus
       (progn
+	(message "go!")
 	(setq px-no-mail-window-configuration (current-window-configuration))
 	(px-prefs 0)
 	(set-window-configuration px-mail-window-configuration))
     (progn
+      (message "load!")
       (setq px-no-mail-window-configuration (current-window-configuration))
       (px-prefs 0)
       (px-mail-client))))
@@ -631,6 +636,7 @@ select 'this' or <that> (enclosed)  s-SPC
 (defun px-no-mail nil
   "switch back from mail"
   (interactive)
+  (message "back!")
   (setq px-mail-window-configuration (current-window-configuration))
   (set-window-configuration px-no-mail-window-configuration)
   (px-prefs t))
@@ -640,6 +646,12 @@ select 'this' or <that> (enclosed)  s-SPC
 
 (eval-after-load "wl-summary"
   '(define-key wl-summary-mode-map px-toggle-mail-key 'px-no-mail))
+
+(eval-after-load "wl-draft"
+  '(define-key wl-draft-mode-map px-toggle-mail-key 'px-no-mail))
+
+(eval-after-load "mime-view-mode"
+  '(define-key mime-view-mode-default-map px-toggle-mail-key 'px-no-mail))
 
 ;; (eval-after-load "wl-draft"
 ;;   '(define-key wl-draft-mode-map px-toggle-mail-key 'px-no-mail))
@@ -659,6 +671,8 @@ select 'this' or <that> (enclosed)  s-SPC
   "reset my fucking prefs"
   (interactive)
   (px-prefs 0))
+
+(add-hook 'perl-mode-hook 'cperl-mode)
 
 ;; wl-draft-send-and-exit
 ;; (add-hook 'wl-summary-toggle-disp-off-hook 'Reset-prefs)
@@ -834,6 +848,7 @@ select 'this' or <that> (enclosed)  s-SPC
  '(mode-line-highlight ((t (:inverse-video t))))
  '(mumamo-background-chunk-major ((t (:background "gray15"))))
  '(mumamo-background-chunk-submode1 ((t (:background "gray16"))))
+ '(mumamo-region ((t nil)))
  '(wl-highlight-folder-few-face ((t (:foreground "orange" :weight bold))))
  '(wl-highlight-folder-path-face ((t (:background "dark red" :foreground "white" :weight bold))))
  '(wl-highlight-folder-unread-face ((t (:foreground "orange" :weight bold))))

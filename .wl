@@ -47,8 +47,8 @@
  wl-folder-summary-line-format-alist
  '(
    ;; ("^%" . "%T%P%Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s")
-   ("^%" . "%P│ %Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s")
-   ("^-" . "%T%P%Y/%M/%D (%W) %h:%m %[%17(%f %c%)%] %t%s")
+   ("^%" . "%P│| %Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s")
+   ;; ("^-" . "%T%P%Y/%M/%D (%W) %h:%m %[%17(%f %c%)%] %t%s")
 )
 
  wl-message-window-size '(4 . 6)

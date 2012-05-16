@@ -18,6 +18,7 @@
 [[ $UID != "0" && -e ~/scripts/git-completion.bash ]] && . ~/scripts/git-completion.bash
 
 GIT_PS1_SHOWDIRTYSTATE=true
+export UNISONLOCALHOSTNAME=moe
 
 kituu_user=$(whoami)
 kituu_processes=$(ps ax | wc -l | tr -d " ")
