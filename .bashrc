@@ -138,6 +138,7 @@ Kituu_bash_prompt_commands () {
 
     history -a;
 
+
     local kituu_time=$(date +%H:%M:%S)
 
     local kituu_load_average=$(uptime | awk -F 'load average:' '{ print $2 }' | (cut -d, -f1) | sed 's/ //g' | awk '{printf("%d\n",$1 + 0.5)}')
