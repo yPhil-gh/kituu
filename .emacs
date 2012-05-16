@@ -650,8 +650,7 @@ select 'this' or <that> (enclosed)  s-SPC
 (eval-after-load "wl-draft"
   '(define-key wl-draft-mode-map px-toggle-mail-key 'px-no-mail))
 
-(eval-after-load "mime-view-mode"
-  '(define-key mime-view-mode-default-map px-toggle-mail-key 'px-no-mail))
+;; (define-key mime-view-mode-default-map px-toggle-mail-key 'px-no-mail)
 
 ;; (eval-after-load "wl-draft"
 ;;   '(define-key wl-draft-mode-map px-toggle-mail-key 'px-no-mail))
