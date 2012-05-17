@@ -72,6 +72,10 @@
   (interactive)
   (switch-to-buffer "*scratch*"))
 
+(defun px-kill-now ()
+  (interactive)
+  (kill-buffer (current-buffer)))
+
 (defun this-buffer-is-visible (buffer)
   "Test if BUFFER is actually on screen"
   (if (get-buffer buffer)
@@ -238,7 +242,6 @@
 	  '(lambda ()
 	     (Session-save-px)))
 
-
 ;; Modes! ______________________________________________________________________
 ;; (display-time-mode t)
 (tabbar-mode t)
@@ -247,7 +250,7 @@
 (global-linum-mode t)
 ;; (global-smart-tab-mode 1)
 ;; (smart-tab-mode t)
-;; (tabkey2-mode t)
+(tabkey2-mode t)
 (global-font-lock-mode t)
 (tool-bar-mode 0)
 (set-scroll-bar-mode `right)
@@ -257,6 +260,7 @@
 ;; (mouse-avoidance-mode 'cat-and-mouse)
 (iswitchb-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
+(setq suggest-key-bindings 1) ; wait 5 seconds
 
 (defun iswitchb-local-keys ()
   (mapc (lambda (K)
@@ -405,7 +409,11 @@
 (global-set-key (kbd "s-r") 'replace-string)
 (global-set-key (kbd "s-²") (kbd "C-x b <return>")) ; Keyboard macro!
 (global-set-key (kbd "<C-kp-add>") 'kmacro-end-and-call-macro) ; Keyboard macro!
-(global-set-key (kbd "s-t") 'sgml-tag)
+;; (global-set-key (kbd "s-t") 'sgml-tag)
+(global-set-key (kbd "s-b") 'px-kill-now)
+
+;; (define-key global-map [s-k] 'kill-buffer)
+
 
 (global-set-key (kbd "C-f") 'isearch-forward)
 (global-set-key (kbd "C-d") nil)	; I kept deleting stuff
@@ -505,9 +513,9 @@ The optional second argument indicates whether to kill internal buffers too."
     (comment-dwim nil)) ;; [un]comment
   (deactivate-mark)) ;; don't mess with selection
 
-;; Help ______________________________________________________________________
+;; Help! ______________________________________________________________________
 
-(defun Help-px ()
+(defun px-help-emacs ()
   (interactive)
   (princ "* My EMACS cheat cheet
 
@@ -535,13 +543,38 @@ Search selected imap folder         G G
 Mark thread read                    T k
 
 *** PHP-MODE
-C-c C-m
-C-c RET                             Browse PHP manual in a Web browser.
-C-c C-f                             Search PHP manual using identifier
-at point.
+C-c C-f                             Search PHP manual for point.
+C-c RET / C-c C-m                   Browse PHP manual in a Web browser.
+
+*** MISC EDITING
+M-c		                    capitalize-word		Capitalize the first letter of the current word.
+M-u		                    upcase-word		Make the word all uppercase.
+M-l		                    downcase-word		Make the word all lowercase.
+C-x C-l		                    downcase-region		Make the region all lowercase.
+C-x C-u		                    uppercase-region	Make the region all uppercase.
+
+*** WANDERLUST
+T                                   Toggle Threading
+d                                   Dispose MSG (mark)
+D                                   Delete MSG (mark)
+rx                                  Execute marks
+
+
+*** MACROS
+C-x (		                    start-kbd-macro		Start a new macro definition.
+C-x )		                    end-kbd-macro		End the current macro definition.
+C-x e		                    call-last-kbd-macro	Execute the last defined macro.
+M-(number) C-x e	            call-last-kbd-maco	Do that last macro (number times).
+C-u C-x (	                    stat-kbd-macro		Execute last macro and add to it.
+		                    name-last-kbd-macro	Name the last macro before saving it.
+		                    insert-last-keyboard-macro	Insert the macro you made into a file.
+		                    load-file			Load a file with macros in it.
+C-x q		                    kbd-macro-query		Insert a query into a keyboard macro.
+M-C-c		                    exit-recursive-edit		Get the hell out of a recursive edit.
 
 *** THIS VERY EMACS CONFIG
 Save buffer                         M-s
+Kill current buffer                 s-b
 Undo                                C-z
 Open file                           C-o
 Open recent file                    M-o
@@ -554,6 +587,44 @@ Spell-check buffer                  F7
 Word-wrap toggle                    F10
 enclose region in <tag> (sgml-tag)  s-t RET tag [ args... ]
 select 'this' or <that> (enclosed)  s-SPC
+
+*** VERSION CONTROL
+C-x v v                                               vc-next-action
+perform the next logical control operation on file
+C-x v i                                               vc-register
+add a new file to version control
+
+C-x v +                                               vc-update
+Get latest changes from version control
+C-x v ~                                               vc-version-other-window
+look at other revisions
+C-x v =                                               vc-diff
+diff with other revisions
+C-x v u                                               vc-revert-buffer
+undo checkout
+C-x v c                                               vc-cancel-version
+delete latest rev (look at an old rev and re-check it)
+
+C-x v d                                               vc-directory
+show all files which are not up to date
+C-x v g                                               vc-annotate
+show when each line in a tracked file was added and by whom
+C-x v s                                               vc-create-snapshot
+tag all the files with a symbolic name
+C-x v r                                               vc-retrieve-snapshot
+undo checkouts and return to a snapshot with a symbolic name
+
+C-x v l                                               vc-print-log
+show log (not in ChangeLog format)
+C-x v a                                               vc-update-change-log
+update ChangeLog
+
+C-x v m     vc-merge
+C-x v h     vc-insert-headers
+
+M-x                                                   vc-resolve-conflicts
+ediff-merge session on a file with conflict markers
+
 "
          (generate-new-buffer "px-help-emacs"))
   (switch-to-buffer "px-help-emacs")
@@ -645,7 +716,10 @@ select 'this' or <that> (enclosed)  s-SPC
   '(define-key wl-folder-mode-map px-toggle-mail-key 'px-no-mail))
 
 (eval-after-load "wl-summary"
-  '(define-key wl-summary-mode-map px-toggle-mail-key 'px-no-mail))
+  '(progn
+     (define-key wl-summary-mode-map [f3] 'wl-summary-pick)
+     (define-key wl-summary-mode-map px-toggle-mail-key 'px-no-mail)
+     (define-key mime-view-mode-default-map px-toggle-mail-key 'px-no-mail)))
 
 (eval-after-load "wl-draft"
   '(define-key wl-draft-mode-map px-toggle-mail-key 'px-no-mail))
@@ -843,18 +917,21 @@ select 'this' or <that> (enclosed)  s-SPC
  ;; If there is more than one, they won't work right.
  '(cperl-array-face ((t (:foreground "#fcaf3e" :weight bold))))
  '(cperl-hash-face ((t (:foreground "#fcaf3e" :slant italic :weight bold))))
+ '(highlight ((t (:background "dark red"))))
  '(mode-line ((t (:background "gray10" :foreground "#eeeeee"))))
  '(mode-line-highlight ((t (:inverse-video t))))
  '(mumamo-background-chunk-major ((t (:background "gray15"))))
  '(mumamo-background-chunk-submode1 ((t (:background "gray16"))))
  '(mumamo-region ((t nil)))
- '(wl-highlight-folder-few-face ((t (:foreground "orange" :weight bold))))
+ '(wl-highlight-folder-few-face ((t (:foreground "gainsboro" :weight bold))))
+ '(wl-highlight-folder-many-face ((t (:foreground "AntiqueWhite3" :weight extra-bold))))
  '(wl-highlight-folder-path-face ((t (:background "dark red" :foreground "white" :weight bold))))
- '(wl-highlight-folder-unread-face ((t (:foreground "orange" :weight bold))))
- '(wl-highlight-folder-zero-face ((t (:foreground "orange"))))
+ '(wl-highlight-folder-unread-face ((t (:foreground "light gray" :weight bold))))
+ '(wl-highlight-folder-zero-face ((t (:foreground "AntiqueWhite2"))))
  '(wl-highlight-summary-answered-face ((t (:foreground "khaki"))))
- '(wl-highlight-summary-displaying-face ((t (:background "dark red" :foreground "white" :weight bold))))
- '(wl-highlight-summary-new-face ((t (:foreground "white" :weight ultra-bold)))))
+ '(wl-highlight-summary-displaying-face ((t (:background "dark red" :foreground "yellow" :weight bold))))
+ '(wl-highlight-summary-new-face ((t (:foreground "white" :weight ultra-bold))))
+ '(wl-highlight-summary-thread-top-face ((t (:foreground "gray")))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -865,6 +942,7 @@ select 'this' or <that> (enclosed)  s-SPC
  '(backup-directory-alist (quote ((".*" . "~/.bkp/"))))
  '(bbdb-use-pop-up (quote (quote horiz)))
  '(canlock-password "cf5f7a7261c5832898abfc7ea08ba333a36ed78c")
+ '(epa-popup-info-window nil)
  '(inhibit-startup-echo-area-message (user-login-name))
  '(recentf-save-file "~/.bkp/recentf")
  '(web-vcs-default-download-directory (quote site-lisp-dir))
@@ -872,8 +950,14 @@ select 'this' or <that> (enclosed)  s-SPC
  '(wl-draft-buffer-style (quote keep))
  '(wl-draft-reply-buffer-style (quote keep))
  '(wl-message-mode-line-format "")
+ '(wl-message-truncate-lines t)
+ '(wl-prefetch-threshold 300000)
  '(wl-subscribed-mailing-list (quote ("wl@lists.airs.net")))
- '(wl-summary-mode-line-format ""))
+ '(wl-summary-default-view (quote sequence))
+ '(wl-summary-exit-next-move nil)
+ '(wl-summary-mode-line-format "")
+ '(wl-summary-recenter nil)
+ '(wl-summary-width 150))
 
 ;; Garbage ______________________________________________________________________
 

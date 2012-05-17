@@ -44,18 +44,30 @@
  wl-stay-folder-window t
  wl-folder-window-width 25
  wl-summary-always-sticky-folder-list t
- wl-folder-summary-line-format-alist
- '(
-   ;; ("^%" . "%T%P%Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s")
-   ;; ("^%" . "%P│ %Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s") works pretty good
-   ("^%" . "%P│ %Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s")
-   ;; ("^-" . "%T%P%Y/%M/%D (%W) %h:%m %[%17(%f %c%)%] %t%s")
-)
+;;  wl-folder-summary-line-format-alist
+;;  '(
+;;    ;; ("^%" . "%T%P%Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s")
+;;    ;; ("^%" . "%P│ %Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s") works pretty good
+;;    ("^%" . "%P│ %Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s")
+;;    ;; ("^-" . "%T%P%Y/%M/%D (%W) %h:%m %[%17(%f %c%)%] %t%s")
+;; )
 
- wl-message-window-size '(4 . 6)
+ wl-message-window-size '(3 . 7)
  wl-auto-select-first t
 
 )
+
+(setq wl-summary-line-format
+;; "%n%T%P %D/%M (%W) %h:%m %t%[%25(%c %f%) %] %s"
+"%P│ %Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s"
+)
+
+;; ;; highlight the current line; set a custom face, so we can
+;; ;; recognize from the normal marking (selection)
+;; (defface hl-line '((t (:background "Gray")))
+;;   "Face to use for `hl-line-face'." :group 'hl-line)
+;; (setq hl-line-face 'hl-line)
+;; (global-hl-line-mode t) ; turn it on for all modes by default
 
 (setq
  wl-message-ignored-field-list '("^.*:")
