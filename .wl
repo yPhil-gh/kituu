@@ -42,7 +42,7 @@
 
 ;; Visual
  wl-stay-folder-window t
- wl-folder-window-width 25
+ wl-folder-window-width 28
  wl-summary-always-sticky-folder-list t
 ;;  wl-folder-summary-line-format-alist
 ;;  '(
@@ -62,12 +62,8 @@
 "%P│ %Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s"
 )
 
-;; ;; highlight the current line; set a custom face, so we can
-;; ;; recognize from the normal marking (selection)
-;; (defface hl-line '((t (:background "Gray")))
-;;   "Face to use for `hl-line-face'." :group 'hl-line)
-;; (setq hl-line-face 'hl-line)
-;; (global-hl-line-mode t) ; turn it on for all modes by default
+(add-hook 'wl-summary-mode-hook 'hl-line-mode)
+(add-hook 'wl-folder-mode-hook 'hl-line-mode)
 
 (setq
  wl-message-ignored-field-list '("^.*:")
