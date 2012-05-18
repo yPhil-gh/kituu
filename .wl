@@ -62,8 +62,10 @@
 "%P│ %Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s"
 )
 
-(add-hook 'wl-summary-mode-hook 'hl-line-mode)
+(add-hook 'recentl-dialog-mode-hook 'hl-line-mode)
 (add-hook 'wl-folder-mode-hook 'hl-line-mode)
+
+;; (setq-default cursor-type 'bar)
 
 (setq
  wl-message-ignored-field-list '("^.*:")

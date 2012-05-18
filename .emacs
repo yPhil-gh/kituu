@@ -12,19 +12,38 @@
 (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
 (autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
 
-(load "~/.emacs.d/lisp/nxhtml/autostart.el")
+(if (< emacs-major-version 24)
+    (progn
+      (load "~/.emacs.d/lisp/nxhtml/autostart.el")
+      (tabkey2-mode t))
+  (progn
+    (require 'php-mode nil t)
+    (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
+    ;; (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
+    ;; (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode)
+))
+
+(setq tabbar-ruler-global-tabbar 't) ; If you want tabbar
+;; (setq tabbar-ruler-global-ruler 't) ; if you want a global ruler
+;; (setq tabbar-ruler-popup-menu 't) ; If you want a popup menu.
+;; (setq tabbar-ruler-popup-toolbar 't) ; If you want a popup toolbar
+
+(require 'tabbar-ruler)
+
+(if (>= emacs-major-version 23)
+    (set-frame-font "Monospace-12"))
+
+(setq auto-mode-alist (cons '(".php" . php-mode) auto-mode-alist))
 
 (eval-and-compile
 (require 'tabbar nil t)
 (require 'mail-bug nil t)
 (require 'bbdb nil t)
-;; (require 'php-mode nil t)
 ;; (require 'tabkey2 nil t)
 (require 'cl))
 
 ;; Required by my iswitchb hack
 (require 'edmacro)
-;; (autoload 'php-mode "php-mode" t)
 
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
@@ -91,7 +110,6 @@
     (byte-compile-file user-init-file)
     (message "%s compiled" user-init-file)
     ))
-
 
 (defun my-emacs-lisp-mode-hook ()
   (when (string-match "\\.emacs" (buffer-name))
@@ -250,7 +268,6 @@
 (global-linum-mode t)
 ;; (global-smart-tab-mode 1)
 ;; (smart-tab-mode t)
-(tabkey2-mode t)
 (global-font-lock-mode t)
 (tool-bar-mode 0)
 (set-scroll-bar-mode `right)
@@ -261,6 +278,9 @@
 (iswitchb-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq suggest-key-bindings 1) ; wait 5 seconds
+
+;; This is harsh but just, shortens the war and saves lives.
+(setq resize-mini-windows nil)
 
 (defun iswitchb-local-keys ()
   (mapc (lambda (K)
@@ -328,6 +348,7 @@
 
 ;; Hooks! _____________________________________________________________________
 
+(add-hook 'wl-summary-mode-hook 'hl-line-mode)
 (add-hook 'perl-mode-hook 'cperl-mode)
 
 (add-hook 'cperl-mode-hook
@@ -439,24 +460,24 @@
 (global-set-key (kbd "M-o") 'recentf-open-files)
 (global-set-key (kbd "M-d") 'px-toggle-comments)
 
-(defun tabbar-buffer-groups ()
-  "Return the list of group names the current buffer belongs to.
-This function is a custom function for tabbar-mode's tabbar-buffer-groups.
-This function groups all buffers into 3 groups:
-Those Dired, those user buffer, and those emacs buffer.
-Emacs buffer are those starting with “*”."
-  (list
-   (cond
-    ((string-equal "*" (substring (buffer-name) 0 1))
-     "Emacs Buffer"
-     )
-    ((eq major-mode 'dired-mode)
-     "Dired"
-     )
-    (t
-     "User Buffer"
-     )
-    )))
+;; (defun tabbar-buffer-groups ()
+;;   "Return the list of group names the current buffer belongs to.
+;; This function is a custom function for tabbar-mode's tabbar-buffer-groups.
+;; This function groups all buffers into 3 groups:
+;; Those Dired, those user buffer, and those emacs buffer.
+;; Emacs buffer are those starting with “*”."
+;;   (list
+;;    (cond
+;;     ((string-equal "*" (substring (buffer-name) 0 1))
+;;      "Emacs Buffer"
+;;      )
+;;     ((eq major-mode 'dired-mode)
+;;      "Dired"
+;;      )
+;;     (t
+;;      "User Buffer"
+;;      )
+;;     )))
 
 ;; (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
 
@@ -552,6 +573,11 @@ M-u		                    upcase-word		Make the word all uppercase.
 M-l		                    downcase-word		Make the word all lowercase.
 C-x C-l		                    downcase-region		Make the region all lowercase.
 C-x C-u		                    uppercase-region	Make the region all uppercase.
+
+*** RECTANGLES
+C-x r k/c                           Kill/clear rectangle
+C-x r y                             yank-rectangle (upper left corner at point)
+C-x r t string <RET>                Replace rectangle contents with string on each line (string-rectangle).
 
 *** WANDERLUST
 T                                   Toggle Threading
@@ -869,42 +895,39 @@ ediff-merge session on a file with conflict markers
     "white")
   (set-face-attribute 'mode-line nil :background "blue" :foreground "yellow"))
 
-(if (>= emacs-major-version 23)
-(set-frame-font "Monospace-12"))
+;; (set-face-attribute 'tabbar-default nil
+;; 		    :inherit nil
+;; 		    :height 110
+;; 		    :weight 'normal
+;; 		    :width 'normal
+;; 		    :slant 'normal
+;; 		    :underline nil
+;; 		    :strike-through nil
+;; 		    :stipple nil
+;; 		    :background "gray80"
+;; 		    :foreground "black"
+;; 		    :box nil
+;; 		    ;; :family "Lucida Grande"
+;; 		    )
 
-(set-face-attribute 'tabbar-default nil
-		    :inherit nil
-		    :height 110
-		    :weight 'normal
-		    :width 'normal
-		    :slant 'normal
-		    :underline nil
-		    :strike-through nil
-		    :stipple nil
-		    :background "gray80"
-		    :foreground "black"
-		    :box nil
-		    ;; :family "Lucida Grande"
-		    )
+;; (set-face-attribute 'tabbar-selected nil
+;; 		    :background "#2e3436"
+;; 		    :foreground "red"
+;; 		    :inherit 'tabbar-default
+;; 		    :box '(:line-width 3 :color "#2e3436" :style nil))
 
-(set-face-attribute 'tabbar-selected nil
-		    :background "#2e3436"
-		    :foreground "red"
-		    :inherit 'tabbar-default
-		    :box '(:line-width 3 :color "#2e3436" :style nil))
+;; (set-face-attribute 'tabbar-unselected nil
+;; 		    :inherit 'tabbar-default
+;; 		    :background "gray50"
+;; 		    :box '(:line-width 3 :color "grey50" :style nil))
 
-(set-face-attribute 'tabbar-unselected nil
-		    :inherit 'tabbar-default
-		    :background "gray50"
-		    :box '(:line-width 3 :color "grey50" :style nil))
+;; (set-face-attribute 'tabbar-highlight nil
+;; 		    :foreground "white"
+;; 		    :underline nil)
 
-(set-face-attribute 'tabbar-highlight nil
-		    :foreground "white"
-		    :underline nil)
-
-(set-face-attribute 'tabbar-button nil
-		    :inherit 'tabbar-default
-		    :box nil)
+;; (set-face-attribute 'tabbar-button nil
+;; 		    :inherit 'tabbar-default
+;; 		    :box nil)
 
 ;; Custom ______________________________________________________________________
 
@@ -945,6 +968,8 @@ ediff-merge session on a file with conflict markers
  '(epa-popup-info-window nil)
  '(inhibit-startup-echo-area-message (user-login-name))
  '(recentf-save-file "~/.bkp/recentf")
+ '(send-mail-function (quote mailclient-send-it))
+ '(tabbar-ruler-excluded-buffers (quote ("*Messages*" "*scratch*" "\\*.\\*")))
  '(web-vcs-default-download-directory (quote site-lisp-dir))
  '(wl-draft-add-in-reply-to nil)
  '(wl-draft-buffer-style (quote keep))
