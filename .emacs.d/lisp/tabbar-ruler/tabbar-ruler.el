@@ -809,7 +809,7 @@ Return a list of one element based on major mode."
                  '(help-mode apropos-mode Info-mode Man-mode))
            "Help")
           ((memq major-mode
-                 '(rmail-mode
+                 '(rmail-mode wl-summary-mode wl-folder-mode
                    rmail-edit-mode vm-summary-mode vm-mode mail-mode
                    mh-letter-mode mh-show-mode mh-folder-mode
                    gnus-summary-mode message-mode gnus-group-mode
