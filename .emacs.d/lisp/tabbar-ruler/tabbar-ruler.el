@@ -242,7 +242,6 @@
   (interactive)
   (popup-menu (tabbar-popup-menu)))
 
-
 (set-face-attribute 'tabbar-default nil
                     :inherit nil
                     :weight 'normal

@@ -41,6 +41,7 @@
  wl-thread-space-str                "  "
 
 ;; Visual
+ wl-icon-directory "/usr/local/share/emacs/24.0.94/etc/wl/icons/"
  wl-stay-folder-window t
  wl-folder-window-width 28
  wl-summary-always-sticky-folder-list t
@@ -57,10 +58,9 @@
 
 )
 
-(setq wl-summary-line-format
-;; "%n%T%P %D/%M (%W) %h:%m %t%[%25(%c %f%) %] %s"
-"%P│ %Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s"
-)
+;; orig value is "%n%T%P%M/%D(%W)%h:%m %t%[%17(%c %f%) %] %s"
+
+(setq wl-summary-line-format "%T%P%│%M/%D (%W) %h:%m %t%[%17(%c %f%) %] %s")
 
 (add-hook 'recentl-dialog-mode-hook 'hl-line-mode)
 (add-hook 'wl-folder-mode-hook 'hl-line-mode)

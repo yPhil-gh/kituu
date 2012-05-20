@@ -12,7 +12,7 @@
 (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
 (autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
 
-(if (< emacs-major-version 24)
+(if (<= emacs-major-version 24)
     (progn
       (load "~/.emacs.d/lisp/nxhtml/autostart.el")
       (tabkey2-mode t))
@@ -22,6 +22,59 @@
     ;; (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
     ;; (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode)
 ))
+
+
+;; Experiments
+;;----------------------------------------
+;;automatic font-lock-mode [TUCKERM Jan2002]
+;;----------------------------------------
+(add-hook 'find-file-hooks 'turn-on-font-lock)
+
+;;----------------------------------------
+;;default to text-mode with auto-fill at column 75 [TUCKERM Feb2002]
+;;----------------------------------------
+(setq default-major-mode 'text-mode
+  text-mode-hook 'turn-on-auto-fill
+  fill-column 75)
+
+(put 'overwrite-mode 'disabled t)
+
+(global-set-key "\C-xE" 'apply-macro-to-region-lines)
+
+
+  (defun date (&optional insert)
+    "Display the current date and time.
+  With a prefix arg, INSERT it into the buffer."
+    (interactive "P")
+    (funcall (if insert 'insert 'message)
+             (format-time-string "%a, %d %b %Y %T %Z"
+    (current-time))))
+
+  ;; (defconst animate-n-steps 3)
+  ;; (defun emacs-reloaded ()
+  ;;   (animate-string (concat ";; Initialization successful, welcome to "
+  ;; 			  (substring (emacs-version) 0 16)
+  ;; 			  ".")
+  ;; 		  0 0)
+  ;;   (newline-and-indent)  (newline-and-indent))
+
+;; (emacs-reloaded)
+
+  ;; (add-hook 'after-init-hook 'emacs-reloaded)
+
+;; End XPs
+
+;;----------------------------------------
+;; Tramp settings
+;;----------------------------------------
+;; (add-to-list 'load-path "/usr/share/emacs21/site-lisp/tramp")
+;; (require 'tramp)
+;; (setq tramp-default-method "ssh")
+;; ;(setq shell-prompt-pattern ".*\}")
+;; (setq shell-prompt-pattern "^[\[].*[\]]*")
+;; ;(setq tramp-rcp-args "-C")
+;; (setq tramp-ssh-args "-C")
+;; (setq tramp-auto-save-directory "~/.emacs_backups")
 
 (setq tabbar-ruler-global-tabbar 't) ; If you want tabbar
 ;; (setq tabbar-ruler-global-ruler 't) ; if you want a global ruler
@@ -89,7 +142,24 @@
 
 ;; Funcs! _________________________________________________________________
 
-(defun Scratch ()
+(defun px-undo-kill-buffer (arg)
+  "Re-open the last buffer killed.  With ARG, re-open the nth buffer."
+  (interactive "p")
+  (let ((recently-killed-list (copy-sequence recentf-list))
+	(buffer-files-list
+	 (delq nil (mapcar (lambda (buf)
+			     (when (buffer-file-name buf)
+			       (expand-file-name (buffer-file-name buf)))) (buffer-list)))))
+    (mapc
+     (lambda (buf-file)
+       (setq recently-killed-list
+	     (delq buf-file recently-killed-list)))
+     buffer-files-list)
+    (find-file
+     (if arg (nth arg recently-killed-list)
+       (car recently-killed-list)))))
+
+(defun px-go-scratch ()
   (interactive)
   (switch-to-buffer "*scratch*"))
 
@@ -700,7 +770,7 @@ ediff-merge session on a file with conflict markers
 "Key used to switch to mail and back"
 (defvar px-toggle-mail-key [(meta f1)])
 
-"Mail client"
+"Mail client, use wl or gnus"
 (fset 'px-mail-client 'wl)
 (defvar px-no-mail-window-configuration (current-window-configuration))
 (defvar px-mail-window-configuration nil)
@@ -713,22 +783,20 @@ ediff-merge session on a file with conflict markers
   (fringe-mode arg))
 
 (defun px-exit-mail nil
-  "called after exiting mail"
+  "called after switch back from mail"
   (set-window-configuration px-no-mail-window-configuration)
   (px-prefs -1))
 
 (defun px-go-mail nil
-  "switch to mail or launch it"
+  "switch to mail client or launch it"
   (interactive)
   (if (or (get-buffer "Folder")		; Wanderlust
 	  (get-buffer "*Group*"))	; Gnus
       (progn
-	(message "go!")
 	(setq px-no-mail-window-configuration (current-window-configuration))
 	(px-prefs 0)
 	(set-window-configuration px-mail-window-configuration))
     (progn
-      (message "load!")
       (setq px-no-mail-window-configuration (current-window-configuration))
       (px-prefs 0)
       (px-mail-client))))
@@ -736,7 +804,6 @@ ediff-merge session on a file with conflict markers
 (defun px-no-mail nil
   "switch back from mail"
   (interactive)
-  (message "back!")
   (setq px-mail-window-configuration (current-window-configuration))
   (set-window-configuration px-no-mail-window-configuration)
   (px-prefs t))
@@ -753,11 +820,6 @@ ediff-merge session on a file with conflict markers
 (eval-after-load "wl-draft"
   '(define-key wl-draft-mode-map px-toggle-mail-key 'px-no-mail))
 
-;; (define-key mime-view-mode-default-map px-toggle-mail-key 'px-no-mail)
-
-;; (eval-after-load "wl-draft"
-;;   '(define-key wl-draft-mode-map px-toggle-mail-key 'px-no-mail))
-
 (eval-after-load "gnus"
   '(progn
      (define-key gnus-summary-mode-map px-toggle-mail-key 'px-no-mail)
@@ -773,8 +835,6 @@ ediff-merge session on a file with conflict markers
   "reset my fucking prefs"
   (interactive)
   (px-prefs 0))
-
-(add-hook 'perl-mode-hook 'cperl-mode)
 
 ;; wl-draft-send-and-exit
 ;; (add-hook 'wl-summary-toggle-disp-off-hook 'Reset-prefs)
@@ -892,8 +952,7 @@ ediff-merge session on a file with conflict markers
       (set-face-attribute 'mode-line nil :background "gray10" :foreground "#eeeeee")
       (set-face-attribute 'mode-line-inactive nil :background "#555753" :foreground "#ffffff")
       (set-face-attribute 'mode-line-highlight nil :inverse-video t)
-      (set-face-attribute 'region nil :background "#555753")
-)
+      (set-face-attribute 'region nil :background "#555753"))
   (set-face-attribute 'default nil :background "black" :foreground
     "white")
   (set-face-attribute 'mode-line nil :background "blue" :foreground "yellow"))
@@ -911,8 +970,7 @@ ediff-merge session on a file with conflict markers
 		    :background nil
 		    :foreground "black"
 		    :box nil
-		    :family "Vera Sans Mono Bold Oblique"
-		    )
+		    :family "Vera Sans Mono Bold Oblique")
 
 (set-face-attribute 'tabbar-separator nil
                     :background "gray40"
@@ -923,26 +981,21 @@ ediff-merge session on a file with conflict markers
 		    :background "#2e3436"
 		    :foreground "red"
 		    :inherit 'tabbar-default
-		    :box '(:line-width 1 :color "#2e3436" :style nil)
-)
-
-		    ;; :box '(:line-width 3 :color "#2e3436" :style nil))
-
+		    :box '(:line-width 1 :color "#2e3436" :style nil))
 
 (set-face-attribute 'tabbar-unselected nil
 		    :inherit 'tabbar-default
 		    :background "gray50"
 		    ;; :background "red"
-		    :box '(:line-width 1 :color "gray50" :style nil)
-)
+		    :box '(:line-width 1 :color "gray50" :style nil))
 
-(set-face-attribute 'tabbar-highlight nil
-		    :foreground "white"
-		    :underline nil)
+;; (set-face-attribute 'tabbar-highlight nil
+;; 		    :foreground "white"
+;; 		    :underline nil)
 
-(set-face-attribute 'tabbar-button nil
-		    :inherit 'tabbar-default
-		    :box nil)
+;; (set-face-attribute 'tabbar-button nil
+;; 		    :inherit 'tabbar-default
+;; 		    :box nil)
 
 ;; Custom ______________________________________________________________________
 
