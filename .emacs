@@ -1,6 +1,7 @@
 ;;; See https://github.com/xaccrocheur/kituu/
 ;; Keep it under 1k lines ;p
 
+
 ;; Init! ______________________________________________________________________
 
 (let ((default-directory "~/.emacs.d/lisp/"))
@@ -12,7 +13,7 @@
 (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
 (autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
 
-(if (<= emacs-major-version 24)
+(if (< emacs-major-version 24)
     (progn
       (load "~/.emacs.d/lisp/nxhtml/autostart.el")
       (tabkey2-mode t))
@@ -93,6 +94,7 @@
 (require 'mail-bug nil t)
 (require 'bbdb nil t)
 ;; (require 'tabkey2 nil t)
+(require 'undo-tree)
 (require 'cl))
 
 (mail-bug-init)
@@ -131,13 +133,14 @@
 ;; Server! ____________________________________________________________________
 
 (server-start)
-(defun ff/raise-frame-and-give-focus ()
+(defun px-raise-and-focus ()
   (when window-system
     (raise-frame)
     (x-focus-frame (selected-frame))
     (set-mouse-pixel-position (selected-frame) 4 4)
+    (delete-other-windows)
     ))
-(add-hook 'server-switch-hook 'ff/raise-frame-and-give-focus)
+(add-hook 'server-switch-hook 'px-raise-and-focus)
 
 
 ;; Funcs! _________________________________________________________________
@@ -241,13 +244,13 @@
        (buffer-file-name x))
      (buffer-list)))))
 
-(defun Fullscreen-px ()
+(defun px-fullscreen ()
   "Maximize the current frame (to full screen)"
   (interactive)
   (x-send-client-message nil 0 nil "_NET_WM_STATE" 32 '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0))
   (x-send-client-message nil 0 nil "_NET_WM_STATE" 32 '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0)))
 
-(defun Google-that-bitch-px (start end)
+(defun px-google-that-bitch (start end)
   "Google selected string"
   (interactive "r")
   (let ((q (buffer-substring-no-properties start end)))
@@ -393,6 +396,7 @@
  ;; ediff-setup-windows-plain t
  ;; tramp-terminal-type dumb
  ispell-dictionary "francais"
+ completion-auto-help nil
 )
 
 (set-face-foreground 'show-paren-mismatch-face "red")
@@ -499,7 +503,8 @@
 (define-key global-map [f10] 'toggle-truncate-lines)
 (define-key global-map [f11] 'Fullscreen-px)
 
-(global-set-key (kbd "s-g") 'goto-line)
+(global-set-key (kbd "C-c C-g") 'goto-line)
+(global-set-key (kbd "s-g") 'px-google-that-bitch)
 (global-set-key (kbd "s-r") 'replace-string)
 (global-set-key (kbd "s-²") (kbd "C-x b <return>")) ; Keyboard macro!
 (global-set-key (kbd "<C-kp-add>") 'kmacro-end-and-call-macro) ; Keyboard macro!
@@ -516,6 +521,7 @@
 (global-set-key (kbd "C-S-o") 'desktop-read)
 (global-set-key (kbd "C-S-<mouse-1>") 'flyspell-correct-word)
 (global-set-key (kbd "C-z") 'undo)
+(global-set-key (kbd "C-S-z") 'undo-tree-redo)
 (global-set-key (kbd "<C-next>") 'forward-page)
 (global-set-key (kbd "<C-prior>") 'backward-page)
 (global-set-key (kbd "C-<tab>") 'tabbar-forward)
@@ -773,7 +779,7 @@ ediff-merge session on a file with conflict markers
 "Mail client, use wl or gnus"
 (fset 'px-mail-client 'wl)
 (defvar px-no-mail-window-configuration (current-window-configuration))
-(defvar px-mail-window-configuration nil)
+(defvar px-mail-window-configuration t)
 
 (defun px-prefs (arg)
   "toggle pref bits"
@@ -785,7 +791,7 @@ ediff-merge session on a file with conflict markers
 (defun px-exit-mail nil
   "called after switch back from mail"
   (set-window-configuration px-no-mail-window-configuration)
-  (px-prefs -1))
+  (px-prefs t))
 
 (defun px-go-mail nil
   "switch to mail client or launch it"
@@ -814,8 +820,7 @@ ediff-merge session on a file with conflict markers
 (eval-after-load "wl-summary"
   '(progn
      (define-key wl-summary-mode-map [f3] 'wl-summary-pick)
-     (define-key wl-summary-mode-map px-toggle-mail-key 'px-no-mail)
-     (define-key mime-view-mode-default-map px-toggle-mail-key 'px-no-mail)))
+     (define-key wl-summary-mode-map px-toggle-mail-key 'px-no-mail)))
 
 (eval-after-load "wl-draft"
   '(define-key wl-draft-mode-map px-toggle-mail-key 'px-no-mail))
@@ -829,103 +834,12 @@ ediff-merge session on a file with conflict markers
 (eval-after-load "message"
   '(define-key message-mode-map px-toggle-mail-key 'px-no-mail))
 
+(add-hook
+ 'mime-view-mode-hook
+ '(lambda ()
+    (local-set-key px-toggle-mail-key 'px-no-mail)))
+
 (define-key global-map px-toggle-mail-key 'px-go-mail)
-
-(defun Reset-prefs nil
-  "reset my fucking prefs"
-  (interactive)
-  (px-prefs 0))
-
-;; wl-draft-send-and-exit
-;; (add-hook 'wl-summary-toggle-disp-off-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-toggle-disp-on-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-toggle-disp-off-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-toggle-disp-folder-on-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-toggle-disp-folder-off-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-toggle-disp-folder-message-resumed-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-mode-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-prepared-pre-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-prepared-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-sync-updated-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-unread-message-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-edit-addresses-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-buffer-message-saved-hook 'Reset-prefs)
-
-;; (add-hook 'bbdb-wl-get-update-record-hook 'Reset-prefs)
-;; (add-hook 'elmo-archive-load-hook 'Reset-prefs)
-;; (add-hook 'elmo-nntp-opened-hook 'Reset-prefs)
-;; (add-hook 'elmo-pipe-drained-hook 'Reset-prefs)
-;; (add-hook 'elmo-msg-appended-hook 'Reset-prefs)
-;; (add-hook 'elmo-msg-deleted-hook 'Reset-prefs)
-;; (add-hook 'elmo-nntp-post-pre-hook 'Reset-prefs)
-;; (add-hook 'wl-ps-preprint-hook 'Reset-prefs)
-;; (add-hook 'wl-ps-print-hook 'Reset-prefs)
-;; (add-hook 'wl-folder-mode-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-toggle-disp-on-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-toggle-disp-off-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-toggle-disp-folder-on-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-toggle-disp-folder-off-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-toggle-disp-folder-message-resumed-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-mode-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-prepared-pre-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-prepared-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-sync-updated-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-unread-message-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-edit-addresses-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-buffer-message-saved-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-buffer-mark-saved-hook 'Reset-prefs)
-;; (add-hook 'wl-init-hook 'Reset-prefs)
-;; (add-hook 'wl-hook 'Reset-prefs)
-;; (add-hook 'wl-draft-reply-hook 'Reset-prefs)
-;; (add-hook 'wl-draft-forward-hook 'Reset-prefs)
-;; (add-hook 'wl-draft-kill-pre-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-reply-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-forward-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-resend-hook 'Reset-prefs)
-;; (add-hook 'wl-mail-setup-hook 'Reset-prefs)
-;; (add-hook 'wl-draft-reedit-hook 'Reset-prefs)
-
-;; This is sufficient apart from exiting
-(add-hook 'wl-mail-setup-hook 'Reset-prefs)
-(add-hook 'wl-draft-send-hook 'Reset-prefs)
-(add-hook 'wl-mail-send-pre-hook 'Reset-prefs)
-(add-hook 'wl-news-send-pre-hook 'Reset-prefs)
-(add-hook 'wl-message-buffer-created-hook 'Reset-prefs)
-(add-hook 'wl-message-redisplay-hook 'Reset-prefs)
-(add-hook 'wl-message-exit-hook 'Reset-prefs)
-(add-hook 'wl-summary-exit-pre-hook 'Reset-prefs)
-(add-hook 'wl-summary-exit-hook 'Reset-prefs)
-
-;; ;; Test
-;; (add-hook 'wl-highlight-headers-hook 'Reset-prefs)
-;; (add-hook 'wl-highlight-message-hook 'Reset-prefs)
-;; (add-hook 'wl-save-hook 'Reset-prefs)
-(add-hook 'wl-exit-hook 'Reset-prefs)
-;; (add-hook 'wl-folder-suspend-hook 'Reset-prefs)
-;; (add-hook 'wl-biff-notify-hook 'Reset-prefs)
-;; (add-hook 'wl-biff-unnotify-hook 'Reset-prefs)
-;; (add-hook 'wl-auto-check-folder-pre-hook 'Reset-prefs)
-;; (add-hook 'wl-auto-check-folder-hook 'Reset-prefs)
-;; (add-hook 'wl-folder-check-entity-pre-hook 'Reset-prefs)
-;; (add-hook 'wl-folder-check-entity-hook 'Reset-prefs)
-;; (add-hook 'wl-draft-config-exec-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-expire-pre-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-expire-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-archive-pre-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-archive-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-line-inserted-hook 'Reset-prefs)
-;; (add-hook 'wl-summary-insert-headers-hook 'Reset-prefs)
-;; (add-hook 'wl-message-display-internal-hook 'Reset-prefs)
-;; (add-hook 'wl-thread-update-children-number-hook 'Reset-prefs)
-;; (add-hook 'wl-folder-update-access-group-hook 'Reset-prefs)
-;; (add-hook 'wl-draft-cited-hook 'Reset-prefs)
-;; (add-hook 'wl-draft-insert-x-face-field-hook 'Reset-prefs)
-;; (add-hook 'wl-template-mode-hook 'Reset-prefs)
-;; (add-hook 'wl-score-mode-hook 'Reset-prefs)
-;; (add-hook 'wl-make-plugged-hook 'Reset-prefs)
-;; (add-hook 'wl-plugged-exit-hook 'Reset-prefs)
-;; (add-hook 'wl-plugged-hook 'Reset-prefs)
-;; (add-hook 'wl-unplugged-hook 'Reset-prefs)
 
 ;; Faces ______________________________________________________________________
 
@@ -1014,6 +928,7 @@ ediff-merge session on a file with conflict markers
  '(mumamo-background-chunk-major ((t (:background "gray15"))))
  '(mumamo-background-chunk-submode1 ((t (:background "gray16"))))
  '(mumamo-region ((t nil)))
+ '(undo-tree-visualizer-default-face ((t (:foreground "gray"))))
  '(wl-highlight-folder-few-face ((t (:foreground "gainsboro" :weight bold))))
  '(wl-highlight-folder-many-face ((t (:foreground "AntiqueWhite3" :weight extra-bold))))
  '(wl-highlight-folder-path-face ((t (:background "dark red" :foreground "white" :weight bold))))
@@ -1034,10 +949,14 @@ ediff-merge session on a file with conflict markers
  '(bbdb-use-pop-up (quote (quote horiz)))
  '(canlock-password "cf5f7a7261c5832898abfc7ea08ba333a36ed78c")
  '(epa-popup-info-window nil)
+ '(global-undo-tree-mode t)
  '(inhibit-startup-echo-area-message (user-login-name))
  '(recentf-save-file "~/.bkp/recentf")
  '(send-mail-function (quote mailclient-send-it))
  '(tabbar-ruler-excluded-buffers (quote ("*Messages*" "*scratch*" "\\*.\\*")))
+ '(undo-tree-auto-save-history t)
+ '(undo-tree-visualizer-relative-timestamps t)
+ '(undo-tree-visualizer-timestamps t)
  '(web-vcs-default-download-directory (quote site-lisp-dir))
  '(wl-draft-add-in-reply-to nil)
  '(wl-draft-buffer-style (quote keep))

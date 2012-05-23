@@ -55,8 +55,16 @@
 
  wl-message-window-size '(3 . 7)
  wl-auto-select-first t
-
 )
+
+
+(eval-after-load "wl-summary"
+  '(progn
+     (define-key wl-summary-mode-map [mouse-4] 'mwheel-scroll)
+     (define-key wl-summary-mode-map [mouse-5] 'mwheel-scroll)
+     (define-key wl-summary-mode-map [S-mouse-4] 'mwheel-scroll)
+     (define-key wl-summary-mode-map [S-mouse-5] 'mwheel-scroll)))
+
 
 ;; orig value is "%n%T%P%M/%D(%W)%h:%m %t%[%17(%c %f%) %] %s"
 
