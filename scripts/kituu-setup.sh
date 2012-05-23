@@ -6,6 +6,14 @@ lispdir=~/.emacs.d/lisp
 scriptdir=~/scripts
 sep="\n################# "
 
+# My lisp packages
+declare -A lisp
+lisp[tabbar]="git clone https://github.com/dholm/tabbar.git"
+lisp[tabbar-ruler]="git clone https://github.com/mlf176f2/tabbar-ruler.el.git"
+lisp[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
+lisp[mail-bug.el]="git clone https://github.com/xaccrocheur/mail-bug.el"
+lisp[nxhtml]="bzr branch lp:nxhtml"
+
 echo -e $sep"Kituu! #################"
 
 if [ ! -d $kituudir ] ; then
@@ -45,15 +53,7 @@ else
     cd $scriptsdir/leecher/ && git pull
 fi
 
-declare -A lisp
-lisp[tabbar]="git clone https://github.com/dholm/tabbar.git"
-lisp[tabbar-ruler]="git clone https://github.com/mlf176f2/tabbar-ruler.el.git"
-lisp[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
-lisp[nxhtml]="bzr branch lp:nxhtml"
-lisp[zob]="bzr branch lp:nxhtml"
-
-for project in "${!lisp[@]}"
-do
+for project in "${!lisp[@]}" ; do
     vcsystem=${lisp[$project]:0:3}
     echo -e $sep"$project ($lispdir/$project/)"
     if [ ! -e $lispdir/$project/ ] ; then
@@ -65,32 +65,5 @@ do
 	cd $lispdir/$project/ && $vcsystem pull
     fi
 done
-
-# if [ ! -e $lispdir/nxhtml/ ] ; then
-#     echo -e $sep"nXhtml ($lispdir/nxhtml/)"
-#     cd $lispdir/ && wget http://ourcomments.org/Emacs/DL/elisp/nxhtml/zip/nxhtml-2.08-100425.zip && unzip nxhtml-2.08-100425.zip
-# fi
-
-# if [ ! -e $lispdir/tabbar/ ] ; then
-#     echo -e $sep"Tabbar ($lispdir/tabbar/)"
-#     cd $lispdir && git clone https://github.com/dholm/tabbar.git
-# else
-#     cd $lispdir/tabbar/ && git pull
-# fi
-
-
-# if [ ! -e $lispdir/tabbar-ruler/ ] ; then
-#     echo -e $sep"Tabbar-ruler ($lispdir/tabbar-ruler/)"
-#     cd $lispdir && git clone https://github.com/mlf176f2/tabbar-ruler.el.git
-# else
-#     cd $lispdir/tabbar-ruler/ && git pull
-# fi
-
-# if [ ! -e $lispdir/undo-tree/ ] ; then
-#     echo -e $sep"Undo-tree ($lispdir/undo-tree/)"
-#     cd $lispdir && git clone http://www.dr-qubit.org/git/undo-tree.git
-# else
-#     cd $lispdir/undo-tree/ && git pull
-# fi
 
 echo -e $sep"...Done."
