@@ -40,17 +40,17 @@ if $mandriva ; then
     sudo urpmi curl wget bzr git perl-doc sox bbdb htop
 fi
 
-if [ ! -e $scriptsdir/git-completion.bash ] ; then
-    echo -e $sep"Git completion ($scriptsdir/git-completion.bash)"
-    curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptsdir/git-completion.bash
+if [ ! -e $scriptdir/git-completion.bash ] ; then
+    echo -e $sep"Git completion ($scriptdir/git-completion.bash)"
+    curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptdir/git-completion.bash
 fi
 
-if [ ! -e $scriptsdir/leecher/leecher.pl ] ; then
-    echo -e $sep"leecher.pl ($scriptsdir/leecher.pl)"
-    cd $scriptsdir && git clone git@github.com:xaccrocheur/leecher.pl.git
-    ln -sv $scriptsdir/leecher/leecher.pl $scriptsdir/
+if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
+    echo -e $sep"leecher.pl ($scriptdir/leecher.pl)"
+    cd $scriptdir && git clone git@github.com:xaccrocheur/leecher.pl.git
+    ln -sv $scriptdir/leecher/leecher.pl $scriptdir/
 else
-    cd $scriptsdir/leecher/ && git pull
+    cd $scriptdir/leecher/ && git pull
 fi
 
 for project in "${!lisp[@]}" ; do
