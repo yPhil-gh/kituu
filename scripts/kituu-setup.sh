@@ -8,37 +8,20 @@ sep="\n################# "
 
 echo -e $sep"Kituu! #################"
 
-# if [ ! -d $kituudir ] ; then
-#     echo -e $sep"No existing $kituudir, so"
-#     cd && git clone git@github.com:xaccrocheur/kituu.git
-# else
-#     echo -e $sep"Found $kituudir, so"
-#     cd $kituudir && git pull
-# fi
-
-# for i in * ; do
-#     if [[ "${i}" != ".git" && "${i}" != "README.org" && "${i}" != "." && "${i}" != ".." && ! -L ~/$i && "${i}" != "*.elc" ]] ; then
-# 	if [[ -e ~/$i ]] ; then
-# 	    mv -v ~/$i ~/$i.orig
-# 	    ln -sv $kituudir/$i ~/
-# 	else
-# 	    ln -sv $kituudir/$i ~/
-# 	fi
-#     fi
-# done
-
+if [ ! -d $kituudir ] ; then
+    echo -e $sep"No existing $kituudir, so"
+    cd && git clone git@github.com:xaccrocheur/kituu.git
+else
+    echo -e $sep"Found $kituudir, so"
+    cd $kituudir && git pull
+fi
 
 for i in * ; do
-    if [[ $i != *#* && $i != *~* && $i != *git* && $i != "README.org" && $i != "." && "${i}" != ".." ]] ; then
-
-	echo $i
-
-	# if [[ -e ~/$i ]] ; then
-	#     mv -v ~/$i ~/$i.orig
-	#     ln -sv $kituudir/$i ~/
-	# else
-	#     ln -sv $kituudir/$i ~/
-	# fi
+    if [[  ! -h ~/$i && $i != *#* && $i != *~* && $i != *git* && $i != "README.org" && $i != "." && "${i}" != ".." ]] ; then
+	if [[ -e ~/$i ]] ; then
+	    mv -v ~/$i ~/$i.orig
+	    ln -sv $kituudir/$i ~/
+	fi
     fi
 done
 
