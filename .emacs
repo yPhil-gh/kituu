@@ -513,7 +513,6 @@
 
 ;; (define-key global-map [s-k] 'kill-buffer)
 
-
 (global-set-key (kbd "C-f") 'isearch-forward)
 (global-set-key (kbd "C-d") nil)	; I kept deleting stuff
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
