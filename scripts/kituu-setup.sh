@@ -45,7 +45,7 @@ fi
 
 if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
     echo -e $sep"leecher.pl ($scriptdir/leecher.pl)"
-    cd $scriptdir && git clone git@github.com:xaccrocheur/leecher.pl.git
+    cd $scriptdir && git clone git@github.com:xaccrocheur/leecher.git
     ln -sv $scriptdir/leecher/leecher.pl $scriptdir/
 else
     cd $scriptdir/leecher/ && git pull
