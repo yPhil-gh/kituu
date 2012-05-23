@@ -40,7 +40,7 @@ fi
 
 if [ ! -e $scriptdir/git-completion.bash ] ; then
     echo -e $sep"Git completion ($scriptdir/git-completion.bash)"
-    curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptdir/git-completion.bash
+    cd $scriptdir && curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptdir/git-completion.bash
 fi
 
 if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
