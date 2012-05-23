@@ -26,10 +26,8 @@ fi
 
 for i in * ; do
     if [[  ! -h ~/$i && $i != *#* && $i != *~* && $i != *git* && $i != "README.org" && $i != "." && "${i}" != ".." ]] ; then
-	if [[ -e ~/$i ]] ; then
-	    mv -v ~/$i ~/$i.orig
-	    ln -sv $kituudir/$i ~/
-	fi
+	if [[ -e ~/$i ]] ; then mv -v ~/$i ~/$i.orig ; fi
+	ln -sv $kituudir/$i ~/
     fi
 done
 
