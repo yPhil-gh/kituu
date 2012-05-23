@@ -53,6 +53,8 @@ else
     cd $scriptdir/leecher/ && git pull
 fi
 
+if [ ! -d "$lispdir" ] ; then mkdir -p $lispdir ; fi
+
 for project in "${!lisp[@]}" ; do
     vcsystem=${lisp[$project]:0:3}
     echo -e $sep"$project ($lispdir/$project/)"
