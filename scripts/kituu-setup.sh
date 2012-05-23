@@ -8,13 +8,13 @@ sep="\n################# "
 
 echo -e $sep"Kituu! #################"
 
-if [ ! -d $kituudir ] ; then
-    echo -e $sep"No existing $kituudir, so"
-    cd && git clone git@github.com:xaccrocheur/kituu.git
-else
-    echo -e $sep"Found $kituudir, so"
-    cd $kituudir && git pull
-fi
+# if [ ! -d $kituudir ] ; then
+#     echo -e $sep"No existing $kituudir, so"
+#     cd && git clone git@github.com:xaccrocheur/kituu.git
+# else
+#     echo -e $sep"Found $kituudir, so"
+#     cd $kituudir && git pull
+# fi
 
 for i in * ; do
     if [[  ! -h ~/$i && $i != *#* && $i != *~* && $i != *git* && $i != "README.org" && $i != "." && "${i}" != ".." ]] ; then
@@ -25,11 +25,12 @@ for i in * ; do
     fi
 done
 
+type -P drakconf &>/dev/null || { mandriva=false >&2; }
 
-# echo -e $sep"Various binary packages"
-# if [ command -v drakconf >/dev/null 2>&1 ] ; then
-#     sudo urpmi curl wget bzr git perl-doc sox bbdb htop
-# fi
+if $mandriva ; then
+    echo -e $sep"Various binary packages"
+    sudo urpmi curl wget bzr git perl-doc sox bbdb htop
+fi
 
 # if [ ! -e $scriptsdir/git-completion.bash ] ; then
 #     echo -e $sep"Git completion ($scriptsdir/git-completion.bash)"
