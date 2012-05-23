@@ -59,10 +59,10 @@ do
     if [ ! -e $lispdir/$project/ ] ; then
 	read -e -p "Install $project in ($lispdir/$project/)? [Y/n] " yn
 	if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-	    echo "cd $lispdir && ${lisp[$project]}"
+	    cd $lispdir && ${lisp[$project]}
 	fi
     else
-	echo "cd $lispdir/$project/ && $vcsystem pull"
+	cd $lispdir/$project/ && $vcsystem pull
     fi
 done
 
