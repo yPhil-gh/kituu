@@ -11,7 +11,7 @@ declare -A lisp
 lisp[tabbar]="git clone git://github.com/dholm/tabbar.git"
 lisp[tabbar-ruler]="git clone git://github.com/mlf176f2/tabbar-ruler.el.git"
 lisp[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
-lisp[mail-bug.el]="git clone https://github.com/xaccrocheur/mail-bug.el"
+lisp[mail-bug]="git clone https://xaccrocheur@github.com/xaccrocheur/mail-bug.git"
 lisp[nxhtml]="bzr branch lp:nxhtml"
 
 echo -e $sep"Kituu! #################"
