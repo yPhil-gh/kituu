@@ -1,7 +1,6 @@
 ;;; See https://github.com/xaccrocheur/kituu/
 ;; Keep it under 1k lines ;p
 
-
 ;; Init! ______________________________________________________________________
 
 (let ((default-directory "~/.emacs.d/lisp/"))
@@ -29,8 +28,48 @@
 ;;----------------------------------------
 ;;automatic font-lock-mode [TUCKERM Jan2002]
 ;;----------------------------------------
+
+(defvar libnotify-program "/usr/bin/notify-send")
+
+(defvar myicon "/usr/share/icons/wordprocessor_section.png")
+
+(defun notify-send (title message icon)
+  (start-process "notify" " notify"
+		 libnotify-program "--expire-time=5000"
+  "--urgency=low" (concat "--icon=" icon) title message))
+
+;; (notify-send "plop" "plip" myicon)
+
+;; ;; Message alert hooks
+;; (define-jabber-alert echo "Show a message in the echo area"
+;;   (lambda (msg)
+;;     (unless (minibuffer-prompt)
+;;       (message "%s" msg))))
+
+
+
 (add-hook 'find-file-hooks 'turn-on-font-lock)
 
+(set-face-attribute 'default nil
+:font "Monospace"
+:height 110
+:weight 'bold
+;; :width 'wide
+)
+
+;; (has ital)
+;; Liberation Mono-11
+;; Liberation Sans-11
+;; (no ital)
+;; Haramain-13
+;; Inconsolata-12
+
+;; (set-default-font
+;;  "-*-lucida-*-*-*-*-*-*-*-*-*-*-*-*")
+
+;; (set-face-font "-b&h-lucida-*-i-*-*-11-*-*-*-*-*-*-*")
+
+;; (set-face-attribute 'default nil :family "Inconsolata" :height 140)
 ;;----------------------------------------
 ;;default to text-mode with auto-fill at column 75 [TUCKERM Feb2002]
 ;;----------------------------------------
@@ -83,8 +122,8 @@
 ;; (setq tabbar-ruler-popup-toolbar 't) ; If you want a popup toolbar
 
 
-(if (>= emacs-major-version 23)
-    (set-frame-font "Monospace-12"))
+;; (if (>= emacs-major-version 23)
+;;     (set-frame-font "Monospace-12"))
 
 (setq auto-mode-alist (cons '(".php" . php-mode) auto-mode-alist))
 
@@ -227,7 +266,7 @@
   (message "backuped %s" px-newName)
   )
 
-(defun query-replace-regexp-in-open-buffers-px (arg1 arg2)
+(defun px-query-replace-in-open-buffers (arg1 arg2)
   "query-replace in open files"
   (interactive "sRegexp:\nsReplace with:")
   (mapcar
@@ -304,6 +343,7 @@
       (save-buffer)
       (message "Region refrigerated!"))))
 
+;; (the lock file is ~/.bkp/.emacs.desktop.lock)
 (defun px-saved-session ()
   (file-exists-p (concat desktop-dirname "/" desktop-base-file-name)))
 
@@ -311,8 +351,10 @@
   "Restore a saved emacs session."
   (interactive)
   (if (px-saved-session)
-      (progn (desktop-read)
-	     (recenter-top-bottom 15))
+      (progn
+	;; (delete-file (concat desktop-dirname "/.emacs.desktop.lock"))
+	(desktop-read)
+	(recenter-top-bottom 15))
     (message "No desktop (session) file found.")))
 
 (defun Session-save-px ()
@@ -356,6 +398,9 @@
 
 ;; This is harsh but just, shortens the war and saves lives.
 (setq resize-mini-windows nil)
+
+;; Modal setting (if this mode then this setting)
+(add-hook 'custom-mode-hook 'linum-mode -1)
 
 (defun iswitchb-local-keys ()
   (mapc (lambda (K)
@@ -501,7 +546,7 @@
 (define-key global-map [f7] 'flyspell-buffer)
 (define-key global-map [M-f7] 'flyspell-mode)
 (define-key global-map [f10] 'toggle-truncate-lines)
-(define-key global-map [f11] 'Fullscreen-px)
+(define-key global-map [f11] 'px-fullscreen)
 
 (global-set-key (kbd "C-c C-g") 'goto-line)
 (global-set-key (kbd "s-g") 'px-google-that-bitch)
@@ -746,9 +791,9 @@ ediff-merge session on a file with conflict markers
 (setq
     bbdb-offer-save 1 ;; 1 means save-without-asking
 
-    bbdb-use-pop-up t ;; allow popups for addresses
-    bbdb-electric-p t ;; be disposable with SPC
-    bbdb-popup-target-lines 1 ;; very small
+    ;; bbdb-use-pop-up t ;; allow popups for addresses
+    ;; bbdb-electric-p t ;; be disposable with SPC
+    ;; bbdb-popup-target-lines 1 ;; very small
     bbdb-dwim-net-address-allow-redundancy t ;; always use full name
     bbdb-quiet-about-name-mismatches 2 ;; show name-mismatches 2 secs
     bbdb-always-add-address t ;; add new addresses to existing...
@@ -786,6 +831,11 @@ ediff-merge session on a file with conflict markers
   (scroll-bar-mode arg)
   (global-linum-mode arg)
   (fringe-mode arg))
+
+(defun px-reset-prefs nil
+  "reset my fucking prefs"
+  (interactive)
+  (px-prefs 0))
 
 (defun px-exit-mail nil
   "called after switch back from mail"
@@ -839,6 +889,17 @@ ediff-merge session on a file with conflict markers
     (local-set-key px-toggle-mail-key 'px-no-mail)))
 
 (define-key global-map px-toggle-mail-key 'px-go-mail)
+
+;; This is sufficient apart from exiting
+(add-hook 'wl-mail-setup-hook 'px-reset-prefs)
+(add-hook 'wl-draft-send-hook 'px-reset-prefs)
+(add-hook 'wl-mail-send-pre-hook 'px-reset-prefs)
+(add-hook 'wl-news-send-pre-hook 'px-reset-prefs)
+(add-hook 'wl-message-buffer-created-hook 'px-reset-prefs)
+(add-hook 'wl-message-redisplay-hook 'px-reset-prefs)
+(add-hook 'wl-message-exit-hook 'px-reset-prefs)
+(add-hook 'wl-summary-exit-pre-hook 'px-reset-prefs)
+(add-hook 'wl-summary-exit-hook 'px-reset-prefs)
 
 ;; Faces ______________________________________________________________________
 
@@ -921,6 +982,7 @@ ediff-merge session on a file with conflict markers
  ;; If there is more than one, they won't work right.
  '(cperl-array-face ((t (:foreground "#fcaf3e" :weight bold))))
  '(cperl-hash-face ((t (:foreground "#fcaf3e" :slant italic :weight bold))))
+ '(font-lock-comment-face ((t (:foreground "orange red" :slant oblique :weight light))))
  '(highlight ((t (:background "dark red"))))
  '(mode-line ((t (:background "gray10" :foreground "#eeeeee"))))
  '(mode-line-highlight ((t (:inverse-video t))))
@@ -945,7 +1007,7 @@ ediff-merge session on a file with conflict markers
  ;; If there is more than one, they won't work right.
  '(auto-save-file-name-transforms (quote ((".*" "~/.bkp/\\1" t))))
  '(backup-directory-alist (quote ((".*" . "~/.bkp/"))))
- '(bbdb-use-pop-up (quote (quote horiz)))
+ '(bbdb-use-pop-up nil)
  '(canlock-password "cf5f7a7261c5832898abfc7ea08ba333a36ed78c")
  '(epa-popup-info-window nil)
  '(global-undo-tree-mode t)

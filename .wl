@@ -44,7 +44,7 @@
  wl-icon-directory "/usr/local/share/emacs/24.0.94/etc/wl/icons/"
  wl-stay-folder-window t
  wl-folder-window-width 28
- wl-summary-always-sticky-folder-list t
+ ;; wl-summary-always-sticky-folder-list t
 ;;  wl-folder-summary-line-format-alist
 ;;  '(
 ;;    ;; ("^%" . "%T%P%Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s")
@@ -55,16 +55,8 @@
 
  wl-message-window-size '(3 . 7)
  wl-auto-select-first t
+
 )
-
-
-(eval-after-load "wl-summary"
-  '(progn
-     (define-key wl-summary-mode-map [mouse-4] 'mwheel-scroll)
-     (define-key wl-summary-mode-map [mouse-5] 'mwheel-scroll)
-     (define-key wl-summary-mode-map [S-mouse-4] 'mwheel-scroll)
-     (define-key wl-summary-mode-map [S-mouse-5] 'mwheel-scroll)))
-
 
 ;; orig value is "%n%T%P%M/%D(%W)%h:%m %t%[%17(%c %f%) %] %s"
 
@@ -167,7 +159,7 @@
     (wl-from . "Philippe M. Coatmeur <philippe.coatmeur@gmail.com>")
     ("From" . wl-from)
     ("Cc" . "")
-    (body . "Hello ;\n")
+    ;; (body . "Hello ;\n")
     (wl-smtp-posting-user . "philippe.coatmeur")
     (wl-smtp-posting-server . "smtp.gmail.com")
     (wl-smtp-authenticate-type ."plain")

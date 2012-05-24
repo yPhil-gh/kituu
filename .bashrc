@@ -113,7 +113,7 @@ Find-this-and-do-that () {
 }
 
 pss () {
-    ps aux | grep "[${1:0:1}]${1:1}"
+    ps aux | grep -i "[${1:0:1}]${1:1}"
 }
 
 bkp () {
@@ -150,7 +150,6 @@ local myChar=$(echo -e "\xE2\x80\xA2") # (•)
 ;;
 *)
 local myChar="|"
-echo "plop"
 ;;
 esac
 
