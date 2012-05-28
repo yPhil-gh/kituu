@@ -15,6 +15,11 @@
 #     emacs -mm "$@"
 # fi
 
+# Notes
+# mount -o remount,rw /dev/dsb1
+# kdmctl reserve
+# mount -o umask=0
+
 [[ $UID != "0" && -e ~/scripts/git-completion.bash ]] && . ~/scripts/git-completion.bash
 
 GIT_PS1_SHOWDIRTYSTATE=true
@@ -153,6 +158,8 @@ local myChar="|"
 ;;
 esac
 
+kituu_titlebar='\[\033]0;\u@\h:\w\007\]'
+
 local kituu_load_color_lo="\e[0;91m"
 local kituu_load_color_md="\e[0;31m"
 local kituu_load_color_hi="\e[1;91m"
@@ -238,6 +245,8 @@ kituu_bash_prompt() {
 # color path differently if not on my own machines
     if grep -q moe /etc/hosts; then kpc=$kuc; else kpc="\[\e[1;34m\]"; fi
 
+    curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptsdir/git-completion.bash
+
 # Return Smiley
     local kituu_smiley='$(if [[ $? -eq 0 ]]; then echo "\[\e[1;32m\]"":)"; else echo "\[\e[1;31m\]"":("; fi;)'
 
@@ -245,16 +254,19 @@ kituu_bash_prompt() {
 	"dumb")
 	    PS1="> "
 	    ;;
-	xterm*|rxvt*|eterm*|screen*|linux*)
-  	    PS1="${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
-  	    # PS1="${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
-	    # PS1='\[\033[32m\]\u@\h\[\033[00m\]:\[\033[34m\]\w\[\033[31m\]$(__git_ps1)\[\033[00m\]\$ '
+	xterm*|rxvt*|eterm*|screen*)
+  	    PS1="\[\e]1;\u@\h: \W\007\e]2;\u@\h: \W\007\]\${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
+	    ;;
+	linux*)
+	    PS1="${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
 	    ;;
 	*)
 	    PS1="> "
 	    ;;
     esac
 }
+
+# http://tldp.org/HOWTO/Bash-Prompt-HOWTO/xterm-title-bar-manipulations.html
 
 export PROMPT_COMMAND="Kituu_bash_prompt_commands"
 kituu_bash_prompt

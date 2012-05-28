@@ -29,7 +29,11 @@
 ;;automatic font-lock-mode [TUCKERM Jan2002]
 ;;----------------------------------------
 
-(defvar libnotify-program "/usr/bin/notify-send")
+;; network-speed configuration:
+;; (add-to-list 'load-path "/path/to/network-speed.el")
+
+(require 'network-speed)
+(network-speed-start)
 
 (defvar myicon "/usr/share/icons/wordprocessor_section.png")
 
@@ -52,8 +56,12 @@
 
 (set-face-attribute 'default nil
 :font "Monospace"
-:height 110
-:weight 'bold
+:height 125
+;; :font "Inconsolata"
+;; :width 'normal
+:weight 'normal
+;; :slant 'reverse-italic
+;; :weight 'bold
 ;; :width 'wide
 )
 
@@ -357,7 +365,7 @@
 	(recenter-top-bottom 15))
     (message "No desktop (session) file found.")))
 
-(defun Session-save-px ()
+(defun px-session-save ()
   "Save an emacs session."
   (interactive)
   (if (px-saved-session)
@@ -365,6 +373,31 @@
 	  (desktop-save-in-desktop-dir)
 	(message "Session not saved."))
   (desktop-save-in-desktop-dir)))
+
+(defun my-test (&optional arg)
+  (interactive (list (if current-prefix-arg
+                         (read-from-minibuffer "MyPrompt: ")
+                       nil)))
+  (if arg
+      (message arg)
+    (message "NO ARG")))
+
+(defun px-session-save-named (px-session-named-name)
+  "Prompt the user for a session name."
+  (interactive "MSession name: ")
+  (message "So what do I do with this: %s ?" px-session-named-name)
+  (desktop-save (concat desktop-dirname "/" px-session-named-name
+			".session") t)
+)
+
+;; (defun px-session-save-named ()
+;;   "Save a named emacs session."
+;;   (interactive)
+;;   (if (px-saved-session)
+;;       (if (y-or-n-p "Save session? ")
+;; 	  (desktop-save-in-desktop-dir)
+;; 	(message "Session not saved."))
+;;   (desktop-save-in-desktop-dir)))
 
 ;; This will only work for one session
 (add-hook 'after-init-hook
@@ -375,7 +408,7 @@
 
 (add-hook 'kill-emacs-hook
 	  '(lambda ()
-	     (Session-save-px)))
+	     (px-session-save)))
 
 ;; Modes! ______________________________________________________________________
 ;; (display-time-mode t)

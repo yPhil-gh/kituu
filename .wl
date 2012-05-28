@@ -17,6 +17,11 @@
  ;; wl-folder-desktop-name #("Desktop" 0 7 (wl-folder-entity-id 0 wl-folder-is-group is-group))
  ;; wl-subscribed-mailing-list (quote ("wl@lists.airs.net"))
 
+
+;; Correct To: In Sent:
+ wl-summary-showto-folder-regexp ".*"
+ wl-summary-from-function 'wl-summary-default-from
+
  ;; Offline and synchronization
  wl-plugged t
  elmo-imap4-use-modified-utf7 t
@@ -49,13 +54,13 @@
 ;;  '(
 ;;    ;; ("^%" . "%T%P%Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s")
 ;;    ;; ("^%" . "%P│ %Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s") works pretty good
+;;    (".*Sent.*" . "%P│ %Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s")
 ;;    ("^%" . "%P│ %Y/%M/%D (%W) %h:%m %[%17(%c %f%)%] %t%s")
 ;;    ;; ("^-" . "%T%P%Y/%M/%D (%W) %h:%m %[%17(%f %c%)%] %t%s")
 ;; )
 
  wl-message-window-size '(3 . 7)
  wl-auto-select-first t
-
 )
 
 ;; orig value is "%n%T%P%M/%D(%W)%h:%m %t%[%17(%c %f%) %] %s"
