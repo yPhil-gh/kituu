@@ -586,8 +586,15 @@
 (global-set-key (kbd "s-r") 'replace-string)
 (global-set-key (kbd "s-²") (kbd "C-x b <return>")) ; Keyboard macro!
 (global-set-key (kbd "<C-kp-add>") 'kmacro-end-and-call-macro) ; Keyboard macro!
-;; (global-set-key (kbd "s-t") 'sgml-tag)
+(global-set-key (kbd "s-t") 'sgml-tag)
+(global-set-key (kbd "C-s-t") 'sgml-close-tag)
 (global-set-key (kbd "s-b") 'px-kill-now)
+(global-set-key (kbd "s-p") 'php-mode)
+(global-set-key (kbd "s-h") 'html-mode)
+(global-set-key (kbd "s-j") 'js-mode)
+(global-set-key (kbd "s-o") 'org-mode)
+(global-set-key (kbd "s-d") 'wl-draft-mode)
+(global-set-key (kbd "s-m") 'kmacro-end-and-call-macro)
 
 ;; (define-key global-map [s-k] 'kill-buffer)
 
