@@ -7,6 +7,14 @@
 
 ;; Vars! ______________________________________________________________________
 
+
+(eval-after-load "wl-summary"
+  '(progn
+     (define-key wl-summary-mode-map [mouse-4] 'mwheel-scroll)
+     (define-key wl-summary-mode-map [mouse-5] 'mwheel-scroll)
+     (define-key wl-summary-mode-map [S-mouse-4] 'mwheel-scroll)
+     (define-key wl-summary-mode-map [S-mouse-5] 'mwheel-scroll)))
+
 (setq
 
  wl-from "Philippe M. Coatmeur <philippe.coatmeur@gmail.com>"
@@ -95,8 +103,8 @@
    ;; "^Cc"
 )
 
- ;; elmo-nntp-default-server "news.eternal-september.org"
- ;; elmo-nntp-default-user "PhilippeCM"
+ elmo-nntp-default-server "news.eternal-september.org"
+ elmo-nntp-default-user "PhilippeCM"
 )
 (setq wl-nntp-posting-server elmo-nntp-default-server)
 

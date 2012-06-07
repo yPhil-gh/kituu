@@ -11,9 +11,9 @@ GMAIL{
 #like: "myname@company.com". Folders at my work are delimited by dot '.'.
 WORK{
    %INBOX:"contact@adamweb.net"/clear@mail.gandi.net "Inbox"
-   %INBOX.Sent:"contact@adamweb.net"/clear@mail.gandi.net "Sent"
-   %INBOX.Drafts:"contact@adamweb.net"/clear@mail.gandi.net "Draft"
-   %INBOX.Trash:"contact@adamweb.net"/clear@mail.gandi.net "Trash"
+   %Sent:"contact@adamweb.net"/clear@mail.gandi.net "Sent"
+   %Drafts:"contact@adamweb.net"/clear@mail.gandi.net "Draft"
+   %Trash:"contact@adamweb.net"/clear@mail.gandi.net "Trash"
 }
 
 TESTS{
