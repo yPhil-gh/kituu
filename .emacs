@@ -32,8 +32,8 @@
 ;; network-speed configuration:
 ;; (add-to-list 'load-path "/path/to/network-speed.el")
 
-(require 'network-speed)
-(network-speed-start)
+;; (require 'network-speed)
+;; (network-speed-start)
 
 (defvar myicon "/usr/share/icons/wordprocessor_section.png")
 

@@ -17,7 +17,7 @@
  ;; wl-folder-desktop-name #("Desktop" 0 7 (wl-folder-entity-id 0 wl-folder-is-group is-group))
  ;; wl-subscribed-mailing-list (quote ("wl@lists.airs.net"))
 
-
+ mime-edit-split-message nil
 ;; Correct To: In Sent:
  wl-summary-showto-folder-regexp ".*"
  wl-summary-from-function 'wl-summary-default-from
@@ -95,8 +95,8 @@
    ;; "^Cc"
 )
 
- elmo-nntp-default-server "news.eternal-september.org"
- elmo-nntp-default-user "PhilippeCM"
+ ;; elmo-nntp-default-server "news.eternal-september.org"
+ ;; elmo-nntp-default-user "PhilippeCM"
 )
 (setq wl-nntp-posting-server elmo-nntp-default-server)
 
