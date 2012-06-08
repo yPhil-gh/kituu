@@ -6,6 +6,7 @@ lispdir=~/.emacs.d/lisp
 scriptdir=~/scripts
 sep="\n################# "
 
+
 # My lisp packages
 declare -A lisp
 lisp[tabbar]="git clone git://github.com/dholm/tabbar.git"
