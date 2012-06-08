@@ -332,7 +332,7 @@
 (defun insert-pair-dbquotes () (interactive) (insert-bracket-pair "\"" "\"") )
 ;; Thanks Xah Lee, my favorite usenet freak, for those last two
 
-(defun Frigo-px ()
+(defun px-frigo ()
   (interactive)
   "Copy the current region, paste it in frigo.txt with a time tag, and save this file"
   (unless (use-region-p) (error "No region selected"))
