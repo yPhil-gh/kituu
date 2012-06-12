@@ -35,6 +35,8 @@
 ;; (require 'network-speed)
 ;; (network-speed-start)
 
+
+
 (defvar myicon "/usr/share/icons/wordprocessor_section.png")
 
 (defun notify-send (title message icon)
@@ -142,6 +144,7 @@
 (require 'bbdb nil t)
 ;; (require 'tabkey2 nil t)
 (require 'undo-tree)
+(require 'marker-visit)
 (require 'cl))
 
 (mail-bug-init)
@@ -559,6 +562,23 @@
 (defvar px-keys-minor-mode-map (make-keymap) "px-keys-minor-mode keymap.")
 
 (define-key px-keys-minor-mode-map (kbd "²") 'hippie-expand) ; Hippie-expand everywhere
+(define-key px-keys-minor-mode-map (kbd "<tab>") 'indent-or-expand) ; Indent/expand everywhere
+
+(defun indent-or-expand (arg)
+  "Either indent according to mode, or expand the word preceding
+point."
+  (interactive "*P")
+  (if (and
+       (or (bobp) (= ?w (char-syntax (char-before))))
+       (or (eobp) (not (= ?w (char-syntax (char-after))))))
+      (dabbrev-expand arg)
+    (indent-according-to-mode)))
+
+;; (defun my-tab-fix ()
+;;   (local-set-key [tab] 'indent-or-expand))
+
+;; (add-hook 'px-mode-hook 'my-tab-fix)
+
 
 (define-minor-mode px-keys-minor-mode
   "A minor mode so that my key settings override annoying major modes."
@@ -595,6 +615,10 @@
 (global-set-key (kbd "s-o") 'org-mode)
 (global-set-key (kbd "s-d") 'wl-draft-mode)
 (global-set-key (kbd "s-m") 'kmacro-end-and-call-macro)
+(global-set-key (kbd "<s-left>") 'marker-visit-prev)
+(global-set-key (kbd "<s-right>") 'marker-visit-next)
+
+
 
 ;; (define-key global-map [s-k] 'kill-buffer)
 
@@ -813,6 +837,10 @@ C-x v h     vc-insert-headers
 
 M-x                                                   vc-resolve-conflicts
 ediff-merge session on a file with conflict markers
+
+*** OTHER
+git reflog                                            view log
+git reset --hard HEAD@{7}                             revert HEAD to 7
 
 "
          (generate-new-buffer "px-help-emacs"))
