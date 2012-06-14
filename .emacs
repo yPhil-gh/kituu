@@ -151,7 +151,7 @@
 ;; (setq tabbar-ruler-global-tabbar 't) ; If you want tabbar
 
 
-(mail-bug-init)
+;; (mail-bug-init)
 
 ;; Required by my iswitchb hack
 (require 'edmacro)
