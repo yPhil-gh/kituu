@@ -4,9 +4,28 @@ autoload -U compinit && compinit
 autoload -U colors && colors
 
 setopt emacs
+setopt AUTO_LIST
+setopt AUTO_MENU
+setopt MENU_COMPLETE
 
 bindkey ';5D' emacs-backward-word
 bindkey ';5C' emacs-forward-word
+
+# GNU Colors 需要/etc/DIR_COLORS文件 否则自动补全时候选菜单中的选项不能彩色显示
+[ -f /etc/DIR_COLORS ] && eval $(dircolors -b /etc/DIR_COLORS)
+export ZLSCOLORS="${LS_COLORS}"
+zmodload  zsh/complist
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+
+zstyle ':completion:*' completer _complete _match _approximate
+zstyle ':completion:*:match:*' original only
+zstyle ':completion:*:approximate:*' max-errors 1 numeric
+
+compdef pkill=kill
+compdef pkill=killall
+zstyle ':completion:*:*:kill:*' menu yes select
+zstyle ':completion:*:processes' command 'ps -au$USER'
 
 # WORDCHARS="*?_-.[]~&;!#$%^(){}<>"
 export WORDCHARS=''
