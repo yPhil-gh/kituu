@@ -13,7 +13,7 @@ lisp[tabbar-ruler]="git clone git://github.com/mlf176f2/tabbar-ruler.el.git"
 lisp[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
 lisp[mail-bug]="git clone https://xaccrocheur@github.com/xaccrocheur/mail-bug.git"
 lisp[nxhtml]="bzr branch lp:nxhtml"
-lisp[marker-visit]="git clone https://github.com/emacsmirror/marker-visit.git"
+lisp[marker-visit]="git clone git://github.com/emacsmirror/marker-visit.git"
 # lisp[emacs-powerline]="git clone https://github.com/jonathanchu/emacs-powerline.git"
 
 echo -e $sep"Kituu! #################"
