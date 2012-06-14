@@ -6,7 +6,6 @@ lispdir=~/.emacs.d/lisp
 scriptdir=~/scripts
 sep="\n################# "
 
-
 # My lisp packages
 declare -A lisp
 lisp[tabbar]="git clone git://github.com/dholm/tabbar.git"
@@ -15,6 +14,7 @@ lisp[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
 lisp[mail-bug]="git clone https://xaccrocheur@github.com/xaccrocheur/mail-bug.git"
 lisp[nxhtml]="bzr branch lp:nxhtml"
 lisp[marker-visit]="git clone https://github.com/emacsmirror/marker-visit.git"
+# lisp[emacs-powerline]="git clone https://github.com/jonathanchu/emacs-powerline.git"
 
 echo -e $sep"Kituu! #################"
 
@@ -37,7 +37,7 @@ type -P drakconf &>/dev/null || { mandriva=false >&2; }
 
 if $mandriva ; then
     echo -e $sep"Various binary packages"
-    sudo urpmi --auto curl wget bzr git perl-doc sox bbdb htop fonts-ttf-Inconsolata xfdesktop task-xfce task-xfce-plugins
+    sudo urpmi --auto curl wget bzr git perl-doc sox bbdb htop fonts-ttf-Inconsolata xfdesktop task-xfce task-xfce-plugins bc
 fi
 
 if [ ! -e $scriptdir/git-completion.bash ] ; then

@@ -7,21 +7,22 @@
   (normal-top-level-add-to-load-path '("."))
   (normal-top-level-add-subdirs-to-load-path))
 
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/bbdb/")
-(autoload 'wl "wl" "Wanderlust" t)
-(autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
-(autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
+;; GNU
+;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/bbdb/")
+;; (autoload 'wl "wl" "Wanderlust" t)
+;; (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
+;; (autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
 
-(if (< emacs-major-version 24)
-    (progn
-      (load "~/.emacs.d/lisp/nxhtml/autostart.el")
-      (tabkey2-mode t))
-  (progn
-    (require 'php-mode nil t)
-    (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
-    ;; (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
-    ;; (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode)
-))
+;; (if (< emacs-major-version 24)
+;;     (progn
+;;       (load "~/.emacs.d/lisp/nxhtml/autostart.el")
+;;       (tabkey2-mode t))
+;;   (progn
+;;     (require 'php-mode nil t)
+;;     (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
+;;     ;; (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
+;;     ;; (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode)
+;; ))
 
 
 ;; Experiments
@@ -35,24 +36,20 @@
 ;; (require 'network-speed)
 ;; (network-speed-start)
 
-
-
-(defvar myicon "/usr/share/icons/wordprocessor_section.png")
+;; (setq redisplay-dont-pause t)
+;; (setq delete-by-moving-to-trash t)
+;; (setq list-colors-sort 'hsv )
 
 (defun notify-send (title message icon)
   (start-process "notify" " notify"
 		 libnotify-program "--expire-time=5000"
   "--urgency=low" (concat "--icon=" icon) title message))
 
-;; (notify-send "plop" "plip" myicon)
-
 ;; ;; Message alert hooks
 ;; (define-jabber-alert echo "Show a message in the echo area"
 ;;   (lambda (msg)
 ;;     (unless (minibuffer-prompt)
 ;;       (message "%s" msg))))
-
-
 
 (add-hook 'find-file-hooks 'turn-on-font-lock)
 
@@ -66,6 +63,8 @@
 ;; :weight 'bold
 ;; :width 'wide
 )
+
+(message "we are at line %s" (line-number-at-pos))
 
 ;; (has ital)
 ;; Liberation Mono-11
@@ -140,12 +139,14 @@
 (eval-and-compile
 (require 'tabbar nil t)
 (require 'tabbar-ruler)
+;; (require 'powerline)
 (require 'mail-bug nil t)
 (require 'bbdb nil t)
 ;; (require 'tabkey2 nil t)
 (require 'undo-tree)
 (require 'marker-visit)
-(require 'cl))
+(require 'cl)
+)
 
 (mail-bug-init)
 
@@ -511,7 +512,7 @@
 
 (add-hook 'cperl-mode-hook
 	  (lambda ()
-	    (local-set-key (kbd "C-h f") 'cperl-perldoc)))
+	    (local-set-key (kbd "C-c h") 'cperl-perldoc)))
 
 (defun text-mode-hook-px ()
 (tabbar-mode t)
@@ -524,9 +525,9 @@
 
 ;; FIXME
 (defun info-mode-hook-px ()
-(tabbar-mode t)
-;; (menu-bar-mode -1)
-)
+  (tabbar-mode t)
+  ;; (menu-bar-mode -1)
+  )
 
 (add-hook 'text-mode-hook 'text-mode-hook-px)
 (add-hook 'gnus-before-startup-hook 'gnus-mode-hook-px)
@@ -536,55 +537,29 @@
 (add-hook 'flyspell-mode-hook 'flyspell-prog-mode)
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-;; (add-hook 'emacs-lisp-mode-hook 'eldoc-mode)
-(add-hook 'display-time-hook
-          (lambda () (setq gnus-mode-non-string-length
-                           (+ 21
-                              (if line-number-mode 5 0)
-                              (if column-number-mode 4 0)
-                              (length display-time-string)))))
-;; (add-hook 'php-mode-hook 'yas/minor-mode)
-;; (add-hook 'html-mode-hook 'yas/minor-mode)
-;; (setq yas/extra-mode-hooks '(php-html-helper-mode))
-;; (setq yas/extra-mode-hooks '(css-mode))
-
-
-;; ;; remove desktop after it's been read
-;; (add-hook 'desktop-after-read-hook
-;; 	  '(lambda ()
-;; 	     ;; desktop-remove clears desktop-dirname
-;; 	     (setq desktop-dirname-tmp desktop-dirname)
-;; 	     (desktop-remove)
-;; 	     (setq desktop-dirname desktop-dirname-tmp)))
 
 ;; Keys! ______________________________________________________________________
 
-(defvar px-keys-minor-mode-map (make-keymap) "px-keys-minor-mode keymap.")
-
-(define-key px-keys-minor-mode-map (kbd "²") 'hippie-expand) ; Hippie-expand everywhere
-(define-key px-keys-minor-mode-map (kbd "<tab>") 'indent-or-expand) ; Indent/expand everywhere
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+(global-set-key (kbd "C-<escape>") 'keyboard-quit)
+(global-set-key (kbd "²") 'hippie-expand)
 
 (defun indent-or-expand (arg)
   "Either indent according to mode, or expand the word preceding
 point."
   (interactive "*P")
-  (if (and
-       (or (bobp) (= ?w (char-syntax (char-before))))
-       (or (eobp) (not (= ?w (char-syntax (char-after))))))
-      (dabbrev-expand arg)
-    (indent-according-to-mode)))
+      (if (and
+	   (or (bobp) (= ?w (char-syntax (char-before))))
+	   (or (eobp) (not (= ?w (char-syntax (char-after))))))
+	  (dabbrev-expand arg)
+	(indent-according-to-mode)))
 
-;; (defun my-tab-fix ()
-;;   (local-set-key [tab] 'indent-or-expand))
+(defun my-tab-fix ()
+  (local-set-key [tab] 'indent-or-expand))
 
-;; (add-hook 'px-mode-hook 'my-tab-fix)
-
-
-(define-minor-mode px-keys-minor-mode
-  "A minor mode so that my key settings override annoying major modes."
-  t " px" 'px-keys-minor-mode-map)
-
-(px-keys-minor-mode 1)
+(add-hook 'c-mode-hook          'my-tab-fix)
+(add-hook 'sh-mode-hook         'my-tab-fix)
+(add-hook 'emacs-lisp-mode-hook 'my-tab-fix)
 
 (define-key global-map [(meta up)] '(lambda() (interactive) (scroll-other-window -1)))
 (define-key global-map [(meta down)] '(lambda() (interactive) (scroll-other-window 1)))
@@ -618,8 +593,6 @@ point."
 (global-set-key (kbd "<s-left>") 'marker-visit-prev)
 (global-set-key (kbd "<s-right>") 'marker-visit-next)
 
-
-
 ;; (define-key global-map [s-k] 'kill-buffer)
 
 (global-set-key (kbd "C-f") 'isearch-forward)
@@ -646,6 +619,14 @@ point."
 (global-set-key (kbd "M-<backspace>") 'backward-kill-word)
 (global-set-key (kbd "M-o") 'recentf-open-files)
 (global-set-key (kbd "M-d") 'px-toggle-comments)
+
+;; px Minor mode
+;; (defvar px-keys-minor-mode-map (make-keymap) "px-keys-minor-mode keymap.")
+;; (define-minor-mode px-keys-minor-mode
+;;   "A minor mode so that my key settings override annoying major modes."
+;;   t " px" 'px-keys-minor-mode-map)
+;; (px-keys-minor-mode 1)
+;; (define-key px-keys-minor-mode-map (kbd "²") 'hippie-expand) ; Hippie-expand everywhere
 
 ;; (defun tabbar-buffer-groups ()
 ;;   "Return the list of group names the current buffer belongs to.
@@ -971,34 +952,6 @@ git reset --hard HEAD@{7}                             revert HEAD to 7
 
 ;; Faces ______________________________________________________________________
 
-(if (window-system)
-    (progn
-      (set-face-attribute 'default nil :background "#2e3436" :foreground "#eeeeec")
-      (set-face-attribute 'cursor nil :background "#fce94f" :foreground "#2e3436")
-      (set-face-attribute 'font-lock-builtin-face nil :foreground "#ad7fa8")
-      (set-face-attribute 'font-lock-comment-face nil :foreground "#73d216")
-      (set-face-attribute 'font-lock-constant-face nil :foreground "#e6a8df")
-      (set-face-attribute 'font-lock-function-name-face nil :foreground "#fce84f")
-      (set-face-attribute 'font-lock-keyword-face nil :foreground "#8cc4ff")
-      (set-face-attribute 'font-lock-string-face nil :foreground "#e9b96e")
-      (set-face-attribute 'font-lock-type-face nil :foreground "#a5ff4d")
-      (set-face-attribute 'font-lock-variable-name-face nil :foreground "#fcaf3e")
-      (set-face-attribute 'font-lock-warning-face nil :foreground "#ef2929")
-      (set-face-attribute 'fringe nil :background "#2c2c2c")
-      (set-face-attribute 'header-line nil :background "#555753" :foreground "#ffffff")
-      (set-face-attribute 'isearch nil :background "#ce5c00" :foreground "#ffffff")
-      (set-face-attribute 'lazy-highlight nil :background "#8f5902")
-      (set-face-attribute 'link nil :foreground "#729fcf" :underline t)
-      (set-face-attribute 'link-visited nil :foreground "#3465a4" :underline t)
-      (set-face-attribute 'minibuffer-prompt nil :foreground "#fce94f")
-      (set-face-attribute 'mode-line nil :background "gray10" :foreground "#eeeeee")
-      (set-face-attribute 'mode-line-inactive nil :background "#555753" :foreground "#ffffff")
-      (set-face-attribute 'mode-line-highlight nil :inverse-video t)
-      (set-face-attribute 'region nil :background "#555753"))
-  (set-face-attribute 'default nil :background "black" :foreground
-    "white")
-  (set-face-attribute 'mode-line nil :background "blue" :foreground "yellow"))
-
 (set-face-attribute 'tabbar-default nil
 		    :inherit nil
 		    :height 110
@@ -1039,34 +992,65 @@ git reset --hard HEAD@{7}                             revert HEAD to 7
 ;; 		    :inherit 'tabbar-default
 ;; 		    :box nil)
 
+
+(if (window-system)
+    (progn
+      (set-face-attribute 'default nil :background "#2e3436" :foreground "#eeeeec")
+      (set-face-attribute 'cursor nil :background "#fce94f" :foreground "#2e3436")
+      (set-face-attribute 'highlight nil :background "dark red" :foreground
+    "#fce94f")
+      (set-face-attribute 'font-lock-builtin-face nil :foreground "#ad7fa8")
+      (set-face-attribute 'font-lock-comment-face nil :slant 'oblique :foreground "#73d216")
+      (set-face-attribute 'font-lock-constant-face nil :foreground "#e6a8df")
+      (set-face-attribute 'font-lock-function-name-face nil :foreground "#fce84f")
+      (set-face-attribute 'font-lock-keyword-face nil :foreground "#8cc4ff")
+      (set-face-attribute 'font-lock-string-face nil :foreground "#e9b96e")
+      (set-face-attribute 'font-lock-type-face nil :foreground "#a5ff4d")
+      (set-face-attribute 'font-lock-variable-name-face nil :foreground "#fcaf3e")
+      (set-face-attribute 'font-lock-warning-face nil :foreground "#ef2929")
+      (set-face-attribute 'fringe nil :background "#2c2c2c")
+      (set-face-attribute 'header-line nil :background "#555753" :foreground "#ffffff")
+      (set-face-attribute 'isearch nil :background "#ce5c00" :foreground "#ffffff")
+      (set-face-attribute 'lazy-highlight nil :background "#8f5902")
+      (set-face-attribute 'link nil :foreground "#729fcf" :underline t)
+      (set-face-attribute 'link-visited nil :foreground "#3465a4" :underline t)
+      (set-face-attribute 'minibuffer-prompt nil :foreground "#fce94f")
+      (set-face-attribute 'mode-line nil :background "gray10" :foreground "#eeeeee")
+      (set-face-attribute 'mode-line-inactive nil :background "#555753" :foreground "#ffffff")
+      (set-face-attribute 'mode-line-highlight nil :inverse-video t)
+      (set-face-attribute 'region nil :background "#555753"))
+  (set-face-attribute 'default nil :background "black" :foreground
+    "white")
+  (set-face-attribute 'mode-line nil :background "blue" :foreground "yellow"))
+
 ;; Custom ______________________________________________________________________
 
 ;; (setq tabbar-separator '(1)) ;; set tabbar-separator size to 1 pixel
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(cperl-array-face ((t (:foreground "#fcaf3e" :weight bold))))
- '(cperl-hash-face ((t (:foreground "#fcaf3e" :slant italic :weight bold))))
- '(font-lock-comment-face ((t (:foreground "orange red" :slant oblique :weight light))))
- '(highlight ((t (:background "dark red"))))
- '(mode-line ((t (:background "gray10" :foreground "#eeeeee"))))
- '(mode-line-highlight ((t (:inverse-video t))))
- '(mumamo-background-chunk-major ((t (:background "gray15"))))
- '(mumamo-background-chunk-submode1 ((t (:background "gray16"))))
- '(mumamo-region ((t nil)))
- '(undo-tree-visualizer-default-face ((t (:foreground "gray"))))
- '(wl-highlight-folder-few-face ((t (:foreground "gainsboro" :weight bold))))
- '(wl-highlight-folder-many-face ((t (:foreground "AntiqueWhite3" :weight extra-bold))))
- '(wl-highlight-folder-path-face ((t (:background "dark red" :foreground "white" :weight bold))))
- '(wl-highlight-folder-unread-face ((t (:foreground "light gray" :weight bold))))
- '(wl-highlight-folder-zero-face ((t (:foreground "AntiqueWhite2"))))
- '(wl-highlight-summary-answered-face ((t (:foreground "khaki"))))
- '(wl-highlight-summary-displaying-face ((t (:background "dark red" :foreground "yellow" :weight bold))))
- '(wl-highlight-summary-new-face ((t (:foreground "white" :weight ultra-bold))))
- '(wl-highlight-summary-thread-top-face ((t (:foreground "gray")))))
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(cperl-array-face ((t (:foreground "#fcaf3e" :weight bold))))
+;;  '(cperl-hash-face ((t (:foreground "#fcaf3e" :slant italic :weight bold))))
+;;  '(font-lock-comment-face ((t (:slant oblique :weight light))))
+;;  '(highlight ((t (:background "dark red"))))
+;;  '(mode-line ((t (:background "gray10" :foreground "#eeeeee"))))
+;;  '(mode-line-highlight ((t (:inverse-video t))))
+;;  '(mumamo-background-chunk-major ((t (:background "gray15"))))
+;;  '(mumamo-background-chunk-submode1 ((t (:background "gray16"))))
+;;  '(mumamo-region ((t nil)))
+;;  '(undo-tree-visualizer-default-face ((t (:foreground "gray"))))
+;;  '(wl-highlight-folder-few-face ((t (:foreground "gainsboro" :weight bold))))
+;;  '(wl-highlight-folder-many-face ((t (:foreground "AntiqueWhite3" :weight extra-bold))))
+;;  '(wl-highlight-folder-path-face ((t (:background "dark red" :foreground "white" :weight bold))))
+;;  '(wl-highlight-folder-unread-face ((t (:foreground "light gray" :weight bold))))
+;;  '(wl-highlight-folder-zero-face ((t (:foreground "AntiqueWhite2"))))
+;;  '(wl-highlight-summary-answered-face ((t (:foreground "khaki"))))
+;;  '(wl-highlight-summary-displaying-face ((t (:background "dark red" :foreground "yellow" :weight bold))))
+;;  '(wl-highlight-summary-new-face ((t (:foreground "white" :weight ultra-bold))))
+;;  '(wl-highlight-summary-thread-top-face ((t (:foreground "gray")))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -1105,3 +1089,9 @@ git reset --hard HEAD@{7}                             revert HEAD to 7
 ;; (setq yas/root-directory "~/.emacs.d/el-get/yasnippet/snippets")
 ;; (add-hook 'php-mode-hook 'yas/global-mode)
 (message "%s loaded" (or load-file-name buffer-file-name))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
