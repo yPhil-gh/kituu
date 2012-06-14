@@ -407,7 +407,7 @@
 ;;   (desktop-save-in-desktop-dir)))
 
 ;; This will only work for one session
-GNU
+;; GNU
 ;; (add-hook 'after-init-hook
 ;; 	  '(lambda ()
 ;; 	     (if (px-saved-session)
