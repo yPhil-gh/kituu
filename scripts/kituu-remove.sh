@@ -1,3 +1,3 @@
 #!/bin/bash
 
-rm -rfv .kituu/ scripts/ .wl .emacs* .gnus.el
+rm -rfv .Xresources .bkp/ .emacs* .folders .gnus.el .kituu/ .wl
