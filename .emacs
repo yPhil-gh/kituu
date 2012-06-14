@@ -428,7 +428,7 @@
 ;; (global-smart-tab-mode 1)
 ;; (smart-tab-mode t)
 (global-font-lock-mode t)
-(tool-bar-mode 0)
+;; (tool-bar-mode 0)
 (set-scroll-bar-mode `right)
 (delete-selection-mode t)
 (auto-fill-mode t)
