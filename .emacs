@@ -407,19 +407,21 @@
 ;;   (desktop-save-in-desktop-dir)))
 
 ;; This will only work for one session
-(add-hook 'after-init-hook
-	  '(lambda ()
-	     (if (px-saved-session)
-		 (if (y-or-n-p "Restore session? ")
-		     (Session-restore-px)))))
+GNU
+;; (add-hook 'after-init-hook
+;; 	  '(lambda ()
+;; 	     (if (px-saved-session)
+;; 		 (if (y-or-n-p "Restore session? ")
+;; 		     (Session-restore-px)))))
 
-(add-hook 'kill-emacs-hook
-	  '(lambda ()
-	     (px-session-save)))
+;; (add-hook 'kill-emacs-hook
+;; 	  '(lambda ()
+;; 	     (px-session-save)))
 
 ;; Modes! ______________________________________________________________________
 ;; (display-time-mode t)
-(tabbar-mode t)
+;; GNU
+;; (tabbar-mode t)
 (show-paren-mode t)
 (menu-bar-mode -1)
 (global-linum-mode t)
@@ -532,10 +534,11 @@
   ;; (menu-bar-mode -1)
   )
 
-(add-hook 'text-mode-hook 'text-mode-hook-px)
-(add-hook 'gnus-before-startup-hook 'gnus-mode-hook-px)
-(add-hook 'gnus-exit-gnus-hook 'text-mode-hook-px)
-(add-hook 'lisp-mode-hook 'info-mode-hook-px)
+;; GNU
+;; (add-hook 'text-mode-hook 'text-mode-hook-px)
+;; (add-hook 'gnus-before-startup-hook 'gnus-mode-hook-px)
+;; (add-hook 'gnus-exit-gnus-hook 'text-mode-hook-px)
+;; (add-hook 'lisp-mode-hook 'info-mode-hook-px)
 
 (add-hook 'flyspell-mode-hook 'flyspell-prog-mode)
 
