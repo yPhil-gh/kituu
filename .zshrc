@@ -22,9 +22,9 @@ alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
 # alias Screen="screen -r $newest"
 
 # Funcs
-Find-this-and-do-that () {
-    find . -name $1 -exec ls -l \{} \;
-}
+# Find-this-and-do-that () {
+#     find . -name $1 -exec ls -l \{} \;
+# }
 
 pss () {
     ps aux | grep -i "[${1:0:1}]${1:1}"
