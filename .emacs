@@ -959,37 +959,42 @@ git reset --hard HEAD@{7}                             revert HEAD to 7
 
 ;; Faces ______________________________________________________________________
 
-(set-face-attribute 'tabbar-default nil
-		    :inherit nil
-		    :height 110
-		    :weight 'normal
-		    :width 'normal
-		    :slant 'normal
-		    :underline nil
-		    :strike-through nil
-		    :stipple nil
-		    ;; :background "gray80"
-		    :background nil
-		    :foreground "black"
-		    :box nil
-		    :family "Vera Sans Mono Bold Oblique")
+;; GNU
+;; (set-face-attribute 'tabbar-default nil
+;; 		    :inherit nil
+;; 		    :height 110
+;; 		    :weight 'normal
+;; 		    :width 'normal
+;; 		    :slant 'normal
+;; 		    :underline nil
+;; 		    :strike-through nil
+;; 		    :stipple nil
+;; 		    ;; :background "gray80"
+;; 		    :background nil
+;; 		    :foreground "black"
+;; 		    :box nil
+;; 		    :family "Vera Sans Mono Bold Oblique")
 
-(set-face-attribute 'tabbar-separator nil
-                    :background "gray40"
-                    :foreground nil
-                    :height 1.0)
+;; (set-face-attribute 'tabbar-separator nil
+;;                     :background "gray40"
+;;                     :foreground nil
+;;                     :height 1.0)
 
-(set-face-attribute 'tabbar-selected nil
-		    :background "#2e3436"
-		    :foreground "red"
-		    :inherit 'tabbar-default
-		    :box '(:line-width 1 :color "#2e3436" :style nil))
+;; (set-face-attribute 'tabbar-selected nil
+;; 		    :background "#2e3436"
+;; 		    :foreground "red"
+;; 		    :inherit 'tabbar-default
+;; 		    :box '(:line-width 1 :color "#2e3436" :style nil))
 
-(set-face-attribute 'tabbar-unselected nil
-		    :inherit 'tabbar-default
-		    :background "gray50"
-		    ;; :background "red"
-		    :box '(:line-width 1 :color "gray50" :style nil))
+;; (set-face-attribute 'tabbar-unselected nil
+;; 		    :inherit 'tabbar-default
+;; 		    :background "gray50"
+;; 		    ;; :background "red"
+;; 		    :box '(:line-width 1 :color "gray50" :style nil))
+
+
+
+
 
 ;; (set-face-attribute 'tabbar-highlight nil
 ;; 		    :foreground "white"
