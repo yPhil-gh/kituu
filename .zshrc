@@ -3,6 +3,13 @@ autoload -U compinit && compinit
 
 autoload -U colors && colors
 
+setopt emacs
+
+bindkey ';5D' emacs-backward-word
+bindkey ';5C' emacs-forward-word
+
+# WORDCHARS="*?_-.[]~&;!#$%^(){}<>"
+export WORDCHARS=''
 # Ye ol' Aliasses
 alias ll="ls -alh"
 alias la="ls -A"
@@ -22,9 +29,9 @@ alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
 # alias Screen="screen -r $newest"
 
 # Funcs
-# Find-this-and-do-that () {
-#     find . -name $1 -exec ls -l \{} \;
-# }
+Find-this-and-do-that () {
+    find . -name $1 -exec ls -l '{}' \;
+}
 
 pss () {
     ps aux | grep -i "[${1:0:1}]${1:1}"
@@ -33,13 +40,6 @@ pss () {
 bkp () {
     cp -Rp $1 ${1%.*}.bkp-$(date +%y-%m-%d-%Hh%M).${1#*.}
 }
-
-cleanup-turds () {
-    find ./ -name "*~" -exec rm '{}' \; -print -or -name ".*~" -exec rm {} \; -print -or -name "#*#" -exec rm '{}' \; -print -or -name "*.swp" -exec rm '{}' \; -print
-}
-
-WORDCHARS="*?_-.[]~&;!#$%^(){}<>"
-
 
 # prompt
 function precmd {
@@ -67,13 +67,12 @@ function precmd {
     ###
     # Get APM info.
 
-    if which ibam > /dev/null; then
-	PR_APM_RESULT=`ibam --percentbattery`
-    elif which apm > /dev/null; then
-	PR_APM_RESULT=`apm`
-    fi
+    # if which ibam > /dev/null; then
+    # 	PR_APM_RESULT=`ibam --percentbattery`
+    # elif which apm > /dev/null; then
+    # 	PR_APM_RESULT=`apm`
+    # fi
 }
-
 
 setopt extended_glob
 preexec () {
@@ -83,13 +82,11 @@ preexec () {
     fi
 }
 
-
 setprompt () {
     ###
     # Need this so the prompt will work.
 
     setopt prompt_subst
-
 
     ###
     # See if we can use colors.
@@ -104,7 +101,6 @@ setprompt () {
 	(( count = $count + 1 ))
     done
     PR_NO_COLOUR="%{$terminfo[sgr0]%}"
-
 
     ###
     # See if we can use extended characters to look nicer.
@@ -147,37 +143,36 @@ setprompt () {
     ###
     # APM detection
 
-    if which ibam > /dev/null; then
-	PR_APM='$PR_RED${${PR_APM_RESULT[(f)1]}[(w)-2]}%%(${${PR_APM_RESULT[(f)3]}[(w)-1]})$PR_LIGHT_BLUE:'
-    elif which apm > /dev/null; then
-	PR_APM='$PR_RED${PR_APM_RESULT[(w)5,(w)6]/\% /%%}$PR_LIGHT_BLUE:'
-    else
-	PR_APM=''
-    fi
+    # if which ibam > /dev/null; then
+    # 	PR_APM='$PR_RED${${PR_APM_RESULT[(f)1]}[(w)-2]}%%(${${PR_APM_RESULT[(f)3]}[(w)-1]})$PR_LIGHT_BLUE:'
+    # elif which apm > /dev/null; then
+    # 	PR_APM='$PR_RED${PR_APM_RESULT[(w)5,(w)6]/\% /%%}$PR_LIGHT_BLUE:'
+    # else
+    # 	PR_APM=''
+    # fi
 
     ###
     # Finally, the prompt.
     PROMPT='$PR_SET_CHARSET$PR_STITLE${(e)PR_TITLEBAR}\
-$PR_CYAN$PR_SHIFT_IN$PR_ULCORNER$PR_BLUE$PR_HBAR$PR_SHIFT_OUT(\
+$PR_BLUE$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT(\
 $PR_GREEN%(!.%SROOT%s.%n)$PR_GREEN@%m:%l\
-$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_CYAN$PR_HBAR${(e)PR_FILLBAR}$PR_BLUE$PR_HBAR$PR_SHIFT_OUT(\
+$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_HBAR${(e)PR_FILLBAR}$PR_BLUE$PR_HBAR$PR_SHIFT_OUT(\
 $PR_MAGENTA%$PR_PWDLEN<...<%~%<<\
-$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_CYAN$PR_URCORNER$PR_SHIFT_OUT\
+$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_URCORNER$PR_SHIFT_OUT\
 
-$PR_CYAN$PR_SHIFT_IN$PR_LLCORNER$PR_BLUE$PR_HBAR$PR_SHIFT_OUT(\
+$PR_SHIFT_IN$PR_LLCORNER$PR_BLUE$PR_HBAR$PR_SHIFT_OUT(\
 %(?..$PR_LIGHT_RED%?$PR_BLUE:)\
 ${(e)PR_APM}$PR_YELLOW%D{%H:%M}\
 $PR_LIGHT_BLUE:%(!.$PR_RED.$PR_WHITE)%#$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
-$PR_CYAN$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
-$PR_NO_COLOUR '
+$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT> '
 
-    RPROMPT='$PR_CYAN$PR_SHIFT_IN$PR_HBAR$PR_BLUE$PR_HBAR$PR_SHIFT_OUT\
-($PR_YELLOW%D{%a,%b%d}$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_CYAN$PR_LRCORNER$PR_SHIFT_OUT$PR_NO_COLOUR'
+    RPROMPT='$PR_SHIFT_IN$PR_HBAR$PR_BLUE$PR_HBAR$PR_SHIFT_OUT\
+($PR_YELLOW%D{%a,%b%d}$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_LRCORNER$PR_SHIFT_OUT$PR_NO_COLOUR'
 
     PS2='$PR_CYAN$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
 $PR_BLUE$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT(\
 $PR_LIGHT_GREEN%_$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
-$PR_CYAN$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT$PR_NO_COLOUR '
+$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT$PR_NO_COLOUR '
 }
 
 setprompt
