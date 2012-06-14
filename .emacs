@@ -26,9 +26,6 @@
 
 
 ;; Experiments
-;;----------------------------------------
-;;automatic font-lock-mode [TUCKERM Jan2002]
-;;----------------------------------------
 
 ;; network-speed configuration:
 ;; (add-to-list 'load-path "/path/to/network-speed.el")
@@ -136,17 +133,17 @@
 
 ;; (setq auto-mode-alist (cons '(".php" . php-mode) auto-mode-alist))
 
-;; (eval-and-compile
+(eval-and-compile
 ;; (require 'tabbar nil t)
 ;; (require 'tabbar-ruler)
-;; ;; (require 'powerline)
-;; (require 'mail-bug nil t)
+;; (require 'powerline)
+(require 'mail-bug nil t)
 ;; (require 'bbdb nil t)
-;; ;; (require 'tabkey2 nil t)
-;; (require 'undo-tree)
+;; (require 'tabkey2 nil t)
+(require 'undo-tree)
 ;; (require 'marker-visit)
-;; (require 'cl)
-;; )
+(require 'cl)
+)
 
 ;; (setq tabbar-ruler-global-tabbar 't) ; If you want tabbar
 
