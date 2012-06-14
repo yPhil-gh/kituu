@@ -53,16 +53,16 @@
 
 (add-hook 'find-file-hooks 'turn-on-font-lock)
 
-(set-face-attribute 'default nil
-:font "Monospace"
-:height 125
-;; :font "Inconsolata"
-;; :width 'normal
-:weight 'normal
-;; :slant 'reverse-italic
-;; :weight 'bold
-;; :width 'wide
-)
+;; (set-face-attribute 'default nil
+;; :font "Monospace"
+;; :height 125
+;; ;; :font "Inconsolata"
+;; ;; :width 'normal
+;; :weight 'normal
+;; ;; :slant 'reverse-italic
+;; ;; :weight 'bold
+;; ;; :width 'wide
+;; )
 
 (message "we are at line %s" (line-number-at-pos))
 
@@ -125,7 +125,7 @@
 ;; (setq tramp-ssh-args "-C")
 ;; (setq tramp-auto-save-directory "~/.emacs_backups")
 
-(setq tabbar-ruler-global-tabbar 't) ; If you want tabbar
+
 ;; (setq tabbar-ruler-global-ruler 't) ; if you want a global ruler
 ;; (setq tabbar-ruler-popup-menu 't) ; If you want a popup menu.
 ;; (setq tabbar-ruler-popup-toolbar 't) ; If you want a popup toolbar
@@ -134,19 +134,22 @@
 ;; (if (>= emacs-major-version 23)
 ;;     (set-frame-font "Monospace-12"))
 
-(setq auto-mode-alist (cons '(".php" . php-mode) auto-mode-alist))
+;; (setq auto-mode-alist (cons '(".php" . php-mode) auto-mode-alist))
 
-(eval-and-compile
-(require 'tabbar nil t)
-(require 'tabbar-ruler)
-;; (require 'powerline)
-(require 'mail-bug nil t)
-(require 'bbdb nil t)
-;; (require 'tabkey2 nil t)
-(require 'undo-tree)
-(require 'marker-visit)
-(require 'cl)
-)
+;; (eval-and-compile
+;; (require 'tabbar nil t)
+;; (require 'tabbar-ruler)
+;; ;; (require 'powerline)
+;; (require 'mail-bug nil t)
+;; (require 'bbdb nil t)
+;; ;; (require 'tabkey2 nil t)
+;; (require 'undo-tree)
+;; (require 'marker-visit)
+;; (require 'cl)
+;; )
+
+;; (setq tabbar-ruler-global-tabbar 't) ; If you want tabbar
+
 
 (mail-bug-init)
 
