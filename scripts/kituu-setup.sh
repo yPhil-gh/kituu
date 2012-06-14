@@ -37,7 +37,7 @@ type -P drakconf &>/dev/null || { mandriva=false >&2; }
 
 if $mandriva ; then
     echo -e $sep"Various binary packages"
-    sudo urpmi --auto curl wget bzr git perl-doc sox bbdb htop fonts-ttf-Inconsolata xfdesktop task-xfce task-xfce-plugins bc
+    sudo urpmi --auto zsh curl wget bzr git perl-doc sox bbdb htop fonts-ttf-Inconsolata xfdesktop task-xfce task-xfce-plugins bc
 fi
 
 if [ ! -e $scriptdir/git-completion.bash ] ; then
