@@ -11,6 +11,9 @@ setopt MENU_COMPLETE
 bindkey ';5D' emacs-backward-word
 bindkey ';5C' emacs-forward-word
 
+PATH=$PATH:~/scripts:~/bin
+
+
 # GNU Colors 需要/etc/DIR_COLORS文件 否则自动补全时候选菜单中的选项不能彩色显示
 [ -f /etc/DIR_COLORS ] && eval $(dircolors -b /etc/DIR_COLORS)
 export ZLSCOLORS="${LS_COLORS}"

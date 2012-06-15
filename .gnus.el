@@ -12,9 +12,9 @@
 (require 'olimap)
 (require 'gnus-notify-)
 (require 'nnir)
-(require 'bbdb)
-(require 'moy-bbdb)
-(bbdb-initialize)
+;; (require 'bbdb)
+;; (require 'moy-bbdb)
+;; (bbdb-initialize)
 ;; (setq gnus-topic-topology '(("Adamweb" visible nil nil) (("News" visible nil nil) (("Perso" visible nil nil))) (("Local" visible nil nil))))
 
 (autoload 'bbdb/send-hook "moy-bbdb"

@@ -9,9 +9,26 @@
 
 ;; GNU
 ;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/bbdb/")
-;; (autoload 'wl "wl" "Wanderlust" t)
-;; (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
-;; (autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
+(autoload 'wl "wl" "Wanderlust" t)
+(autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
+(autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
+
+(eval-and-compile
+(require 'tabbar nil t)
+;; (require 'tabbar-ruler)
+;; (require 'elid)
+;; (require 'mail-bug nil t)
+;; (require 'bbdb nil t)
+;; (require 'tabkey2 nil t)
+(require 'undo-tree)
+;; (require 'marker-visit)
+(require 'cl)
+)
+
+;; (mail-bug-init)
+
+;; Required by my iswitchb hack
+(require 'edmacro)
 
 ;; (if (< emacs-major-version 24)
 ;;     (progn
@@ -24,6 +41,7 @@
 ;;     ;; (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode)
 ;; ))
 
+;; (setq tabbar-ruler-global-tabbar 't) ; If you want tabbar
 
 ;; Experiments
 
@@ -132,26 +150,6 @@
 ;;     (set-frame-font "Monospace-12"))
 
 ;; (setq auto-mode-alist (cons '(".php" . php-mode) auto-mode-alist))
-
-(eval-and-compile
-;; (require 'tabbar nil t)
-;; (require 'tabbar-ruler)
-;; (require 'powerline)
-(require 'mail-bug nil t)
-;; (require 'bbdb nil t)
-;; (require 'tabkey2 nil t)
-(require 'undo-tree)
-;; (require 'marker-visit)
-(require 'cl)
-)
-
-;; (setq tabbar-ruler-global-tabbar 't) ; If you want tabbar
-
-
-;; (mail-bug-init)
-
-;; Required by my iswitchb hack
-(require 'edmacro)
 
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
@@ -405,15 +403,15 @@
 
 ;; This will only work for one session
 ;; GNU
-;; (add-hook 'after-init-hook
-;; 	  '(lambda ()
-;; 	     (if (px-saved-session)
-;; 		 (if (y-or-n-p "Restore session? ")
-;; 		     (Session-restore-px)))))
+(add-hook 'after-init-hook
+	  '(lambda ()
+	     (if (px-saved-session)
+		 (if (y-or-n-p "Restore session? ")
+		     (Session-restore-px)))))
 
-;; (add-hook 'kill-emacs-hook
-;; 	  '(lambda ()
-;; 	     (px-session-save)))
+(add-hook 'kill-emacs-hook
+	  '(lambda ()
+	     (px-session-save)))
 
 ;; Modes! ______________________________________________________________________
 ;; (display-time-mode t)
@@ -427,8 +425,8 @@
 (global-font-lock-mode t)
 ;; (tool-bar-mode 0)
 ;; (set-scroll-bar-mode `right)
-(delete-selection-mode t)
-(auto-fill-mode t)
+;; (delete-selection-mode t)
+;; (auto-fill-mode t)
 (recentf-mode 1)
 ;; (mouse-avoidance-mode 'cat-and-mouse)
 (iswitchb-mode t)
@@ -517,7 +515,7 @@
 	    (local-set-key (kbd "C-c h") 'cperl-perldoc)))
 
 (defun text-mode-hook-px ()
-(tabbar-mode t)
+;; (tabbar-mode t)
 (menu-bar-mode -1))
 
 (defun gnus-mode-hook-px ()
@@ -1097,10 +1095,3 @@ git reset --hard HEAD@{7}                             revert HEAD to 7
 
 ;; (setq yas/root-directory "~/.emacs.d/el-get/yasnippet/snippets")
 ;; (add-hook 'php-mode-hook 'yas/global-mode)
-(message "%s loaded" (or load-file-name buffer-file-name))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
