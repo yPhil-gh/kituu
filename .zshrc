@@ -12,6 +12,7 @@ bindkey ';5D' emacs-backward-word
 bindkey ';5C' emacs-forward-word
 
 PATH=$PATH:~/scripts:~/bin
+PATH=/usr/local/bin:$PATH
 
 
 # GNU Colors 需要/etc/DIR_COLORS文件 否则自动补全时候选菜单中的选项不能彩色显示
@@ -62,6 +63,11 @@ pss () {
 bkp () {
     cp -Rp $1 ${1%.*}.bkp-$(date +%y-%m-%d-%Hh%M).${1#*.}
 }
+
+cleanup-turds () {
+    find ./ -name "*~" -exec rm '{}' \; -print -or -name ".*~" -exec rm {} \; -print -or -name "#*#" -exec rm '{}' \; -print -or -name "*.swp" -exec rm '{}' \; -print
+}
+
 
 # prompt
 function precmd {
@@ -185,10 +191,13 @@ $PR_SHIFT_IN$PR_LLCORNER$PR_BLUE$PR_HBAR$PR_SHIFT_OUT(\
 %(?..$PR_LIGHT_RED%?$PR_BLUE:)\
 ${(e)PR_APM}$PR_YELLOW%D{%H:%M}\
 $PR_LIGHT_BLUE:%(!.$PR_RED.$PR_WHITE)%#$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
-$PR_SHIFT_IN$PR_SHIFT_OUT> '
+$PR_SHIFT_IN$PR_SHIFT_OUT> $PR_NO_COLOUR'
 
-    RPROMPT='\
-($PR_YELLOW%D{%a,%b%d}$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_LRCORNER$PR_SHIFT_OUT$PR_NO_COLOUR'
+# This breaks in console
+    # RPROMPT='\
+# ($PR_YELLOW%D{%a,%b%d}$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_LRCORNER$PR_SHIFT_OUT$PR_NO_COLOUR'
+
+    RPROMPT=''
 
     PS2='$PR_CYAN$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
 $PR_BLUE$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT(\

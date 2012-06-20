@@ -8,24 +8,25 @@
   (normal-top-level-add-subdirs-to-load-path))
 
 ;; GNU
-;; (add-to-list 'load-path "/usr/share/emacs/site-lisp/bbdb/")
+(add-to-list 'load-path "/usr/share/emacs/site-lisp/bbdb/")
 (autoload 'wl "wl" "Wanderlust" t)
 (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
 (autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
 
 (eval-and-compile
 (require 'tabbar nil t)
-;; (require 'tabbar-ruler)
+(require 'tabbar-ruler)
 ;; (require 'elid)
-;; (require 'mail-bug nil t)
-;; (require 'bbdb nil t)
+(require 'mail-bug nil t)
+(require 'bbdb nil t)
 ;; (require 'tabkey2 nil t)
 (require 'undo-tree)
 ;; (require 'marker-visit)
 (require 'cl)
+(require 'imapua)
 )
 
-;; (mail-bug-init)
+(mail-bug-init)
 
 ;; Required by my iswitchb hack
 (require 'edmacro)
@@ -41,7 +42,7 @@
 ;;     ;; (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode)
 ;; ))
 
-;; (setq tabbar-ruler-global-tabbar 't) ; If you want tabbar
+(setq tabbar-ruler-global-tabbar 't) ; If you want tabbar
 
 ;; Experiments
 
@@ -68,16 +69,16 @@
 
 (add-hook 'find-file-hooks 'turn-on-font-lock)
 
-;; (set-face-attribute 'default nil
-;; :font "Monospace"
-;; :height 125
-;; ;; :font "Inconsolata"
-;; ;; :width 'normal
-;; :weight 'normal
-;; ;; :slant 'reverse-italic
-;; ;; :weight 'bold
-;; ;; :width 'wide
-;; )
+(set-face-attribute 'default nil
+:font "Monospace"
+:height 125
+;; :font "Inconsolata"
+;; :width 'normal
+:weight 'normal
+;; :slant 'reverse-italic
+;; :weight 'bold
+;; :width 'wide
+)
 
 (message "we are at line %s" (line-number-at-pos))
 
@@ -254,7 +255,7 @@
 ;;     	     )))
 ;; (add-hook 'emacs-lisp-mode-hook 'my-emacs-lisp-mode-hook)
 
-
+;; GNU
 (defun make-backup-dir-px (dirname)
   "create backup dir"
   (interactive)
@@ -392,16 +393,15 @@
 			".session") t)
 )
 
-;; (defun px-session-save-named ()
-;;   "Save a named emacs session."
-;;   (interactive)
-;;   (if (px-saved-session)
-;;       (if (y-or-n-p "Save session? ")
-;; 	  (desktop-save-in-desktop-dir)
-;; 	(message "Session not saved."))
-;;   (desktop-save-in-desktop-dir)))
+(defun px-session-save-named ()
+  "Save a named emacs session."
+  (interactive)
+  (if (px-saved-session)
+      (if (y-or-n-p "Save session? ")
+	  (desktop-save-in-desktop-dir)
+	(message "Session not saved."))
+  (desktop-save-in-desktop-dir)))
 
-;; This will only work for one session
 ;; GNU
 (add-hook 'after-init-hook
 	  '(lambda ()
@@ -414,24 +414,19 @@
 	     (px-session-save)))
 
 ;; Modes! ______________________________________________________________________
-;; (display-time-mode t)
-;; GNU
-;; (tabbar-mode t)
+(display-time-mode t)
 (show-paren-mode t)
 (menu-bar-mode -1)
 (global-linum-mode t)
-;; (global-smart-tab-mode 1)
-;; (smart-tab-mode t)
 (global-font-lock-mode t)
-;; (tool-bar-mode 0)
-;; (set-scroll-bar-mode `right)
-;; (delete-selection-mode t)
-;; (auto-fill-mode t)
+(set-scroll-bar-mode `right)
+(delete-selection-mode t)
+(auto-fill-mode t)
 (recentf-mode 1)
 ;; (mouse-avoidance-mode 'cat-and-mouse)
 (iswitchb-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
-(setq suggest-key-bindings 1) ; wait 5 seconds
+;; (setq suggest-key-bindings 1) ; wait 5 seconds
 
 ;; This is harsh but just, shortens the war and saves lives.
 (setq resize-mini-windows nil)
@@ -504,7 +499,7 @@
 					    (abbreviate-file-name (buffer-file-name))
 					  "%b")) " [%*]"))
 
-;; Hooks! _____________________________________________________________________
+;; ;; Hooks! _____________________________________________________________________
 
 (add-hook 'wl-summary-mode-hook 'hl-line-mode)
 (add-hook 'recentf-dialog-mode-hook 'hl-line-mode)
@@ -515,7 +510,7 @@
 	    (local-set-key (kbd "C-c h") 'cperl-perldoc)))
 
 (defun text-mode-hook-px ()
-;; (tabbar-mode t)
+(tabbar-mode t)
 (menu-bar-mode -1))
 
 (defun gnus-mode-hook-px ()
@@ -539,10 +534,10 @@
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
-;; Keys! ______________________________________________________________________
+;; ;; Keys! ______________________________________________________________________
 
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-(global-set-key (kbd "C-<escape>") 'keyboard-quit)
+;; (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+;; (global-set-key (kbd "C-<escape>") 'keyboard-quit)
 (global-set-key (kbd "²") 'hippie-expand)
 
 (defun indent-or-expand (arg)
@@ -597,17 +592,20 @@ point."
 ;; (define-key global-map [s-k] 'kill-buffer)
 
 (global-set-key (kbd "C-f") 'isearch-forward)
-(global-set-key (kbd "C-d") nil)	; I kept deleting stuff
+;; THIS NEX ONE BROKE HAVOC!!
+;; (global-set-key (kbd "C-d") nil)	; I kept deleting stuff
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
 (global-set-key (kbd "C-o") 'find-file)
 (global-set-key (kbd "C-S-o") 'desktop-read)
 (global-set-key (kbd "C-S-<mouse-1>") 'flyspell-correct-word)
 (global-set-key (kbd "C-z") 'undo)
 (global-set-key (kbd "C-S-z") 'undo-tree-redo)
-(global-set-key (kbd "<C-next>") 'forward-page)
-(global-set-key (kbd "<C-prior>") 'backward-page)
+
+;; (global-set-key (kbd "<C-next>") 'forward-page)
+;; (global-set-key (kbd "<C-prior>") 'backward-page)
 (global-set-key (kbd "C-<tab>") 'tabbar-forward)
 (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
+
 (global-set-key (kbd "C-\"") 'insert-pair-dbquotes)		;""
 (global-set-key (kbd "C-)") 'insert-pair-paren)			;()
 (global-set-key (kbd "C-=") 'insert-pair-brace)			;{}
@@ -621,45 +619,20 @@ point."
 (global-set-key (kbd "M-o") 'recentf-open-files)
 (global-set-key (kbd "M-d") 'px-toggle-comments)
 
-;; px Minor mode
-;; (defvar px-keys-minor-mode-map (make-keymap) "px-keys-minor-mode keymap.")
-;; (define-minor-mode px-keys-minor-mode
-;;   "A minor mode so that my key settings override annoying major modes."
-;;   t " px" 'px-keys-minor-mode-map)
-;; (px-keys-minor-mode 1)
-;; (define-key px-keys-minor-mode-map (kbd "²") 'hippie-expand) ; Hippie-expand everywhere
-
-;; (defun tabbar-buffer-groups ()
-;;   "Return the list of group names the current buffer belongs to.
-;; This function is a custom function for tabbar-mode's tabbar-buffer-groups.
-;; This function groups all buffers into 3 groups:
-;; Those Dired, those user buffer, and those emacs buffer.
-;; Emacs buffer are those starting with “*”."
-;;   (list
-;;    (cond
-;;     ((string-equal "*" (substring (buffer-name) 0 1))
-;;      "Emacs Buffer"
-;;      )
-;;     ((eq major-mode 'dired-mode)
-;;      "Dired"
-;;      )
-;;     (t
-;;      "User Buffer"
-;;      )
-;;     )))
-
-;; (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
-
-;; (if (not (search "*Group*" (buffer-name)))
-;;      (setq px-no-gnus-window-configuration (current-window-configuration))
-;;   (set-window-configuration px-no-gnus-window-configuration))
+;; ;; px Minor mode
+;; ;; (defvar px-keys-minor-mode-map (make-keymap) "px-keys-minor-mode keymap.")
+;; ;; (define-minor-mode px-keys-minor-mode
+;; ;;   "A minor mode so that my key settings override annoying major modes."
+;; ;;   t " px" 'px-keys-minor-mode-map)
+;; ;; (px-keys-minor-mode 1)
+;; ;; (define-key px-keys-minor-mode-map (kbd "²") 'hippie-expand) ; Hippie-expand everywhere
 
 ;; Save the minibuffer history
 (setq px-minibuffer-history (concat user-emacs-directory "px-minibuffer-history"))
 (setq savehist-file px-minibuffer-history)
 (when (functionp 'savehist-mode) (savehist-mode 1))
 
-;; (cdr (car backup-directory-alist))
+;; ;; (cdr (car backup-directory-alist))
 
 (defun Kill-boring-buffers-px (regexp &optional internal-too)
   "Kill buffers whose name matches REGEXP.
@@ -703,170 +676,169 @@ The optional second argument indicates whether to kill internal buffers too."
     (comment-dwim nil)) ;; [un]comment
   (deactivate-mark)) ;; don't mess with selection
 
-;; Help! ______________________________________________________________________
+;; ;; Help! ______________________________________________________________________
 
-(defun px-help-emacs ()
-  (interactive)
-  (princ "* My EMACS cheat cheet
+;; (defun px-help-emacs ()
+;;   (interactive)
+;;   (princ "* My EMACS cheat cheet
 
-** notes
-'s' (super) on a PC keyboard, is the 'windows logo' key
+;; ** notes
+;; 's' (super) on a PC keyboard, is the 'windows logo' key
 
-*** EMACSEN
-Copy to register A                  C-x r s A
-Paste from register A               C-x r g A
-Clone emacs (!?)                    C-x 5 2
-Set bookmark at point               C-x r m RET
-Close HTML tag                      sgml-close-tag
-Switch to *Messages* buffer         C-h e
-capitalize-word                     M-c
-kill-paragraph                      C-S-del
+;; *** EMACSEN
+;; Copy to register A                  C-x r s A
+;; Paste from register A               C-x r g A
+;; Clone emacs (!?)                    C-x 5 2
+;; Set bookmark at point               C-x r m RET
+;; Close HTML tag                      sgml-close-tag
+;; Switch to *Messages* buffer         C-h e
+;; capitalize-word                     M-c
+;; kill-paragraph                      C-S-del
 
-*** EDIFF
-Next / previous diff                n / p
-Copy a diff into b / opposite       a / b
-Save a / b buffer                   wa / wb
+;; *** EDIFF
+;; Next / previous diff                n / p
+;; Copy a diff into b / opposite       a / b
+;; Save a / b buffer                   wa / wb
 
-*** GNUS
-Sort summary by author/date         C-c C-s C-a/d
-Search selected imap folder         G G
-Mark thread read                    T k
+;; *** GNUS
+;; Sort summary by author/date         C-c C-s C-a/d
+;; Search selected imap folder         G G
+;; Mark thread read                    T k
 
-*** PHP-MODE
-C-c C-f                             Search PHP manual for point.
-C-c RET / C-c C-m                   Browse PHP manual in a Web browser.
+;; *** PHP-MODE
+;; C-c C-f                             Search PHP manual for point.
+;; C-c RET / C-c C-m                   Browse PHP manual in a Web browser.
 
-*** MISC EDITING
-M-c		                    capitalize-word		Capitalize the first letter of the current word.
-M-u		                    upcase-word		Make the word all uppercase.
-M-l		                    downcase-word		Make the word all lowercase.
-C-x C-l		                    downcase-region		Make the region all lowercase.
-C-x C-u		                    uppercase-region	Make the region all uppercase.
+;; *** MISC EDITING
+;; M-c		                    capitalize-word		Capitalize the first letter of the current word.
+;; M-u		                    upcase-word		Make the word all uppercase.
+;; M-l		                    downcase-word		Make the word all lowercase.
+;; C-x C-l		                    downcase-region		Make the region all lowercase.
+;; C-x C-u		                    uppercase-region	Make the region all uppercase.
 
-*** RECTANGLES
-C-x r k/c                           Kill/clear rectangle
-C-x r y                             yank-rectangle (upper left corner at point)
-C-x r t string <RET>                Replace rectangle contents with string on each line (string-rectangle).
+;; *** RECTANGLES
+;; C-x r k/c                           Kill/clear rectangle
+;; C-x r y                             yank-rectangle (upper left corner at point)
+;; C-x r t string <RET>                Replace rectangle contents with string on each line (string-rectangle).
 
-*** WANDERLUST
-T                                   Toggle Threading
-d                                   Dispose MSG (mark)
-D                                   Delete MSG (mark)
-rx                                  Execute marks
-
-
-*** MACROS
-C-x (		                    start-kbd-macro		Start a new macro definition.
-C-x )		                    end-kbd-macro		End the current macro definition.
-C-x e		                    call-last-kbd-macro	Execute the last defined macro.
-M-(number) C-x e	            call-last-kbd-maco	Do that last macro (number times).
-C-u C-x (	                    stat-kbd-macro		Execute last macro and add to it.
-		                    name-last-kbd-macro	Name the last macro before saving it.
-		                    insert-last-keyboard-macro	Insert the macro you made into a file.
-		                    load-file			Load a file with macros in it.
-C-x q		                    kbd-macro-query		Insert a query into a keyboard macro.
-M-C-c		                    exit-recursive-edit		Get the hell out of a recursive edit.
-
-*** THIS VERY EMACS CONFIG
-Save buffer                         M-s
-Kill current buffer                 s-b
-Undo                                C-z
-Open file                           C-o
-Open recent file                    M-o
-Close other window (frame)          F1
-Switch to other window (frame)      F2
-Split horizontally                  F3
-Split vertically                    F4
-Switch to buffer                    F5
-Spell-check buffer                  F7
-Word-wrap toggle                    F10
-enclose region in <tag> (sgml-tag)  s-t RET tag [ args... ]
-select 'this' or <that> (enclosed)  s-SPC
-
-*** VERSION CONTROL
-C-x v v                                               vc-next-action
-perform the next logical control operation on file
-C-x v i                                               vc-register
-add a new file to version control
-
-C-x v +                                               vc-update
-Get latest changes from version control
-C-x v ~                                               vc-version-other-window
-look at other revisions
-C-x v =                                               vc-diff
-diff with other revisions
-C-x v u                                               vc-revert-buffer
-undo checkout
-C-x v c                                               vc-cancel-version
-delete latest rev (look at an old rev and re-check it)
-
-C-x v d                                               vc-directory
-show all files which are not up to date
-C-x v g                                               vc-annotate
-show when each line in a tracked file was added and by whom
-C-x v s                                               vc-create-snapshot
-tag all the files with a symbolic name
-C-x v r                                               vc-retrieve-snapshot
-undo checkouts and return to a snapshot with a symbolic name
-
-C-x v l                                               vc-print-log
-show log (not in ChangeLog format)
-C-x v a                                               vc-update-change-log
-update ChangeLog
-
-C-x v m     vc-merge
-C-x v h     vc-insert-headers
-
-M-x                                                   vc-resolve-conflicts
-ediff-merge session on a file with conflict markers
-
-*** OTHER
-git reflog                                            view log
-git reset --hard HEAD@{7}                             revert HEAD to 7
-
-"
-         (generate-new-buffer "px-help-emacs"))
-  (switch-to-buffer "px-help-emacs")
-  (org-mode)
-  ;; (show-all) ; ?
-  )
-(put 'upcase-region 'disabled nil)
+;; *** WANDERLUST
+;; T                                   Toggle Threading
+;; d                                   Dispose MSG (mark)
+;; D                                   Delete MSG (mark)
+;; rx                                  Execute marks
 
 
-;; ;; Bbdb! ____________________________________________________________________
+;; *** MACROS
+;; C-x (		                    start-kbd-macro		Start a new macro definition.
+;; C-x )		                    end-kbd-macro		End the current macro definition.
+;; C-x e		                    call-last-kbd-macro	Execute the last defined macro.
+;; M-(number) C-x e	            call-last-kbd-maco	Do that last macro (number times).
+;; C-u C-x (	                    stat-kbd-macro		Execute last macro and add to it.
+;; 		                    name-last-kbd-macro	Name the last macro before saving it.
+;; 		                    insert-last-keyboard-macro	Insert the macro you made into a file.
+;; 		                    load-file			Load a file with macros in it.
+;; C-x q		                    kbd-macro-query		Insert a query into a keyboard macro.
+;; M-C-c		                    exit-recursive-edit		Get the hell out of a recursive edit.
 
-;; GNU
-;; (setq bbdb-file "~/.emacs.d/bbdb") ;; keep ~/ clean; set before loading
-;; (bbdb-initialize)
+;; *** THIS VERY EMACS CONFIG
+;; Save buffer                         M-s
+;; Kill current buffer                 s-b
+;; Undo                                C-z
+;; Open file                           C-o
+;; Open recent file                    M-o
+;; Close other window (frame)          F1
+;; Switch to other window (frame)      F2
+;; Split horizontally                  F3
+;; Split vertically                    F4
+;; Switch to buffer                    F5
+;; Spell-check buffer                  F7
+;; Word-wrap toggle                    F10
+;; enclose region in <tag> (sgml-tag)  s-t RET tag [ args... ]
+;; select 'this' or <that> (enclosed)  s-SPC
 
-;; (setq
-;;     bbdb-offer-save 1 ;; 1 means save-without-asking
+;; *** VERSION CONTROL
+;; C-x v v                                               vc-next-action
+;; perform the next logical control operation on file
+;; C-x v i                                               vc-register
+;; add a new file to version control
 
-;;     ;; bbdb-use-pop-up t ;; allow popups for addresses
-;;     ;; bbdb-electric-p t ;; be disposable with SPC
-;;     ;; bbdb-popup-target-lines 1 ;; very small
-;;     bbdb-dwim-net-address-allow-redundancy t ;; always use full name
-;;     bbdb-quiet-about-name-mismatches 2 ;; show name-mismatches 2 secs
-;;     bbdb-always-add-address t ;; add new addresses to existing...
-;;                                              ;; ...contacts automatically
-;;     bbdb-canonicalize-redundant-nets-p t ;; x@foo.bar.cx => x@bar.cx
-;;     bbdb-completion-type nil ;; complete on anything
-;;     bbdb-complete-name-allow-cycling t ;; cycle through matches
-;;                                              ;; this only works partially
-;;     bbbd-message-caching-enabled t ;; be fast
-;;     bbdb-use-alternate-names t ;; use AKA
-;;     bbdb-elided-display t ;; single-line addresses
+;; C-x v +                                               vc-update
+;; Get latest changes from version control
+;; C-x v ~                                               vc-version-other-window
+;; look at other revisions
+;; C-x v =                                               vc-diff
+;; diff with other revisions
+;; C-x v u                                               vc-revert-buffer
+;; undo checkout
+;; C-x v c                                               vc-cancel-version
+;; delete latest rev (look at an old rev and re-check it)
 
-;;     ;; auto-create addresses from mail
-;;     bbdb/mail-auto-create-p 'bbdb-ignore-some-messages-hook
-;;     bbdb-ignore-some-messages-alist ;; don't ask about fake addresses
-;;     ;; NOTE: there can be only one entry per header (such as To, From)
-;;     ;; http://flex.ee.uec.ac.jp/texi/bbdb/bbdb_11.html
+;; C-x v d                                               vc-directory
+;; show all files which are not up to date
+;; C-x v g                                               vc-annotate
+;; show when each line in a tracked file was added and by whom
+;; C-x v s                                               vc-create-snapshot
+;; tag all the files with a symbolic name
+;; C-x v r                                               vc-retrieve-snapshot
+;; undo checkouts and return to a snapshot with a symbolic name
 
-;;     '(( "From" . "no.?reply\\|DAEMON\\|daemon\\|facebookmail\\|twitter")))
+;; C-x v l                                               vc-print-log
+;; show log (not in ChangeLog format)
+;; C-x v a                                               vc-update-change-log
+;; update ChangeLog
+
+;; C-x v m     vc-merge
+;; C-x v h     vc-insert-headers
+
+;; M-x                                                   vc-resolve-conflicts
+;; ediff-merge session on a file with conflict markers
+
+;; *** OTHER
+;; git reflog                                            view log
+;; git reset --hard HEAD@{7}                             revert HEAD to 7
+
+;; "
+;;          (generate-new-buffer "px-help-emacs"))
+;;   (switch-to-buffer "px-help-emacs")
+;;   (org-mode)
+;;   ;; (show-all) ; ?
+;;   )
+;; (put 'upcase-region 'disabled nil)
 
 
-;; ;; Toggling email! _____________________________________________________________
+;; ;; ;; Bbdb! ____________________________________________________________________
+
+;; ;; GNU
+;; ;; (setq bbdb-file "~/.emacs.d/bbdb") ;; keep ~/ clean; set before loading
+;; ;; (bbdb-initialize)
+
+;; ;; (setq
+;; ;;     bbdb-offer-save 1 ;; 1 means save-without-asking
+
+;; ;;     ;; bbdb-use-pop-up t ;; allow popups for addresses
+;; ;;     ;; bbdb-electric-p t ;; be disposable with SPC
+;; ;;     ;; bbdb-popup-target-lines 1 ;; very small
+;; ;;     bbdb-dwim-net-address-allow-redundancy t ;; always use full name
+;; ;;     bbdb-quiet-about-name-mismatches 2 ;; show name-mismatches 2 secs
+;; ;;     bbdb-always-add-address t ;; add new addresses to existing...
+;; ;;                                              ;; ...contacts automatically
+;; ;;     bbdb-canonicalize-redundant-nets-p t ;; x@foo.bar.cx => x@bar.cx
+;; ;;     bbdb-completion-type nil ;; complete on anything
+;; ;;     bbdb-complete-name-allow-cycling t ;; cycle through matches
+;; ;;                                              ;; this only works partially
+;; ;;     bbbd-message-caching-enabled t ;; be fast
+;; ;;     bbdb-use-alternate-names t ;; use AKA
+;; ;;     bbdb-elided-display t ;; single-line addresses
+
+;; ;;     ;; auto-create addresses from mail
+;; ;;     bbdb/mail-auto-create-p 'bbdb-ignore-some-messages-hook
+;; ;;     bbdb-ignore-some-messages-alist ;; don't ask about fake addresses
+;; ;;     ;; NOTE: there can be only one entry per header (such as To, From)
+;; ;;     ;; http://flex.ee.uec.ac.jp/texi/bbdb/bbdb_11.html
+
+;; ;;     '(( "From" . "no.?reply\\|DAEMON\\|daemon\\|facebookmail\\|twitter")))
+
+;; ;; ;; Toggling email! _____________________________________________________________
 
 "Key used to switch to mail and back"
 (defvar px-toggle-mail-key [(meta f1)])
@@ -887,6 +859,11 @@ git reset --hard HEAD@{7}                             revert HEAD to 7
   "reset my fucking prefs"
   (interactive)
   (px-prefs 0))
+
+(defun px-set-prefs nil
+  "reset my fucking prefs"
+  (interactive)
+  (px-prefs 1))
 
 (defun px-exit-mail nil
   "called after switch back from mail"
@@ -952,53 +929,48 @@ git reset --hard HEAD@{7}                             revert HEAD to 7
 (add-hook 'wl-summary-exit-pre-hook 'px-reset-prefs)
 (add-hook 'wl-summary-exit-hook 'px-reset-prefs)
 
-;; Faces ______________________________________________________________________
+;; ;; Faces ______________________________________________________________________
 
-;; GNU
-;; (set-face-attribute 'tabbar-default nil
-;; 		    :inherit nil
-;; 		    :height 110
-;; 		    :weight 'normal
-;; 		    :width 'normal
-;; 		    :slant 'normal
-;; 		    :underline nil
-;; 		    :strike-through nil
-;; 		    :stipple nil
-;; 		    ;; :background "gray80"
-;; 		    :background nil
-;; 		    :foreground "black"
-;; 		    :box nil
-;; 		    :family "Vera Sans Mono Bold Oblique")
+(set-face-attribute 'tabbar-default nil
+		    :inherit 'default
+		    :height 110
+		    ;; :weight 'normal
+		    :width 'normal
+		    :slant 'normal
+		    :underline nil
+		    :strike-through nil
+		    :stipple nil
+		    ;; :background "gray80"
+		    :background nil
+		    :foreground "black"
+		    :box nil
+		    :family "Vera Sans Mono Bold Oblique")
 
-;; (set-face-attribute 'tabbar-separator nil
-;;                     :background "gray40"
-;;                     :foreground nil
-;;                     :height 1.0)
+(set-face-attribute 'tabbar-separator nil
+                    :background "gray40"
+                    :foreground nil
+		    ;; :width 1.0
+                    :height 1.0)
 
-;; (set-face-attribute 'tabbar-selected nil
-;; 		    :background "#2e3436"
-;; 		    :foreground "red"
-;; 		    :inherit 'tabbar-default
-;; 		    :box '(:line-width 1 :color "#2e3436" :style nil))
+(set-face-attribute 'tabbar-selected nil
+		    :background "#2e3436"
+		    :foreground "red"
+		    :inherit 'tabbar-default
+		    :box '(:line-width 1 :color "#2e3436" :style nil))
 
-;; (set-face-attribute 'tabbar-unselected nil
-;; 		    :inherit 'tabbar-default
-;; 		    :background "gray50"
-;; 		    ;; :background "red"
-;; 		    :box '(:line-width 1 :color "gray50" :style nil))
+(set-face-attribute 'tabbar-unselected nil
+		    :inherit 'tabbar-default
+		    :background "gray50"
+		    ;; :background "red"
+		    :box '(:line-width 1 :color "gray50" :style nil))
 
+(set-face-attribute 'tabbar-highlight nil
+		    :foreground "white"
+		    :underline nil)
 
-
-
-
-;; (set-face-attribute 'tabbar-highlight nil
-;; 		    :foreground "white"
-;; 		    :underline nil)
-
-;; (set-face-attribute 'tabbar-button nil
-;; 		    :inherit 'tabbar-default
-;; 		    :box nil)
-
+(set-face-attribute 'tabbar-button nil
+		    :inherit 'tabbar-default
+		    :box nil)
 
 (if (window-system)
     (progn
@@ -1030,34 +1002,32 @@ git reset --hard HEAD@{7}                             revert HEAD to 7
     "white")
   (set-face-attribute 'mode-line nil :background "blue" :foreground "yellow"))
 
-;; Custom ______________________________________________________________________
+;; ;; Custom ______________________________________________________________________
 
-;; (setq tabbar-separator '(1)) ;; set tabbar-separator size to 1 pixel
-
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(cperl-array-face ((t (:foreground "#fcaf3e" :weight bold))))
-;;  '(cperl-hash-face ((t (:foreground "#fcaf3e" :slant italic :weight bold))))
-;;  '(font-lock-comment-face ((t (:slant oblique :weight light))))
-;;  '(highlight ((t (:background "dark red"))))
-;;  '(mode-line ((t (:background "gray10" :foreground "#eeeeee"))))
-;;  '(mode-line-highlight ((t (:inverse-video t))))
-;;  '(mumamo-background-chunk-major ((t (:background "gray15"))))
-;;  '(mumamo-background-chunk-submode1 ((t (:background "gray16"))))
-;;  '(mumamo-region ((t nil)))
-;;  '(undo-tree-visualizer-default-face ((t (:foreground "gray"))))
-;;  '(wl-highlight-folder-few-face ((t (:foreground "gainsboro" :weight bold))))
-;;  '(wl-highlight-folder-many-face ((t (:foreground "AntiqueWhite3" :weight extra-bold))))
-;;  '(wl-highlight-folder-path-face ((t (:background "dark red" :foreground "white" :weight bold))))
-;;  '(wl-highlight-folder-unread-face ((t (:foreground "light gray" :weight bold))))
-;;  '(wl-highlight-folder-zero-face ((t (:foreground "AntiqueWhite2"))))
-;;  '(wl-highlight-summary-answered-face ((t (:foreground "khaki"))))
-;;  '(wl-highlight-summary-displaying-face ((t (:background "dark red" :foreground "yellow" :weight bold))))
-;;  '(wl-highlight-summary-new-face ((t (:foreground "white" :weight ultra-bold))))
-;;  '(wl-highlight-summary-thread-top-face ((t (:foreground "gray")))))
+;; ;; (custom-set-faces
+;; ;;  ;; custom-set-faces was added by Custom.
+;; ;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;; ;;  ;; Your init file should contain only one such instance.
+;; ;;  ;; If there is more than one, they won't work right.
+;; ;;  '(cperl-array-face ((t (:foreground "#fcaf3e" :weight bold))))
+;; ;;  '(cperl-hash-face ((t (:foreground "#fcaf3e" :slant italic :weight bold))))
+;; ;;  '(font-lock-comment-face ((t (:slant oblique :weight light))))
+;; ;;  '(highlight ((t (:background "dark red"))))
+;; ;;  '(mode-line ((t (:background "gray10" :foreground "#eeeeee"))))
+;; ;;  '(mode-line-highlight ((t (:inverse-video t))))
+;; ;;  '(mumamo-background-chunk-major ((t (:background "gray15"))))
+;; ;;  '(mumamo-background-chunk-submode1 ((t (:background "gray16"))))
+;; ;;  '(mumamo-region ((t nil)))
+;; ;;  '(undo-tree-visualizer-default-face ((t (:foreground "gray"))))
+;; ;;  '(wl-highlight-folder-few-face ((t (:foreground "gainsboro" :weight bold))))
+;; ;;  '(wl-highlight-folder-many-face ((t (:foreground "AntiqueWhite3" :weight extra-bold))))
+;; ;;  '(wl-highlight-folder-path-face ((t (:background "dark red" :foreground "white" :weight bold))))
+;; ;;  '(wl-highlight-folder-unread-face ((t (:foreground "light gray" :weight bold))))
+;; ;;  '(wl-highlight-folder-zero-face ((t (:foreground "AntiqueWhite2"))))
+;; ;;  '(wl-highlight-summary-answered-face ((t (:foreground "khaki"))))
+;; ;;  '(wl-highlight-summary-displaying-face ((t (:background "dark red" :foreground "yellow" :weight bold))))
+;; ;;  '(wl-highlight-summary-new-face ((t (:foreground "white" :weight ultra-bold))))
+;; ;;  '(wl-highlight-summary-thread-top-face ((t (:foreground "gray")))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -1091,7 +1061,6 @@ git reset --hard HEAD@{7}                             revert HEAD to 7
  '(wl-summary-recenter nil)
  '(wl-summary-width 150))
 
-;; Garbage ______________________________________________________________________
-
-;; (setq yas/root-directory "~/.emacs.d/el-get/yasnippet/snippets")
-;; (add-hook 'php-mode-hook 'yas/global-mode)
+;; ;; Garbage ______________________________________________________________________
+;; ;; (setq yas/root-directory "~/.emacs.d/el-get/yasnippet/snippets")
+;; ;; (add-hook 'php-mode-hook 'yas/global-mode)

@@ -73,10 +73,9 @@
 
 ;; orig value is "%n%T%P%M/%D(%W)%h:%m %t%[%17(%c %f%) %] %s"
 
-(setq wl-summary-line-format "%T%P%│%M/%D (%W) %h:%m %t%[%17(%c %f%) %] %s")
-
-(add-hook 'recentl-dialog-mode-hook 'hl-line-mode)
-(add-hook 'wl-folder-mode-hook 'hl-line-mode)
+(setq wl-summary-line-format "%n%T%P│%M/%D (%W) %h:%m %t%[%17(%c %f%) %] %s")
+;; (add-hook 'recentl-dialog-mode-hook 'hl-line-mode)
+;; (add-hook 'wl-folder-mode-hook 'hl-line-mode)
 
 ;; (setq-default cursor-type 'bar)
 
@@ -213,6 +212,8 @@
 (setq display-time-mail-function
 '(lambda () wl-modeline-biff-status))
 
+(setq wl-auto-save-drafts-interval nil)
+
 ;;default folder name auto completion:
 ;; (setq wl-default-spec "%")
 
@@ -221,7 +222,10 @@
 
 ;;Only save draft when I tell it to! (C-x C-s or C-c C-s):
 ;;(arg: seconds of idle time untill auto-save).
-(setq wl-auto-save-drafts-interval nil)
+
+
+;; End of file
+
 
 ;; This kinda works
 

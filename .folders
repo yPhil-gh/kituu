@@ -1,5 +1,13 @@
 # -*- conf-unix -*-
-GMAIL{
+
+GNU {
+   %INBOX:"philippec@gmx.com"/clear@imap.gmx.com "Inbox"
+   %Sent:"philippec@gmx.com"/clear@imap.gmx.com "Sent"
+   %Drafts:"philippec@gmx.com"/clear@imap.gmx.com "Draft"
+   %Trash:"philippec@gmx.com"/clear@imap.gmx.com "Trash"
+}
+
+GMAIL {
    %INBOX:philippe.coatmeur/clear@imap.gmail.com:993! "In"
    %[Gmail]/Sent Mail:philippe.coatmeur/clear@imap.gmail.com:993! "Sent"
    %[Gmail]/Draft:philippe.coatmeur/clear@imap.gmail.com:993! "Draft"
@@ -9,7 +17,7 @@ GMAIL{
 
 #Note: usernames with "strange" characters (like "@") must be written
 #like: "myname@company.com". Folders at my work are delimited by dot '.'.
-WORK{
+ADAMWEB{
    %INBOX:"contact@adamweb.net"/clear@mail.gandi.net "Inbox"
    %Sent:"contact@adamweb.net"/clear@mail.gandi.net "Sent"
    %Drafts:"contact@adamweb.net"/clear@mail.gandi.net "Draft"
