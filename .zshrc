@@ -179,7 +179,20 @@ setprompt () {
     # fi
 
     ###
-    # Finally, the prompt.
+    # Finally, the prompt. If in tramp, or any dumb terminal, dum everything down.
+
+
+# prompts
+if [[ $TERM == "dumb" ]]; then	# in emacs
+    PS1='%(?..[%?])%!:%~%# '
+    # for tramp to not hang, need the following. cf:
+    # http://www.emacswiki.org/emacs/TrampMode
+    unsetopt zle
+    unsetopt prompt_cr
+    unsetopt prompt_subst
+    unfunction precmd
+    unfunction preexec
+else
     PROMPT='$PR_SET_CHARSET$PR_STITLE${(e)PR_TITLEBAR}\
 $PR_BLUE$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT(\
 $PR_GREEN%(!.%SROOT%s.%n)$PR_GREEN@%m:%l\
@@ -203,6 +216,8 @@ $PR_SHIFT_IN$PR_SHIFT_OUT> $PR_NO_COLOUR'
 $PR_BLUE$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT(\
 $PR_LIGHT_GREEN%_$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
 $PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT$PR_NO_COLOUR '
+
+fi
 }
 
 setprompt
