@@ -1,13 +1,13 @@
 # -*- conf-unix -*-
 
-GNU {
-   %INBOX:"philippec@gmx.com"/clear@imap.gmx.com "Inbox"
-   %Sent:"philippec@gmx.com"/clear@imap.gmx.com "Sent"
-   %Drafts:"philippec@gmx.com"/clear@imap.gmx.com "Draft"
-   %Trash:"philippec@gmx.com"/clear@imap.gmx.com "Trash"
-}
+# GNU {
+#    %INBOX:"philippec@gmx.com"/clear@imap.gmx.com "Inbox"
+#    %Sent:"philippec@gmx.com"/clear@imap.gmx.com "Sent"
+#    %Drafts:"philippec@gmx.com"/clear@imap.gmx.com "Draft"
+#    %Trash:"philippec@gmx.com"/clear@imap.gmx.com "Trash"
+# }
 
-GMAIL {
+GNU {
    %INBOX:philippe.coatmeur/clear@imap.gmail.com:993! "In"
    %[Gmail]/Sent Mail:philippe.coatmeur/clear@imap.gmail.com:993! "Sent"
    %[Gmail]/Draft:philippe.coatmeur/clear@imap.gmail.com:993! "Draft"

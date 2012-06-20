@@ -17,7 +17,9 @@
 
 (setq
 
- wl-from "Philippe M. Coatmeur <philippe.coatmeur@gmail.com>"
+ ;; wl-from "Philippe M. Coatmeur <philippe.coatmeur@gmail.com>"
+
+ wl-from "Philippe M. Coatmeur <philcm@gnu.org>"
 
  wl-default-folder "%INBOX"
  wl-demo nil
@@ -138,43 +140,80 @@
          )))
 
 ;; xprmt
+
+;; encoded password transmission (login)
+;; ( ) CRAM-MD5 authentication (cram-md5)
+;; ( ) DIGEST-MD5 authentication (digest-md5)
+;; (*) plain password transmission (clear)
+;; ( ) NTLM authentication (ntlm)
+;; ( ) Other: ignore
+;;     State : CHANGED outside Customize.
+;;    Default Authentication type for IMAP4.
+;; Groups: ELMO
+
+
 ;; IMAP, gmail:
+;; (setq
+;;  elmo-imap4-default-server "imap.gmail.com"
+;;  elmo-imap4-default-user "philippe.coatmeur@gmail.com"
+;;  elmo-imap4-default-authenticate-type 'clear
+;;  elmo-imap4-default-port '993
+;;  elmo-imap4-default-stream-type 'ssl
+
+;;  wl-generate-mailer-string-function 'wl-generate-user-agent-string-1
+
+;;  ;;for non ascii-characters in folder-names
+;;  elmo-imap4-use-modified-utf7 t)
+
 (setq
  elmo-imap4-default-server "imap.gmail.com"
  elmo-imap4-default-user "philippe.coatmeur@gmail.com"
  elmo-imap4-default-authenticate-type 'clear
  elmo-imap4-default-port '993
  elmo-imap4-default-stream-type 'ssl
-
-
+ wl-draft-folder "%[Gmail]/Drafts"
  wl-generate-mailer-string-function 'wl-generate-user-agent-string-1
 
  ;;for non ascii-characters in folder-names
  elmo-imap4-use-modified-utf7 t)
 
 ;; SMTP
+
 (setq
  wl-smtp-connection-type 'starttls
  wl-smtp-posting-port 587
- wl-smtp-authenticate-type "plain"
+ wl-smtp-authenticate-type "LOGIN"
  wl-smtp-posting-user "philippe.coatmeur"
  wl-smtp-posting-server "smtp.gmail.com"
  wl-local-domain "gmail.com"
  wl-message-id-domain "smtp.gmail.com"
-
 )
+
+;; (setq
+;;  wl-smtp-connection-type 'default
+;;  wl-smtp-posting-port 25
+;;  wl-smtp-authenticate-type "LOGIN"
+;;  wl-smtp-posting-user "philippec@gmx.com"
+;;  wl-smtp-posting-server "smtp.gmx.com"
+;;  wl-local-domain "gmx.com"
+;;  wl-message-id-domain "smtp.gmx.com"
+;; )
+
+;; Test
+;; (setq wl-dispose-folder-alist
+;;       '(("^%" . "%[Gmail]/Trash:philippe.coatmeur/clear@imap.gmail.com:993!")))
 
 ;;choose template with C-c C-j
 (setq
  wl-template-alist
  '(("gmail"
-    (wl-from . "Philippe M. Coatmeur <philippe.coatmeur@gmail.com>")
+    (wl-from . "Philippe M. Coatmeur <philcm@gnu.org>")
     ("From" . wl-from)
     ("Cc" . "")
     ;; (body . "Hello ;\n")
     (wl-smtp-posting-user . "philippe.coatmeur")
     (wl-smtp-posting-server . "smtp.gmail.com")
-    (wl-smtp-authenticate-type ."plain")
+    (wl-smtp-authenticate-type ."login")
     (wl-smtp-connection-type . 'starttls)
     (wl-smtp-posting-port . 587)
     (wl-local-domain . "gmail.com")
