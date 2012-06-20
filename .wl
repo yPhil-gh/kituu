@@ -151,7 +151,6 @@
 ;;    Default Authentication type for IMAP4.
 ;; Groups: ELMO
 
-
 ;; IMAP, gmail:
 ;; (setq
 ;;  elmo-imap4-default-server "imap.gmail.com"
