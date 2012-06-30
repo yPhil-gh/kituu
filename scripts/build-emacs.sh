@@ -25,5 +25,5 @@ cd $EMACS_SRC_DIR && pwd
 
 if [ -d "trunk" ]; then mv -v trunk trunk.bkp; fi
 
-cp -Rv $EMACS_BZR_DIR/trunk/ .
+cp -Rv $EMACS_BZR_DIR/trunk/ $EMACS_SRC_DIR/
 cd trunk && ./autogen.sh && ./configure && make && sudo make install
