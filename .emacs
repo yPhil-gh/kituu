@@ -17,16 +17,22 @@
 (require 'tabbar nil t)
 (require 'tabbar-ruler)
 ;; (require 'elid)
-(require 'mail-bug nil t)
+;; (require 'mail-bug nil t)
 (require 'bbdb nil t)
 ;; (require 'tabkey2 nil t)
 (require 'undo-tree)
 ;; (require 'marker-visit)
 (require 'cl)
-(require 'imapua)
+;; (require 'imapua)
 )
 
-(mail-bug-init)
+ ;; wl-thread-have-younger-brother-str "├►"
+ ;; wl-thread-youngest-child-str "╰►"
+ ;; wl-thread-vertical-str "│ "
+ ;; wl-thread-horizontal-str "──"
+ ;; wl-thread-space-str " "
+
+;; (mail-bug-init)
 
 ;; Required by my iswitchb hack
 (require 'edmacro)
@@ -42,7 +48,7 @@
 ;;     ;; (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode)
 ;; ))
 
-(setq tabbar-ruler-global-tabbar 't) ; If you want tabbar
+(setq tabbar-ruler-global-tabbar 't)
 
 ;; Experiments
 
@@ -80,7 +86,7 @@
 ;; :width 'wide
 )
 
-(message "we are at line %s" (line-number-at-pos))
+;; (message "we are at line %s" (line-number-at-pos))
 
 ;; (has ital)
 ;; Liberation Mono-11
@@ -98,6 +104,9 @@
 ;;----------------------------------------
 ;;default to text-mode with auto-fill at column 75 [TUCKERM Feb2002]
 ;;----------------------------------------
+
+;; start
+
 (setq default-major-mode 'text-mode
   text-mode-hook 'turn-on-auto-fill
   fill-column 75)
@@ -307,17 +316,17 @@
     (browse-url (concat "http://www.google.com/search?&q="
 			(url-hexify-string q)))))
 
-(defun select-text-in-quote-px ()
-  "Select text between the nearest left and right delimiters."
-  (interactive)
-  (let (b1 b2)
-    (skip-chars-backward "^<>([{“「『‹«（〈《〔【〖⦗〘⦅〚⦃\"")
-    (setq b1 (point))
-    (skip-chars-forward "^<>)]}”」』›»）〉》〕】〗⦘〙⦆〛⦄\"")
-    (setq b2 (point))
-    (set-mark b1)))
+;; (defun select-text-in-quote-px ()
+;;   "Select text between the nearest left and right delimiters."
+;;   (interactive)
+;;   (let (b1 b2)
+;;     (skip-chars-backward "^<>([{“「『‹«（〈《〔【〖⦗〘⦅〚⦃\"")
+;;     (setq b1 (point))
+;;     (skip-chars-forward "^<>)]}”」』›»）〉》〕】〗⦘〙⦆〛⦄\"")
+;;     (setq b2 (point))
+;;     (set-mark b1)))
 
-(global-set-key (kbd "s-SPC") 'select-text-in-quote-px)
+;; (global-set-key (kbd "s-SPC") 'select-text-in-quote-px)
 
 (defun insert-bracket-pair (leftBracket rightBracket)
   "Insert a matching bracket and place the cursor between them."
@@ -414,7 +423,7 @@
 	     (px-session-save)))
 
 ;; Modes! ______________________________________________________________________
-(display-time-mode t)
+;; (display-time-mode t)
 (show-paren-mode t)
 (menu-bar-mode -1)
 (global-linum-mode t)
@@ -455,16 +464,11 @@
 (setq
  vc-make-backup-files t
  iswitchb-buffer-ignore '("^ " "*.")
- ;; scroll-preserve-screen-position t
- ;; scroll-up-aggressively 0.1
- ;; scroll-down-aggressively 0.5
  scroll-conservatively 200
  scroll-margin 3
  recenter-redisplay nil
  inhibit-startup-screen t
  inhibit-startup-echo-area-message t
- ;; user-mail-address "philippe.coatmeur@gmail.com"
- ;; user-full-name "Philippe M. Coatmeur"
  recentf-max-saved-items 120
  recentf-max-menu-items 60
  x-select-enable-clipboard t
@@ -503,40 +507,40 @@
 
 ;; ;; Hooks! _____________________________________________________________________
 
-(add-hook 'wl-summary-mode-hook 'hl-line-mode)
-(add-hook 'recentf-dialog-mode-hook 'hl-line-mode)
-(add-hook 'perl-mode-hook 'cperl-mode)
+;; (add-hook 'wl-summary-mode-hook 'hl-line-mode)
+;; (add-hook 'recentf-dialog-mode-hook 'hl-line-mode)
+;; (add-hook 'perl-mode-hook 'cperl-mode)
 
-(add-hook 'cperl-mode-hook
-	  (lambda ()
-	    (local-set-key (kbd "C-c h") 'cperl-perldoc)))
+;; (add-hook 'cperl-mode-hook
+;; 	  (lambda ()
+;; 	    (local-set-key (kbd "C-c h") 'cperl-perldoc)))
 
-(defun text-mode-hook-px ()
-(tabbar-mode t)
-(menu-bar-mode -1))
+;; (defun text-mode-hook-px ()
+;; (tabbar-mode t)
+;; (menu-bar-mode -1))
 
-(defun gnus-mode-hook-px ()
-(tabbar-mode -1)
-;; (menu-bar-mode -1)
-)
+;; (defun gnus-mode-hook-px ()
+;; (tabbar-mode -1)
+;; ;; (menu-bar-mode -1)
+;; )
 
 ;; FIXME
-(defun info-mode-hook-px ()
-  (tabbar-mode t)
-  ;; (menu-bar-mode -1)
-  )
+;; (defun info-mode-hook-px ()
+;;   (tabbar-mode t)
+;;   ;; (menu-bar-mode -1)
+;;   )
 
-;; GNU
-;; (add-hook 'text-mode-hook 'text-mode-hook-px)
-;; (add-hook 'gnus-before-startup-hook 'gnus-mode-hook-px)
-;; (add-hook 'gnus-exit-gnus-hook 'text-mode-hook-px)
-;; (add-hook 'lisp-mode-hook 'info-mode-hook-px)
+;; ;; GNU
+;; ;; (add-hook 'text-mode-hook 'text-mode-hook-px)
+;; ;; (add-hook 'gnus-before-startup-hook 'gnus-mode-hook-px)
+;; ;; (add-hook 'gnus-exit-gnus-hook 'text-mode-hook-px)
+;; ;; (add-hook 'lisp-mode-hook 'info-mode-hook-px)
 
-(add-hook 'flyspell-mode-hook 'flyspell-prog-mode)
+;; (add-hook 'flyspell-mode-hook 'flyspell-prog-mode)
 
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+;; (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
-;; ;; Keys! ______________________________________________________________________
+;; ;; ;; Keys! ______________________________________________________________________
 
 ;; (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 ;; (global-set-key (kbd "C-<escape>") 'keyboard-quit)
@@ -621,52 +625,52 @@ point."
 (global-set-key (kbd "M-o") 'recentf-open-files)
 (global-set-key (kbd "M-d") 'px-toggle-comments)
 
-;; ;; px Minor mode
-;; ;; (defvar px-keys-minor-mode-map (make-keymap) "px-keys-minor-mode keymap.")
-;; ;; (define-minor-mode px-keys-minor-mode
-;; ;;   "A minor mode so that my key settings override annoying major modes."
-;; ;;   t " px" 'px-keys-minor-mode-map)
-;; ;; (px-keys-minor-mode 1)
-;; ;; (define-key px-keys-minor-mode-map (kbd "²") 'hippie-expand) ; Hippie-expand everywhere
+;; ;; ;; px Minor mode
+;; ;; ;; (defvar px-keys-minor-mode-map (make-keymap) "px-keys-minor-mode keymap.")
+;; ;; ;; (define-minor-mode px-keys-minor-mode
+;; ;; ;;   "A minor mode so that my key settings override annoying major modes."
+;; ;; ;;   t " px" 'px-keys-minor-mode-map)
+;; ;; ;; (px-keys-minor-mode 1)
+;; ;; ;; (define-key px-keys-minor-mode-map (kbd "²") 'hippie-expand) ; Hippie-expand everywhere
 
-;; Save the minibuffer history
+;; ;; Save the minibuffer history
 (setq px-minibuffer-history (concat user-emacs-directory "px-minibuffer-history"))
 (setq savehist-file px-minibuffer-history)
 (when (functionp 'savehist-mode) (savehist-mode 1))
 
-;; ;; (cdr (car backup-directory-alist))
+;; ;; ;; (cdr (car backup-directory-alist))
 
-(defun Kill-boring-buffers-px (regexp &optional internal-too)
-  "Kill buffers whose name matches REGEXP.
-The optional second argument indicates whether to kill internal buffers too."
-  ;; (interactive "sKill buffers matching this regular expression: \nP")
-  (dolist (buffer (buffer-list))
-    (let ((name (buffer-name buffer)))
-      (when (and name (not (string-equal name ""))
-                 (or internal-too (/= (aref name 0) ?\s))
-                 (string-match regexp name))
-        (kill-buffer buffer)))))
+;; (defun Kill-boring-buffers-px (regexp &optional internal-too)
+;;   "Kill buffers whose name matches REGEXP.
+;; The optional second argument indicates whether to kill internal buffers too."
+;;   ;; (interactive "sKill buffers matching this regular expression: \nP")
+;;   (dolist (buffer (buffer-list))
+;;     (let ((name (buffer-name buffer)))
+;;       (when (and name (not (string-equal name ""))
+;;                  (or internal-too (/= (aref name 0) ?\s))
+;;                  (string-match regexp name))
+;;         (kill-buffer buffer)))))
 
-(Kill-boring-buffers-px "*Completions*\\|*Compile\-Log*\\|*.*trace\\|*Help*\\|*RE-Builder*\\|Customize\\|\\.newsrc-dribble\\|*olimap*\\|.*el\\.gz")
+;; (Kill-boring-buffers-px "*Completions*\\|*Compile\-Log*\\|*.*trace\\|*Help*\\|*RE-Builder*\\|Customize\\|\\.newsrc-dribble\\|*olimap*\\|.*el\\.gz")
 
-;; ;; Kill & copy lines
-(defadvice kill-ring-save (before slick-copy activate compile)
-  "When called interactively with no active region, COPY a single line instead."
-  (interactive
-   (if mark-active (list (region-beginning) (region-end))
-     (message "Copied line")
-     (list (line-beginning-position)
-           (line-beginning-position 2)))))
+;; ;; ;; Kill & copy lines
+;; (defadvice kill-ring-save (before slick-copy activate compile)
+;;   "When called interactively with no active region, COPY a single line instead."
+;;   (interactive
+;;    (if mark-active (list (region-beginning) (region-end))
+;;      (message "Copied line")
+;;      (list (line-beginning-position)
+;;            (line-beginning-position 2)))))
 
-(defadvice kill-region (before slick-cut activate compile)
-  "When called interactively with no active region, KILL a single line instead."
-  (interactive
-   (if mark-active (list (region-beginning) (region-end))
-     (message "Killed line")
-     (list (line-beginning-position)
-           (line-beginning-position 2)))))
+;; (defadvice kill-region (before slick-cut activate compile)
+;;   "When called interactively with no active region, KILL a single line instead."
+;;   (interactive
+;;    (if mark-active (list (region-beginning) (region-end))
+;;      (message "Killed line")
+;;      (list (line-beginning-position)
+;;            (line-beginning-position 2)))))
 
-(defun px-toggle-comments () ;; function definition
+(defun px-toggle-comments ()
   "If region is set, [un]comments it. Otherwise [un]comments current line."
   (interactive) ;; apparently I need this line so it can move the cursor
   ;; (save-excursion ;; don't mess with mark
@@ -1004,32 +1008,32 @@ The optional second argument indicates whether to kill internal buffers too."
     "white")
   (set-face-attribute 'mode-line nil :background "blue" :foreground "yellow"))
 
-;; ;; Custom ______________________________________________________________________
+;; Custom ______________________________________________________________________
 
-;; ;; (custom-set-faces
-;; ;;  ;; custom-set-faces was added by Custom.
-;; ;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;; ;;  ;; Your init file should contain only one such instance.
-;; ;;  ;; If there is more than one, they won't work right.
-;; ;;  '(cperl-array-face ((t (:foreground "#fcaf3e" :weight bold))))
-;; ;;  '(cperl-hash-face ((t (:foreground "#fcaf3e" :slant italic :weight bold))))
-;; ;;  '(font-lock-comment-face ((t (:slant oblique :weight light))))
-;; ;;  '(highlight ((t (:background "dark red"))))
-;; ;;  '(mode-line ((t (:background "gray10" :foreground "#eeeeee"))))
-;; ;;  '(mode-line-highlight ((t (:inverse-video t))))
-;; ;;  '(mumamo-background-chunk-major ((t (:background "gray15"))))
-;; ;;  '(mumamo-background-chunk-submode1 ((t (:background "gray16"))))
-;; ;;  '(mumamo-region ((t nil)))
-;; ;;  '(undo-tree-visualizer-default-face ((t (:foreground "gray"))))
-;; ;;  '(wl-highlight-folder-few-face ((t (:foreground "gainsboro" :weight bold))))
-;; ;;  '(wl-highlight-folder-many-face ((t (:foreground "AntiqueWhite3" :weight extra-bold))))
-;; ;;  '(wl-highlight-folder-path-face ((t (:background "dark red" :foreground "white" :weight bold))))
-;; ;;  '(wl-highlight-folder-unread-face ((t (:foreground "light gray" :weight bold))))
-;; ;;  '(wl-highlight-folder-zero-face ((t (:foreground "AntiqueWhite2"))))
-;; ;;  '(wl-highlight-summary-answered-face ((t (:foreground "khaki"))))
-;; ;;  '(wl-highlight-summary-displaying-face ((t (:background "dark red" :foreground "yellow" :weight bold))))
-;; ;;  '(wl-highlight-summary-new-face ((t (:foreground "white" :weight ultra-bold))))
-;; ;;  '(wl-highlight-summary-thread-top-face ((t (:foreground "gray")))))
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(cperl-array-face ((t (:foreground "#fcaf3e" :weight bold))))
+;;  '(cperl-hash-face ((t (:foreground "#fcaf3e" :slant italic :weight bold))))
+;;  '(font-lock-comment-face ((t (:slant oblique :weight light))))
+;;  '(highlight ((t (:background "dark red"))))
+;;  '(mode-line ((t (:background "gray10" :foreground "#eeeeee"))))
+;;  '(mode-line-highlight ((t (:inverse-video t))))
+;;  '(mumamo-background-chunk-major ((t (:background "gray15"))))
+;;  '(mumamo-background-chunk-submode1 ((t (:background "gray16"))))
+;;  '(mumamo-region ((t nil)))
+;;  '(undo-tree-visualizer-default-face ((t (:foreground "gray"))))
+;;  '(wl-highlight-folder-few-face ((t (:foreground "gainsboro" :weight bold))))
+;;  '(wl-highlight-folder-many-face ((t (:foreground "AntiqueWhite3" :weight extra-bold))))
+;;  '(wl-highlight-folder-path-face ((t (:background "dark red" :foreground "white" :weight bold))))
+;;  '(wl-highlight-folder-unread-face ((t (:foreground "light gray" :weight bold))))
+;;  '(wl-highlight-folder-zero-face ((t (:foreground "AntiqueWhite2"))))
+;;  '(wl-highlight-summary-answered-face ((t (:foreground "khaki"))))
+;;  '(wl-highlight-summary-displaying-face ((t (:background "dark red" :foreground "yellow" :weight bold))))
+;;  '(wl-highlight-summary-new-face ((t (:foreground "white" :weight ultra-bold))))
+;;  '(wl-highlight-summary-thread-top-face ((t (:foreground "gray")))))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -1040,6 +1044,8 @@ The optional second argument indicates whether to kill internal buffers too."
  '(backup-directory-alist (quote ((".*" . "~/.bkp/"))))
  '(bbdb-use-pop-up nil)
  '(canlock-password "cf5f7a7261c5832898abfc7ea08ba333a36ed78c")
+ '(display-time-24hr-format t)
+ '(display-time-mode t)
  '(epa-popup-info-window nil)
  '(global-undo-tree-mode t)
  '(inhibit-startup-echo-area-message (user-login-name))
@@ -1066,3 +1072,9 @@ The optional second argument indicates whether to kill internal buffers too."
 ;; ;; Garbage ______________________________________________________________________
 ;; ;; (setq yas/root-directory "~/.emacs.d/el-get/yasnippet/snippets")
 ;; ;; (add-hook 'php-mode-hook 'yas/global-mode)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

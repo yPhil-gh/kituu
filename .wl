@@ -1,4 +1,3 @@
-;; -*- emacs-lisp -*-
 ;; You should set this variable if you use multiple e-mail addresses.
 ;; (setq wl-user-mail-address-list (quote ("philippe.coatmeur@gmail.com" "contact@adamweb.net")))
 ;; (define-key wl-summary-mode-map px-toggle-mail-key 'px-no-mail)
@@ -7,13 +6,13 @@
 
 ;; Vars! ______________________________________________________________________
 
-
 (eval-after-load "wl-summary"
   '(progn
      (define-key wl-summary-mode-map [mouse-4] 'mwheel-scroll)
      (define-key wl-summary-mode-map [mouse-5] 'mwheel-scroll)
      (define-key wl-summary-mode-map [S-mouse-4] 'mwheel-scroll)
      (define-key wl-summary-mode-map [S-mouse-5] 'mwheel-scroll)))
+
 
 (setq
 
@@ -49,14 +48,16 @@
  wl-thread-insert-opened t
  wl-thread-indent-level 1
 
- wl-thread-have-younger-brother-str "├►"
- wl-thread-youngest-child-str       "╰►"
- wl-thread-vertical-str             "│ "
- wl-thread-horizontal-str           "──"
- wl-thread-space-str                "  "
+ ;; wl-thread-have-younger-brother-str "├►"
+ ;; wl-thread-youngest-child-str       "╰►"
+ ;; wl-thread-vertical-str             "│ "
+ ;; wl-thread-horizontal-str           "──"
+ ;; wl-thread-space-str                "  "
 
 ;; Visual
  wl-icon-directory "/usr/local/share/emacs/24.0.94/etc/wl/icons/"
+ ;; wl-icon-directory "/usr/share/icons/Revenge/128x128/"
+
  wl-stay-folder-window t
  wl-folder-window-width 28
  ;; wl-summary-always-sticky-folder-list t
@@ -75,7 +76,7 @@
 
 ;; orig value is "%n%T%P%M/%D(%W)%h:%m %t%[%17(%c %f%) %] %s"
 
-(setq wl-summary-line-format "%n%T%P│%M/%D (%W) %h:%m %t%[%17(%c %f%) %] %s")
+;; (setq wl-summary-line-format "%n%T%P│%M/%D (%W) %h:%m %t%[%17(%c %f%) %] %s")
 ;; (add-hook 'recentl-dialog-mode-hook 'hl-line-mode)
 ;; (add-hook 'wl-folder-mode-hook 'hl-line-mode)
 
@@ -107,6 +108,7 @@
  elmo-nntp-default-server "news.eternal-september.org"
  elmo-nntp-default-user "PhilippeCM"
 )
+
 (setq wl-nntp-posting-server elmo-nntp-default-server)
 
 (require 'bbdb-wl)
@@ -139,31 +141,6 @@
          (template . "gmail")
          )))
 
-;; xprmt
-
-;; encoded password transmission (login)
-;; ( ) CRAM-MD5 authentication (cram-md5)
-;; ( ) DIGEST-MD5 authentication (digest-md5)
-;; (*) plain password transmission (clear)
-;; ( ) NTLM authentication (ntlm)
-;; ( ) Other: ignore
-;;     State : CHANGED outside Customize.
-;;    Default Authentication type for IMAP4.
-;; Groups: ELMO
-
-;; IMAP, gmail:
-;; (setq
-;;  elmo-imap4-default-server "imap.gmail.com"
-;;  elmo-imap4-default-user "philippe.coatmeur@gmail.com"
-;;  elmo-imap4-default-authenticate-type 'clear
-;;  elmo-imap4-default-port '993
-;;  elmo-imap4-default-stream-type 'ssl
-
-;;  wl-generate-mailer-string-function 'wl-generate-user-agent-string-1
-
-;;  ;;for non ascii-characters in folder-names
-;;  elmo-imap4-use-modified-utf7 t)
-
 (setq
  elmo-imap4-default-server "imap.gmail.com"
  elmo-imap4-default-user "philippe.coatmeur@gmail.com"
@@ -181,7 +158,7 @@
 (setq
  wl-smtp-connection-type 'starttls
  wl-smtp-posting-port 587
- wl-smtp-authenticate-type "LOGIN"
+ wl-smtp-authenticate-type "PLAIN"
  wl-smtp-posting-user "philippe.coatmeur"
  wl-smtp-posting-server "smtp.gmail.com"
  wl-local-domain "gmail.com"

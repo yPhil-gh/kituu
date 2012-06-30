@@ -13,7 +13,7 @@ lisp[tabbar-ruler]="git clone git://github.com/mlf176f2/tabbar-ruler.el.git"
 lisp[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
 lisp[mail-bug]="git clone https://xaccrocheur@github.com/xaccrocheur/mail-bug.git"
 lisp[nxhtml]="bzr branch lp:nxhtml"
-lisp[marker-visit]="git clone git://github.com/emacsmirror/marker-visit.git"
+# lisp[marker-visit]="git clone git://github.com/emacsmirror/marker-visit.git"
 # lisp[emacs-powerline]="git clone https://github.com/jonathanchu/emacs-powerline.git"
 
 echo -e $sep"Kituu! #################"
@@ -35,15 +35,19 @@ done
 
 type -P drakconf &>/dev/null || { mandriva=false >&2; }
 
+packages="zsh curl wget bzr git perl-doc sox bbdb htop fonts-ttf-Inconsolata xfce4 bc"
+
 if $mandriva ; then
     echo -e $sep"Various binary packages"
-    sudo urpmi --auto zsh curl wget bzr git perl-doc sox bbdb htop fonts-ttf-Inconsolata xfdesktop task-xfce task-xfce-plugins bc
+    sudo urpmi --auto $packages task-xfce task-xfce-plugins
+else
+    sudo apt-get install $packages
 fi
 
-if [ ! -e $scriptdir/git-completion.bash ] ; then
-    echo -e $sep"Git completion ($scriptdir/git-completion.bash)"
-    cd $scriptdir && curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptdir/git-completion.bash
-fi
+# if [ ! -e $scriptdir/git-completion.bash ] ; then
+#     echo -e $sep"Git completion ($scriptdir/git-completion.bash)"
+#     cd $scriptdir && curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptdir/git-completion.bash
+# fi
 
 if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
     echo -e $sep"leecher.pl ($scriptdir/leecher.pl)"

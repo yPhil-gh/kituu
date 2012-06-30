@@ -10,7 +10,7 @@
 GNU {
    %INBOX:philippe.coatmeur/clear@imap.gmail.com:993! "In"
    %[Gmail]/Sent Mail:philippe.coatmeur/clear@imap.gmail.com:993! "Sent"
-   %[Gmail]/Draft:philippe.coatmeur/clear@imap.gmail.com:993! "Draft"
+   %[Gmail]/Drafts:philippe.coatmeur/clear@imap.gmail.com:993! "Draft"
    %[Gmail]/Trash:philippe.coatmeur/clear@imap.gmail.com:993! "Trash"
    %[Gmail]/Spam:philippe.coatmeur/clear@imap.gmail.com:993! "Spam"
 }
