@@ -12,6 +12,7 @@ setopt hist_ignore_space
 export HISTSIZE=2000
 export HISTFILE="$HOME/.history"
 export SAVEHIST=$HISTSIZE
+setopt -o sharehistory
 
 bindkey ';5D' emacs-backward-word
 bindkey ';5C' emacs-forward-word
