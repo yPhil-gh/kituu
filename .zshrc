@@ -9,7 +9,7 @@ setopt AUTO_MENU
 setopt MENU_COMPLETE
 setopt hist_ignore_all_dups
 setopt hist_ignore_space
-export HISTSIZE=2000
+export HISTSIZE=10000
 export HISTFILE="$HOME/.history"
 export SAVEHIST=$HISTSIZE
 setopt -o sharehistory
