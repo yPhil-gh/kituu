@@ -35,10 +35,11 @@ done
 
 type -P drakconf &>/dev/null || { mandriva=false >&2; }
 
-packages="zsh curl wget bzr git perl-doc sox bbdb htop xfce4 bc"
+packages="zsh curl emacs zile wget bzr git perl-doc sox bbdb htop xfce4 bc thunderbird gimp inkscape wl"
+
+echo -e $sep"Various binary packages"
 
 if $mandriva ; then
-    echo -e $sep"Various binary packages"
     sudo urpmi --auto $packages task-xfce task-xfce-plugins
 else
     sudo apt-get install $packages
