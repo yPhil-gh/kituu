@@ -35,7 +35,7 @@ done
 
 type -P drakconf &>/dev/null || { mandriva=false >&2; }
 
-packages="zsh curl wget bzr git perl-doc sox bbdb htop fonts-ttf-Inconsolata xfce4 bc"
+packages="zsh curl wget bzr git perl-doc sox bbdb htop xfce4 bc"
 
 if $mandriva ; then
     echo -e $sep"Various binary packages"
