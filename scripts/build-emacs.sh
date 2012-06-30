@@ -3,9 +3,9 @@
 EMACS_BZR_DIR=~/tmp/emacs-src
 EMACS_SRC_DIR=~/src/emacs-src
 
-if [ ! -d "$EMACS_BZR_DIR" ]; then mkdir $EMACS_BZR_DIR; fi
+if [ ! -d "$EMACS_BZR_DIR" ]; then mkdir -p $EMACS_BZR_DIR; fi
 
-if [ ! -d "$EMACS_SRC_DIR" ]; then mkdir $EMACS_SRC_DIR; fi
+if [ ! -d "$EMACS_SRC_DIR" ]; then mkdir -p $EMACS_SRC_DIR; fi
 
 cd $EMACS_BZR_DIR;
 
