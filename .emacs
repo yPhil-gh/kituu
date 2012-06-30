@@ -950,7 +950,8 @@ point."
 		    :background nil
 		    :foreground "black"
 		    :box nil
-		    :family "Vera Sans Mono Bold Oblique")
+		    ;; :family "Vera Sans Mono Bold Oblique"
+)
 
 (set-face-attribute 'tabbar-separator nil
                     :background "gray40"
