@@ -44,6 +44,8 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     else
 	sudo apt-get install $packages
     fi
+else
+    echo "well ok"
 fi
 
 # if [ ! -e $scriptdir/git-completion.bash ] ; then
