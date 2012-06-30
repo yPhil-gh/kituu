@@ -53,13 +53,13 @@ fi
 #     cd $scriptdir && curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptdir/git-completion.bash
 # fi
 
-if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
-    echo -e $sep"leecher.pl ($scriptdir/leecher.pl)"
-    cd $scriptdir && git clone https://xaccrocheur@github.com/xaccrocheur/leecher.git
-    ln -sv $scriptdir/leecher/leecher.pl $scriptdir/
-else
-    cd $scriptdir/leecher/ && git pull
-fi
+# if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
+#     echo -e $sep"leecher.pl ($scriptdir/leecher.pl)"
+#     cd $scriptdir && git clone https://xaccrocheur@github.com/xaccrocheur/leecher.git
+#     ln -sv $scriptdir/leecher/leecher.pl $scriptdir/
+# else
+#     cd $scriptdir/leecher/ && git pull
+# fi
 
 if [ ! -d "$lispdir" ] ; then mkdir -p $lispdir ; fi
 
