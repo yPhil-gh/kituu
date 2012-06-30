@@ -35,7 +35,7 @@ done
 
 type -P drakconf &>/dev/null || { mandriva=false >&2; }
 
-packages="zsh curl gcc autoconf automake texinfo libtool libncurses libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev  emacs zile wget bzr git perl-doc sox bbdb htop xfce4 bc thunderbird gimp inkscape wl"
+packages="zsh curl gcc autoconf automake texinfo libtool libncurses5-dev libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev  emacs zile wget bzr git perl-doc sox bbdb htop xfce4 bc thunderbird gimp inkscape wl"
 
 read -e -p "Install various binary packages ($packages)? [Y/n] " yn
 if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
