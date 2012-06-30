@@ -653,22 +653,22 @@ point."
 
 ;; (Kill-boring-buffers-px "*Completions*\\|*Compile\-Log*\\|*.*trace\\|*Help*\\|*RE-Builder*\\|Customize\\|\\.newsrc-dribble\\|*olimap*\\|.*el\\.gz")
 
-;; ;; ;; Kill & copy lines
-;; (defadvice kill-ring-save (before slick-copy activate compile)
-;;   "When called interactively with no active region, COPY a single line instead."
-;;   (interactive
-;;    (if mark-active (list (region-beginning) (region-end))
-;;      (message "Copied line")
-;;      (list (line-beginning-position)
-;;            (line-beginning-position 2)))))
+;; ;; Kill & copy lines
+(defadvice kill-ring-save (before slick-copy activate compile)
+  "When called interactively with no active region, COPY a single line instead."
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (message "Copied line")
+     (list (line-beginning-position)
+           (line-beginning-position 2)))))
 
-;; (defadvice kill-region (before slick-cut activate compile)
-;;   "When called interactively with no active region, KILL a single line instead."
-;;   (interactive
-;;    (if mark-active (list (region-beginning) (region-end))
-;;      (message "Killed line")
-;;      (list (line-beginning-position)
-;;            (line-beginning-position 2)))))
+(defadvice kill-region (before slick-cut activate compile)
+  "When called interactively with no active region, KILL a single line instead."
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (message "Killed line")
+     (list (line-beginning-position)
+           (line-beginning-position 2)))))
 
 (defun px-toggle-comments ()
   "If region is set, [un]comments it. Otherwise [un]comments current line."
