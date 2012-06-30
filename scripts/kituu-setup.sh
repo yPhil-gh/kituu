@@ -74,7 +74,7 @@ for project in "${!lisp[@]}" ; do
     fi
 done
 
-read -e -p "Download, build and install / update (trunk) emacs? [Y/n] " yn
+read -e -p $sep"Download, build and install / update (trunk) emacs? [Y/n] " yn
 if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     build-emacs.sh
 fi
