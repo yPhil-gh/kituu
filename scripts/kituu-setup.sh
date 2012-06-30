@@ -37,12 +37,13 @@ type -P drakconf &>/dev/null || { mandriva=false >&2; }
 
 packages="zsh curl emacs zile wget bzr git perl-doc sox bbdb htop xfce4 bc thunderbird gimp inkscape wl"
 
-echo -e $sep"Various binary packages"
-
-if $mandriva ; then
-    sudo urpmi --auto $packages task-xfce task-xfce-plugins
-else
-    sudo apt-get install $packages
+read -e -p "Install various binary packages ($packages)? [Y/n] " yn
+if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+    if $mandriva ; then
+	sudo urpmi --auto $packages task-xfce task-xfce-plugins
+    else
+	sudo apt-get install $packages
+    fi
 fi
 
 # if [ ! -e $scriptdir/git-completion.bash ] ; then
@@ -72,5 +73,10 @@ for project in "${!lisp[@]}" ; do
 	cd $lispdir/$project/ && $vcsystem pull
     fi
 done
+
+read -e -p "Download, build and install the latest emacs? [Y/n] " yn
+if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+    build-emacs.sh
+fi
 
 echo -e $sep"...Done."
