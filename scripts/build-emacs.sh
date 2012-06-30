@@ -10,10 +10,10 @@ if [ ! -d "$EMACS_SRC_DIR" ]; then mkdir -p $EMACS_SRC_DIR; fi
 cd $EMACS_BZR_DIR;
 
 if [ -d "trunk" ]; then
-    cd trunk && bzr update;
+    cd trunk && bzr update
 else
-    bzr branch bzr://bzr.savannah.gnu.org/emacs/trunk;
+    bzr branch bzr://bzr.savannah.gnu.org/emacs/trunk
 fi
 
-cd $EMACS_SRC_DIR && rm -rf * && cp -R ~/tmp/emacs-src/trunk/ .;
-cd trunk && ./autogen.sh && ./configure && make && sudo make install;
+cd $EMACS_SRC_DIR && rm -rf * && cp -R ~/tmp/emacs-src/trunk/ .
+cd trunk && ./autogen.sh && ./configure && make && sudo make install
