@@ -938,7 +938,7 @@ point."
 ;; ;; Faces ______________________________________________________________________
 
 (set-face-attribute 'tabbar-default nil
-		    :inherit 'default
+		    ;; :inherit 'default
 		    :height 110
 		    ;; :weight 'normal
 		    :width 'normal
