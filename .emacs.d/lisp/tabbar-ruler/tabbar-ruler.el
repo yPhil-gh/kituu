@@ -255,7 +255,7 @@
                     :foreground "black"
                     ;;              :box '(:line-width 2 :color "white" :style nil)
                     :box nil
-                    :family "Lucida Grande"
+                    ;; :family "Lucida Grande"
                     )
 
 (set-face-attribute 'tabbar-selected nil

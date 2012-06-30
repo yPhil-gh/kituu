@@ -77,8 +77,8 @@
 
 (set-face-attribute 'default nil
 :font "Monospace"
-:height 125
 ;; :font "Inconsolata"
+:height 125
 ;; :width 'normal
 :weight 'normal
 ;; :slant 'reverse-italic
@@ -438,7 +438,10 @@
 ;; (setq suggest-key-bindings 1) ; wait 5 seconds
 
 ;; This is harsh but just, shortens the war and saves lives.
-(setq resize-mini-windows nil)
+(setq 
+ ;; resize-mini-windows nil
+ max-mini-window-height nil
+)
 
 ;; Modal setting (if this mode then this setting)
 (add-hook 'custom-mode-hook 'linum-mode -1)
@@ -950,7 +953,9 @@ point."
 		    :background nil
 		    :foreground "black"
 		    :box nil
+		    ;; :family "Monospace"
 		    ;; :family "Vera Sans Mono Bold Oblique"
+                    :family "Lucida Grande"
 )
 
 (set-face-attribute 'tabbar-separator nil
