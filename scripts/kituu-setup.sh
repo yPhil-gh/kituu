@@ -35,9 +35,11 @@ done
 
 type -P drakconf &>/dev/null || { mandriva=false >&2; }
 
-packages="zsh curl gcc autoconf automake texinfo libtool libncurses5-dev libgnutls-dev librsvg2-dev imagemagick libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev  emacs zile wget bzr git perl-doc sox bbdb htop xfce4 bc thunderbird gimp inkscape wl"
+packages="zsh curl gcc autoconf automake texinfo libtool libncurses5-dev libgnutls-dev librsvg2-dev imagemagick libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev  emacs zile wget bzr git perl-doc sox bbdb htop xfce4 xfce4-terminal bc thunderbird gimp inkscape wl"
 
-read -e -p "Install various binary packages ($packages)? [Y/n] " yn
+echo -e $sep"Binaries"
+
+read -e -p "Install binary packages ($packages)? [Y/n] " yn
 if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     if $mandriva ; then
 	sudo urpmi --auto $packages task-xfce task-xfce-plugins
