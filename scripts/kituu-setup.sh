@@ -50,11 +50,12 @@ fi
 
 echo -e $sep"Theme"
 
-read -e -p "Install themes? [Y/n] " yn
+read -e -p "Install themes? [Y/n] (only run this once) " yn
 if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     wget -q http://ubuntusatanic.org/ubuntu-se-key.gpg -O- | sudo apt-key add -
-    # sudo echo "deb http://ubuntusatanic.org/hell oneiric main" >> /etc/apt/sources.list    
-    echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list
+    if (! grep "ubuntusatanic" /etc/apt/sources.list); then echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list && sudo apt-get update; fi
+    # echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list
+
 fi
 
 # if [ ! -e $scriptdir/git-completion.bash ] ; then
