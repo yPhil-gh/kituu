@@ -58,15 +58,14 @@ if (! grep "ubuntusatanic" /etc/apt/sources.list); then
     fi
 fi
 
-echo -e $sep"Theme"
-read -e -p "Install dark theme? [Y/n] " yn
-if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-    wget -q http://ubuntusatanic.org/ubuntu-se-key.gpg -O- | sudo apt-key add -
-    if (! grep "ubuntusatanic" /etc/apt/sources.list); then echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list && sudo apt-get update; fi
-    sudo apt-get install xubuntu-satanic
-    # echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list
-
-fi
+# echo -e $sep"Theme"
+# read -e -p "Install dark theme? [Y/n] " yn
+# if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+#     wget -q http://ubuntusatanic.org/ubuntu-se-key.gpg -O- | sudo apt-key add -
+#     if (! grep "ubuntusatanic" /etc/apt/sources.list); then echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list && sudo apt-get update; fi
+#     sudo apt-get install xubuntu-satanic
+#     # echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list
+# fi
 
 # if [ ! -e $scriptdir/git-completion.bash ] ; then
 #     echo -e $sep"Git completion ($scriptdir/git-completion.bash)"
