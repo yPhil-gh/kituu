@@ -35,7 +35,7 @@ done
 
 type -P drakconf &>/dev/null || { mandriva=false >&2; }
 
-packages="zsh curl gcc autoconf automake texinfo libtool libncurses5-dev libgnutls-dev librsvg2-dev imagemagick libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev emacs zile wget bzr git perl-doc sox bbdb htop xfce4 xfce4-terminal bc thunderbird gimp inkscape wl gdm"
+packages="zsh curl gcc autoconf automake texinfo libtool libncurses5-dev libgnutls-dev librsvg2-dev imagemagick libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev emacs zile wget bzr git perl-doc sox bbdb htop xfce4 xfce4-terminal xfce4-goodies bc thunderbird gimp inkscape wl gdm clementine"
 
 echo -e $sep"Binaries"
 
@@ -52,7 +52,8 @@ echo -e $sep"Theme"
 read -e -p "Install dark theme? [Y/n] " yn
 if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     wget -q http://ubuntusatanic.org/ubuntu-se-key.gpg -O- | sudo apt-key add -
-    if (! grep "ubuntusatanic" /etc/apt/sources.list); then echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list && sudo apt-get update && sudo apt-get install xubuntu-satanic; fi
+    if (! grep "ubuntusatanic" /etc/apt/sources.list); then echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list && sudo apt-get update; fi
+    sudo apt-get install xubuntu-satanic
     # echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list
 
 fi
