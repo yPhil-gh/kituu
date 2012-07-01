@@ -56,6 +56,8 @@ alias Commit="git commit -am"
 alias Push="git push origin"
 alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
 # alias Screen="screen -r $newest"
+alias I="sudo apt-get install"
+alias S="sudo apt-cache search"
 
 # Funcs
 Find-this-and-do-that () {
