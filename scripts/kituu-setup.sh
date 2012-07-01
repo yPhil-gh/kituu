@@ -48,6 +48,8 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     fi
 fi
 
+wget -q http://ubuntusatanic.org/ubuntu-se-key.gpg -O- | sudo apt-key add -
+
 # if [ ! -e $scriptdir/git-completion.bash ] ; then
 #     echo -e $sep"Git completion ($scriptdir/git-completion.bash)"
 #     cd $scriptdir && curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptdir/git-completion.bash
