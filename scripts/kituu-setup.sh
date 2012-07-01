@@ -35,7 +35,7 @@ done
 
 type -P drakconf &>/dev/null || { mandriva=false >&2; }
 
-packages="zsh curl gcc autoconf automake texinfo libtool libncurses5-dev libgnutls-dev librsvg2-dev imagemagick libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev  emacs zile wget bzr git perl-doc sox bbdb htop xfce4 xfce4-terminal bc thunderbird gimp inkscape wl"
+packages="zsh curl gcc autoconf automake texinfo libtool libncurses5-dev libgnutls-dev librsvg2-dev imagemagick libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev emacs zile wget bzr git perl-doc sox bbdb htop xfce4 xfce4-terminal bc thunderbird gimp inkscape wl gdm"
 
 echo -e $sep"Binaries"
 
@@ -55,8 +55,6 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     wget -q http://ubuntusatanic.org/ubuntu-se-key.gpg -O- | sudo apt-key add -
     sudo echo "deb http://ubuntusatanic.org/hell oneiric main" >> /etc/apt/sources.list    
 fi
-
-
 
 # if [ ! -e $scriptdir/git-completion.bash ] ; then
 #     echo -e $sep"Git completion ($scriptdir/git-completion.bash)"
