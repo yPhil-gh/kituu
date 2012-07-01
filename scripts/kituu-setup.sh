@@ -48,7 +48,15 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     fi
 fi
 
-wget -q http://ubuntusatanic.org/ubuntu-se-key.gpg -O- | sudo apt-key add -
+echo -e $sep"Theme"
+
+read -e -p "Install themes? [Y/n] " yn
+if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+    wget -q http://ubuntusatanic.org/ubuntu-se-key.gpg -O- | sudo apt-key add -
+    sudo echo "deb http://ubuntusatanic.org/hell oneiric main" >> /etc/apt/sources.list    
+fi
+
+
 
 # if [ ! -e $scriptdir/git-completion.bash ] ; then
 #     echo -e $sep"Git completion ($scriptdir/git-completion.bash)"
