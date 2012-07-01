@@ -35,7 +35,7 @@ done
 
 type -P drakconf &>/dev/null || { mandriva=false >&2; }
 
-packages="zsh curl gcc autoconf automake texinfo libtool libncurses5-dev libgnutls-dev librsvg2-dev imagemagick libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev emacs zile wget bzr git perl-doc sox bbdb htop xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager bc thunderbird gimp inkscape wl gdm clementine"
+packages="zsh curl gcc autoconf automake texinfo libtool libncurses5-dev libgnutls-dev librsvg2-dev imagemagick libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev emacs zile wget bzr git perl-doc sox bbdb htop xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager bc thunderbird gimp inkscape wl gdm clementine unison"
 
 echo -e $sep"Binaries"
 
