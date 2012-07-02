@@ -19,21 +19,9 @@ to github (if you're me, for instance)
     -Backup your existing ~/dotfiles as ~/dotfile.orig
     -Symlink ~/.kituu/* in ~/*
     -Now you have a new dir, ~/script/ and it's in your $PATH
+    -Install a selection of packages
     -From now on you can put files in your .emacs.d/, when you run "kituu-setup.sh" it's existing components will be updated, and new one will be installed in the same way outlined above.
     -Remember that if a release breaks anything you can always roll-back to a previous one. And bug-report, please.
-
-*** Usage
-    -Many, if not all aspects, are configurable in the commented [[https://github.com/xaccrocheur/kituu/blob/master/.bashrc][.bashrc]] file ; It's also meant to be as secure as possible and avoids exporting crap in your env. Many surprises as well. I spent some time on this one. Bug reports *welcome*
-
-    -Use this little [[file:scripts/list-shell-colours.sh][script]] to help you find your colors but stick to the ASCII ones if you're going to use your .bashrc on weird old crusty machines, like I do.
-
-    -If you defined custom paths and aliases in your existing .bashrc, don't forget to source them in the new one. Always keep a backup.
-
-    -Use the force, read the source ;)
-
-    NOTE: this .bashrc only works with UTF-8 capable terminal emulators.
-
-    -Don't forget that in BASH, [[http://www.catonmat.net/blog/bash-emacs-editing-mode-cheat-sheet/][you're already in Emacs]] !
 
 *** LICENSE
     This program is free software: you can redistribute it and/or modify
