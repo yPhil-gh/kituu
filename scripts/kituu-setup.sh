@@ -7,6 +7,7 @@ scriptdir=~/scripts
 sep="\n################# "
 
 type -P aptitude &>/dev/null || { debian=true >&2; }
+if [[ $1="-rw" ]] ; then rw=true; fi
 
 # My lisp packages
 declare -A lisp
@@ -32,8 +33,8 @@ pack[image_tools]="gimp inkscape"
 
 echo -e $sep"Kituu! #################
 
-Welcome to $(basename $0). This script allows you to install and maintain various packages from misc places.
-You will be asked for every package if you want to install it ; After that you can run $0 again to update the packages. Sounds good? Let's go.
+Welcome to Kituu. This script allows you to install and maintain various packages from misc places.
+You will be asked for every package if you want to install it ; After that you can run $(basename $0) again (it's in your PATH now) to update the packages. Sounds good? Let's go.
 "
 
 if $debian; then
@@ -60,20 +61,6 @@ for i in * ; do
     fi
 done
 
-
-packages="zsh curl gcc autoconf automake texinfo libtool libncurses5-dev libgnutls-dev librsvg2-dev imagemagick libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev emacs zile wget bzr git perl-doc sox bbdb htop xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager bc thunderbird gimp inkscape wl gdm clementine unison firefox locate gstreamer0.10-plugins"
-
-echo -e $sep"Binaries"
-
-read -e -p "Install binary packages ($packages)? [Y/n] " yn
-if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-    if $mandriva ; then
-	sudo urpmi --auto $packages task-xfce task-xfce-plugins
-    else
-	sudo apt-get install $packages
-    fi
-fi
-
 if (! grep "ubuntusatanic" /etc/apt/sources.list); then
     read -e -p "Install dark theme? [Y/n] " yn
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
@@ -83,15 +70,6 @@ if (! grep "ubuntusatanic" /etc/apt/sources.list); then
     # echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list
     fi
 fi
-
-# echo -e $sep"Theme"
-# read -e -p "Install dark theme? [Y/n] " yn
-# if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-#     wget -q http://ubuntusatanic.org/ubuntu-se-key.gpg -O- | sudo apt-key add -
-#     if (! grep "ubuntusatanic" /etc/apt/sources.list); then echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list && sudo apt-get update; fi
-#     sudo apt-get install xubuntu-satanic
-#     # echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list
-# fi
 
 # if [ ! -e $scriptdir/git-completion.bash ] ; then
 #     echo -e $sep"Git completion ($scriptdir/git-completion.bash)"
