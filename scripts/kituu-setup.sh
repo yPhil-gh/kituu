@@ -11,10 +11,10 @@ type -P aptitude &>/dev/null || { debian=true >&2; }
 if [[ $1 = "-rw" ]]; then rw=true; fi
 
 if ($rw); then echo "rw!";fi
-exit;
+# exit;
 if ($rw); then vc_prefix="git@github.com:";else vc_prefix="https://github.com/"; fi
 
-plop="zob"
+# plop="zob"
 
 # echo $1;
 
@@ -36,7 +36,7 @@ pack[dev_tools]="gcc autoconf automake texinfo libtool"
 pack[dev_env]="perl-doc"
 pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev"
 pack[emacs]="emacs bbdb wl"
-pack[image_tools]="${vc_prefix}gimp inkscape imagemagick $plop"
+pack[image_tools]="gimp inkscape imagemagick"
 pack[multimedia]="clementine gstreamer0.10-plugins"
 
 echo -e $sep"Kituu! #################
