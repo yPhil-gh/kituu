@@ -11,22 +11,7 @@ type -P aptitude &>/dev/null || { debian=true >&2; }
 if [[ $1 = "-rw" ]]; then rw=true; fi
 
 if ($rw); then echo "rw!";fi
-# exit;
 if ($rw); then vc_prefix="git@github.com:";else vc_prefix="https://github.com/"; fi
-
-# plop="zob"
-
-# echo $1;
-
-# My lisp packages
-declare -A lisp
-lisp[tabbar]="git clone https://github.com/dholm/tabbar.git"
-lisp[tabbar-ruler]="git clone https://github.com/mlf176f2/tabbar-ruler.el.git"
-lisp[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
-lisp[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
-lisp[nxhtml]="bzr branch lp:nxhtml"
-# lisp[marker-visit]="git clone git://github.com/emacsmirror/marker-visit.git"
-# lisp[emacs-powerline]="git clone https://github.com/jonathanchu/emacs-powerline.git"
 
 # My binary packages
 declare -A pack
@@ -39,11 +24,20 @@ pack[emacs]="emacs bbdb wl"
 pack[image_tools]="gimp inkscape imagemagick"
 pack[multimedia]="clementine gstreamer0.10-plugins"
 
+# My lisp packages
+declare -A lisp
+lisp[tabbar]="git clone https://github.com/dholm/tabbar.git"
+lisp[tabbar-ruler]="git clone https://github.com/mlf176f2/tabbar-ruler.el.git"
+lisp[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
+lisp[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
+lisp[nxhtml]="bzr branch lp:nxhtml"
+# lisp[marker-visit]="git clone git://github.com/emacsmirror/marker-visit.git"
+# lisp[emacs-powerline]="git clone https://github.com/jonathanchu/emacs-powerline.git"
+
 echo -e $sep"Kituu! #################
 
 Welcome to Kituu. This script allows you to install and maintain various packages from misc places.
-You will be asked for every package if you want to install it ; After that you can run $(basename $0) again (it's in your PATH now) to update the packages. Sounds good? Let's go.
-"
+You will be asked for every package if you want to install it ; After that you can run $(basename $0) again (it's in your PATH now) to update the packages. Sounds good? Let's go."
 
 if $debian; then
     echo -e $sep"Binary packages"
@@ -74,22 +68,16 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     done
 fi
 
-if (! grep "ubuntusatanic" /etc/apt/sources.list); then
+if (! grep "ubuntusatanic" /etc/apt/sources.list &>/dev/null); then
     read -e -p "Install dark theme? [Y/n] " yn
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 	wget -q http://ubuntusatanic.org/ubuntu-se-key.gpg -O- | sudo apt-key add -
 	echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list && sudo apt-get update
 	sudo apt-get install xubuntu-satanic
-    # echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list
     fi
 fi
 
-# if [ ! -e $scriptdir/git-completion.bash ] ; then
-#     echo -e $sep"Git completion ($scriptdir/git-completion.bash)"
-#     cd $scriptdir && curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptdir/git-completion.bash
-# fi
-
-echo -e $sep"leecher.pl (a script to auto-get .ext links from a given web page URL"
+echo -e $sep"leecher.pl (a script to auto-get .ext links from a given web page URL)"
 if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
     read -e -p "Install leecher?  ($scriptdir/leecher.pl) [Y/n] " yn
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
