@@ -1,7 +1,7 @@
 #!/bin/bash
 
 shopt -s dotglob
-kituudir=~/.kituu
+repodir=~/.kituu
 lispdir=~/.emacs.d/lisp
 scriptdir=~/scripts
 sep="\n################# "
@@ -21,7 +21,7 @@ lisp[nxhtml]="bzr branch lp:nxhtml"
 
 # My binary packages
 declare -A pack
-pack[base]="zsh curl zile wget bzr git sox htop bc unison thunderbird firefox locate"
+pack[base]="zsh curl zile wget bzr git sox htop bc unison thunderbird firefox locate filelight gparted"
 pack[xfce]="gdm xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager"
 pack[dev_tools]="gcc autoconf automake texinfo libtool"
 pack[dev_env]="perl-doc"
@@ -38,6 +38,7 @@ You will be asked for every package if you want to install it ; After that you c
 "
 
 if $debian; then
+    echo -e $sep"Binary packages"
     for group in "${!pack[@]}" ; do
 	read -e -p "Install $group? (${pack[$group]}) [Y/n] " yn
 	if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
@@ -46,20 +47,24 @@ if $debian; then
     done
 fi
 
-if [ ! -d $kituudir ] ; then
-    echo -e $sep"No existing $kituudir, so"
-    cd && git clone git@github.com:xaccrocheur/kituu.git
-else
-    echo -e $sep"Found $kituudir, so"
-    cd $kituudir && git pull
-fi
-
-for i in * ; do
-    if [[  ! -h ~/$i && $i != *#* && $i != *~* && $i != *git* && $i != "README.org" && $i != "." && "${i}" != ".." ]] ; then
-	if [[ -e ~/$i ]] ; then mv -v ~/$i ~/$i.orig ; fi
-	ln -sv $kituudir/$i ~/
+echo -e $sep"Dotfiles and scripts"
+read -e -p "Install dotfiles (in $HOME) and scripts (in $scriptdir)? [Y/n] " yn
+if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+    if [ ! -d $repodir ] ; then
+	echo -e $sep"No existing $repodir, so"
+	cd && git clone git@github.com:xaccrocheur/kituu.git
+    else
+	echo -e $sep"Found $repodir, so"
+	cd $repodir && git pull
     fi
-done
+
+    for i in * ; do
+	if [[  ! -h ~/$i && $i != *#* && $i != *~* && $i != *git* && $i != "README.org" && $i != "." && "${i}" != ".." ]] ; then
+	    if [[ -e ~/$i ]] ; then mv -v ~/$i ~/$i.orig ; fi
+	    ln -sv $repodir/$i ~/
+	fi
+    done
+fi
 
 if (! grep "ubuntusatanic" /etc/apt/sources.list); then
     read -e -p "Install dark theme? [Y/n] " yn
