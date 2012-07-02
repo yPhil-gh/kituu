@@ -6,6 +6,8 @@ lispdir=~/.emacs.d/lisp
 scriptdir=~/scripts
 sep="\n################# "
 
+type -P aptitude &>/dev/null || { debian=true >&2; }
+
 # My lisp packages
 declare -A lisp
 lisp[tabbar]="git clone git://github.com/dholm/tabbar.git"
@@ -28,21 +30,19 @@ pack[image_tools]="gimp inkscape imagemagick"
 pack[multimedia]="clementine gstreamer0.10-plugins"
 pack[image_tools]="gimp inkscape"
 
+echo -e $sep"Kituu! #################
 
-# for project in "${!lisp[@]}" ; do
-#     vcsystem=${lisp[$project]:0:3}
-#     echo -e $sep"$project ($lispdir/$project/)"
-#     if [ ! -e $lispdir/$project/ ] ; then
-# 	read -e -p "Install $project in ($lispdir/$project/)? [Y/n] " yn
-# 	if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-# 	    cd $lispdir && ${lisp[$project]}
-# 	fi
-#     else
-# 	cd $lispdir/$project/ && $vcsystem pull
-#     fi
-# done
+Welcome to $(basename $0). This script allows you to 
+"
 
-echo -e $sep"Kituu! #################"
+if $debian; then
+    for group in "${!pack[@]}" ; do
+	read -e -p "Install $group? (${pack[$group]}) [Y/n] " yn
+	if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+	    sudo aptitude install ${pack[$group]}
+	fi
+    done
+fi
 
 if [ ! -d $kituudir ] ; then
     echo -e $sep"No existing $kituudir, so"
@@ -59,7 +59,6 @@ for i in * ; do
     fi
 done
 
-type -P drakconf &>/dev/null || { mandriva=false >&2; }
 
 packages="zsh curl gcc autoconf automake texinfo libtool libncurses5-dev libgnutls-dev librsvg2-dev imagemagick libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev emacs zile wget bzr git perl-doc sox bbdb htop xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager bc thunderbird gimp inkscape wl gdm clementine unison firefox locate gstreamer0.10-plugins"
 
