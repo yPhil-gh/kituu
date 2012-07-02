@@ -32,7 +32,8 @@ pack[image_tools]="gimp inkscape"
 
 echo -e $sep"Kituu! #################
 
-Welcome to $(basename $0). This script allows you to 
+Welcome to $(basename $0). This script allows you to install and maintain various packages from misc places.
+You will be asked for every package if you want to install it ; After that you can run $0 again to update the packages. Sounds good? Let's go.
 "
 
 if $debian; then
