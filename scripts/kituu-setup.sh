@@ -110,4 +110,8 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     build-emacs.sh
 fi
 
+if [ ! -d "~/ploup" ]; then
+    mkdir -v ~/ploup
+fi
+
 echo -e $sep"...Done."
