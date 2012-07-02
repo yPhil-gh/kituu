@@ -5,16 +5,25 @@ repodir=~/.kituu
 lispdir=~/.emacs.d/lisp
 scriptdir=~/scripts
 sep="\n################# "
+rw=false
 
 type -P aptitude &>/dev/null || { debian=true >&2; }
-if [[ $1="-rw" ]] ; then rw=true; fi
+if [[ $1 = "-rw" ]]; then rw=true; fi
+
+if ($rw); then echo "rw!";fi
+exit;
+if ($rw); then vc_prefix="git@github.com:";else vc_prefix="https://github.com/"; fi
+
+plop="zob"
+
+# echo $1;
 
 # My lisp packages
 declare -A lisp
-lisp[tabbar]="git clone git://github.com/dholm/tabbar.git"
-lisp[tabbar-ruler]="git clone git://github.com/mlf176f2/tabbar-ruler.el.git"
+lisp[tabbar]="git clone https://github.com/dholm/tabbar.git"
+lisp[tabbar-ruler]="git clone https://github.com/mlf176f2/tabbar-ruler.el.git"
 lisp[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
-lisp[mail-bug]="git clone https://xaccrocheur@github.com/xaccrocheur/mail-bug.git"
+lisp[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
 lisp[nxhtml]="bzr branch lp:nxhtml"
 # lisp[marker-visit]="git clone git://github.com/emacsmirror/marker-visit.git"
 # lisp[emacs-powerline]="git clone https://github.com/jonathanchu/emacs-powerline.git"
@@ -27,9 +36,8 @@ pack[dev_tools]="gcc autoconf automake texinfo libtool"
 pack[dev_env]="perl-doc"
 pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev"
 pack[emacs]="emacs bbdb wl"
-pack[image_tools]="gimp inkscape imagemagick"
+pack[image_tools]="${vc_prefix}gimp inkscape imagemagick $plop"
 pack[multimedia]="clementine gstreamer0.10-plugins"
-pack[image_tools]="gimp inkscape"
 
 echo -e $sep"Kituu! #################
 
@@ -81,13 +89,16 @@ fi
 #     cd $scriptdir && curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptdir/git-completion.bash
 # fi
 
-# if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
-#     echo -e $sep"leecher.pl ($scriptdir/leecher.pl)"
-#     cd $scriptdir && git clone https://xaccrocheur@github.com/xaccrocheur/leecher.git
-#     ln -sv $scriptdir/leecher/leecher.pl $scriptdir/
-# else
-#     cd $scriptdir/leecher/ && git pull
-# fi
+echo -e $sep"leecher.pl (a script to auto-get .ext links from a given web page URL"
+if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
+    read -e -p "Install leecher?  ($scriptdir/leecher.pl) [Y/n] " yn
+    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+	cd $scriptdir && git clone ${vc_prefix}xaccrocheur/leecher.git
+	ln -sv $scriptdir/leecher/leecher.pl $scriptdir/
+    else
+	cd $scriptdir/leecher/ && git pull
+    fi
+fi
 
 if [ ! -d "$lispdir" ] ; then mkdir -p $lispdir ; fi
 

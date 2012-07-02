@@ -75,16 +75,17 @@
 
 (add-hook 'find-file-hooks 'turn-on-font-lock)
 
-(set-face-attribute 'default nil
-:font "Monospace"
-;; :font "Inconsolata"
-:height 125
-;; :width 'normal
-:weight 'normal
-;; :slant 'reverse-italic
-;; :weight 'bold
-;; :width 'wide
-)
+;; (set-face-attribute 'default nil
+;; :font "Monospace"
+;; :height 125
+;; :weight 'normal
+
+;; ;; :width 'normal
+;; ;; :font "Inconsolata"
+;; ;; :slant 'reverse-italic
+;; ;; :weight 'bold
+;; ;; :width 'wide
+;; )
 
 ;; (message "we are at line %s" (line-number-at-pos))
 

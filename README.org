@@ -1,24 +1,18 @@
 * Kituu
 
-**  Fully configured/able environment
+**  Fully configured/able environment (dotfiles, scripts & packages) installation & maintainance script
 
-**** BASH Features
-    -Two-lines solid display
-    -Double-clickable full path (for copy & pasting)
-    -Simple and light load-meter
-    -Visual status of the latest command output
-    -Command history available across all new shells
-    -Cool aliases & helper functions
-    -git integration : commands completion + branch status in prompt
-
-**** Emacs features
-    -Generalized awesomeness ; Try M-x px-help-emacs
-
-*** Installation
+*** Installation (and update)
     -cd ~/
-    -git clone git://github.com/xaccrocheur/kituu.git .kituu && .kituu/scripts/kituu-setup.sh
+    -git clone https://github.com/xaccrocheur/kituu.git .kituu && .kituu/scripts/kituu-setup.sh
     -bash
     -e
+
+Or, to install it and be able to modify it and push back your changes
+to github (if you are me, for instance) :
+
+    -git clone git@github.com:xaccrocheur/kituu.git .kituu && .kituu/scripts/kituu-setup.sh -rw
+    -Then run kituu-setup.sh -rw afterwards to update your packages
 
 ***** This will :
     -Clone a repository at ~/.kituu/
