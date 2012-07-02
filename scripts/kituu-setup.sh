@@ -10,7 +10,7 @@ rw=false
 type -P aptitude &>/dev/null || { debian=true >&2; }
 if [[ $1 = "-rw" ]]; then rw=true; fi
 
-if ($rw); then echo "rw!";fi
+if ($rw); then echo "rw!"; fi
 if ($rw); then vc_prefix="git@github.com:";else vc_prefix="https://github.com/"; fi
 
 # My binary packages
@@ -22,7 +22,7 @@ pack[dev_env]="perl-doc"
 pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev"
 pack[emacs]="emacs bbdb wl"
 pack[image_tools]="gimp inkscape imagemagick"
-pack[multimedia]="clementine gstreamer0.10-plugins"
+pack[multimedia]="clementine smplayer gstreamer0.10-plugins"
 
 # My lisp packages
 declare -A lisp
@@ -103,15 +103,16 @@ for project in "${!lisp[@]}" ; do
     fi
 done
 
-echo -e $sep"Emacs trunk"
-
-read -e -p "Download, build and install / update (trunk) emacs? [Y/n] " yn
-if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-    build-emacs.sh
+if [ -e $scriptdir/build-emacs.sh ]; then
+    echo -e $sep"Emacs trunk"
+    read -e -p "Download, build and install / update (trunk) emacs? [Y/n] " yn
+    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+	build-emacs.sh
+    fi
 fi
 
-if [ ! -d "~/ploup" ]; then
-    mkdir -v ~/ploup
+if [ ! -d ~/tmp ]; then
+    mkdir -v ~/tmp
 fi
 
 echo -e $sep"...Done."
