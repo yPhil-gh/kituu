@@ -16,9 +16,17 @@ lisp[nxhtml]="bzr branch lp:nxhtml"
 # lisp[marker-visit]="git clone git://github.com/emacsmirror/marker-visit.git"
 # lisp[emacs-powerline]="git clone https://github.com/jonathanchu/emacs-powerline.git"
 
-# # My binary packages
-# declare -A lisp
-# lisp[tabbar]="git clone git://github.com/dholm/tabbar.git"
+# My binary packages
+declare -A pack
+pack[base]="zsh curl zile wget bzr git sox htop bc unison thunderbird firefox locate"
+pack[xfce]="gdm xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager"
+pack[dev_tools]="gcc autoconf automake texinfo libtool"
+pack[dev_env]="perl-doc"
+pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev"
+pack[emacs]="emacs bbdb wl"
+pack[image_tools]="gimp inkscape imagemagick"
+pack[multimedia]="clementine gstreamer0.10-plugins"
+pack[image_tools]="gimp inkscape"
 
 # for project in "${!lisp[@]}" ; do
 #     vcsystem=${lisp[$project]:0:3}
