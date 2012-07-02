@@ -16,6 +16,23 @@ lisp[nxhtml]="bzr branch lp:nxhtml"
 # lisp[marker-visit]="git clone git://github.com/emacsmirror/marker-visit.git"
 # lisp[emacs-powerline]="git clone https://github.com/jonathanchu/emacs-powerline.git"
 
+# # My binary packages
+# declare -A lisp
+# lisp[tabbar]="git clone git://github.com/dholm/tabbar.git"
+
+# for project in "${!lisp[@]}" ; do
+#     vcsystem=${lisp[$project]:0:3}
+#     echo -e $sep"$project ($lispdir/$project/)"
+#     if [ ! -e $lispdir/$project/ ] ; then
+# 	read -e -p "Install $project in ($lispdir/$project/)? [Y/n] " yn
+# 	if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+# 	    cd $lispdir && ${lisp[$project]}
+# 	fi
+#     else
+# 	cd $lispdir/$project/ && $vcsystem pull
+#     fi
+# done
+
 echo -e $sep"Kituu! #################"
 
 if [ ! -d $kituudir ] ; then
