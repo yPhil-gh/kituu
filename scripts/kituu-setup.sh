@@ -28,6 +28,7 @@ pack[image_tools]="gimp inkscape imagemagick"
 pack[multimedia]="clementine gstreamer0.10-plugins"
 pack[image_tools]="gimp inkscape"
 
+
 # for project in "${!lisp[@]}" ; do
 #     vcsystem=${lisp[$project]:0:3}
 #     echo -e $sep"$project ($lispdir/$project/)"
