@@ -3,7 +3,7 @@
 ****  Environment (dotfiles, scripts & binary packages and Mozilla extensions) installation & update script
 
 *** Features
-   -Install and maintains the things I (and you too I guess) need on every machine I install :
+   -Install and maintain the things I (and you too I guess) need on every machine I install :
      -Binary packages (debian only, sorry. I mean every distro has its naming scheme, what are you gonna do?)
      -Mozilla (Firefox, Thunderbird, ABroswer, whatever) add-ons
      -Various scripts from Version Control repositories
@@ -16,7 +16,7 @@
    -Allow editing of the files as well as deployment : It's a big deal and it's the whole point of the thing
    -Setup a home dir the way I'm used to
 
-*** Installation (and update)
+*** Installation
     -cd ~/
     -git clone https://github.com/xaccrocheur/kituu.git .kituu && .kituu/scripts/kituu-setup.sh
 
@@ -24,7 +24,6 @@
 
     -git clone git@github.com:xaccrocheur/kituu.git .kituu && .kituu/scripts/kituu-setup.sh -rw
     -Then run *kituu-setup.sh -rw* afterwards to update your packages
-
 
 **** This will :
     -Clone a repository at ~/.kituu/
