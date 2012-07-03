@@ -23,14 +23,6 @@ pack[image_tools]="gimp inkscape blender"
 pack[multimedia]="clementine smplayer gstreamer0.10-plugins"
 pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2"
 
-# My lisp packages
-declare -A lisp
-lisp[tabbar]="git clone https://github.com/dholm/tabbar.git"
-lisp[tabbar-ruler]="git clone ${vc_prefix}xaccrocheur/tabbar-ruler.git"
-lisp[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
-lisp[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
-lisp[nxhtml]="bzr branch lp:nxhtml"
-
 # My Mozilla addons
 declare -A moz
 moz[Uppity]="https://addons.mozilla.org/firefox/downloads/latest/869/addon-869-latest.xpi"
@@ -39,6 +31,14 @@ moz[Firebug]="https://addons.mozilla.org/firefox/downloads/latest/1843/addon-184
 moz[GreaseMonkey]="https://addons.mozilla.org/firefox/downloads/latest/748/addon-748-latest.xpi"
 moz[GreaseMonkey_style_fix]="http://userscripts.org/scripts/source/36850.user.js"
 moz[French_dictionary]="https://addons.mozilla.org/firefox/downloads/latest/354872/addon-354872-latest.xpi"
+
+# My lisp packages
+declare -A lisp
+lisp[tabbar]="git clone https://github.com/dholm/tabbar.git"
+lisp[tabbar-ruler]="git clone ${vc_prefix}xaccrocheur/tabbar-ruler.git"
+lisp[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
+lisp[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
+lisp[nxhtml]="bzr branch lp:nxhtml"
 
 echo -e $sep"Kituu! #################
 
