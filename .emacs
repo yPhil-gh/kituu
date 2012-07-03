@@ -324,6 +324,7 @@
     (browse-url (concat "http://www.google.com/search?&q="
 			(url-hexify-string q)))))
 
+
 (defun select-text-in-quote-px ()
   "Select text between the nearest left and right delimiters."
   (interactive)
