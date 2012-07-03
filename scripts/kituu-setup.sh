@@ -55,10 +55,8 @@ echo -e $sep"Dotfiles and scripts"
 read -e -p "Install dotfiles (in $HOME) and scripts (in $scriptdir)? [Y/n] " yn
 if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     if [ ! -d $repodir ] ; then
-	echo -e $sep"No existing $repodir, so"
 	cd && git clone ${vc_prefix}xaccrocheur/kituu.git
     else
-	echo -e $sep"Found $repodir, so"
 	cd $repodir && git pull
     fi
 
