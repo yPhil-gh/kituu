@@ -1,6 +1,6 @@
 * Kituu
 
-****  Environment (dotfiles, scripts & binary packages and Mozilla extensions) installation & update sh (tested w/ BASH and ZSH) script
+****  Environment (dotfiles, scripts, binary packages, emacs and Mozilla extensions so far) installation & update sh (tested w/ BASH and ZSH) script
 
 What do one need on a given computer ? Dotfiles ("hidden"
 configuration files in your $HOME dir, names start with a dot, hence
