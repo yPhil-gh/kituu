@@ -3,19 +3,18 @@
 ****  Environment (dotfiles, scripts & binary packages and Mozilla extensions) installation & update script
 
 *** Features
-   -Installs and maintains the things I (and you too I guess) need on every machine I install :
+   -Install and maintains the things I (and you too I guess) need on every machine I install :
      -Binary packages (debian only, sorry. I mean every distro has its naming scheme, what are you gonna do?)
      -Mozilla (Firefox, Thunderbird, ABroswer, whatever) add-ons
      -Various scripts from Version Control repositories
-   -Manages multiple VC systems 
+   -Manage multiple VC systems 
      -GIT
      -SVN
      -BZR
      -CVS
      -Anything that's three-letter named :)
-   -Allows editing of the files as well as deployment : It's a big deal and it's the whole pointof the thing
-   -Setups a home dir the way I intend it.
-   -Shortens the war and saves lives
+   -Allow editing of the files as well as deployment : It's a big deal and it's the whole point of the thing
+   -Setup a home dir the way I'm used to
 
 *** Installation (and update)
     -cd ~/
@@ -32,8 +31,9 @@
     -Symlink ~/.kituu/* in ~/*
     -Now you have a new dir, ~/script/ and it's in your $PATH
     -Install a selection of packages
-    -From now on you can put files in your .emacs.d/, when you run "kituu-setup.sh" it's existing components will be updated, and new one will be installed in the same way outlined above.
-    -Remember that if a release breaks anything you can always roll-back to a previous one. And bug-report, please.
+    -Generate a local web page on the fly, where you can install a selection of Mozilla extensions
+    -Download, build and install the latest emacs from Savannah trunk
+    -Update everything to the latest version at each subsequent run
 
 *** LICENSE
     This program is free software: you can redistribute it and/or modify
