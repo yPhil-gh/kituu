@@ -3,6 +3,25 @@
 
 ;; Init! ______________________________________________________________________
 
+
+(set-face-attribute 'default nil
+:font "Monospace"
+;; :height 110
+;; :weight 'normal
+
+;; :width 'normal
+;; :font "Inconsolata"
+;; :slant 'reverse-italic
+;; :weight 'bold
+;; :width 'wide
+)
+
+;; (add-hook 'minibuffer-setup-hook 'my-minibuffer-setup)
+;; (defun my-minibuffer-setup ()
+;;        (set (make-local-variable 'face-remapping-alist)
+;;           '((default :height 0.5))))
+
+
 (let ((default-directory "~/.emacs.d/lisp/"))
 ;;  (normal-top-level-add-to-load-path '("."))
   (normal-top-level-add-subdirs-to-load-path))
@@ -74,18 +93,6 @@
 ;;       (message "%s" msg))))
 
 (add-hook 'find-file-hooks 'turn-on-font-lock)
-
-;; (set-face-attribute 'default nil
-;; :font "Monospace"
-;; :height 125
-;; :weight 'normal
-
-;; ;; :width 'normal
-;; ;; :font "Inconsolata"
-;; ;; :slant 'reverse-italic
-;; ;; :weight 'bold
-;; ;; :width 'wide
-;; )
 
 ;; (message "we are at line %s" (line-number-at-pos))
 
@@ -317,17 +324,17 @@
     (browse-url (concat "http://www.google.com/search?&q="
 			(url-hexify-string q)))))
 
-;; (defun select-text-in-quote-px ()
-;;   "Select text between the nearest left and right delimiters."
-;;   (interactive)
-;;   (let (b1 b2)
-;;     (skip-chars-backward "^<>([{“「『‹«（〈《〔【〖⦗〘⦅〚⦃\"")
-;;     (setq b1 (point))
-;;     (skip-chars-forward "^<>)]}”」』›»）〉》〕】〗⦘〙⦆〛⦄\"")
-;;     (setq b2 (point))
-;;     (set-mark b1)))
+(defun select-text-in-quote-px ()
+  "Select text between the nearest left and right delimiters."
+  (interactive)
+  (let (b1 b2)
+    (skip-chars-backward "^<>([{“「『‹«（〈《〔【〖⦗〘⦅〚⦃\"")
+    (setq b1 (point))
+    (skip-chars-forward "^<>)]}”」』›»）〉》〕】〗⦘〙⦆〛⦄\"")
+    (setq b2 (point))
+    (set-mark b1)))
 
-;; (global-set-key (kbd "s-SPC") 'select-text-in-quote-px)
+(global-set-key (kbd "s-SPC") 'select-text-in-quote-px)
 
 (defun insert-bracket-pair (leftBracket rightBracket)
   "Insert a matching bracket and place the cursor between them."
@@ -942,7 +949,7 @@ point."
 ;; ;; Faces ______________________________________________________________________
 
 (set-face-attribute 'tabbar-default nil
-		    ;; :inherit 'default
+		    :inherit 'default
 		    :height 110
 		    ;; :weight 'normal
 		    :width 'normal
@@ -956,7 +963,7 @@ point."
 		    :box nil
 		    ;; :family "Monospace"
 		    ;; :family "Vera Sans Mono Bold Oblique"
-                    :family "Lucida Grande"
+                    ;; :family "Lucida Grande"
 )
 
 (set-face-attribute 'tabbar-separator nil
@@ -1084,4 +1091,4 @@ point."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(minibuffer-prompt ((t (:foreground "#fce94f" :height 1.0)))))

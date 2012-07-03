@@ -13,6 +13,7 @@ export HISTSIZE=10000
 export HISTFILE="$HOME/.history"
 export SAVEHIST=$HISTSIZE
 setopt -o sharehistory
+setopt list_ambiguous
 
 bindkey ';5D' emacs-backward-word
 bindkey ';5C' emacs-forward-word

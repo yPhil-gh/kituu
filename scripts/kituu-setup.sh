@@ -30,26 +30,62 @@ lisp[tabbar-ruler]="git clone ${vc_prefix}xaccrocheur/tabbar-ruler.git"
 lisp[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
 lisp[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
 lisp[nxhtml]="bzr branch lp:nxhtml"
-# lisp[marker-visit]="git clone git://github.com/emacsmirror/marker-visit.git"
-# lisp[emacs-powerline]="git clone https://github.com/jonathanchu/emacs-powerline.git"
+
+# My Mozilla addons
+declare -A moz
+moz[Uppity]="https://addons.mozilla.org/firefox/downloads/latest/869/addon-869-latest.xpi"
+moz[back_is_close]="https://addons.mozilla.org/firefox/downloads/latest/939/addon-939-latest.xpi"
+moz[Firebug]="https://addons.mozilla.org/firefox/downloads/latest/1843/addon-1843-latest.xpi"
+moz[GreaseMonkey]="https://addons.mozilla.org/firefox/downloads/latest/748/addon-748-latest.xpi"
+moz[GreaseMonkey_style_fix]="http://userscripts.org/scripts/source/36850.user.js"
+moz[French_dict]="https://addons.mozilla.org/firefox/downloads/latest/354872/addon-354872-latest.xpi"
 
 echo -e $sep"Kituu! #################
 
 Welcome to Kituu. This script allows you to install and maintain various packages from misc places. And well, do what you want done on every machine you install, and are tired of doing over and over again (tiny pedestrian things like create a "tmp" dir in your home).
 You will be asked for every package (or group of packages in the case of binaries) if you want to install it ; After that you can run $(basename $0) again (it's in your PATH now if you use the dotfiles, specifically the .*shrc) to update the packages. Sounds good? Let's go."
 
-if $debian; then
-    echo -e $sep"Binary packages"
-    read -e -p "Install packages? [Y/n] " yn
+
+if (type -P firefox &>/dev/null); then
+    page=~/tmp/addons.html
+    echo -e $sep"Mozilla add-ons"
+    for addon in "${!moz[@]}" ; do
+	addons=$addons"    <li><a href='"${moz[$addon]}"'>$addon</a></li>\n"
+	addon_names=$addon", "$addon_names
+    done
+    read -e -p "Install add-ons ($addon_names)? [Y/n] " yn
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-	for group in "${!pack[@]}" ; do
-	    read -e -p "Install $group? (${pack[$group]}) [Y/n] " yn
-	    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-		sudo aptitude install ${pack[$group]}
-	    fi
-	done
+	echo -e "
+<html>
+<head>
+<style>
+  body {
+    font-family: sans-serif;
+    background:#ccc;}
+  hr {
+    margin-top: 1em;
+    width:35%;}
+  img {
+    float:right;
+    margin-right:1em;}
+</style>
+  <!--link rel='stylesheet' media='screen,projection,tv' href='http://www.mozilla.org/media/css/firefox_new-min.css?build=193788b' /-->
+</head>
+<body style='background:#ccc'>
+<img src='http://a0.twimg.com/profile_images/998643823/xix_reasonably_small.jpg' />
+  <h1>Click to install/update extension</h1>
+  <ul>" > $page
+echo -e $addons >> $page 
+echo -e "</ul>
+  <hr />
+  <div style='margin-left: auto;margin-right: auto;width:75%;text-align:center;'><a href='https://github.com/xaccrocheur/kituu'>Kituu</a> is a <a href='https://plus.google.com/u/0/102175718864884791287'>xaccrocheur</a> production, don't forget that you're a genius too ;)</div>
+</body>
+</html>" >> $page && firefox $page &
+	# echo $addons
     fi
 fi
+# rm -fv ~/tmp/addons.html
+
 
 echo -e $sep"Dotfiles and scripts"
 read -e -p "Install dotfiles (in $HOME) and scripts (in $scriptdir)? [Y/n] " yn
@@ -66,6 +102,19 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 	    ln -sv $repodir/$i ~/
 	fi
     done
+fi
+
+if $debian; then
+    echo -e $sep"Binary packages"
+    read -e -p "Install packages? [Y/n] " yn
+    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+	for group in "${!pack[@]}" ; do
+	    read -e -p "Install $group? (${pack[$group]}) [Y/n] " yn
+	    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+		sudo aptitude install ${pack[$group]}
+	    fi
+	done
+    fi
 fi
 
 if (! grep "ubuntusatanic" /etc/apt/sources.list &>/dev/null); then
@@ -115,5 +164,22 @@ fi
 if [ ! -d ~/tmp ]; then
     mkdir -v ~/tmp
 fi
+
+addons="
+# Uppity
+https://addons.mozilla.org/firefox/downloads/latest/869/addon-869-latest.xpi
+# BiClose
+https://addons.mozilla.org/firefox/downloads/latest/939/addon-939-latest.xpi?src=dp-btn-primary
+# FBug
+https://addons.mozilla.org/firefox/downloads/latest/1843/addon-1843-latest.xpi?src=dp-btn-primary
+# GMonkey
+https://addons.mozilla.org/firefox/downloads/latest/748/addon-748-latest.xpi?src=dp-btn-primary
+# Style corrector (gmonkey)
+http://userscripts.org/scripts/source/36850.user.js
+# French dict
+https://addons.mozilla.org/firefox/downloads/latest/354872/addon-354872-latest.xpi?src=dp-btn-primary
+# Adblock
+https://addons.mozilla.org/firefox/downloads/latest/1865/addon-1865-latest.xpi?src=dp-btn-primary
+"
 
 echo -e $sep"...Done."
