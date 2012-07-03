@@ -9,7 +9,9 @@ can type "install emacs", "mkdir ~/tmp", and many bits that get
 painful to do and re-do over time.
 
 *NOTA BENE* You can preview the script by answering "no" to every
- quetion, and then get a taste of what would be going on
+ question, and then get a taste of what would be going on without
+ touching anything. The idea here being that you make this script you
+ own
 
 *** Features
    -Install and maintain the things I (and you too I guess) need on every machine I install :
