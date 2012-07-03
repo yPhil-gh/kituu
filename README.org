@@ -4,17 +4,21 @@
 
 ** Features
    -Installs and maintain the packages I (and you too I guess) need on every machine I install :
-     -Binary packages
-      -Mozilla (Firefox, Thunderbird, ABroswer, whatever) add-ons
-      -Various scripts from Version Control repositories
-   -Manages multiple VC systems (git, bzr, vcs, anything that's three-letter named :) )
-   -Allows editing of the files as well as deployment : It's a big deal and it's the whole pointof the thing.
+     -Binary packages (debian only, sorry. I mean every distro has its naming scheme, what are you gonna do?)
+     -Mozilla (Firefox, Thunderbird, ABroswer, whatever) add-ons
+     -Various scripts from Version Control repositories
+   -Manages multiple VC systems 
+     -GIT
+     -SVN
+     -BZR
+     -CVS
+     -Anything that's three-letter named :)
+   -Allows editing of the files as well as deployment : It's a big deal and it's the whole pointof the thing
+   -Shortens the war and saves lives
 
 *** Installation (and update)
     -cd ~/
     -git clone https://github.com/xaccrocheur/kituu.git .kituu && .kituu/scripts/kituu-setup.sh
-    -bash
-    -e
 
 Or, to install it and be able to modify it and push back your changes
 to github (if you're me, for instance)
