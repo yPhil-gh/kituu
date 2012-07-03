@@ -25,6 +25,7 @@
     -git clone git@github.com:xaccrocheur/kituu.git .kituu && .kituu/scripts/kituu-setup.sh -rw
     -Then run *kituu-setup.sh -rw* afterwards to update your packages
 
+
 **** This will :
     -Clone a repository at ~/.kituu/
     -Backup your existing ~/dotfiles as ~/dotfile.orig
