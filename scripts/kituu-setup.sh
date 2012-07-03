@@ -14,7 +14,7 @@ if ($rw); then vc_prefix="git@github.com:";else vc_prefix="https://github.com/";
 # My binary packages
 declare -A pack
 pack[base]="zsh curl zile wget bzr git sox htop bc unison thunderbird firefox locate filelight gparted"
-pack[xfce]="gdm xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager"
+pack[xfce]="gdm xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager xscreensaver-extra xscreensaver-gl-extra"
 pack[dev_tools]="gcc autoconf automake texinfo libtool"
 pack[dev_env]="perl-doc"
 pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev imagemagick"
@@ -22,6 +22,7 @@ pack[emacs&friends]="emacs bbdb wl vim"
 pack[image_tools]="gimp inkscape blender"
 pack[multimedia]="clementine smplayer gstreamer0.10-plugins"
 pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2"
+pack[games]="torcs nexuiz extremetuxracer supertuxkart"
 
 # My Mozilla addons
 declare -A moz
