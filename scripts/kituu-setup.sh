@@ -149,13 +149,13 @@ if (type -P firefox &>/dev/null); then
   <!--link rel='stylesheet' media='screen,projection,tv' href='http://www.mozilla.org/media/css/firefox_new-min.css?build=193788b' /-->
 </head>
 <body style='background:#ccc'>
-<img src='http://a0.twimg.com/profile_images/998643823/xix_reasonably_small.jpg' />
+<a href='http://opensimo.org/play/?a=Azer0,Counternatures'><img src='http://a0.twimg.com/profile_images/998643823/xix_reasonably_small.jpg' /></a>
   <h1>Click to install/update extension</h1>
   <ul>" > $page
 echo -e $addons >> $page 
 echo -e "</ul>
   <hr />
-  <div style='margin-left: auto;margin-right: auto;width:75%;text-align:center;'><a href='https://github.com/xaccrocheur/kituu'>Kituu</a> is a <a href='https://plus.google.com/u/0/102175718864884791287'>xaccrocheur</a> production, don't forget that you're a genius too ;)</div>
+  <div style='margin-left: auto;margin-right: auto;width:75%;text-align:center;'><a href='https://github.com/xaccrocheur/kituu'>Kituu</a> is a <a href='https://plus.google.com/u/0/102175718864884791287'>xaccrocheur</a> production - don't forget that you're a genius too ;)</div>
 </body>
 </html>" >> $page && firefox $page &
 	# echo $addons
