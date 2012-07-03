@@ -10,7 +10,7 @@ emacs. AFAIC, that's it. And there's only so many times a guy can type
 "install zile", "mkdir ~/tmp", and many bits that get painful to do
 and re-do over time.
 
-*NOTA BENE* You can preview the script by answering "no" to every
+*NOTA BENE* You can "preview" the script by answering "no" to every
  question, and then get a taste of what would be going on without
  touching anything. The idea here being that you make this system your
  own
