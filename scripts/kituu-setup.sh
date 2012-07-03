@@ -9,8 +9,6 @@ rw=false
 
 type -P aptitude &>/dev/null || { debian=true >&2; }
 if [[ $1 = "-rw" ]]; then rw=true; fi
-
-if ($rw); then echo "rw!"; fi
 if ($rw); then vc_prefix="git@github.com:";else vc_prefix="https://github.com/"; fi
 
 # My binary packages
@@ -23,11 +21,12 @@ pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libgtk2.0-dev libxpm-
 pack[emacs]="emacs bbdb wl"
 pack[image_tools]="gimp inkscape imagemagick"
 pack[multimedia]="clementine smplayer gstreamer0.10-plugins"
+pack[music_prod]="qtractor"
 
 # My lisp packages
 declare -A lisp
 lisp[tabbar]="git clone https://github.com/dholm/tabbar.git"
-lisp[tabbar-ruler]="git clone https://github.com/mlf176f2/tabbar-ruler.el.git"
+lisp[tabbar-ruler]="git clone git://github.com/mlf176f2/tabbar-ruler.el.git"
 lisp[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
 lisp[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
 lisp[nxhtml]="bzr branch lp:nxhtml"
@@ -36,8 +35,8 @@ lisp[nxhtml]="bzr branch lp:nxhtml"
 
 echo -e $sep"Kituu! #################
 
-Welcome to Kituu. This script allows you to install and maintain various packages from misc places.
-You will be asked for every package if you want to install it ; After that you can run $(basename $0) again (it's in your PATH now) to update the packages. Sounds good? Let's go."
+Welcome to Kituu. This script allows you to install and maintain various packages from misc places. And well, do what you want done on every machine you install, and are tired of doing over and over again (tiny pedestrian things like create a "tmp" dir in your home).
+You will be asked for every package (or group of packages in the case of binaries) if you want to install it ; After that you can run $(basename $0) again (it's in your PATH now if you use the dotfiles, specifically the .*shrc) to update the packages. Sounds good? Let's go."
 
 if $debian; then
     echo -e $sep"Binary packages"
@@ -73,7 +72,7 @@ if (! grep "ubuntusatanic" /etc/apt/sources.list &>/dev/null); then
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 	wget -q http://ubuntusatanic.org/ubuntu-se-key.gpg -O- | sudo apt-key add -
 	echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list && sudo apt-get update
-	sudo apt-get install xubuntu-satanic
+	sudo apt-get install satanic-gnome-themes satanic-icon-themes
     fi
 fi
 
