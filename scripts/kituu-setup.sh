@@ -26,7 +26,7 @@ pack[music_prod]="qtractor"
 # My lisp packages
 declare -A lisp
 lisp[tabbar]="git clone https://github.com/dholm/tabbar.git"
-lisp[tabbar-ruler]="git clone git://github.com/mlf176f2/tabbar-ruler.el.git"
+lisp[tabbar-ruler]="git clone ${vc_prefix}xaccrocheur/tabbar-ruler.git"
 lisp[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
 lisp[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
 lisp[nxhtml]="bzr branch lp:nxhtml"
@@ -53,7 +53,7 @@ read -e -p "Install dotfiles (in $HOME) and scripts (in $scriptdir)? [Y/n] " yn
 if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     if [ ! -d $repodir ] ; then
 	echo -e $sep"No existing $repodir, so"
-	cd && git clone git@github.com:xaccrocheur/kituu.git
+	cd && git clone ${vc_prefix}xaccrocheur/kituu.git
     else
 	echo -e $sep"Found $repodir, so"
 	cd $repodir && git pull

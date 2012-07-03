@@ -40,6 +40,7 @@ zstyle ':completion:*:processes' command 'ps -au$USER'
 # WORDCHARS="*?_-.[]~&;!#$%^(){}<>"
 export WORDCHARS=''
 # Ye ol' Aliasses
+alias ls='ls -F --color=auto' 
 alias ll="ls -alh"
 alias la="ls -A"
 alias lss="ls -la | grep $1"

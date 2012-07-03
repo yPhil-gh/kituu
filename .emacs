@@ -4,7 +4,7 @@
 ;; Init! ______________________________________________________________________
 
 (let ((default-directory "~/.emacs.d/lisp/"))
-  (normal-top-level-add-to-load-path '("."))
+;;  (normal-top-level-add-to-load-path '("."))
   (normal-top-level-add-subdirs-to-load-path))
 
 ;; GNU
@@ -48,7 +48,7 @@
 ;;     ;; (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode)
 ;; ))
 
-(setq tabbar-ruler-global-tabbar 't)
+;;(setq tabbar-ruler-global-tabbar 't)
 
 ;; Experiments
 
