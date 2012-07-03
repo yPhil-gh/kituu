@@ -1,6 +1,6 @@
 * Kituu
 
-****  Environment (dotfiles, scripts & packages) installation & update script
+****  Environment (dotfiles, scripts & binary packages and Mozilla extensions) installation & update script
 
 *** Features
    -Installs and maintains the things I (and you too I guess) need on every machine I install :
