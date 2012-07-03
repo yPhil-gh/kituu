@@ -40,12 +40,15 @@ You will be asked for every package (or group of packages in the case of binarie
 
 if $debian; then
     echo -e $sep"Binary packages"
-    for group in "${!pack[@]}" ; do
-	read -e -p "Install $group? (${pack[$group]}) [Y/n] " yn
-	if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-	    sudo aptitude install ${pack[$group]}
-	fi
-    done
+    read -e -p "Install packages? [Y/n] " yn
+    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+	for group in "${!pack[@]}" ; do
+	    read -e -p "Install $group? (${pack[$group]}) [Y/n] " yn
+	    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+		sudo aptitude install ${pack[$group]}
+	    fi
+	done
+    fi
 fi
 
 echo -e $sep"Dotfiles and scripts"
@@ -68,6 +71,7 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 fi
 
 if (! grep "ubuntusatanic" /etc/apt/sources.list &>/dev/null); then
+    echo -e $sep"Theme (icons and stuff)"
     read -e -p "Install dark theme? [Y/n] " yn
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 	wget -q http://ubuntusatanic.org/ubuntu-se-key.gpg -O- | sudo apt-key add -
