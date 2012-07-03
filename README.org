@@ -12,7 +12,7 @@ and re-do over time.
 
 *NOTA BENE* You can preview the script by answering "no" to every
  question, and then get a taste of what would be going on without
- touching anything. The idea here being that you make this script you
+ touching anything. The idea here being that you make this system your
  own
 
 *** Features
