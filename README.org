@@ -2,6 +2,15 @@
 
 ****  Environment (dotfiles, scripts & binary packages and Mozilla extensions) installation & update script
 
+What do one need on a given computer ? Dotfiles (configuration bit in
+your $HOME dir, that start with a dot, hence the name), a bunch of
+packages, emacs. AFAIC, that's it. And there's only so many times one
+can type "install emacs", "mkdir ~/tmp", and many bits that get
+painful to do and re-do over time.
+
+*NOTA BENE* You can preview the script by answering "no" to every
+ quetion, and then get a taste of what would be going on
+
 *** Features
    -Install and maintain the things I (and you too I guess) need on every machine I install :
      -Binary packages (debian only, sorry. I mean every distro has its naming scheme, what are you gonna do?)

@@ -18,10 +18,10 @@ pack[xfce]="gdm xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager"
 pack[dev_tools]="gcc autoconf automake texinfo libtool"
 pack[dev_env]="perl-doc"
 pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev"
-pack[emacs]="emacs bbdb wl"
+pack[emacs&friends]="emacs bbdb wl vim"
 pack[image_tools]="gimp inkscape imagemagick"
 pack[multimedia]="clementine smplayer gstreamer0.10-plugins"
-pack[music_prod]="qtractor"
+pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2"
 
 # My lisp packages
 declare -A lisp
@@ -38,13 +38,90 @@ moz[back_is_close]="https://addons.mozilla.org/firefox/downloads/latest/939/addo
 moz[Firebug]="https://addons.mozilla.org/firefox/downloads/latest/1843/addon-1843-latest.xpi"
 moz[GreaseMonkey]="https://addons.mozilla.org/firefox/downloads/latest/748/addon-748-latest.xpi"
 moz[GreaseMonkey_style_fix]="http://userscripts.org/scripts/source/36850.user.js"
-moz[French_dict]="https://addons.mozilla.org/firefox/downloads/latest/354872/addon-354872-latest.xpi"
+moz[French_dictionary]="https://addons.mozilla.org/firefox/downloads/latest/354872/addon-354872-latest.xpi"
 
 echo -e $sep"Kituu! #################
 
 Welcome to Kituu. This script allows you to install and maintain various packages from misc places. And well, do what you want done on every machine you install, and are tired of doing over and over again (tiny pedestrian things like create a "tmp" dir in your home).
 You will be asked for every package (or group of packages in the case of binaries) if you want to install it ; After that you can run $(basename $0) again (it's in your PATH now if you use the dotfiles, specifically the .*shrc) to update the packages. Sounds good? Let's go."
 
+echo -e $sep"Dotfiles and scripts"
+read -e -p "## Install dotfiles (in $HOME) and scripts (in $scriptdir)? [Y/n] " yn
+if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+    if [ ! -d $repodir ] ; then
+	cd && git clone ${vc_prefix}xaccrocheur/kituu.git
+    else
+	cd $repodir && git pull
+    fi
+
+    for i in * ; do
+	if [[  ! -h ~/$i && $i != *#* && $i != *~* && $i != *git* && $i != "README.org" && $i != "." && "${i}" != ".." ]] ; then
+	    if [[ -e ~/$i ]] ; then mv -v ~/$i ~/$i.orig ; fi
+	    ln -sv $repodir/$i ~/
+	fi
+    done
+fi
+
+if $debian; then
+    echo -e $sep"Binary packages"
+    read -e -p "#### Install packages? [Y/n] " yn
+    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+	for group in "${!pack[@]}" ; do
+	    read -e -p "## Install $group? (${pack[$group]}) [Y/n] " yn
+	    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+		sudo aptitude install ${pack[$group]}
+	    fi
+	done
+    fi
+fi
+
+if (! grep "ubuntusatanic" /etc/apt/sources.list &>/dev/null); then
+    echo -e $sep"Theme (icons and stuff)"
+    read -e -p "## Install dark theme? [Y/n] " yn
+    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+	wget -q http://ubuntusatanic.org/ubuntu-se-key.gpg -O- | sudo apt-key add -
+	echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list && sudo apt-get update
+	sudo apt-get install satanic-gnome-themes satanic-icon-themes
+    fi
+fi
+
+echo -e $sep"leecher.pl (a script to auto-get .ext links from a given web page URL)"
+if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
+    read -e -p "## Install leecher?  ($scriptdir/leecher.pl) [Y/n] " yn
+    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+	cd $scriptdir && git clone ${vc_prefix}xaccrocheur/leecher.git
+	ln -sv $scriptdir/leecher/leecher.pl $scriptdir/
+    else
+	cd $scriptdir/leecher/ && git pull
+    fi
+fi
+
+if [ ! -d "$lispdir" ] ; then mkdir -p $lispdir ; fi
+
+for project in "${!lisp[@]}" ; do
+    vcsystem=${lisp[$project]:0:3}
+    echo -e $sep"$project ($lispdir/$project/)"
+    if [ ! -e $lispdir/$project/ ] ; then
+	read -e -p "## Install $project in ($lispdir/$project/)? [Y/n] " yn
+	if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+	    cd $lispdir && ${lisp[$project]}
+	fi
+    else
+	cd $lispdir/$project/ && $vcsystem pull
+    fi
+done
+
+if [ -e $scriptdir/build-emacs.sh ]; then
+    echo -e $sep"Emacs trunk"
+    read -e -p "## Download, build and install / update (trunk) emacs? [Y/n] " yn
+    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+	build-emacs.sh
+    fi
+fi
+
+if [ ! -d ~/tmp ]; then
+    mkdir -v ~/tmp
+fi
 
 if (type -P firefox &>/dev/null); then
     page=~/tmp/addons.html
@@ -84,102 +161,5 @@ echo -e "</ul>
 	# echo $addons
     fi
 fi
-# rm -fv ~/tmp/addons.html
-
-
-echo -e $sep"Dotfiles and scripts"
-read -e -p "Install dotfiles (in $HOME) and scripts (in $scriptdir)? [Y/n] " yn
-if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-    if [ ! -d $repodir ] ; then
-	cd && git clone ${vc_prefix}xaccrocheur/kituu.git
-    else
-	cd $repodir && git pull
-    fi
-
-    for i in * ; do
-	if [[  ! -h ~/$i && $i != *#* && $i != *~* && $i != *git* && $i != "README.org" && $i != "." && "${i}" != ".." ]] ; then
-	    if [[ -e ~/$i ]] ; then mv -v ~/$i ~/$i.orig ; fi
-	    ln -sv $repodir/$i ~/
-	fi
-    done
-fi
-
-if $debian; then
-    echo -e $sep"Binary packages"
-    read -e -p "Install packages? [Y/n] " yn
-    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-	for group in "${!pack[@]}" ; do
-	    read -e -p "Install $group? (${pack[$group]}) [Y/n] " yn
-	    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-		sudo aptitude install ${pack[$group]}
-	    fi
-	done
-    fi
-fi
-
-if (! grep "ubuntusatanic" /etc/apt/sources.list &>/dev/null); then
-    echo -e $sep"Theme (icons and stuff)"
-    read -e -p "Install dark theme? [Y/n] " yn
-    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-	wget -q http://ubuntusatanic.org/ubuntu-se-key.gpg -O- | sudo apt-key add -
-	echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list && sudo apt-get update
-	sudo apt-get install satanic-gnome-themes satanic-icon-themes
-    fi
-fi
-
-echo -e $sep"leecher.pl (a script to auto-get .ext links from a given web page URL)"
-if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
-    read -e -p "Install leecher?  ($scriptdir/leecher.pl) [Y/n] " yn
-    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-	cd $scriptdir && git clone ${vc_prefix}xaccrocheur/leecher.git
-	ln -sv $scriptdir/leecher/leecher.pl $scriptdir/
-    else
-	cd $scriptdir/leecher/ && git pull
-    fi
-fi
-
-if [ ! -d "$lispdir" ] ; then mkdir -p $lispdir ; fi
-
-for project in "${!lisp[@]}" ; do
-    vcsystem=${lisp[$project]:0:3}
-    echo -e $sep"$project ($lispdir/$project/)"
-    if [ ! -e $lispdir/$project/ ] ; then
-	read -e -p "Install $project in ($lispdir/$project/)? [Y/n] " yn
-	if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-	    cd $lispdir && ${lisp[$project]}
-	fi
-    else
-	cd $lispdir/$project/ && $vcsystem pull
-    fi
-done
-
-if [ -e $scriptdir/build-emacs.sh ]; then
-    echo -e $sep"Emacs trunk"
-    read -e -p "Download, build and install / update (trunk) emacs? [Y/n] " yn
-    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-	build-emacs.sh
-    fi
-fi
-
-if [ ! -d ~/tmp ]; then
-    mkdir -v ~/tmp
-fi
-
-addons="
-# Uppity
-https://addons.mozilla.org/firefox/downloads/latest/869/addon-869-latest.xpi
-# BiClose
-https://addons.mozilla.org/firefox/downloads/latest/939/addon-939-latest.xpi?src=dp-btn-primary
-# FBug
-https://addons.mozilla.org/firefox/downloads/latest/1843/addon-1843-latest.xpi?src=dp-btn-primary
-# GMonkey
-https://addons.mozilla.org/firefox/downloads/latest/748/addon-748-latest.xpi?src=dp-btn-primary
-# Style corrector (gmonkey)
-http://userscripts.org/scripts/source/36850.user.js
-# French dict
-https://addons.mozilla.org/firefox/downloads/latest/354872/addon-354872-latest.xpi?src=dp-btn-primary
-# Adblock
-https://addons.mozilla.org/firefox/downloads/latest/1865/addon-1865-latest.xpi?src=dp-btn-primary
-"
 
 echo -e $sep"...Done."
