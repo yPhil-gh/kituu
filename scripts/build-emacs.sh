@@ -14,11 +14,11 @@ else
     cd trunk && pwd
 fi
 
-bzr up 2>&1 | grep "Tree"
+bzr pull 2>&1 | grep "No revisions to pull"
 if [ ! $? -eq 0 ]; then
     cd $EMACS_SRC_DIR && pwd
 
-    if [ -d "trunk" ]; then mv -v trunk trunk.bkp; fi
+    if [ -d "trunk" ]; then mv -v trunk trunk.bkp && rm -rfv trunk; fi
 
     cp -Rv $EMACS_BZR_DIR/trunk/ $EMACS_SRC_DIR/
     cd trunk && ./autogen.sh && ./configure && make && sudo make install
