@@ -21,8 +21,8 @@ pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libgtk2.0-dev libxpm-
 pack[emacs&friends]="emacs bbdb wl vim"
 pack[image_tools]="gimp inkscape blender"
 pack[multimedia]="clementine smplayer gstreamer0.10-plugins"
-pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2"
-pack[games]="torcs nexuiz extremetuxracer supertuxkart"
+pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk"
+pack[games]="extremetuxracer supertuxkart torcs nexuiz"
 
 # My Mozilla addons
 declare -A moz
@@ -151,7 +151,7 @@ if (type -P firefox &>/dev/null); then
 </head>
 <body style='background:#ccc'>
 <a href='http://opensimo.org/play/?a=Azer0,Counternatures'><img src='http://a0.twimg.com/profile_images/998643823/xix_reasonably_small.jpg' /></a>
-  <h1>Click to install/update extension</h1>
+  <h1>Hi $(whoami), click to install/update extension</h1>
   <ul>" > $page
 echo -e $addons >> $page 
 echo -e "</ul>
