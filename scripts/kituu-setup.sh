@@ -73,7 +73,7 @@ fi
 if (! grep -q "deactivate" ~/.mplayer/config); then
     read -e -p "#### Setup xscreensaver? [Y/n] " yn
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-	echo 'heartbeat-cmd="xscreensaver-command -deactivate >&- 2>&- &"' | sudo tee -a /etc/apt/sources.list && sudo apt-get update
+	echo 'heartbeat-cmd="xscreensaver-command -deactivate >&- 2>&- &"' | tee -a ~/.mplayer/config
     fi
 fi
 
