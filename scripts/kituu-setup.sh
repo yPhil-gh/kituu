@@ -15,7 +15,7 @@ if ($rw); then vc_prefix="git@github.com:" && message="RW mode ON";else vc_prefi
 declare -A pack
 pack[base]="zsh curl zile wget bzr git sox htop bc unison thunderbird firefox locate filelight gparted"
 pack[xfce]="gdm xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager"
-pack[xscreensaver]="xscreensaver-extra xscreensaver-gl-extra xscreensaver-data-extra xscreensaver-data"
+pack[xscreensaver]="xscreensaver-gl xscreensaver-gl-extra xscreensaver-data-extra xscreensaver-data"
 pack[dev_tools]="gcc autoconf automake texinfo libtool"
 pack[dev_env]="perl-doc"
 pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev imagemagick"
@@ -66,6 +66,17 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     done
 fi
 
+if [ ! -d ~/tmp ]; then
+    mkdir -v ~/tmp
+fi
+
+if (! grep -q "deactivate" ~/.mplayer/config); then
+    read -e -p "#### Setup xscreensaver? [Y/n] " yn
+    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+	echo 'heartbeat-cmd="xscreensaver-command -deactivate >&- 2>&- &"' | sudo tee -a /etc/apt/sources.list && sudo apt-get update
+    fi
+fi
+
 if $debian; then
     echo -e $sep"Binary packages"
     read -e -p "#### Install packages? [Y/n] " yn
@@ -79,7 +90,7 @@ if $debian; then
     fi
 fi
 
-if (! grep "ubuntusatanic" /etc/apt/sources.list &>/dev/null); then
+if (! grep -q "ubuntusatanic" /etc/apt/sources.list); then
     echo -e $sep"Theme (icons and stuff)"
     read -e -p "## Install dark theme? [Y/n] " yn
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
@@ -121,10 +132,6 @@ if [ -e $scriptdir/build-emacs.sh ]; then
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 	build-emacs.sh
     fi
-fi
-
-if [ ! -d ~/tmp ]; then
-    mkdir -v ~/tmp
 fi
 
 if (type -P firefox &>/dev/null); then
