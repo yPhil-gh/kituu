@@ -9,7 +9,7 @@ rw=false
 
 type -P aptitude &>/dev/null || { debian=true >&2; }
 if [[ $1 = "-rw" ]]; then rw=true; fi
-if ($rw); then vc_prefix="git@github.com:";else vc_prefix="https://github.com/"; fi
+if ($rw); then vc_prefix="git@github.com:" && message="RW mode ON";else vc_prefix="https://github.com/" && message="RW mode OFF"; fi
 
 # My binary packages
 declare -A pack
@@ -42,6 +42,8 @@ lisp[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
 lisp[nxhtml]="bzr branch lp:nxhtml"
 
 echo -e $sep"Kituu! #################
+
+$message
 
 Welcome to Kituu. This script allows you to install and maintain various packages from misc places. And well, do what you want done on every machine you install, and are tired of doing over and over again (tiny pedestrian things like create a "tmp" dir in your home).
 You will be asked for every package (or group of packages in the case of binaries) if you want to install it ; After that you can run $(basename $0) again (it's in your PATH now if you use the dotfiles, specifically the .*shrc) to update the packages. Sounds good? Let's go."
@@ -153,7 +155,7 @@ if (type -P firefox &>/dev/null); then
 <a href='http://opensimo.org/play/?a=Azer0,Counternatures'><img src='http://a0.twimg.com/profile_images/998643823/xix_reasonably_small.jpg' /></a>
   <h1>Hi $(whoami), click to install/update extension</h1>
   <ul>" > $page
-echo -e $addons >> $page 
+echo -e $addons >> $page
 echo -e "</ul>
   <hr />
   <div style='margin-left: auto;margin-right: auto;width:75%;text-align:center;'><a href='https://github.com/xaccrocheur/kituu'>Kituu</a> is a <a href='https://plus.google.com/u/0/102175718864884791287'>xaccrocheur</a> production - don't forget that you're a genius too ;)</div>
