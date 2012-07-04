@@ -14,7 +14,8 @@ if ($rw); then vc_prefix="git@github.com:" && message="RW mode ON";else vc_prefi
 # My binary packages
 declare -A pack
 pack[base]="zsh curl zile wget bzr git sox htop bc unison thunderbird firefox locate filelight gparted"
-pack[xfce]="gdm xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager xscreensaver-extra xscreensaver-gl-extra"
+pack[xfce]="gdm xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager"
+pack[xscreensaver]="xscreensaver-extra xscreensaver-gl-extra xscreensaver-data-extra xscreensaver-data"
 pack[dev_tools]="gcc autoconf automake texinfo libtool"
 pack[dev_env]="perl-doc"
 pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev imagemagick"
