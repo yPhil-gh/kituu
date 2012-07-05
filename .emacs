@@ -3,9 +3,8 @@
 
 ;; Init! ______________________________________________________________________
 
-
-(set-face-attribute 'default nil
-:font "Monospace"
+;; (set-face-attribute 'default nil
+;; :font "Monospace"
 ;; :height 110
 ;; :weight 'normal
 
@@ -14,13 +13,12 @@
 ;; :slant 'reverse-italic
 ;; :weight 'bold
 ;; :width 'wide
-)
+;; )
 
 ;; (add-hook 'minibuffer-setup-hook 'my-minibuffer-setup)
 ;; (defun my-minibuffer-setup ()
 ;;        (set (make-local-variable 'face-remapping-alist)
 ;;           '((default :height 0.5))))
-
 
 (let ((default-directory "~/.emacs.d/lisp/"))
 ;;  (normal-top-level-add-to-load-path '("."))
@@ -447,7 +445,7 @@
 ;; (setq suggest-key-bindings 1) ; wait 5 seconds
 
 ;; This is harsh but just, shortens the war and saves lives.
-(setq 
+(setq
  ;; resize-mini-windows nil
  max-mini-window-height nil
 )
@@ -949,79 +947,79 @@ point."
 
 ;; ;; Faces ______________________________________________________________________
 
-(set-face-attribute 'tabbar-default nil
-		    :inherit 'default
-		    :height 110
-		    ;; :weight 'normal
-		    :width 'normal
-		    :slant 'normal
-		    :underline nil
-		    :strike-through nil
-		    :stipple nil
-		    ;; :background "gray80"
-		    :background nil
-		    :foreground "black"
-		    :box nil
-		    ;; :family "Monospace"
-		    ;; :family "Vera Sans Mono Bold Oblique"
-                    ;; :family "Lucida Grande"
-)
+;; (set-face-attribute 'tabbar-default nil
+;; 		    :inherit 'default
+;; 		    :height 110
+;; 		    ;; :weight 'normal
+;; 		    :width 'normal
+;; 		    :slant 'normal
+;; 		    :underline nil
+;; 		    :strike-through nil
+;; 		    :stipple nil
+;; 		    ;; :background "gray80"
+;; 		    :background nil
+;; 		    :foreground "black"
+;; 		    :box nil
+;; 		    ;; :family "Monospace"
+;; 		    ;; :family "Vera Sans Mono Bold Oblique"
+;;                     ;; :family "Lucida Grande"
+;; )
 
-(set-face-attribute 'tabbar-separator nil
-                    :background "gray40"
-                    :foreground nil
-		    ;; :width 1.0
-                    :height 1.0)
+;; (set-face-attribute 'tabbar-separator nil
+;;                     :background "gray40"
+;;                     :foreground nil
+;; 		    ;; :width 1.0
+;;                     :height 1.0)
 
-(set-face-attribute 'tabbar-selected nil
-		    :background "#2e3436"
-		    :foreground "red"
-		    :inherit 'tabbar-default
-		    :box '(:line-width 1 :color "#2e3436" :style nil))
+;; (set-face-attribute 'tabbar-selected nil
+;; 		    :background "#2e3436"
+;; 		    :foreground "red"
+;; 		    :inherit 'tabbar-default
+;; 		    :box '(:line-width 1 :color "#2e3436" :style nil))
 
-(set-face-attribute 'tabbar-unselected nil
-		    :inherit 'tabbar-default
-		    :background "gray50"
-		    ;; :background "red"
-		    :box '(:line-width 1 :color "gray50" :style nil))
+;; (set-face-attribute 'tabbar-unselected nil
+;; 		    :inherit 'tabbar-default
+;; 		    :background "gray50"
+;; 		    ;; :background "red"
+;; 		    :box '(:line-width 1 :color "gray50" :style nil))
 
-(set-face-attribute 'tabbar-highlight nil
-		    :foreground "white"
-		    :underline nil)
+;; (set-face-attribute 'tabbar-highlight nil
+;; 		    :foreground "white"
+;; 		    :underline nil)
 
-(set-face-attribute 'tabbar-button nil
-		    :inherit 'tabbar-default
-		    :box nil)
+;; (set-face-attribute 'tabbar-button nil
+;; 		    :inherit 'tabbar-default
+;; 		    :box nil)
 
-(if (window-system)
-    (progn
-      (set-face-attribute 'default nil :background "#2e3436" :foreground "#eeeeec")
-      (set-face-attribute 'cursor nil :background "#fce94f" :foreground "#2e3436")
-      (set-face-attribute 'highlight nil :background "dark red" :foreground
-    "#fce94f")
-      (set-face-attribute 'font-lock-builtin-face nil :foreground "#ad7fa8")
-      (set-face-attribute 'font-lock-comment-face nil :slant 'oblique :foreground "#73d216")
-      (set-face-attribute 'font-lock-constant-face nil :foreground "#e6a8df")
-      (set-face-attribute 'font-lock-function-name-face nil :foreground "#fce84f")
-      (set-face-attribute 'font-lock-keyword-face nil :foreground "#8cc4ff")
-      (set-face-attribute 'font-lock-string-face nil :foreground "#e9b96e")
-      (set-face-attribute 'font-lock-type-face nil :foreground "#a5ff4d")
-      (set-face-attribute 'font-lock-variable-name-face nil :foreground "#fcaf3e")
-      (set-face-attribute 'font-lock-warning-face nil :foreground "#ef2929")
-      (set-face-attribute 'fringe nil :background "#2c2c2c")
-      (set-face-attribute 'header-line nil :background "#555753" :foreground "#ffffff")
-      (set-face-attribute 'isearch nil :background "#ce5c00" :foreground "#ffffff")
-      (set-face-attribute 'lazy-highlight nil :background "#8f5902")
-      (set-face-attribute 'link nil :foreground "#729fcf" :underline t)
-      (set-face-attribute 'link-visited nil :foreground "#3465a4" :underline t)
-      (set-face-attribute 'minibuffer-prompt nil :foreground "#fce94f")
-      (set-face-attribute 'mode-line nil :background "gray10" :foreground "#eeeeee")
-      (set-face-attribute 'mode-line-inactive nil :background "#555753" :foreground "#ffffff")
-      (set-face-attribute 'mode-line-highlight nil :inverse-video t)
-      (set-face-attribute 'region nil :background "#555753"))
-  (set-face-attribute 'default nil :background "black" :foreground
-    "white")
-  (set-face-attribute 'mode-line nil :background "blue" :foreground "yellow"))
+;; (if (window-system)
+;;     (progn
+;;       (set-face-attribute 'default nil :background "#2e3436" :foreground "#eeeeec")
+;;       (set-face-attribute 'cursor nil :background "#fce94f" :foreground "#2e3436")
+;;       (set-face-attribute 'highlight nil :background "dark red" :foreground
+;;     "#fce94f")
+;;       (set-face-attribute 'font-lock-builtin-face nil :foreground "#ad7fa8")
+;;       (set-face-attribute 'font-lock-comment-face nil :slant 'oblique :foreground "#73d216")
+;;       (set-face-attribute 'font-lock-constant-face nil :foreground "#e6a8df")
+;;       (set-face-attribute 'font-lock-function-name-face nil :foreground "#fce84f")
+;;       (set-face-attribute 'font-lock-keyword-face nil :foreground "#8cc4ff")
+;;       (set-face-attribute 'font-lock-string-face nil :foreground "#e9b96e")
+;;       (set-face-attribute 'font-lock-type-face nil :foreground "#a5ff4d")
+;;       (set-face-attribute 'font-lock-variable-name-face nil :foreground "#fcaf3e")
+;;       (set-face-attribute 'font-lock-warning-face nil :foreground "#ef2929")
+;;       (set-face-attribute 'fringe nil :background "#2c2c2c")
+;;       (set-face-attribute 'header-line nil :background "#555753" :foreground "#ffffff")
+;;       (set-face-attribute 'isearch nil :background "#ce5c00" :foreground "#ffffff")
+;;       (set-face-attribute 'lazy-highlight nil :background "#8f5902")
+;;       (set-face-attribute 'link nil :foreground "#729fcf" :underline t)
+;;       (set-face-attribute 'link-visited nil :foreground "#3465a4" :underline t)
+;;       (set-face-attribute 'minibuffer-prompt nil :foreground "#fce94f")
+;;       (set-face-attribute 'mode-line nil :background "gray10" :foreground "#eeeeee")
+;;       (set-face-attribute 'mode-line-inactive nil :background "#555753" :foreground "#ffffff")
+;;       (set-face-attribute 'mode-line-highlight nil :inverse-video t)
+;;       (set-face-attribute 'region nil :background "#555753"))
+;;   (set-face-attribute 'default nil :background "black" :foreground
+;;     "white")
+;;   (set-face-attribute 'mode-line nil :background "blue" :foreground "yellow"))
 
 ;; Custom ______________________________________________________________________
 
@@ -1059,6 +1057,7 @@ point."
  '(backup-directory-alist (quote ((".*" . "~/.bkp/"))))
  '(bbdb-use-pop-up nil)
  '(canlock-password "cf5f7a7261c5832898abfc7ea08ba333a36ed78c")
+ '(custom-enabled-themes (quote (tango-dark)))
  '(display-time-24hr-format t)
  '(display-time-mode t)
  '(epa-popup-info-window nil)
@@ -1092,4 +1091,8 @@ point."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(minibuffer-prompt ((t (:foreground "#fce94f" :height 1.0)))))
+ '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 110 :width normal :foundry "unknown" :family "Monospace"))))
+ '(minibuffer-prompt ((t (:foreground "#fce94f" :height 1.0))))
+ '(tabbar-default ((t (:inherit default))))
+ '(tabbar-selected ((t (:inherit tabbar-default :background "#2e3436" :foreground "yellow" :box (:line-width 3 :color "#2e3436")))))
+ '(tabbar-unselected ((t (:inherit tabbar-default :background "dim gray" :box (:line-width 3 :color "dim gray"))))))

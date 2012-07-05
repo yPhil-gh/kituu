@@ -13,7 +13,7 @@ if ($rw); then vc_prefix="git@github.com:" && message="RW mode ON";else vc_prefi
 
 # My binary packages
 declare -A pack
-pack[base]="zsh curl zile wget bzr git sox htop bc unison thunderbird firefox locate filelight gparted"
+pack[base]="zsh curl zile wget bzr git subversion sox htop bc unison thunderbird firefox locate filelight gparted"
 pack[xfce]="gdm xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager"
 pack[xscreensaver]="xscreensaver-gl xscreensaver-gl-extra xscreensaver-data-extra xscreensaver-data"
 pack[dev_tools]="gcc autoconf automake texinfo libtool"
@@ -32,7 +32,10 @@ moz[back_is_close]="https://addons.mozilla.org/firefox/downloads/latest/939/addo
 moz[Firebug]="https://addons.mozilla.org/firefox/downloads/latest/1843/addon-1843-latest.xpi"
 moz[GreaseMonkey]="https://addons.mozilla.org/firefox/downloads/latest/748/addon-748-latest.xpi"
 moz[GreaseMonkey_style_fix]="http://userscripts.org/scripts/source/36850.user.js"
-moz[French_dictionary]="https://addons.mozilla.org/firefox/downloads/latest/354872/addon-354872-latest.xpi"
+moz[French_dictionary_(save-as_for_thunderbird)]="https://addons.mozilla.org/firefox/downloads/latest/354872/addon-354872-latest.xpi"
+moz[tabmix+]="https://addons.mozilla.org/firefox/downloads/latest/1122/addon-1122-latest.xpi"
+moz[adblock+]="https://addons.mozilla.org/firefox/downloads/latest/1865/addon-1865-latest.xpi"
+moz[color_picker]="https://addons.mozilla.org/firefox/downloads/latest/271/addon-271-latest.xpi"
 
 # My lisp packages
 declare -A lisp
@@ -126,14 +129,6 @@ for project in "${!lisp[@]}" ; do
     fi
 done
 
-if [ -e $scriptdir/build-emacs.sh ]; then
-    echo -e $sep"Emacs trunk"
-    read -e -p "## Download, build and install / update (trunk) emacs? [Y/n] " yn
-    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-	build-emacs.sh
-    fi
-fi
-
 if (type -P firefox &>/dev/null); then
     page=~/tmp/addons.html
     echo -e $sep"Mozilla add-ons"
@@ -147,18 +142,12 @@ if (type -P firefox &>/dev/null); then
 <html>
 <head>
 <style>
-  body {
-    font-family: sans-serif;
-    background:#ccc;}
-  hr {
-    margin-top: 1em;
-    width:35%;}
-  img {
-    float:right;
-    margin-right:1em;}
+  body {font-family: sans-serif;background:#ccc;}
+  hr {margin-top: 1em;width:35%;}
+  img {float:right;margin:1em;}
 </style>
-  <!--link rel='stylesheet' media='screen,projection,tv' href='http://www.mozilla.org/media/css/firefox_new-min.css?build=193788b' /-->
-</head>
+<title>Kituu: Install Mozilla addons for $(whoami)</title>
+<link rel='shortcut icon' type='image/x-icon' href='https://static-ssl-cdn.addons.mozilla.net/media/img/favicon.ico'></head>
 <body style='background:#ccc'>
 <a href='http://opensimo.org/play/?a=Azer0,Counternatures'><img src='http://a0.twimg.com/profile_images/998643823/xix_reasonably_small.jpg' /></a>
   <h1>Hi $(whoami), click to install/update extension</h1>
@@ -170,6 +159,14 @@ echo -e "</ul>
 </body>
 </html>" >> $page && firefox $page &
 	# echo $addons
+    fi
+fi
+
+if [ -e $scriptdir/build-emacs.sh ]; then
+    echo -e $sep"Emacs trunk"
+    read -e -p "## Download, build and install / update (trunk: ~500Mb initial DL) emacs? [Y/n] " yn
+    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+	build-emacs.sh
     fi
 fi
 
