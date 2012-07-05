@@ -548,8 +548,8 @@
 
 ;; (add-hook 'flyspell-mode-hook 'flyspell-prog-mode)
 
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-
+;; (add-hook 'before-save-hook 'delete-trailing-whitespace)
+(setq require-final-newline 'ask)
 ;; ;; ;; Keys! ______________________________________________________________________
 
 ;; (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -1092,7 +1092,11 @@ point."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 110 :width normal :foundry "unknown" :family "Monospace"))))
+ '(font-lock-comment-face ((t (:foreground "#73d216" :slant italic))))
  '(minibuffer-prompt ((t (:foreground "#fce94f" :height 1.0))))
+ '(mode-line ((t (:background "gray10" :foreground "white" :box nil))))
+ '(mode-line-inactive ((t (:inherit mode-line :background "#555753" :foreground "#eeeeec" :box nil :weight light))))
  '(tabbar-default ((t (:inherit default))))
+ '(tabbar-highlight ((t (:color red :underline t))))
  '(tabbar-selected ((t (:inherit tabbar-default :background "#2e3436" :foreground "yellow" :box (:line-width 3 :color "#2e3436")))))
  '(tabbar-unselected ((t (:inherit tabbar-default :background "dim gray" :box (:line-width 3 :color "dim gray"))))))

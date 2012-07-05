@@ -24,6 +24,7 @@ pack[image_tools]="gimp inkscape blender"
 pack[multimedia]="clementine smplayer gstreamer0.10-plugins"
 pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk"
 pack[games]="extremetuxracer supertuxkart torcs nexuiz"
+# http://archive.canonical.com/ubuntu/pool/partner/a/adobe-flashplugin/adobe-flashplugin_11.2.202.236-0precise1_i386.deb
 
 # My Mozilla addons
 declare -A moz
@@ -63,8 +64,8 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 
     for i in * ; do
 	if [[  ! -h ~/$i && $i != *#* && $i != *~* && $i != *git* && $i != "README.org" && $i != "." && "${i}" != ".." ]] ; then
-	    if [[ -e ~/$i ]] ; then mv -v ~/$i ~/$i.orig ; fi
-	    ln -sv $repodir/$i ~/
+	    if [[ -e ~/$i ]] ; then echo "(move)" && mv -v ~/$i ~/$i.orig ; fi
+	    echo "(symlink)" && ln -sv $repodir/$i ~/
 	fi
     done
 fi
@@ -144,18 +145,20 @@ if (type -P firefox &>/dev/null); then
 <style>
   body {font-family: sans-serif;background:#ccc;}
   hr {margin-top: 1em;width:35%;}
-  img {float:right;margin:1em;}
+  img#logo {float:right;margin:1em;}
+  img#id {width:25px;border:1px solid black;vertical-align:middle}
 </style>
 <title>Kituu: Install Mozilla addons for $(whoami)</title>
 <link rel='shortcut icon' type='image/x-icon' href='https://static-ssl-cdn.addons.mozilla.net/media/img/favicon.ico'></head>
 <body style='background:#ccc'>
-<a href='http://opensimo.org/play/?a=Azer0,Counternatures'><img src='http://a0.twimg.com/profile_images/998643823/xix_reasonably_small.jpg' /></a>
+<a href='http://opensimo.org/play/?a=Azer0,Counternatures'>
+<img id='logo' src='https://static-ssl-cdn.addons.mozilla.net/media/img/app-icons/med/firefox.png?b=78073c4' /></a>
   <h1>Hi $(whoami), click to install/update extension</h1>
   <ul>" > $page
 echo -e $addons >> $page
 echo -e "</ul>
   <hr />
-  <div style='margin-left: auto;margin-right: auto;width:75%;text-align:center;'><a href='https://github.com/xaccrocheur/kituu'>Kituu</a> is a <a href='https://plus.google.com/u/0/102175718864884791287'>xaccrocheur</a> production - don't forget that you're a genius too ;)</div>
+  <div style='margin-left: auto;margin-right: auto;width:75%;text-align:center;'><img id='id' src='http://a0.twimg.com/profile_images/998643823/xix_normal.jpg' />&nbsp;&nbsp;<a href='https://github.com/xaccrocheur/kituu'>Kituu</a> is a <a href='https://plus.google.com/u/0/102175718864884791287'>xaccrocheur</a> production - don't forget that you're a genius too ;)</div>
 </body>
 </html>" >> $page && firefox $page &
 	# echo $addons
@@ -171,3 +174,4 @@ if [ -e $scriptdir/build-emacs.sh ]; then
 fi
 
 echo -e $sep"...Done."
+
