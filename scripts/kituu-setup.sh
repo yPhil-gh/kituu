@@ -16,13 +16,13 @@ declare -A pack
 pack[base]="zsh curl zile wget bzr git subversion sox htop bc unison thunderbird firefox locate filelight gparted"
 pack[xfce]="gdm xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager"
 pack[xscreensaver]="xscreensaver-gl xscreensaver-gl-extra xscreensaver-data-extra xscreensaver-data"
-pack[dev_tools]="gcc autoconf automake texinfo libtool"
+pack[dev_tools]="gcc autoconf automake texinfo libtool imagemagick"
 pack[dev_env]="perl-doc"
-pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev imagemagick"
+pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev libqt4-dev"
 pack[emacs&friends]="emacs bbdb wl vim"
 pack[image_tools]="gimp inkscape blender"
 pack[multimedia]="clementine smplayer gstreamer0.10-plugins"
-pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk qmidinet calf-plugins"
+pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk qmidinet calf-plugins nekobee"
 pack[games]="extremetuxracer supertuxkart torcs nexuiz"
 # http://archive.canonical.com/ubuntu/pool/partner/a/adobe-flashplugin/adobe-flashplugin_11.2.202.236-0precise1_i386.deb
 
