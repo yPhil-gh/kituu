@@ -22,7 +22,7 @@ pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libgtk2.0-dev libxpm-
 pack[emacs&friends]="emacs bbdb wl vim"
 pack[image_tools]="gimp inkscape blender"
 pack[multimedia]="clementine smplayer gstreamer0.10-plugins"
-pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk qmidinet"
+pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk qmidinet calf-plugins"
 pack[games]="extremetuxracer supertuxkart torcs nexuiz"
 # http://archive.canonical.com/ubuntu/pool/partner/a/adobe-flashplugin/adobe-flashplugin_11.2.202.236-0precise1_i386.deb
 
