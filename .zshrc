@@ -10,7 +10,7 @@ setopt AUTO_CD
 setopt COMPLETE_IN_WORD 
 setopt EXTENDED_HISTORY 
 
-# unsetopt EQUALS 
+# unsetopt EQUALS (hmm..)
 
 setopt emacs
 setopt AUTO_LIST
@@ -90,7 +90,12 @@ alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
 alias I="sudo apt-get install"
 alias S="sudo apt-cache search"
 
-# Funcs
+## Funcs
+# Alt-S inserts "sudo " at the start of line:
+insert_sudo () { zle beginning-of-line; zle -U "sudo " }
+zle -N insert-sudo insert_sudo
+bindkey "^[s" insert-sudo
+
 
 # ANSI color zebra output
 zebra () {cat $1 | awk 'NR%2 == 1 {printf("\033[30m\033[47m%s\033[0m\n", $0); next}; 1'; }
@@ -120,9 +125,8 @@ function precmd {
     local TERMWIDTH
     (( TERMWIDTH = ${COLUMNS} - 1 ))
 
-
     ###
-    # Truncate the path if it's too long.
+    # Truncate the path
 
     PR_FILLBAR=""
     PR_PWDLEN=""
@@ -135,16 +139,6 @@ function precmd {
     else
 	PR_FILLBAR="\${(l.(($TERMWIDTH - ($promptsize + $pwdsize)))..${PR_HBAR}.)}"
     fi
-
-
-    ###
-    # Get APM info.
-
-    # if which ibam > /dev/null; then
-    # 	PR_APM_RESULT=`ibam --percentbattery`
-    # elif which apm > /dev/null; then
-    # 	PR_APM_RESULT=`apm`
-    # fi
 }
 
 setopt extended_glob
@@ -194,7 +188,7 @@ setprompt () {
     PR_URCORNER=${altchar[k]:--}
 
     ###
-    # Decide if we need to set titlebar text.
+    # Titlebar text.
 
     case $TERM in
 	xterm*)
@@ -209,25 +203,25 @@ setprompt () {
     esac
 
     ###
-    # Decide whether to set a screen title
+    # Screen title
     if [[ "$TERM" == "screen" ]]; then
 	PR_STITLE=$'%{\ekzsh\e\\%}'
     else
 	PR_STITLE=''
     fi
 
-# prompts
-if [[ $TERM == "dumb" ]]; then	# in emacs
+    # prompts
+    if [[ $TERM == "dumb" ]]; then	# in emacs
     # for tramp to not hang, need the following. cf:
     # http://www.emacswiki.org/emacs/TrampMode
-    unsetopt zle
-    unsetopt prompt_cr
-    unsetopt prompt_subst
-    unfunction precmd
-    unfunction preexec
-    PS1='%(?..[%?])%!:%~%# '
-else
-    PROMPT='$PR_SET_CHARSET$PR_STITLE${(e)PR_TITLEBAR}\
+	unsetopt zle
+	unsetopt prompt_cr
+	unsetopt prompt_subst
+	unfunction precmd
+	unfunction preexec
+	PS1='%(?..[%?])%!:%~%# '
+    else
+	PROMPT='$PR_SET_CHARSET$PR_STITLE${(e)PR_TITLEBAR}\
 $PR_BLUE$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT(\
 $PR_GREEN%(!.%SROOT%s.%n)$PR_GREEN@%m:%l\
 $PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_HBAR${(e)PR_FILLBAR}$PR_BLUE$PR_HBAR$PR_SHIFT_OUT(\
@@ -244,14 +238,14 @@ $PR_SHIFT_IN$PR_SHIFT_OUT$PR_WHITE> $PR_NO_COLOUR'
     # RPROMPT='\
 # ($PR_YELLOW%D{%a,%b%d}$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_LRCORNER$PR_SHIFT_OUT$PR_NO_COLOUR'
 
-    RPROMPT=''
+	RPROMPT=''
 
-    PS2='$PR_CYAN$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
+	PS2='$PR_CYAN$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
 $PR_BLUE$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT(\
 $PR_LIGHT_GREEN%_$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
 $PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT$PR_NO_COLOUR '
 
-fi
+    fi
 }
 
 setprompt
