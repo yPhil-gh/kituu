@@ -7,8 +7,8 @@ autoload -U colors
 
 # Options
 setopt AUTO_CD
-setopt COMPLETE_IN_WORD 
-setopt EXTENDED_HISTORY 
+setopt COMPLETE_IN_WORD
+setopt EXTENDED_HISTORY
 
 # unsetopt EQUALS (hmm..)
 
@@ -20,24 +20,25 @@ setopt MENU_COMPLETE
 setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_SPACE
 # hist_ignore_all_dups
-# setopt hist_ignore_space 
+# setopt hist_ignore_space
 export HISTSIZE=10000
 export HISTFILE="$HOME/.zsh_history"
 export SAVEHIST=$HISTSIZE
 setopt -o sharehistory
 setopt list_ambiguous
 setopt completealiases
-setopt HIST_VERIFY 
+setopt HIST_VERIFY
 
-bindkey ';5D' emacs-backward-word
-bindkey ';5C' emacs-forward-word
+bindkey ';5D' backward-word
+bindkey ';5C' forward-word
 bindkey "\e[Z" reverse-menu-complete # Shift+Tab in completion menu
+bindkey '^[[3;3~' kill-word # alt-del kills word forward
 
 # Path
 PATH=$PATH:~/scripts:~/bin
 # PATH=/usr/local/bin:$PATH
 
-# GNU Colors 否则自动补全时候选菜单中的选项不能彩色显示 
+# GNU Colors 否则自动补全时候选菜单中的选项不能彩色显示
 # [ -f /etc/DIR_COLORS ] && eval $(dircolors -b /etc/DIR_COLORS)
 # export ZLSCOLORS="${LS_COLORS}"
 
@@ -67,7 +68,7 @@ zstyle ':completion:*:processes' command 'ps -au$USER'
 export WORDCHARS=''
 
 # Ye ol' Aliasses
-alias ls='ls -F --color=auto' 
+alias ls='ls -F --color=auto'
 alias ll="ls -lha"
 alias la="ls -A"
 alias rm="rm -i"

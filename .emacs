@@ -43,7 +43,7 @@
 ;; Required by my iswitchb hack
 (require 'edmacro)
 ;; (load "~/.emacs.d/lisp/nxhtml/autostart.el")
-;; (add-hook 'after-change-major-mode-hook 'linum-mode 'auto-fill-function) 
+;; (add-hook 'after-change-major-mode-hook 'linum-mode 'auto-fill-function)
 
 (if (< emacs-major-version 24)
     (progn
@@ -173,14 +173,23 @@
 
 ;; Funcs! _________________________________________________________________
 
+(defun test ()
+(interactive)
+(message "char-before # is %s and char-after is %s" (char-before) (char-after)))
+
 (defun px-match-paren (arg)
-  "Go to the matching paren if on a paren; otherwise insert %."
+  "Go to the matching paren if on a paren; otherwise insert <key>."
   (interactive "p")
 
-  (cond 
-   ;; ((char-before "\\s\)") (forward-char 1) (backward-list 1))
-   ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
-   ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
+  (cond
+   ((char-equal 41 (char-before)) (backward-list 1))
+   ((char-equal 125 (char-before)) (backward-list 1))
+   ((and
+     (char-equal 123 (char-before))
+     (char-equal 10 (char-after)))
+    (backward-char 1) (forward-list 1))
+   ((looking-at "\\s\(") (forward-list 1))
+   ((looking-at "\\s\)") (backward-list 1))
    (t (self-insert-command (or arg 1)))))
 
 (defun px-undo-kill-buffer (arg)
@@ -399,7 +408,7 @@
 ;;  ;; resize-mini-windows nil
 ;;  max-mini-window-height nil
 ;; )
- 
+
 ;; Modal setting (if this mode then this setting)
 (add-hook 'custom-mode-hook 'linum-mode -1)
 
@@ -423,6 +432,7 @@
 
 (add-hook 'find-file-hooks 'turn-on-font-lock)
 (add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; Vars! ______________________________________________________________________
 
@@ -600,6 +610,7 @@
 *Open file                           C-o*
 *Open recent file                    M-o*
 *Open file path at point             s-o*
+*Open last session (buffers)         C-s-o*
 
 *Save buffer                         M-s*
 *Kill current buffer                 s-k*
@@ -908,10 +919,6 @@ Emacs buffer are those starting with “*”."
 ;; ;; (setq yas/root-directory "~/.emacs.d/el-get/yasnippet/snippets")
 ;; ;; (add-hook 'php-mode-hook 'yas/global-mode)
 (custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 110 :width normal :foundry "unknown" :family "Monospace"))))
  '(font-lock-comment-face ((t (:foreground "#73d216" :slant italic))))
  '(minibuffer-prompt ((t (:foreground "#fce94f" :height 1.0))))

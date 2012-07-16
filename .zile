@@ -1,0 +1,55 @@
+
+(global-set-key "\M-s" 'save-buffer)
+(global-set-key "\M-DEL" 'kill-word)
+(global-set-key "\M-<backspace>" 'backward-kill-word)
+(global-set-key "\M-o" 'recentf-open-files)
+(global-set-key "\M-d" 'px-toggle-comments)
+
+(global-set-key "\²" 'dabbrev-expand)
+(global-set-key "\M-²" 'hippie-expand)
+
+(global-set-key "\C-s-g" 'goto-line)
+(global-set-key "\C-s-t" 'sgml-close-tag)
+(global-set-key "\\C-f" 'isearch-forward)
+(global-set-key "\C-S-f" 'isearch-backward)
+(define-key isearch-mode-map "\C-f" 'isearch-repeat-forward)
+(define-key isearch-mode-map "C-S-f" 'isearch-repeat-backward)
+
+(global-set-key "\C-ù" 'forward-sexp)
+(global-set-key "\C-%" 'backward-sexp)
+
+(global-set-key "\s-g" 'px-google-that-bitch)
+(global-set-key "\s-r" 'replace-string)
+(global-set-key "\s-²" "C-x b <return>")
+(global-set-key "\s-t" 'sgml-tag)
+(global-set-key "\s-k" 'px-kill-buffer)
+(global-set-key "\s-p" 'php-mode)
+(global-set-key "\s-h" 'html-mode)
+(global-set-key "\s-j" 'js-mode)
+(global-set-key "\s-o" 'find-file-at-point)
+(global-set-key "\s-d" 'wl-draft-mode)
+(global-set-key "\s-m" 'kmacro-end-and-call-macro)
+(global-set-key "\C-s-m" 'apply-macro-to-region-lines)
+(global-set-key "\<s-left>" 'marker-visit-prev)
+(global-set-key "\<s-right>" 'marker-visit-next)
+
+
+
+(global-set-key "\C-a" 'mark-whole-buffer)
+(global-set-key "\C-o" 'find-file)
+(global-set-key "\C-S-o" 'desktop-read)
+(global-set-key "\C-S-<mouse-1>" 'flyspell-correct-word)
+(global-set-key "\C-z" 'undo)
+(global-set-key "\C-S-z" 'undo-tree-redo)
+
+
+
+(global-set-key "\C-<tab>" 'tabbar-forward)
+(global-set-key "\<C-S-iso-lefttab>" 'tabbar-backward)
+
+;; (global-set-key "\C-\"" 'insert-pair-dbquotes)
+(global-set-key "\C-)" 'insert-pair-paren)
+(global-set-key "\C-=" 'insert-pair-brace)
+(global-set-key "\C-'" 'insert-pair-brace)
+(global-set-key "\C-(" 'insert-pair-bracket)
+(global-set-key "\C-<" 'insert-pair-single-angle)
