@@ -35,7 +35,7 @@ bindkey "\e[Z" reverse-menu-complete # Shift+Tab in completion menu
 
 # Path
 PATH=$PATH:~/scripts:~/bin
-PATH=/usr/local/bin:$PATH
+# PATH=/usr/local/bin:$PATH
 
 # GNU Colors 否则自动补全时候选菜单中的选项不能彩色显示 
 # [ -f /etc/DIR_COLORS ] && eval $(dircolors -b /etc/DIR_COLORS)

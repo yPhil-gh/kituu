@@ -43,6 +43,17 @@
 ;; (require 'imapua)
 )
 
+;; By an unknown contributor
+          
+          (global-set-key "%" 'match-paren)
+          
+          (defun match-paren (arg)
+            "Go to the matching paren if on a paren; otherwise insert %."
+            (interactive "p")
+            (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
+                  ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
+                  (t (self-insert-command (or arg 1)))))
+
  ;; wl-thread-have-younger-brother-str "├►"
  ;; wl-thread-youngest-child-str "╰►"
  ;; wl-thread-vertical-str "│ "
@@ -53,17 +64,19 @@
 
 ;; Required by my iswitchb hack
 (require 'edmacro)
+;; (load "~/.emacs.d/lisp/nxhtml/autostart.el")
+;; (add-hook 'after-change-major-mode-hook 'linum-mode 'auto-fill-function) 
 
-;; (if (< emacs-major-version 24)
-;;     (progn
-;;       (load "~/.emacs.d/lisp/nxhtml/autostart.el")
-;;       (tabkey2-mode t))
-;;   (progn
-;;     (require 'php-mode nil t)
-;;     (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
-;;     ;; (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
-;;     ;; (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode)
-;; ))
+(if (< emacs-major-version 24)
+    (progn
+      (load "~/.emacs.d/lisp/nxhtml/autostart.el")
+      (tabkey2-mode t))
+  (progn
+    (require 'php-mode nil t)
+    (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
+    ;; (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
+    ;; (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode)
+    ))
 
 ;;(setq tabbar-ruler-global-tabbar 't)
 
@@ -120,7 +133,6 @@
 (put 'overwrite-mode 'disabled t)
 
 (global-set-key "\C-xE" 'apply-macro-to-region-lines)
-
 
   (defun date (&optional insert)
     "Display the current date and time.
@@ -556,22 +568,22 @@
 ;; (global-set-key (kbd "C-<escape>") 'keyboard-quit)
 (global-set-key (kbd "²") 'hippie-expand)
 
-(defun indent-or-expand (arg)
-  "Either indent according to mode, or expand the word preceding
-point."
-  (interactive "*P")
-      (if (and
-	   (or (bobp) (= ?w (char-syntax (char-before))))
-	   (or (eobp) (not (= ?w (char-syntax (char-after))))))
-	  (dabbrev-expand arg)
-	(indent-according-to-mode)))
+;; (defun indent-or-expand (arg)
+;;   "Either indent according to mode, or expand the word preceding
+;; point."
+;;   (interactive "*P")
+;;       (if (and
+;; 	   (or (bobp) (= ?w (char-syntax (char-before))))
+;; 	   (or (eobp) (not (= ?w (char-syntax (char-after))))))
+;; 	  (dabbrev-expand arg)
+;; 	(indent-according-to-mode)))
 
-(defun my-tab-fix ()
-  (local-set-key [tab] 'indent-or-expand))
+;; (defun my-tab-fix ()
+;;   (local-set-key [tab] 'indent-or-expand))
 
-(add-hook 'c-mode-hook          'my-tab-fix)
-(add-hook 'sh-mode-hook         'my-tab-fix)
-(add-hook 'emacs-lisp-mode-hook 'my-tab-fix)
+;; (add-hook 'c-mode-hook          'my-tab-fix)
+;; (add-hook 'sh-mode-hook         'my-tab-fix)
+;; (add-hook 'emacs-lisp-mode-hook 'my-tab-fix)
 
 (define-key global-map [(meta up)] '(lambda() (interactive) (scroll-other-window -1)))
 (define-key global-map [(meta down)] '(lambda() (interactive) (scroll-other-window 1)))
@@ -599,7 +611,7 @@ point."
 (global-set-key (kbd "s-p") 'php-mode)
 (global-set-key (kbd "s-h") 'html-mode)
 (global-set-key (kbd "s-j") 'js-mode)
-(global-set-key (kbd "s-o") 'org-mode)
+(global-set-key (kbd "s-o") 'find-file-at-point)
 (global-set-key (kbd "s-d") 'wl-draft-mode)
 (global-set-key (kbd "s-m") 'kmacro-end-and-call-macro)
 (global-set-key (kbd "<s-left>") 'marker-visit-prev)
@@ -945,51 +957,24 @@ point."
 (add-hook 'wl-summary-exit-pre-hook 'px-reset-prefs)
 (add-hook 'wl-summary-exit-hook 'px-reset-prefs)
 
+(defun tabbar-buffer-groups ()
+  "Return the list of group names the current buffer belongs to.
+This function is a custom function for tabbar-mode's tabbar-buffer-groups.
+This function groups all buffers into 3 groups:
+Those Dired, those user buffer, and those emacs buffer.
+Emacs buffer are those starting with “*”."
+  (list
+   (cond
+    ((string-equal "*" (substring (buffer-name) 0 1))
+     "Emacs Buffer"
+     )
+    ((eq major-mode 'dired-mode)
+     "Dired"
+     )
+    (t
+     "User Buffer"))))
+
 ;; ;; Faces ______________________________________________________________________
-
-;; (set-face-attribute 'tabbar-default nil
-;; 		    :inherit 'default
-;; 		    :height 110
-;; 		    ;; :weight 'normal
-;; 		    :width 'normal
-;; 		    :slant 'normal
-;; 		    :underline nil
-;; 		    :strike-through nil
-;; 		    :stipple nil
-;; 		    ;; :background "gray80"
-;; 		    :background nil
-;; 		    :foreground "black"
-;; 		    :box nil
-;; 		    ;; :family "Monospace"
-;; 		    ;; :family "Vera Sans Mono Bold Oblique"
-;;                     ;; :family "Lucida Grande"
-;; )
-
-;; (set-face-attribute 'tabbar-separator nil
-;;                     :background "gray40"
-;;                     :foreground nil
-;; 		    ;; :width 1.0
-;;                     :height 1.0)
-
-;; (set-face-attribute 'tabbar-selected nil
-;; 		    :background "#2e3436"
-;; 		    :foreground "red"
-;; 		    :inherit 'tabbar-default
-;; 		    :box '(:line-width 1 :color "#2e3436" :style nil))
-
-;; (set-face-attribute 'tabbar-unselected nil
-;; 		    :inherit 'tabbar-default
-;; 		    :background "gray50"
-;; 		    ;; :background "red"
-;; 		    :box '(:line-width 1 :color "gray50" :style nil))
-
-;; (set-face-attribute 'tabbar-highlight nil
-;; 		    :foreground "white"
-;; 		    :underline nil)
-
-;; (set-face-attribute 'tabbar-button nil
-;; 		    :inherit 'tabbar-default
-;; 		    :box nil)
 
 ;; (if (window-system)
 ;;     (progn
@@ -1023,30 +1008,8 @@ point."
 
 ;; Custom ______________________________________________________________________
 
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(cperl-array-face ((t (:foreground "#fcaf3e" :weight bold))))
-;;  '(cperl-hash-face ((t (:foreground "#fcaf3e" :slant italic :weight bold))))
-;;  '(font-lock-comment-face ((t (:slant oblique :weight light))))
-;;  '(highlight ((t (:background "dark red"))))
-;;  '(mode-line ((t (:background "gray10" :foreground "#eeeeee"))))
-;;  '(mode-line-highlight ((t (:inverse-video t))))
-;;  '(mumamo-background-chunk-major ((t (:background "gray15"))))
-;;  '(mumamo-background-chunk-submode1 ((t (:background "gray16"))))
-;;  '(mumamo-region ((t nil)))
-;;  '(undo-tree-visualizer-default-face ((t (:foreground "gray"))))
-;;  '(wl-highlight-folder-few-face ((t (:foreground "gainsboro" :weight bold))))
-;;  '(wl-highlight-folder-many-face ((t (:foreground "AntiqueWhite3" :weight extra-bold))))
-;;  '(wl-highlight-folder-path-face ((t (:background "dark red" :foreground "white" :weight bold))))
-;;  '(wl-highlight-folder-unread-face ((t (:foreground "light gray" :weight bold))))
-;;  '(wl-highlight-folder-zero-face ((t (:foreground "AntiqueWhite2"))))
-;;  '(wl-highlight-summary-answered-face ((t (:foreground "khaki"))))
-;;  '(wl-highlight-summary-displaying-face ((t (:background "dark red" :foreground "yellow" :weight bold))))
-;;  '(wl-highlight-summary-new-face ((t (:foreground "white" :weight ultra-bold))))
-;;  '(wl-highlight-summary-thread-top-face ((t (:foreground "gray")))))
+(if (< emacs-major-version 24)
+(set-face-attribute 'default nil :background "#2e3436" :foreground "#eeeeec"))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -1057,15 +1020,17 @@ point."
  '(backup-directory-alist (quote ((".*" . "~/.bkp/"))))
  '(bbdb-use-pop-up nil)
  '(canlock-password "cf5f7a7261c5832898abfc7ea08ba333a36ed78c")
+ '(comment-style (quote extra-line))
  '(custom-enabled-themes (quote (tango-dark)))
  '(display-time-24hr-format t)
  '(display-time-mode t)
  '(epa-popup-info-window nil)
  '(global-undo-tree-mode t)
  '(inhibit-startup-echo-area-message (user-login-name))
+ '(mumamo-margin-use (quote (left-margin 13)))
  '(recentf-save-file "~/.bkp/recentf")
  '(send-mail-function (quote mailclient-send-it))
- '(tabbar-ruler-excluded-buffers (quote ("*Messages*" "*scratch*" "\\*.\\*")))
+ '(tabbar-ruler-excluded-buffers (quote ("*Messages*" "*scratch*" "*.*" "\\*.\\*")))
  '(undo-tree-auto-save-history t)
  '(undo-tree-visualizer-relative-timestamps t)
  '(undo-tree-visualizer-timestamps t)
@@ -1096,6 +1061,11 @@ point."
  '(minibuffer-prompt ((t (:foreground "#fce94f" :height 1.0))))
  '(mode-line ((t (:background "gray10" :foreground "white" :box nil))))
  '(mode-line-inactive ((t (:inherit mode-line :background "#555753" :foreground "#eeeeec" :box nil :weight light))))
+ '(mumamo-background-chunk-major ((t (:background "gray10"))))
+ '(mumamo-background-chunk-submode1 ((t (:background "gray15"))))
+ '(mumamo-background-chunk-submode2 ((t (:background "gray20"))))
+ '(mumamo-background-chunk-submode3 ((t (:background "gray25"))))
+ '(mumamo-background-chunk-submode4 ((t (:background "gray30"))))
  '(tabbar-default ((t (:inherit default))))
  '(tabbar-highlight ((t (:color red :underline t))))
  '(tabbar-selected ((t (:inherit tabbar-default :background "#2e3436" :foreground "yellow" :box (:line-width 3 :color "#2e3436")))))
