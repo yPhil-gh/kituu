@@ -245,7 +245,8 @@
 
 (defun px-kill-now ()
   (interactive)
-  (kill-buffer (current-buffer)))
+  (kill-buffer (current-buffer))
+  (delete-window))
 
 (defun this-buffer-is-visible (buffer)
   "Test if BUFFER is actually on screen"
@@ -483,7 +484,10 @@
 
 ;; Vars! ______________________________________________________________________
 
+;; (all of this will slowly migrate to custom)
+
 (setq
+ require-final-newline 'ask
  vc-make-backup-files t
  iswitchb-buffer-ignore '("^ " "*.")
  scroll-conservatively 200
@@ -494,13 +498,21 @@
  recentf-max-saved-items 120
  recentf-max-menu-items 60
  x-select-enable-clipboard t
- enable-recursive-minibuffers t
+ ;; enable-recursive-minibuffers t
  show-paren-delay 0
  ;; ediff-setup-windows-plain t
  ;; tramp-terminal-type dumb
  ispell-dictionary "francais"
  completion-auto-help nil
 )
+
+
+(defun stop-using-minibuffer ()
+  "kill the minibuffer"
+  (when (and (>= (recursion-depth) 1) (active-minibuffer-window))
+    (abort-recursive-edit)))
+
+(add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
 
 (set-face-foreground 'show-paren-mismatch-face "red")
 (set-face-attribute 'show-paren-mismatch-face nil
@@ -529,39 +541,6 @@
 
 ;; ;; Hooks! _____________________________________________________________________
 
-;; (add-hook 'wl-summary-mode-hook 'hl-line-mode)
-;; (add-hook 'recentf-dialog-mode-hook 'hl-line-mode)
-;; (add-hook 'perl-mode-hook 'cperl-mode)
-
-;; (add-hook 'cperl-mode-hook
-;; 	  (lambda ()
-;; 	    (local-set-key (kbd "C-c h") 'cperl-perldoc)))
-
-;; (defun text-mode-hook-px ()
-;; (tabbar-mode t)
-;; (menu-bar-mode -1))
-
-;; (defun gnus-mode-hook-px ()
-;; (tabbar-mode -1)
-;; ;; (menu-bar-mode -1)
-;; )
-
-;; FIXME
-;; (defun info-mode-hook-px ()
-;;   (tabbar-mode t)
-;;   ;; (menu-bar-mode -1)
-;;   )
-
-;; ;; GNU
-;; ;; (add-hook 'text-mode-hook 'text-mode-hook-px)
-;; ;; (add-hook 'gnus-before-startup-hook 'gnus-mode-hook-px)
-;; ;; (add-hook 'gnus-exit-gnus-hook 'text-mode-hook-px)
-;; ;; (add-hook 'lisp-mode-hook 'info-mode-hook-px)
-
-;; (add-hook 'flyspell-mode-hook 'flyspell-prog-mode)
-
-;; (add-hook 'before-save-hook 'delete-trailing-whitespace)
-(setq require-final-newline 'ask)
 ;; ;; ;; Keys! ______________________________________________________________________
 
 ;; (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -600,14 +579,19 @@
 (define-key global-map [f10] 'toggle-truncate-lines)
 (define-key global-map [f11] 'px-fullscreen)
 
-(global-set-key (kbd "C-c C-g") 'goto-line)
+(global-set-key (kbd "C-s-g") 'goto-line)
+(global-set-key (kbd "C-s-t") 'sgml-close-tag)
+(global-set-key "\C-f" 'isearch-forward)
+(global-set-key (kbd "C-S-f") 'isearch-backward)
+(define-key isearch-mode-map "\C-f" 'isearch-repeat-forward)
+(define-key isearch-mode-map (kbd "C-S-f") 'isearch-repeat-backward)
+
+
 (global-set-key (kbd "s-g") 'px-google-that-bitch)
 (global-set-key (kbd "s-r") 'replace-string)
-(global-set-key (kbd "s-²") (kbd "C-x b <return>")) ; Keyboard macro!
-(global-set-key (kbd "<C-kp-add>") 'kmacro-end-and-call-macro) ; Keyboard macro!
+(global-set-key (kbd "s-²") (kbd "C-x b <return>")) ; Keyboard macro! (toggle last buffer)
 (global-set-key (kbd "s-t") 'sgml-tag)
-(global-set-key (kbd "C-s-t") 'sgml-close-tag)
-(global-set-key (kbd "s-b") 'px-kill-now)
+(global-set-key (kbd "s-k") 'px-kill-now)
 (global-set-key (kbd "s-p") 'php-mode)
 (global-set-key (kbd "s-h") 'html-mode)
 (global-set-key (kbd "s-j") 'js-mode)
@@ -617,9 +601,8 @@
 (global-set-key (kbd "<s-left>") 'marker-visit-prev)
 (global-set-key (kbd "<s-right>") 'marker-visit-next)
 
-;; (define-key global-map [s-k] 'kill-buffer)
 
-(global-set-key (kbd "C-f") 'isearch-forward)
+
 ;; THIS NEX ONE BROKE HAVOC!!
 ;; (global-set-key (kbd "C-d") nil)	; I kept deleting stuff
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
@@ -706,131 +689,134 @@
 
 ;; ;; Help! ______________________________________________________________________
 
-;; (defun px-help-emacs ()
-;;   (interactive)
-;;   (princ "* My EMACS cheat cheet
+(defun px-help-emacs ()
+  (interactive)
+  (princ "* My EMACS cheat cheet
 
-;; ** notes
-;; 's' (super) on a PC keyboard, is the 'windows logo' key
+** notes
+'s' (super) on a PC keyboard, is the 'windows logo' key
+*bold* denotes a custom bit (eg specific to this emacs config)
 
-;; *** EMACSEN
-;; Copy to register A                  C-x r s A
-;; Paste from register A               C-x r g A
-;; Clone emacs (!?)                    C-x 5 2
-;; Set bookmark at point               C-x r m RET
-;; Close HTML tag                      sgml-close-tag
-;; Switch to *Messages* buffer         C-h e
-;; capitalize-word                     M-c
-;; kill-paragraph                      C-S-del
+*** EMACSEN
+Copy to register A                  C-x r s A
+Paste from register A               C-x r g A
+Clone emacs (!?)                    C-x 5 2
+Set bookmark at point               C-x r m RET
+Close HTML tag                      sgml-close-tag
+Switch to *Messages* buffer         C-h e
+capitalize-word                     M-c
+kill-paragraph                      C-S-del
 
-;; *** EDIFF
-;; Next / previous diff                n / p
-;; Copy a diff into b / opposite       a / b
-;; Save a / b buffer                   wa / wb
+*** EDIFF
+Next / previous diff                n / p
+Copy a diff into b / opposite       a / b
+Save a / b buffer                   wa / wb
 
-;; *** GNUS
-;; Sort summary by author/date         C-c C-s C-a/d
-;; Search selected imap folder         G G
-;; Mark thread read                    T k
+*** GNUS
+Sort summary by author/date         C-c C-s C-a/d
+Search selected imap folder         G G
+Mark thread read                    T k
 
-;; *** PHP-MODE
-;; C-c C-f                             Search PHP manual for point.
-;; C-c RET / C-c C-m                   Browse PHP manual in a Web browser.
+*** PHP-MODE
+C-c C-f                             Search PHP manual for point.
+C-c RET / C-c C-m                   Browse PHP manual in a Web browser.
 
-;; *** MISC EDITING
-;; M-c		                    capitalize-word		Capitalize the first letter of the current word.
-;; M-u		                    upcase-word		Make the word all uppercase.
-;; M-l		                    downcase-word		Make the word all lowercase.
-;; C-x C-l		                    downcase-region		Make the region all lowercase.
-;; C-x C-u		                    uppercase-region	Make the region all uppercase.
+*** MISC EDITING
+M-c		                    capitalize-word		Capitalize the first letter of the current word.
+M-u		                    upcase-word		Make the word all uppercase.
+M-l		                    downcase-word		Make the word all lowercase.
+C-x C-l		                    downcase-region		Make the region all lowercase.
+C-x C-u		                    uppercase-region	Make the region all uppercase.
 
-;; *** RECTANGLES
-;; C-x r k/c                           Kill/clear rectangle
-;; C-x r y                             yank-rectangle (upper left corner at point)
-;; C-x r t string <RET>                Replace rectangle contents with string on each line (string-rectangle).
+*** RECTANGLES
+C-x r k/c                           Kill/clear rectangle
+C-x r y                             yank-rectangle (upper left corner at point)
+C-x r t string <RET>                Insert STRING on each rectangle line.
 
-;; *** WANDERLUST
-;; T                                   Toggle Threading
-;; d                                   Dispose MSG (mark)
-;; D                                   Delete MSG (mark)
-;; rx                                  Execute marks
+*** WANDERLUST
+T                                   Toggle Threading
+d                                   Dispose MSG (mark)
+D                                   Delete MSG (mark)
+rx                                  Execute marks
 
 
-;; *** MACROS
-;; C-x (		                    start-kbd-macro		Start a new macro definition.
-;; C-x )		                    end-kbd-macro		End the current macro definition.
-;; C-x e		                    call-last-kbd-macro	Execute the last defined macro.
-;; M-(number) C-x e	            call-last-kbd-maco	Do that last macro (number times).
-;; C-u C-x (	                    stat-kbd-macro		Execute last macro and add to it.
-;; 		                    name-last-kbd-macro	Name the last macro before saving it.
-;; 		                    insert-last-keyboard-macro	Insert the macro you made into a file.
-;; 		                    load-file			Load a file with macros in it.
-;; C-x q		                    kbd-macro-query		Insert a query into a keyboard macro.
-;; M-C-c		                    exit-recursive-edit		Get the hell out of a recursive edit.
+*** MACROS
+C-x (		                    start-kbd-macro		Start a new macro definition.
+C-x )		                    end-kbd-macro		End the current macro definition.
+C-x e		                    call-last-kbd-macro	Execute the last defined macro.
+M-(number) C-x e	            call-last-kbd-maco	Do that last macro (number times).
+C-u C-x (	                    stat-kbd-macro		Execute last macro and add to it.
+		                    name-last-kbd-macro	Name the last macro before saving it.
+		                    insert-last-keyboard-macro	Insert the macro you made into a file.
+		                    load-file			Load a file with macros in it.
+C-x q		                    kbd-macro-query		Insert a query into a keyboard macro.
+M-C-c		                    exit-recursive-edit		Get the hell out of a recursive edit.
 
-;; *** THIS VERY EMACS CONFIG
-;; Save buffer                         M-s
-;; Kill current buffer                 s-b
-;; Undo                                C-z
-;; Open file                           C-o
-;; Open recent file                    M-o
-;; Close other window (frame)          F1
-;; Switch to other window (frame)      F2
-;; Split horizontally                  F3
-;; Split vertically                    F4
-;; Switch to buffer                    F5
-;; Spell-check buffer                  F7
-;; Word-wrap toggle                    F10
-;; enclose region in <tag> (sgml-tag)  s-t RET tag [ args... ]
-;; select 'this' or <that> (enclosed)  s-SPC
+*** THIS VERY EMACS CONFIG
+*Save buffer                         M-s*
+*Kill current buffer                 s-b*
+*Undo                                C-z*
+*Open file                           C-o*
+*Open recent file                    M-o*
+*Close other window (frame)          F1*
+*Switch to other window (frame)      F2*
+*Split horizontally                  F3*
+*Split vertically                    F4*
+*Switch to buffer                    F5*
+*Spell-check buffer                  F7*
+*Word-wrap toggle                    F10*
+*enclose region in <tag> (sgml-tag)  s-t RET tag [ args... ]*
+*select 'this' or <that> (enclosed)  s-SPC**
 
-;; *** VERSION CONTROL
-;; C-x v v                                               vc-next-action
-;; perform the next logical control operation on file
-;; C-x v i                                               vc-register
-;; add a new file to version control
+*** VERSION CONTROL
+C-x v v                                               vc-next-action
+perform the next logical control operation on file
+C-x v i                                               vc-register
+add a new file to version control
 
-;; C-x v +                                               vc-update
-;; Get latest changes from version control
-;; C-x v ~                                               vc-version-other-window
-;; look at other revisions
-;; C-x v =                                               vc-diff
-;; diff with other revisions
-;; C-x v u                                               vc-revert-buffer
-;; undo checkout
-;; C-x v c                                               vc-cancel-version
-;; delete latest rev (look at an old rev and re-check it)
+C-x v +                                               vc-update
+Get latest changes from version control
+C-x v ~                                               vc-version-other-window
+look at other revisions
+C-x v =                                               vc-diff
+diff with other revisions
+C-x v u                                               vc-revert-buffer
+undo checkout
+C-x v c                                               vc-cancel-version
+delete latest rev (look at an old rev and re-check it)
 
-;; C-x v d                                               vc-directory
-;; show all files which are not up to date
-;; C-x v g                                               vc-annotate
-;; show when each line in a tracked file was added and by whom
-;; C-x v s                                               vc-create-snapshot
-;; tag all the files with a symbolic name
-;; C-x v r                                               vc-retrieve-snapshot
-;; undo checkouts and return to a snapshot with a symbolic name
+C-x v d                                               vc-directory
+show all files which are not up to date
+C-x v g                                               vc-annotate
+show when each line in a tracked file was added and by whom
+C-x v s                                               vc-create-snapshot
+tag all the files with a symbolic name
+C-x v r                                               vc-retrieve-snapshot
+undo checkouts and return to a snapshot with a symbolic name
 
-;; C-x v l                                               vc-print-log
-;; show log (not in ChangeLog format)
-;; C-x v a                                               vc-update-change-log
-;; update ChangeLog
+C-x v l                                               vc-print-log
+show log (not in ChangeLog format)
+C-x v a                                               vc-update-change-log
+update ChangeLog
 
-;; C-x v m     vc-merge
-;; C-x v h     vc-insert-headers
+C-x v m     vc-merge
+C-x v h     vc-insert-headers
 
-;; M-x                                                   vc-resolve-conflicts
-;; ediff-merge session on a file with conflict markers
+M-x                                                   vc-resolve-conflicts
+ediff-merge session on a file with conflict markers
 
-;; *** OTHER
-;; git reflog                                            view log
-;; git reset --hard HEAD@{7}                             revert HEAD to 7
+*** OTHER
+git reflog                                            view log
+git reset --hard HEAD@{7}                             revert HEAD to 7
 
-;; "
-;;          (generate-new-buffer "px-help-emacs"))
-;;   (switch-to-buffer "px-help-emacs")
-;;   (org-mode)
-;;   ;; (show-all) ; ?
-;;   )
+"
+         (generate-new-buffer "px-help-emacs"))
+  (switch-to-buffer "px-help-emacs")
+  (org-mode)
+  ;; (show-all) ; ?
+  )
+
+;; ??
 ;; (put 'upcase-region 'disabled nil)
 
 
@@ -974,6 +960,8 @@ Emacs buffer are those starting with “*”."
     (t
      "User Buffer"))))
 
+(setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
+
 ;; ;; Faces ______________________________________________________________________
 
 ;; (if (window-system)
@@ -1030,7 +1018,7 @@ Emacs buffer are those starting with “*”."
  '(mumamo-margin-use (quote (left-margin 13)))
  '(recentf-save-file "~/.bkp/recentf")
  '(send-mail-function (quote mailclient-send-it))
- '(tabbar-ruler-excluded-buffers (quote ("*Messages*" "*scratch*" "*.*" "\\*.\\*")))
+ ;; '(tabbar-ruler-excluded-buffers (quote ("*Messages*" "*scratch*" "*.*" "\\*.\\*")))
  '(undo-tree-auto-save-history t)
  '(undo-tree-visualizer-relative-timestamps t)
  '(undo-tree-visualizer-timestamps t)
