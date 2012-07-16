@@ -86,7 +86,8 @@ if $debian; then
     read -e -p "#### Install packages? [Y/n] " yn
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 	for group in "${!pack[@]}" ; do
-	    read -e -p "## Install $group? (${pack[$group]}) [Y/n] " yn
+	    read -e -p "## Install $group? (${pack[$group]})
+[Y/n] " yn
 	    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 		sudo aptitude install ${pack[$group]}
 	    fi
@@ -137,7 +138,8 @@ if (type -P firefox &>/dev/null); then
 	addons=$addons"    <li><a href='"${moz[$addon]}"'>$addon</a></li>\n"
 	addon_names=$addon", "$addon_names
     done
-    read -e -p "Install add-ons ($addon_names)? [Y/n] " yn
+    read -e -p "Install add-ons ($addon_names)?
+[Y/n] " yn
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 	echo -e "
 <html>
@@ -174,4 +176,3 @@ if [ -e $scriptdir/build-emacs.sh ]; then
 fi
 
 echo -e $sep"...Done."
-

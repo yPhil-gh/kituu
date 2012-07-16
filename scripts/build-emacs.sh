@@ -14,15 +14,15 @@ else
     cd trunk && pwd
 fi
 
-bzr pull 2>&1 | grep "No revisions to pull"
+bzr pull 1>&1 | grep "No revisions to pull"
 if [ ! $? -eq 0 ]; then
     read -e -p "## Build and install emacs (revision $(bzr revno))? [Y/n] " yn
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 	cd $EMACS_SRC_DIR && pwd
 
-	if [ -d "trunk" ]; then mv -v trunk/ trunk.bkp/ && rm -rf trunk; fi
+	if [ -d "trunk" ]; then cp -r trunk trunk.bkp && rm -rf trunk; fi
 
 	cp -Rv $EMACS_BZR_DIR/trunk/ $EMACS_SRC_DIR/
-	cd trunk && ./autogen.sh && ./configure && make && sudo make install
+	cd trunk && autoreconf -i -I m4 && ./configure && make bootstrap && make && sudo make install
     fi
 fi
