@@ -156,7 +156,6 @@
 (defun px-match-paren (arg)
   "Go to the matching paren if on a paren; otherwise insert <key>."
   (interactive "p")
-
   (cond
    ((char-equal 41 (char-before)) (backward-list 1))
    ((char-equal 125 (char-before)) (backward-list 1))
@@ -363,6 +362,11 @@
 	  '(lambda ()
 	     (px-session-save)))
 
+(defun stop-using-minibuffer ()
+  "kill the minibuffer when going back to emacs using the mouse"
+  (when (and (>= (recursion-depth) 1) (active-minibuffer-window))
+    (abort-recursive-edit)))
+
 ;; Modes! ______________________________________________________________________
 ;; (display-time-mode t)
 (show-paren-mode t)
@@ -376,16 +380,7 @@
 ;; (mouse-avoidance-mode 'cat-and-mouse)
 (iswitchb-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
-;; (setq suggest-key-bindings 1) ; wait 5 seconds
 
-;; This is harsh but just, shortens the war and saves lives.
-
-;; (setq
-;;  ;; resize-mini-windows nil
-;;  max-mini-window-height nil
-;; )
-
-;; Modal setting (if this mode then this setting)
 (add-hook 'custom-mode-hook 'linum-mode -1)
 
 (defun iswitchb-local-keys ()
@@ -399,8 +394,6 @@
 
 (add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)
 
-(setq-default cursor-type 'bar)
-
 (setq c-default-style "bsd"
       c-basic-offset 4)
 
@@ -413,6 +406,7 @@
 ;; Vars! ______________________________________________________________________
 
 ;; (all of this will slowly migrate to custom)
+(setq-default cursor-type 'bar)
 
 (setq
  require-final-newline 'ask
@@ -434,21 +428,13 @@
  ;; completion-auto-help nil
 )
 
-
-(defun stop-using-minibuffer ()
-  "kill the minibuffer"
-  (when (and (>= (recursion-depth) 1) (active-minibuffer-window))
-    (abort-recursive-edit)))
-
-
-(set-face-foreground 'show-paren-mismatch-face "red")
 (set-face-attribute 'show-paren-mismatch-face nil
                     :weight 'bold)
 
 (setq yas/trigger-key (kbd "TAB"))
 ;; (global-set-key (kbd "C-²") 'yas/expand-from-trigger-key)
 
-;; Desktop
+;; Desktop (session - open buffers - file)
 (setq desktop-path '("~/.bkp/"))
 (setq desktop-dirname "~/.bkp/")
 (setq desktop-base-file-name "emacs-desktop")
@@ -456,7 +442,6 @@
 ;; Ediff
 (setq ediff-window-setup-function (quote ediff-setup-windows-plain))
 (setq ediff-split-window-function 'split-window-horizontally)
-
 
 ;; Window title (with edited status + remote indication)
 (setq frame-title-format
@@ -928,6 +913,6 @@ Emacs buffer are those starting with “*”."
  '(mumamo-background-chunk-submode4 ((t (:background "gray30"))) t)
  '(show-paren-match ((t (:background "salmon4"))))
  '(tabbar-default ((t (:inherit default))))
- '(tabbar-highlight ((t (:color red :underline t))))
+ '(tabbar-highlight ((t (:foreground "red" :underline nil))))
  '(tabbar-selected ((t (:inherit tabbar-default :background "#2e3436" :foreground "yellow" :box (:line-width 3 :color "#2e3436")))))
  '(tabbar-unselected ((t (:inherit tabbar-default :background "dim gray" :box (:line-width 3 :color "dim gray"))))))
