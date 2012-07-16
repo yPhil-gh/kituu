@@ -3,23 +3,10 @@
 
 ;; Init! ______________________________________________________________________
 
-;; (set-face-attribute 'default nil
-;; :font "Monospace"
-;; :height 110
-;; :weight 'normal
-
-;; :width 'normal
-;; :font "Inconsolata"
-;; :slant 'reverse-italic
-;; :weight 'bold
-;; :width 'wide
-;; )
-
 (let ((default-directory "~/.emacs.d/lisp/"))
 ;;  (normal-top-level-add-to-load-path '("."))
   (normal-top-level-add-subdirs-to-load-path))
 
-;; GNU
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/bbdb/")
 (autoload 'wl "wl" "Wanderlust" t)
 (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
@@ -36,12 +23,11 @@
 ;; (require 'marker-visit)
 (require 'cl)
 ;; (require 'imapua)
+;; Required by my iswitchb hack
+(require 'edmacro)
 )
 ;; (mail-bug-init)
 
-
-;; Required by my iswitchb hack
-(require 'edmacro)
 ;; (load "~/.emacs.d/lisp/nxhtml/autostart.el")
 ;; (add-hook 'after-change-major-mode-hook 'linum-mode 'auto-fill-function)
 
@@ -56,19 +42,9 @@
     ;; (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode)
     ))
 
-;;(setq tabbar-ruler-global-tabbar 't)
-
-;; Experiments
-
-;; network-speed configuration:
-;; (add-to-list 'load-path "/path/to/network-speed.el")
-
-;; (require 'network-speed)
-;; (network-speed-start)
-
 ;; (setq redisplay-dont-pause t)
-;; (setq delete-by-moving-to-trash t)
-;; (setq list-colors-sort 'hsv )
+(setq delete-by-moving-to-trash t)
+(setq list-colors-sort 'hsv)
 
 (defun notify-send (title message icon)
   (start-process "notify" " notify"
@@ -490,6 +466,8 @@
 
 ;; ;; ;; Keys! ______________________________________________________________________
 
+(global-set-key (kbd "C-h x") 'px-help-emacs)
+
 (global-set-key "ù" 'px-match-paren)
 
 (global-set-key (kbd "²") 'dabbrev-expand)
@@ -616,6 +594,8 @@
 *Kill current buffer                 s-k*
 *Undo                                C-z*
 *Redo                                C-S-z*
+*Switch last buffer                  s-²*
+*Scroll other buffer                 M-<arrow>*
 
 *match brace                         ù*
 *next brace pair                     C-ù*
@@ -728,8 +708,8 @@ git reset --hard HEAD@{7}                             revert HEAD to 7
          (generate-new-buffer "px-help-emacs"))
   (switch-to-buffer "px-help-emacs")
   (org-mode)
-  ;; (show-all) ; ?
-  )
+  (goto-char (point-min))
+  (org-show-subtree))
 
 ;; ;; ;; Toggling email! _____________________________________________________________
 
@@ -918,18 +898,35 @@ Emacs buffer are those starting with “*”."
 ;; ;; Garbage ______________________________________________________________________
 ;; ;; (setq yas/root-directory "~/.emacs.d/el-get/yasnippet/snippets")
 ;; ;; (add-hook 'php-mode-hook 'yas/global-mode)
+
+;; (set-face-attribute 'default nil
+;; :font "Monospace"
+;; :height 110
+;; :weight 'normal
+
+;; :width 'normal
+;; :font "Inconsolata"
+;; :slant 'reverse-italic
+;; :weight 'bold
+;; :width 'wide
+;; )
+
 (custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 110 :width normal :foundry "unknown" :family "Monospace"))))
  '(font-lock-comment-face ((t (:foreground "#73d216" :slant italic))))
  '(minibuffer-prompt ((t (:foreground "#fce94f" :height 1.0))))
  '(mode-line ((t (:background "gray10" :foreground "white" :box nil))))
  '(mode-line-inactive ((t (:inherit mode-line :background "#555753" :foreground "#eeeeec" :box nil :weight light))))
- '(mumamo-background-chunk-major ((t (:background "gray10"))))
- '(mumamo-background-chunk-submode1 ((t (:background "gray15"))))
- '(mumamo-background-chunk-submode2 ((t (:background "gray20"))))
- '(mumamo-background-chunk-submode3 ((t (:background "gray25"))))
- '(mumamo-background-chunk-submode4 ((t (:background "gray30"))))
- '(show-paren-match ((t (:background "dark olive green"))))
+ '(mumamo-background-chunk-major ((t (:background "gray10"))) t)
+ '(mumamo-background-chunk-submode1 ((t (:background "gray15"))) t)
+ '(mumamo-background-chunk-submode2 ((t (:background "gray20"))) t)
+ '(mumamo-background-chunk-submode3 ((t (:background "gray25"))) t)
+ '(mumamo-background-chunk-submode4 ((t (:background "gray30"))) t)
+ '(show-paren-match ((t (:background "salmon4"))))
  '(tabbar-default ((t (:inherit default))))
  '(tabbar-highlight ((t (:color red :underline t))))
  '(tabbar-selected ((t (:inherit tabbar-default :background "#2e3436" :foreground "yellow" :box (:line-width 3 :color "#2e3436")))))
