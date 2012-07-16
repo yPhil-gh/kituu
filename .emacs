@@ -15,11 +15,6 @@
 ;; :width 'wide
 ;; )
 
-;; (add-hook 'minibuffer-setup-hook 'my-minibuffer-setup)
-;; (defun my-minibuffer-setup ()
-;;        (set (make-local-variable 'face-remapping-alist)
-;;           '((default :height 0.5))))
-
 (let ((default-directory "~/.emacs.d/lisp/"))
 ;;  (normal-top-level-add-to-load-path '("."))
   (normal-top-level-add-subdirs-to-load-path))
@@ -45,14 +40,14 @@
 
 ;; By an unknown contributor
           
-          (global-set-key "%" 'match-paren)
-          
-          (defun match-paren (arg)
-            "Go to the matching paren if on a paren; otherwise insert %."
-            (interactive "p")
-            (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
-                  ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
-                  (t (self-insert-command (or arg 1)))))
+(global-set-key "ù" 'px-match-paren)
+
+(defun px-match-paren (arg)
+  "Go to the matching paren if on a paren; otherwise insert %."
+  (interactive "p")
+  (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
+	((looking-at "\\s\)") (forward-char 1) (backward-list 1))
+	(t (self-insert-command (or arg 1)))))
 
  ;; wl-thread-have-younger-brother-str "├►"
  ;; wl-thread-youngest-child-str "╰►"
@@ -103,7 +98,6 @@
 ;;     (unless (minibuffer-prompt)
 ;;       (message "%s" msg))))
 
-(add-hook 'find-file-hooks 'turn-on-font-lock)
 
 ;; (message "we are at line %s" (line-number-at-pos))
 
@@ -132,27 +126,14 @@
 
 (put 'overwrite-mode 'disabled t)
 
-(global-set-key "\C-xE" 'apply-macro-to-region-lines)
 
-  (defun date (&optional insert)
-    "Display the current date and time.
+(defun date (&optional insert)
+  "Display the current date and time.
   With a prefix arg, INSERT it into the buffer."
-    (interactive "P")
-    (funcall (if insert 'insert 'message)
-             (format-time-string "%a, %d %b %Y %T %Z"
-    (current-time))))
-
-  ;; (defconst animate-n-steps 3)
-  ;; (defun emacs-reloaded ()
-  ;;   (animate-string (concat ";; Initialization successful, welcome to "
-  ;; 			  (substring (emacs-version) 0 16)
-  ;; 			  ".")
-  ;; 		  0 0)
-  ;;   (newline-and-indent)  (newline-and-indent))
-
-;; (emacs-reloaded)
-
-  ;; (add-hook 'after-init-hook 'emacs-reloaded)
+  (interactive "P")
+  (funcall (if insert 'insert 'message)
+	   (format-time-string "%a, %d %b %Y %T %Z"
+			       (current-time))))
 
 ;; End XPs
 
@@ -167,12 +148,6 @@
 ;; ;(setq tramp-rcp-args "-C")
 ;; (setq tramp-ssh-args "-C")
 ;; (setq tramp-auto-save-directory "~/.emacs_backups")
-
-
-;; (setq tabbar-ruler-global-ruler 't) ; if you want a global ruler
-;; (setq tabbar-ruler-popup-menu 't) ; If you want a popup menu.
-;; (setq tabbar-ruler-popup-toolbar 't) ; If you want a popup toolbar
-
 
 ;; (if (>= emacs-major-version 23)
 ;;     (set-frame-font "Monospace-12"))
@@ -190,10 +165,6 @@
 (defvar desktop-dirname)
 (defvar desktop-base-file-name)
 
-;; (defvar el-get-dir)
-;; (defvar el-get-sources)
-;; (defvar my-packages)
-
 (defvar px-newName)
 
 (defvar display-time-string)
@@ -202,8 +173,6 @@
 (defvar ediff-split-window-function)
 (defvar tabbar-buffer-groups-function)
 
-;; (defvar gnus-bury-window-configuration)
-;; (defvar gnus-bury-window-configuration)
 (defvar px-minibuffer-history)
 (defvar savehist-file)
 
@@ -218,7 +187,6 @@
     (delete-other-windows)
     ))
 (add-hook 'server-switch-hook 'px-raise-and-focus)
-
 
 ;; Funcs! _________________________________________________________________
 
@@ -239,11 +207,11 @@
      (if arg (nth arg recently-killed-list)
        (car recently-killed-list)))))
 
-(defun px-go-scratch ()
+(defun px-scratch ()
   (interactive)
   (switch-to-buffer "*scratch*"))
 
-(defun px-kill-now ()
+(defun px-kill-buffer ()
   (interactive)
   (kill-buffer (current-buffer))
   (delete-window))
@@ -255,7 +223,7 @@
 	  t
 	nil)))
 
-(defun byte-compile-user-init-file-px ()
+(defun px-byte-compile-user-init-file ()
   (let ((byte-compile-warnings '(unresolved)))
     ;; in case compilation fails, don't leave the old .elc around:
     (when (file-exists-p (concat user-init-file ".elc"))
@@ -264,26 +232,12 @@
     (message "%s compiled" user-init-file)
     ))
 
-(defun my-emacs-lisp-mode-hook ()
+(defun px-emacs-lisp-mode-hook ()
   (when (string-match "\\.emacs" (buffer-name))
-    (add-hook 'after-save-hook 'byte-compile-user-init-file-px t t)))
+    (add-hook 'after-save-hook 'px-byte-compile-user-init-file t t)))
 
-(add-hook 'emacs-lisp-mode-hook 'my-emacs-lisp-mode-hook)
+(add-hook 'emacs-lisp-mode-hook 'px-emacs-lisp-mode-hook)
 
-;; (defun compile-init-file-px ()
-;;   (let ((byte-compile-warnings '(unresolved)))
-;;     (byte-compile-file user-init-file)
-;;     (message "%s saved and compiled." user-init-file)))
-
-;; (defun my-emacs-lisp-mode-hook ()
-;;   ;; (if (string-equal buffer-file-name user-init-file)
-;;   (if (search ".emacs" (buffer-name))
-;;       (message "compiling %s" buffer-file-name)
-;;       (progn (add-hook 'after-save-hook 'compile-init-file-px t t)
-;;     	     )))
-;; (add-hook 'emacs-lisp-mode-hook 'my-emacs-lisp-mode-hook)
-
-;; GNU
 (defun make-backup-dir-px (dirname)
   "create backup dir"
   (interactive)
@@ -335,14 +289,13 @@
     (browse-url (concat "http://www.google.com/search?&q="
 			(url-hexify-string q)))))
 
-
 (defun select-text-in-quote-px ()
   "Select text between the nearest left and right delimiters."
   (interactive)
   (let (b1 b2)
-    (skip-chars-backward "^<>([{“「『‹«（〈《〔【〖⦗〘⦅〚⦃\"")
+    (skip-chars-backward "^<>([{“「『‹«（〈《〔【〖⦃\"")
     (setq b1 (point))
-    (skip-chars-forward "^<>)]}”」』›»）〉》〕】〗⦘〙⦆〛⦄\"")
+    (skip-chars-forward "^<>)]}”」』›»）〉》〕】〗⦄\"")
     (setq b2 (point))
     (set-mark b1)))
 
@@ -406,21 +359,12 @@
 	(message "Session not saved."))
   (desktop-save-in-desktop-dir)))
 
-(defun my-test (&optional arg)
-  (interactive (list (if current-prefix-arg
-                         (read-from-minibuffer "MyPrompt: ")
-                       nil)))
-  (if arg
-      (message arg)
-    (message "NO ARG")))
-
 (defun px-session-save-named (px-session-named-name)
   "Prompt the user for a session name."
   (interactive "MSession name: ")
   (message "So what do I do with this: %s ?" px-session-named-name)
   (desktop-save (concat desktop-dirname "/" px-session-named-name
-			".session") t)
-)
+			".session") t))
 
 (defun px-session-save-named ()
   "Save a named emacs session."
@@ -431,7 +375,6 @@
 	(message "Session not saved."))
   (desktop-save-in-desktop-dir)))
 
-;; GNU
 (add-hook 'after-init-hook
 	  '(lambda ()
 	     (if (px-saved-session)
@@ -458,11 +401,12 @@
 ;; (setq suggest-key-bindings 1) ; wait 5 seconds
 
 ;; This is harsh but just, shortens the war and saves lives.
-(setq
- ;; resize-mini-windows nil
- max-mini-window-height nil
-)
 
+;; (setq
+;;  ;; resize-mini-windows nil
+;;  max-mini-window-height nil
+;; )
+ 
 ;; Modal setting (if this mode then this setting)
 (add-hook 'custom-mode-hook 'linum-mode -1)
 
@@ -481,6 +425,11 @@
 
 (setq c-default-style "bsd"
       c-basic-offset 4)
+
+;; Hooks! _____________________________________________________________________
+
+(add-hook 'find-file-hooks 'turn-on-font-lock)
+(add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
 
 ;; Vars! ______________________________________________________________________
 
@@ -503,7 +452,7 @@
  ;; ediff-setup-windows-plain t
  ;; tramp-terminal-type dumb
  ispell-dictionary "francais"
- completion-auto-help nil
+ ;; completion-auto-help nil
 )
 
 
@@ -512,7 +461,6 @@
   (when (and (>= (recursion-depth) 1) (active-minibuffer-window))
     (abort-recursive-edit)))
 
-(add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
 
 (set-face-foreground 'show-paren-mismatch-face "red")
 (set-face-attribute 'show-paren-mismatch-face nil
@@ -537,32 +485,10 @@
 					    (abbreviate-file-name (buffer-file-name))
 					  "%b")) " [%*]"))
 
-
-
-;; ;; Hooks! _____________________________________________________________________
-
 ;; ;; ;; Keys! ______________________________________________________________________
 
-;; (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-;; (global-set-key (kbd "C-<escape>") 'keyboard-quit)
-(global-set-key (kbd "²") 'hippie-expand)
-
-;; (defun indent-or-expand (arg)
-;;   "Either indent according to mode, or expand the word preceding
-;; point."
-;;   (interactive "*P")
-;;       (if (and
-;; 	   (or (bobp) (= ?w (char-syntax (char-before))))
-;; 	   (or (eobp) (not (= ?w (char-syntax (char-after))))))
-;; 	  (dabbrev-expand arg)
-;; 	(indent-according-to-mode)))
-
-;; (defun my-tab-fix ()
-;;   (local-set-key [tab] 'indent-or-expand))
-
-;; (add-hook 'c-mode-hook          'my-tab-fix)
-;; (add-hook 'sh-mode-hook         'my-tab-fix)
-;; (add-hook 'emacs-lisp-mode-hook 'my-tab-fix)
+(global-set-key (kbd "²") 'dabbrev-expand)
+(global-set-key (kbd "M-²") 'hippie-expand)
 
 (define-key global-map [(meta up)] '(lambda() (interactive) (scroll-other-window -1)))
 (define-key global-map [(meta down)] '(lambda() (interactive) (scroll-other-window 1)))
@@ -586,22 +512,23 @@
 (define-key isearch-mode-map "\C-f" 'isearch-repeat-forward)
 (define-key isearch-mode-map (kbd "C-S-f") 'isearch-repeat-backward)
 
+(global-set-key (kbd "C-ù") 'forward-sexp)
+(global-set-key (kbd "C-%") 'backward-sexp)
 
-(global-set-key (kbd "s-g") 'px-google-that-bitch)
+(global-set-key (kbd "s-g") 'px-google-that-bitch) ;; zob
 (global-set-key (kbd "s-r") 'replace-string)
 (global-set-key (kbd "s-²") (kbd "C-x b <return>")) ; Keyboard macro! (toggle last buffer)
-(global-set-key (kbd "s-t") 'sgml-tag)
-(global-set-key (kbd "s-k") 'px-kill-now)
-(global-set-key (kbd "s-p") 'php-mode)
-(global-set-key (kbd "s-h") 'html-mode)
-(global-set-key (kbd "s-j") 'js-mode)
+(global-set-key (kbd "s-t") 'sgml-tag) ;; zob
+(global-set-key (kbd "s-k") 'px-kill-buffer) ;; zob
+(global-set-key (kbd "s-p") 'php-mode) ;; zob
+(global-set-key (kbd "s-h") 'html-mode) ;; zob
+(global-set-key (kbd "s-j") 'js-mode) ;; zob
 (global-set-key (kbd "s-o") 'find-file-at-point)
 (global-set-key (kbd "s-d") 'wl-draft-mode)
 (global-set-key (kbd "s-m") 'kmacro-end-and-call-macro)
+(global-set-key (kbd "C-s-m") 'apply-macro-to-region-lines)
 (global-set-key (kbd "<s-left>") 'marker-visit-prev)
 (global-set-key (kbd "<s-right>") 'marker-visit-next)
-
-
 
 ;; THIS NEX ONE BROKE HAVOC!!
 ;; (global-set-key (kbd "C-d") nil)	; I kept deleting stuff
@@ -630,33 +557,10 @@
 (global-set-key (kbd "M-o") 'recentf-open-files)
 (global-set-key (kbd "M-d") 'px-toggle-comments)
 
-;; ;; ;; px Minor mode
-;; ;; ;; (defvar px-keys-minor-mode-map (make-keymap) "px-keys-minor-mode keymap.")
-;; ;; ;; (define-minor-mode px-keys-minor-mode
-;; ;; ;;   "A minor mode so that my key settings override annoying major modes."
-;; ;; ;;   t " px" 'px-keys-minor-mode-map)
-;; ;; ;; (px-keys-minor-mode 1)
-;; ;; ;; (define-key px-keys-minor-mode-map (kbd "²") 'hippie-expand) ; Hippie-expand everywhere
-
 ;; ;; Save the minibuffer history
 (setq px-minibuffer-history (concat user-emacs-directory "px-minibuffer-history"))
 (setq savehist-file px-minibuffer-history)
 (when (functionp 'savehist-mode) (savehist-mode 1))
-
-;; ;; ;; (cdr (car backup-directory-alist))
-
-;; (defun Kill-boring-buffers-px (regexp &optional internal-too)
-;;   "Kill buffers whose name matches REGEXP.
-;; The optional second argument indicates whether to kill internal buffers too."
-;;   ;; (interactive "sKill buffers matching this regular expression: \nP")
-;;   (dolist (buffer (buffer-list))
-;;     (let ((name (buffer-name buffer)))
-;;       (when (and name (not (string-equal name ""))
-;;                  (or internal-too (/= (aref name 0) ?\s))
-;;                  (string-match regexp name))
-;;         (kill-buffer buffer)))))
-
-;; (Kill-boring-buffers-px "*Completions*\\|*Compile\-Log*\\|*.*trace\\|*Help*\\|*RE-Builder*\\|Customize\\|\\.newsrc-dribble\\|*olimap*\\|.*el\\.gz")
 
 ;; ;; Kill & copy lines
 (defadvice kill-ring-save (before slick-copy activate compile)
@@ -697,6 +601,30 @@
 's' (super) on a PC keyboard, is the 'windows logo' key
 *bold* denotes a custom bit (eg specific to this emacs config)
 
+*** THIS VERY EMACS CONFIG
+*Open file                           C-o*
+*Open recent file                    M-o*
+*Open file path at point             s-o*
+
+*Save buffer                         M-s*
+*Kill current buffer                 s-k*
+*Undo                                C-z*
+*Redo                                C-S-z*
+
+*match brace                         ù*
+*next brace pair                     C-ù*
+*Previous brace pair                 C-S-ù*
+
+*Close other window (frame)          F1*
+*Switch to other window (frame)      F2*
+*Split horizontally                  F3*
+*Split vertically                    F4*
+*Switch to buffer                    F5*
+*Spell-check buffer                  F7*
+*Word-wrap toggle                    F10*
+*enclose region in <tag> (sgml-tag)  s-t RET tag [ args... ]*
+*select 'this' or <that> (enclosed)  s-SPC**
+
 *** EMACSEN
 Copy to register A                  C-x r s A
 Paste from register A               C-x r g A
@@ -704,8 +632,30 @@ Clone emacs (!?)                    C-x 5 2
 Set bookmark at point               C-x r m RET
 Close HTML tag                      sgml-close-tag
 Switch to *Messages* buffer         C-h e
-capitalize-word                     M-c
-kill-paragraph                      C-S-del
+
+*** MISC EDITING
+M-c		                    capitalize-word		Capitalize the first letter of the current word.
+M-u		                    upcase-word		Make the word all uppercase.
+M-l		                    downcase-word		Make the word all lowercase.
+C-x C-l		                    downcase-region		Make the region all lowercase.
+C-x C-u		                    uppercase-region	Make the region all uppercase.
+
+*** MACROS
+C-x (		                    start-kbd-macro		Start a new macro definition.
+C-x )		                    end-kbd-macro		End the current macro definition.
+C-x e		                    call-last-kbd-macro	Execute the last defined macro.
+M-(number) C-x e	            call-last-kbd-maco	Do that last macro (number times).
+C-u C-x (	                    stat-kbd-macro		Execute last macro and add to it.
+		                    name-last-kbd-macro	Name the last macro before saving it.
+		                    insert-last-keyboard-macro	Insert the macro you made into a file.
+		                    load-file			Load a file with macros in it.
+C-x q		                    kbd-macro-query		Insert a query into a keyboard macro.
+M-C-c		                    exit-recursive-edit		Get the hell out of a recursive edit.
+
+*** RECTANGLES
+C-x r k/c                           Kill/clear rectangle
+C-x r y                             yank-rectangle (upper left corner at point)
+C-x r t string <RET>                Insert STRING on each rectangle line.
 
 *** EDIFF
 Next / previous diff                n / p
@@ -721,52 +671,11 @@ Mark thread read                    T k
 C-c C-f                             Search PHP manual for point.
 C-c RET / C-c C-m                   Browse PHP manual in a Web browser.
 
-*** MISC EDITING
-M-c		                    capitalize-word		Capitalize the first letter of the current word.
-M-u		                    upcase-word		Make the word all uppercase.
-M-l		                    downcase-word		Make the word all lowercase.
-C-x C-l		                    downcase-region		Make the region all lowercase.
-C-x C-u		                    uppercase-region	Make the region all uppercase.
-
-*** RECTANGLES
-C-x r k/c                           Kill/clear rectangle
-C-x r y                             yank-rectangle (upper left corner at point)
-C-x r t string <RET>                Insert STRING on each rectangle line.
-
 *** WANDERLUST
 T                                   Toggle Threading
 d                                   Dispose MSG (mark)
 D                                   Delete MSG (mark)
 rx                                  Execute marks
-
-
-*** MACROS
-C-x (		                    start-kbd-macro		Start a new macro definition.
-C-x )		                    end-kbd-macro		End the current macro definition.
-C-x e		                    call-last-kbd-macro	Execute the last defined macro.
-M-(number) C-x e	            call-last-kbd-maco	Do that last macro (number times).
-C-u C-x (	                    stat-kbd-macro		Execute last macro and add to it.
-		                    name-last-kbd-macro	Name the last macro before saving it.
-		                    insert-last-keyboard-macro	Insert the macro you made into a file.
-		                    load-file			Load a file with macros in it.
-C-x q		                    kbd-macro-query		Insert a query into a keyboard macro.
-M-C-c		                    exit-recursive-edit		Get the hell out of a recursive edit.
-
-*** THIS VERY EMACS CONFIG
-*Save buffer                         M-s*
-*Kill current buffer                 s-b*
-*Undo                                C-z*
-*Open file                           C-o*
-*Open recent file                    M-o*
-*Close other window (frame)          F1*
-*Switch to other window (frame)      F2*
-*Split horizontally                  F3*
-*Split vertically                    F4*
-*Switch to buffer                    F5*
-*Spell-check buffer                  F7*
-*Word-wrap toggle                    F10*
-*enclose region in <tag> (sgml-tag)  s-t RET tag [ args... ]*
-*select 'this' or <that> (enclosed)  s-SPC**
 
 *** VERSION CONTROL
 C-x v v                                               vc-next-action
@@ -815,42 +724,6 @@ git reset --hard HEAD@{7}                             revert HEAD to 7
   (org-mode)
   ;; (show-all) ; ?
   )
-
-;; ??
-;; (put 'upcase-region 'disabled nil)
-
-
-;; ;; ;; Bbdb! ____________________________________________________________________
-
-;; ;; GNU
-;; ;; (setq bbdb-file "~/.emacs.d/bbdb") ;; keep ~/ clean; set before loading
-;; ;; (bbdb-initialize)
-
-;; ;; (setq
-;; ;;     bbdb-offer-save 1 ;; 1 means save-without-asking
-
-;; ;;     ;; bbdb-use-pop-up t ;; allow popups for addresses
-;; ;;     ;; bbdb-electric-p t ;; be disposable with SPC
-;; ;;     ;; bbdb-popup-target-lines 1 ;; very small
-;; ;;     bbdb-dwim-net-address-allow-redundancy t ;; always use full name
-;; ;;     bbdb-quiet-about-name-mismatches 2 ;; show name-mismatches 2 secs
-;; ;;     bbdb-always-add-address t ;; add new addresses to existing...
-;; ;;                                              ;; ...contacts automatically
-;; ;;     bbdb-canonicalize-redundant-nets-p t ;; x@foo.bar.cx => x@bar.cx
-;; ;;     bbdb-completion-type nil ;; complete on anything
-;; ;;     bbdb-complete-name-allow-cycling t ;; cycle through matches
-;; ;;                                              ;; this only works partially
-;; ;;     bbbd-message-caching-enabled t ;; be fast
-;; ;;     bbdb-use-alternate-names t ;; use AKA
-;; ;;     bbdb-elided-display t ;; single-line addresses
-
-;; ;;     ;; auto-create addresses from mail
-;; ;;     bbdb/mail-auto-create-p 'bbdb-ignore-some-messages-hook
-;; ;;     bbdb-ignore-some-messages-alist ;; don't ask about fake addresses
-;; ;;     ;; NOTE: there can be only one entry per header (such as To, From)
-;; ;;     ;; http://flex.ee.uec.ac.jp/texi/bbdb/bbdb_11.html
-
-;; ;;     '(( "From" . "no.?reply\\|DAEMON\\|daemon\\|facebookmail\\|twitter")))
 
 ;; ;; ;; Toggling email! _____________________________________________________________
 
@@ -1018,7 +891,7 @@ Emacs buffer are those starting with “*”."
  '(mumamo-margin-use (quote (left-margin 13)))
  '(recentf-save-file "~/.bkp/recentf")
  '(send-mail-function (quote mailclient-send-it))
- ;; '(tabbar-ruler-excluded-buffers (quote ("*Messages*" "*scratch*" "*.*" "\\*.\\*")))
+ '(show-paren-style (quote mixed))
  '(undo-tree-auto-save-history t)
  '(undo-tree-visualizer-relative-timestamps t)
  '(undo-tree-visualizer-timestamps t)
@@ -1054,6 +927,7 @@ Emacs buffer are those starting with “*”."
  '(mumamo-background-chunk-submode2 ((t (:background "gray20"))))
  '(mumamo-background-chunk-submode3 ((t (:background "gray25"))))
  '(mumamo-background-chunk-submode4 ((t (:background "gray30"))))
+ '(show-paren-match ((t (:background "dark olive green"))))
  '(tabbar-default ((t (:inherit default))))
  '(tabbar-highlight ((t (:color red :underline t))))
  '(tabbar-selected ((t (:inherit tabbar-default :background "#2e3436" :foreground "yellow" :box (:line-width 3 :color "#2e3436")))))

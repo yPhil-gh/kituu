@@ -72,6 +72,7 @@ alias ll="ls -lha"
 alias la="ls -A"
 alias rm="rm -i"
 alias cp="cp -i"
+alias z="zile"
 
 alias lss="ls -la | grep $1"
 alias hss="history | grep $1"
