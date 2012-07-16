@@ -1,5 +1,6 @@
 ;;; See https://github.com/xaccrocheur/kituu/
 ;; Keep it under 1k lines ;p
+;; Remember to remove ~/.emacs.elc if you edit ~/.emacs, break it and repair it
 
 ;; Init! ______________________________________________________________________
 
@@ -85,7 +86,6 @@
 
 (put 'overwrite-mode 'disabled t)
 
-
 (defun date (&optional insert)
   "Display the current date and time.
   With a prefix arg, INSERT it into the buffer."
@@ -119,21 +119,16 @@
 (defvar recentf-max-saved-items)
 (defvar recentf-max-menu-items)
 (defvar ispell-dictionary)
-(defvar yas/trigger-key)
 (defvar desktop-path)
 (defvar desktop-dirname)
 (defvar desktop-base-file-name)
-
-(defvar px-newName)
-
 (defvar display-time-string)
-(defvar gnus-mode-non-string-length)
 (defvar ediff-window-setup-function)
 (defvar ediff-split-window-function)
 (defvar tabbar-buffer-groups-function)
-
-(defvar px-minibuffer-history)
 (defvar savehist-file)
+(defvar px-newName)
+(defvar px-minibuffer-history)
 
 ;; Server! ____________________________________________________________________
 
