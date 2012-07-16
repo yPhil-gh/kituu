@@ -37,25 +37,8 @@
 (require 'cl)
 ;; (require 'imapua)
 )
-
-;; By an unknown contributor
-          
-(global-set-key "ù" 'px-match-paren)
-
-(defun px-match-paren (arg)
-  "Go to the matching paren if on a paren; otherwise insert %."
-  (interactive "p")
-  (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
-	((looking-at "\\s\)") (forward-char 1) (backward-list 1))
-	(t (self-insert-command (or arg 1)))))
-
- ;; wl-thread-have-younger-brother-str "├►"
- ;; wl-thread-youngest-child-str "╰►"
- ;; wl-thread-vertical-str "│ "
- ;; wl-thread-horizontal-str "──"
- ;; wl-thread-space-str " "
-
 ;; (mail-bug-init)
+
 
 ;; Required by my iswitchb hack
 (require 'edmacro)
@@ -189,6 +172,16 @@
 (add-hook 'server-switch-hook 'px-raise-and-focus)
 
 ;; Funcs! _________________________________________________________________
+
+(defun px-match-paren (arg)
+  "Go to the matching paren if on a paren; otherwise insert %."
+  (interactive "p")
+
+  (cond 
+   ;; ((char-before "\\s\)") (forward-char 1) (backward-list 1))
+   ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
+   ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
+   (t (self-insert-command (or arg 1)))))
 
 (defun px-undo-kill-buffer (arg)
   "Re-open the last buffer killed.  With ARG, re-open the nth buffer."
@@ -486,6 +479,8 @@
 					  "%b")) " [%*]"))
 
 ;; ;; ;; Keys! ______________________________________________________________________
+
+(global-set-key "ù" 'px-match-paren)
 
 (global-set-key (kbd "²") 'dabbrev-expand)
 (global-set-key (kbd "M-²") 'hippie-expand)

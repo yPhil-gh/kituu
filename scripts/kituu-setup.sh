@@ -43,8 +43,8 @@ declare -A lisp
 lisp[tabbar]="git clone https://github.com/dholm/tabbar.git"
 lisp[tabbar-ruler]="git clone ${vc_prefix}xaccrocheur/tabbar-ruler.git"
 lisp[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
-lisp[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
-lisp[nxhtml]="bzr branch lp:nxhtml"
+# lisp[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
+# lisp[nxhtml]="bzr branch lp:nxhtml"
 
 echo -e $sep"Kituu! #################
 
