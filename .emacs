@@ -388,20 +388,9 @@ Does not set point.  Does nothing if mark ring is empty."
     (abort-recursive-edit)))
 
 ;; Modes! ______________________________________________________________________
-;; (display-time-mode t)
-(show-paren-mode t)
-(menu-bar-mode -1)
-(global-linum-mode t)
-(global-font-lock-mode t)
 (set-scroll-bar-mode `right)
-(delete-selection-mode t)
 (auto-fill-mode t)
-(recentf-mode 1)
-;; (mouse-avoidance-mode 'cat-and-mouse)
-(iswitchb-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
-
-(add-hook 'custom-mode-hook 'linum-mode -1)
 
 (defun iswitchb-local-keys ()
   (mapc (lambda (K)
@@ -412,13 +401,12 @@ Does not set point.  Does nothing if mark ring is empty."
 	  ("<up>"    . ignore             )
 	  ("<down>"  . ignore             ))))
 
-(add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)
-
 (setq c-default-style "bsd"
-      c-basic-offset 4)
+      c-basic-offset 2)
 
 ;; Hooks! _____________________________________________________________________
 
+(add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)
 (add-hook 'find-file-hooks 'turn-on-font-lock)
 (add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -429,19 +417,19 @@ Does not set point.  Does nothing if mark ring is empty."
 (setq-default cursor-type 'bar)
 
 (setq
- require-final-newline 'ask
- vc-make-backup-files t
+ ;; require-final-newline 'ask
+ ;; vc-make-backup-files t
  iswitchb-buffer-ignore '("^ " "*.")
- scroll-conservatively 200
- scroll-margin 3
- recenter-redisplay nil
- inhibit-startup-screen t
- inhibit-startup-echo-area-message t
- recentf-max-saved-items 120
- recentf-max-menu-items 60
- x-select-enable-clipboard t
+ ;; scroll-conservatively 200
+ ;; scroll-margin 3
+ ;; recenter-redisplay nil
+ ;; inhibit-startup-screen t
+ ;; inhibit-startup-echo-area-message t
+ ;; recentf-max-saved-items 120
+ ;; recentf-max-menu-items 60
+ ;; x-select-enable-clipboard t
  ;; enable-recursive-minibuffers t
- show-paren-delay 0
+ ;; show-paren-delay 0
  ;; ediff-setup-windows-plain t
  ;; tramp-terminal-type dumb
  ispell-dictionary "francais"
@@ -875,15 +863,30 @@ Emacs buffer are those starting with “*”."
  '(canlock-password "cf5f7a7261c5832898abfc7ea08ba333a36ed78c")
  '(comment-style (quote extra-line))
  '(custom-enabled-themes (quote (tango-dark)))
+ '(delete-selection-mode t)
  '(display-time-24hr-format t)
  '(display-time-mode t)
  '(epa-popup-info-window nil)
+ '(global-font-lock-mode t)
+ '(global-linum-mode t)
  '(global-undo-tree-mode t)
  '(indent-tabs-mode nil)
  '(inhibit-startup-echo-area-message (user-login-name))
+ '(inhibit-startup-screen t)
+ '(iswitchb-mode t)
+ '(menu-bar-mode nil)
  '(mumamo-margin-use (quote (left-margin 13)))
+ '(recenter-redisplay nil)
+ '(recentf-max-menu-items 60)
+ '(recentf-max-saved-items 120)
+ '(recentf-mode t)
  '(recentf-save-file "~/.bkp/recentf")
+ '(require-final-newline (quote ask))
+ '(scroll-conservatively 200)
+ '(scroll-margin 3)
  '(send-mail-function (quote mailclient-send-it))
+ '(show-paren-delay 0)
+ '(show-paren-mode t)
  '(show-paren-style (quote mixed))
  '(standard-indent 2)
  '(tab-always-indent (quote complete))
@@ -892,19 +895,8 @@ Emacs buffer are those starting with “*”."
  '(undo-tree-auto-save-history t)
  '(undo-tree-enable-undo-in-region nil)
  '(undo-tree-visualizer-diff t)
- '(web-vcs-default-download-directory (quote site-lisp-dir))
- '(wl-draft-add-in-reply-to nil)
- '(wl-draft-buffer-style (quote keep))
- '(wl-draft-reply-buffer-style (quote keep))
- '(wl-message-mode-line-format "")
- '(wl-message-truncate-lines t)
- '(wl-prefetch-threshold 300000)
- '(wl-subscribed-mailing-list (quote ("wl@lists.airs.net")))
- '(wl-summary-default-view (quote sequence))
- '(wl-summary-exit-next-move nil)
- '(wl-summary-mode-line-format "")
- '(wl-summary-recenter nil)
- '(wl-summary-width 150))
+ '(vc-make-backup-files t)
+ '(web-vcs-default-download-directory (quote site-lisp-dir)))
 
 ;; ;; Garbage ______________________________________________________________________
 ;; ;; (setq yas/root-directory "~/.emacs.d/el-get/yasnippet/snippets")
