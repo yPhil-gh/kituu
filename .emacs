@@ -21,7 +21,7 @@
 (require 'bbdb nil t)
 ;; (require 'tabkey2 nil t)
 (require 'undo-tree)
-;; (require 'marker-visit)
+(require 'marker-visit)
 (require 'cl)
 ;; (require 'imapua)
 ;; Required by my iswitchb hack
@@ -143,6 +143,22 @@
 (add-hook 'server-switch-hook 'px-raise-and-focus)
 
 ;; Funcs! _________________________________________________________________
+
+(defun unpop-to-mark-command ()
+  "Unpop off mark ring into the buffer's actual mark.
+Does not set point.  Does nothing if mark ring is empty."
+  (interactive)
+  (let ((num-times (if (equal last-command 'pop-to-mark-command) 2
+                     (if (equal last-command 'unpop-to-mark-command) 1
+                       (error "Previous command was not a (un)pop-to-mark-command")))))
+    (dotimes (x num-times)
+      (when mark-ring
+        (setq mark-ring (cons (copy-marker (mark-marker)) mark-ring))
+        (set-marker (mark-marker) (+ 0 (car (last mark-ring))) (current-buffer))
+        (when (null (mark t)) (ding))
+        (setq mark-ring (nbutlast mark-ring))
+        (goto-char (mark t)))
+      (deactivate-mark))))
 
 (defun test ()
 (interactive)
@@ -273,21 +289,30 @@
 
 (global-set-key (kbd "s-SPC") 'select-text-in-quote-px)
 
-(defun insert-bracket-pair (leftBracket rightBracket)
+(defun insert-or-enclose-with-signs (leftSign rightSign)
   "Insert a matching bracket and place the cursor between them."
   (interactive)
-  (when (region-active-p)
-    (delete-region (region-beginning) (region-end) ) )
-  (insert leftBracket rightBracket)
-  (backward-char 1) )
+  (if mark-active
+      (progn
+        (save-excursion
+          (setq debut (region-beginning)
+                fin (+ 1(region-end)))
+        (goto-char debut)
+        (insert leftSign)
+        (goto-char fin)
+        (insert rightSign)
+        (forward-char 1)))
+    (progn
+      (insert leftSign rightSign)
+      (backward-char 1))))
 
-(defun insert-pair-paren () (interactive) (insert-bracket-pair "(" ")") )
-(defun insert-pair-brace () (interactive) (insert-bracket-pair "{" "}") )
-(defun insert-pair-bracket () (interactive) (insert-bracket-pair "[" "]") )
-(defun insert-pair-single-angle () (interactive) (insert-bracket-pair "<" ">") )
-(defun insert-pair-single-straight-quote () (interactive) (insert-bracket-pair "'" "'") )
-(defun insert-pair-dbquotes () (interactive) (insert-bracket-pair "\"" "\"") )
-;; Thanks Xah Lee, my favorite usenet freak, for those last two
+(defun insert-pair-paren () (interactive) (insert-or-enclose-with-signs "(" ")"))
+(defun insert-pair-brace () (interactive) (insert-or-enclose-with-signs "{" "}"))
+(defun insert-pair-bracket () (interactive) (insert-or-enclose-with-signs "[" "]"))
+(defun insert-pair-single-angle () (interactive) (insert-or-enclose-with-signs "<" ">"))
+(defun insert-pair-squote () (interactive) (insert-or-enclose-with-signs "'" "'"))
+(defun insert-pair-dbquote () (interactive) (insert-or-enclose-with-signs "\"" "\""))
+
 
 (defun px-frigo ()
   (interactive)
@@ -499,7 +524,7 @@
 (global-set-key (kbd "C-o") 'find-file)
 (global-set-key (kbd "C-S-o") 'desktop-read)
 (global-set-key (kbd "C-S-<mouse-1>") 'flyspell-correct-word)
-(global-set-key (kbd "C-z") 'undo)
+(global-set-key (kbd "C-z") 'undo-tree-undo)
 (global-set-key (kbd "C-S-z") 'undo-tree-redo)
 
 ;; (global-set-key (kbd "<C-next>") 'forward-page)
@@ -507,10 +532,10 @@
 (global-set-key (kbd "C-<tab>") 'tabbar-forward)
 (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
 
-(global-set-key (kbd "C-\"") 'insert-pair-dbquotes)		;""
+(global-set-key (kbd "C-\"") 'insert-pair-dbquote)		;""
 (global-set-key (kbd "C-)") 'insert-pair-paren)			;()
 (global-set-key (kbd "C-=") 'insert-pair-brace)			;{}
-(global-set-key (kbd "C-'") 'insert-pair-brace)			;{}
+(global-set-key (kbd "C-'") 'insert-pair-squote)			;{}
 (global-set-key (kbd "C-(") 'insert-pair-bracket)		;[]
 (global-set-key (kbd "C-<") 'insert-pair-single-angle)		;<>
 
@@ -592,6 +617,8 @@
 *select 'this' or <that> (enclosed)  s-SPC**
 
 *** EMACSEN
+Recenter window around current line C-l
+Intelligently recenter window       C-S-l
 Copy to register A                  C-x r s A
 Paste from register A               C-x r g A
 Clone emacs (!?)                    C-x 5 2
@@ -837,7 +864,6 @@ Emacs buffer are those starting with “*”."
 
 (if (< emacs-major-version 24)
 (set-face-attribute 'default nil :background "#2e3436" :foreground "#eeeeec"))
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -853,14 +879,19 @@ Emacs buffer are those starting with “*”."
  '(display-time-mode t)
  '(epa-popup-info-window nil)
  '(global-undo-tree-mode t)
+ '(indent-tabs-mode nil)
  '(inhibit-startup-echo-area-message (user-login-name))
  '(mumamo-margin-use (quote (left-margin 13)))
  '(recentf-save-file "~/.bkp/recentf")
  '(send-mail-function (quote mailclient-send-it))
  '(show-paren-style (quote mixed))
+ '(standard-indent 2)
+ '(tab-always-indent (quote complete))
+ '(tab-stop-list (quote (2 4 8 16 24 32 40 48 56 64 72 80 88 96 104 112 120)))
+ '(tab-width 2)
  '(undo-tree-auto-save-history t)
- '(undo-tree-visualizer-relative-timestamps t)
- '(undo-tree-visualizer-timestamps t)
+ '(undo-tree-enable-undo-in-region nil)
+ '(undo-tree-visualizer-diff t)
  '(web-vcs-default-download-directory (quote site-lisp-dir))
  '(wl-draft-add-in-reply-to nil)
  '(wl-draft-buffer-style (quote keep))
@@ -911,3 +942,8 @@ Emacs buffer are those starting with “*”."
  '(tabbar-highlight ((t (:foreground "red" :underline nil))))
  '(tabbar-selected ((t (:inherit tabbar-default :background "#2e3436" :foreground "yellow" :box (:line-width 3 :color "#2e3436")))))
  '(tabbar-unselected ((t (:inherit tabbar-default :background "dim gray" :box (:line-width 3 :color "dim gray"))))))
+
+(add-hook 'php-mode-hook
+          (function (lambda ()
+                      (setq indent-tabs-mode nil
+                            tab-width 2))))

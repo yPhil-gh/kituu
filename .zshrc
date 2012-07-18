@@ -98,6 +98,9 @@ insert_sudo () { zle beginning-of-line; zle -U "sudo " }
 zle -N insert-sudo insert_sudo
 bindkey "^[s" insert-sudo
 
+insert_man () { zle beginning-of-line; zle -U "man " }
+zle -N insert-man insert_man
+bindkey "^[m" insert-man
 
 # ANSI color zebra output
 zebra () {cat $1 | awk 'NR%2 == 1 {printf("\033[30m\033[47m%s\033[0m\n", $0); next}; 1'; }
