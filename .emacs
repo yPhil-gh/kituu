@@ -1,12 +1,12 @@
 ;;; See https://github.com/xaccrocheur/kituu/
 ;; Keep it under 1k lines ;p
 ;; Remember to remove ~/.emacs.elc if you edit ~/.emacs, break it and repair it
-
+;; Use C-h x to read about what this .emacs can do for you (quite a bit)
 
 ;; Init! ______________________________________________________________________
 
 (let ((default-directory "~/.emacs.d/lisp/"))
-;;  (normal-top-level-add-to-load-path '("."))
+	;;  (normal-top-level-add-to-load-path '("."))
   (normal-top-level-add-subdirs-to-load-path))
 
 ;; External libs
@@ -35,8 +35,6 @@
     (require 'php-mode nil t)
     (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
     (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))))
-
-(put 'overwrite-mode 'disabled t)
 
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
@@ -74,10 +72,6 @@ Does not set point.  Does nothing if mark ring is empty."
         (goto-char (mark t)))
       (deactivate-mark))))
 
-(defun test ()
-(interactive)
-(message "char-before # is %s and char-after is %s" (char-before) (char-after)))
-
 (defun px-match-paren (arg)
   "Go to the matching paren if on a paren; otherwise insert <key>."
   (interactive "p")
@@ -91,23 +85,6 @@ Does not set point.  Does nothing if mark ring is empty."
    ((looking-at "\\s\(") (forward-list 1))
    ((looking-at "\\s\)") (backward-list 1))
    (t (self-insert-command (or arg 1)))))
-
-(defun px-undo-kill-buffer (arg)
-  "Re-open the last buffer killed.  With ARG, re-open the nth buffer."
-  (interactive "p")
-  (let ((recently-killed-list (copy-sequence recentf-list))
-	(buffer-files-list
-	 (delq nil (mapcar (lambda (buf)
-			     (when (buffer-file-name buf)
-			       (expand-file-name (buffer-file-name buf)))) (buffer-list)))))
-    (mapc
-     (lambda (buf-file)
-       (setq recently-killed-list
-	     (delq buf-file recently-killed-list)))
-     buffer-files-list)
-    (find-file
-     (if arg (nth arg recently-killed-list)
-       (car recently-killed-list)))))
 
 (defun px-scratch ()
   (interactive)
@@ -144,17 +121,10 @@ Does not set point.  Does nothing if mark ring is empty."
 						(save-buffer)
 						(kill-buffer (current-buffer))
 						(delete-window)
-					))))
+						))))
 		(progn
 			(kill-buffer (current-buffer))
 			(delete-window))))
-
-(defun this-buffer-is-visible (buffer)
-  "Test if BUFFER is actually on screen"
-  (if (get-buffer buffer)
-      (if (get-buffer-window-list buffer)
-	  t
-	nil)))
 
 (defun px-byte-compile-user-init-file ()
 	"byte-compile .emacs each time it is edited"
@@ -175,8 +145,8 @@ Does not set point.  Does nothing if mark ring is empty."
 (defun make-backup-dir-px (dirname)
   "create backup dir"
   (interactive)
-    (if (not (file-exists-p dirname))
-        (make-directory dirname t)))
+	(if (not (file-exists-p dirname))
+			(make-directory dirname t)))
 (make-backup-dir-px "~/.bkp/")
 
 (defun bkp-px ()
@@ -219,7 +189,7 @@ Does not set point.  Does nothing if mark ring is empty."
   (interactive "r")
   (let ((q (buffer-substring-no-properties start end)))
     (browse-url (concat "http://www.google.com/search?&q="
-			(url-hexify-string q)))))
+												(url-hexify-string q)))))
 
 (defun select-text-in-quote-px ()
   "Select text between the nearest left and right delimiters."
@@ -241,11 +211,11 @@ Does not set point.  Does nothing if mark ring is empty."
         (save-excursion
           (setq debut (region-beginning)
                 fin (+ 1(region-end)))
-        (goto-char debut)
-        (insert leftSign)
-        (goto-char fin)
-        (insert rightSign)
-        (forward-char 1)))
+					(goto-char debut)
+					(insert leftSign)
+					(goto-char fin)
+					(insert rightSign)
+					(forward-char 1)))
     (progn
       (insert leftSign rightSign)
       (backward-char 1))))
@@ -303,9 +273,9 @@ Does not set point.  Does nothing if mark ring is empty."
   ;; (save-excursion ;; don't mess with mark
   (if (eq mark-active nil) ;; no region active
       (progn (beginning-of-line 1)
-	     (set-mark (point))
-	     (forward-line)
-	     (comment-dwim nil))
+						 (set-mark (point))
+						 (forward-line)
+						 (comment-dwim nil))
     (comment-dwim nil)) ;; [un]comment
   (deactivate-mark)) ;; don't mess with selection
 
@@ -397,6 +367,16 @@ Emacs buffer are those starting with “*”."
                                       (directory-files my-desktop-session-dir))
                      nil nil nil my-desktop-session-name-hist default)))
 
+(defun iswitchb-local-keys ()
+	"easily switch buffers (F5 or C-x b)"
+  (mapc (lambda (K)
+					(let* ((key (car K)) (fun (cdr K)))
+						(define-key iswitchb-mode-map (edmacro-parse-keys key) fun)))
+				'(("<right>" . iswitchb-next-match)
+					("<left>"  . iswitchb-prev-match)
+					("<up>"    . ignore             )
+					("<down>"  . ignore             ))))
+
 (defun my-desktop-kill-emacs-hook ()
   "Save desktop before killing emacs."
   (when (file-exists-p (concat my-desktop-session-dir "last-session"))
@@ -410,15 +390,7 @@ Emacs buffer are those starting with “*”."
 (set-scroll-bar-mode `right)
 (auto-fill-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
-
-(defun iswitchb-local-keys ()
-  (mapc (lambda (K)
-	  (let* ((key (car K)) (fun (cdr K)))
-	    (define-key iswitchb-mode-map (edmacro-parse-keys key) fun)))
-	'(("<right>" . iswitchb-next-match)
-	  ("<left>"  . iswitchb-prev-match)
-	  ("<up>"    . ignore             )
-	  ("<down>"  . ignore             ))))
+(put 'overwrite-mode 'disabled t)
 
 (setq c-default-style "bsd"
       c-basic-offset 2)
@@ -453,8 +425,8 @@ Emacs buffer are those starting with “*”."
 ;; Window title (with edited status + remote indication)
 (setq frame-title-format
       '("" invocation-name " " emacs-version " %@ "(:eval (if (buffer-file-name)
-					    (abbreviate-file-name (buffer-file-name))
-					  "%b")) " [%*]"))
+																															(abbreviate-file-name (buffer-file-name))
+																														"%b")) " [%*]"))
 
 
 ;; ;; ;; Keys! ______________________________________________________________________
@@ -684,7 +656,7 @@ git reset --hard HEAD@{7}           revert HEAD to 7
 ;; Custom ______________________________________________________________________
 
 (if (< emacs-major-version 24)
-(set-face-attribute 'default nil :background "#2e3436" :foreground "#eeeeec"))
+		(set-face-attribute 'default nil :background "#2e3436" :foreground "#eeeeec"))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
