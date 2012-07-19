@@ -61,11 +61,6 @@
 ;; (setq tramp-ssh-args "-C")
 ;; (setq tramp-auto-save-directory "~/.emacs_backups")
 
-;; (if (>= emacs-major-version 23)
-;;     (set-frame-font "Monospace-12"))
-
-;; (setq auto-mode-alist (cons '(".php" . php-mode) auto-mode-alist))
-
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
 (defvar show-paren-delay)
@@ -82,6 +77,7 @@
 (defvar savehist-file)
 (defvar px-newName)
 (defvar px-minibuffer-history)
+
 
 ;; Funcs! _________________________________________________________________
 
@@ -209,15 +205,13 @@ Does not set point.  Does nothing if mark ring is empty."
   "Write the current buffer to a new file - silently - and append the date+time to the filename, retaining extention"
   (interactive)
   (setq px-newName
-	(concat
-	 (file-name-sans-extension buffer-file-name) "-"
-	 (format-time-string  "%Y-%m-%d") "."
-	 (format-time-string "%Hh%M") "."
-	 (file-name-extension buffer-file-name))
-	)
+				(concat
+				 (file-name-sans-extension buffer-file-name) "-"
+				 (format-time-string  "%Y-%m-%d") "."
+				 (format-time-string "%Hh%M") "."
+				 (file-name-extension buffer-file-name)))
   (write-region (point-min) (point-max) px-newName)
-  (message "backuped %s" px-newName)
-  )
+  (message "backuped %s" px-newName))
 
 (defun px-query-replace-in-open-buffers (arg1 arg2)
   "query-replace in open files"
@@ -304,6 +298,58 @@ Does not set point.  Does nothing if mark ring is empty."
       (save-buffer)
       (message "Region refrigerated!"))))
 
+(defun stop-using-minibuffer ()
+  "kill the minibuffer when going back to emacs using the mouse"
+  (when (and (>= (recursion-depth) 1) (active-minibuffer-window))
+    (abort-recursive-edit)))
+
+(defadvice kill-ring-save (before slick-copy activate compile)
+  "When called interactively with no active region, COPY a single line instead."
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (message "Copied line")
+     (list (line-beginning-position)
+           (line-beginning-position 2)))))
+
+(defadvice kill-region (before slick-cut activate compile)
+  "When called interactively with no active region, KILL a single line instead."
+  (interactive
+   (if mark-active (list (region-beginning) (region-end))
+     (message "Killed line")
+     (list (line-beginning-position)
+           (line-beginning-position 2)))))
+
+(defun px-toggle-comments ()
+  "If region is set, [un]comments it. Otherwise [un]comments current line."
+  (interactive) ;; apparently I need this line so it can move the cursor
+  ;; (save-excursion ;; don't mess with mark
+  (if (eq mark-active nil) ;; no region active
+      (progn (beginning-of-line 1)
+	     (set-mark (point))
+	     (forward-line)
+	     (comment-dwim nil))
+    (comment-dwim nil)) ;; [un]comment
+  (deactivate-mark)) ;; don't mess with selection
+
+(defun tabbar-buffer-groups ()
+  "Return the list of group names the current buffer belongs to.
+This function is a custom function for tabbar-mode's tabbar-buffer-groups.
+This function groups all buffers into 3 groups:
+Those Dired, those user buffer, and those emacs buffer.
+Emacs buffer are those starting with “*”."
+  (list
+   (cond
+    ((string-equal "*" (substring (buffer-name) 0 1))
+     "Emacs Buffer"
+     )
+    ((eq major-mode 'dired-mode)
+     "Dired"
+     )
+    (t
+     "User Buffer"))))
+
+(setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
+
 ;; Sessions! ______________________________________________________________________
 
 (require 'desktop)
@@ -382,11 +428,6 @@ Does not set point.  Does nothing if mark ring is empty."
 
 (add-hook 'kill-emacs-hook 'my-desktop-kill-emacs-hook)
 
-(defun stop-using-minibuffer ()
-  "kill the minibuffer when going back to emacs using the mouse"
-  (when (and (>= (recursion-depth) 1) (active-minibuffer-window))
-    (abort-recursive-edit)))
-
 ;; Modes! ______________________________________________________________________
 (set-scroll-bar-mode `right)
 (auto-fill-mode t)
@@ -411,41 +452,16 @@ Does not set point.  Does nothing if mark ring is empty."
 (add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
+
 ;; Vars! ______________________________________________________________________
 
 ;; (all of this will slowly migrate to custom)
 (setq-default cursor-type 'bar)
 
 (setq
- ;; require-final-newline 'ask
- ;; vc-make-backup-files t
  iswitchb-buffer-ignore '("^ " "*.")
- ;; scroll-conservatively 200
- ;; scroll-margin 3
- ;; recenter-redisplay nil
- ;; inhibit-startup-screen t
- ;; inhibit-startup-echo-area-message t
- ;; recentf-max-saved-items 120
- ;; recentf-max-menu-items 60
- ;; x-select-enable-clipboard t
- ;; enable-recursive-minibuffers t
- ;; show-paren-delay 0
- ;; ediff-setup-windows-plain t
- ;; tramp-terminal-type dumb
  ispell-dictionary "francais"
- ;; completion-auto-help nil
 )
-
-;; (set-face-attribute 'show-paren-mismatch-face nil
-;;                    :weight 'bold)
-
-(setq yas/trigger-key (kbd "TAB"))
-;; (global-set-key (kbd "C-²") 'yas/expand-from-trigger-key)
-
-;; ;; Desktop (session - open buffers - file)
-;; (setq desktop-path '("~/.bkp/"))
-;; (setq desktop-dirname "~/.bkp/")
-;; (setq desktop-base-file-name "emacs-desktop")
 
 ;; Ediff
 (setq ediff-window-setup-function (quote ediff-setup-windows-plain))
@@ -456,6 +472,7 @@ Does not set point.  Does nothing if mark ring is empty."
       '("" invocation-name " " emacs-version " %@ "(:eval (if (buffer-file-name)
 					    (abbreviate-file-name (buffer-file-name))
 					  "%b")) " [%*]"))
+
 
 ;; ;; ;; Keys! ______________________________________________________________________
 
@@ -532,39 +549,9 @@ Does not set point.  Does nothing if mark ring is empty."
 (global-set-key (kbd "M-o") 'recentf-open-files)
 (global-set-key (kbd "M-d") 'px-toggle-comments)
 
-;; ;; Save the minibuffer history
 (setq px-minibuffer-history (concat user-emacs-directory "px-minibuffer-history"))
 (setq savehist-file px-minibuffer-history)
 (when (functionp 'savehist-mode) (savehist-mode 1))
-
-;; ;; Kill & copy lines
-(defadvice kill-ring-save (before slick-copy activate compile)
-  "When called interactively with no active region, COPY a single line instead."
-  (interactive
-   (if mark-active (list (region-beginning) (region-end))
-     (message "Copied line")
-     (list (line-beginning-position)
-           (line-beginning-position 2)))))
-
-(defadvice kill-region (before slick-cut activate compile)
-  "When called interactively with no active region, KILL a single line instead."
-  (interactive
-   (if mark-active (list (region-beginning) (region-end))
-     (message "Killed line")
-     (list (line-beginning-position)
-           (line-beginning-position 2)))))
-
-(defun px-toggle-comments ()
-  "If region is set, [un]comments it. Otherwise [un]comments current line."
-  (interactive) ;; apparently I need this line so it can move the cursor
-  ;; (save-excursion ;; don't mess with mark
-  (if (eq mark-active nil) ;; no region active
-      (progn (beginning-of-line 1)
-	     (set-mark (point))
-	     (forward-line)
-	     (comment-dwim nil))
-    (comment-dwim nil)) ;; [un]comment
-  (deactivate-mark)) ;; don't mess with selection
 
 ;; ;; Help! ______________________________________________________________________
 
@@ -709,25 +696,6 @@ git reset --hard HEAD@{7}           revert HEAD to 7
   (goto-char (point-min))
   (org-show-subtree))
 
-(defun tabbar-buffer-groups ()
-  "Return the list of group names the current buffer belongs to.
-This function is a custom function for tabbar-mode's tabbar-buffer-groups.
-This function groups all buffers into 3 groups:
-Those Dired, those user buffer, and those emacs buffer.
-Emacs buffer are those starting with “*”."
-  (list
-   (cond
-    ((string-equal "*" (substring (buffer-name) 0 1))
-     "Emacs Buffer"
-     )
-    ((eq major-mode 'dired-mode)
-     "Dired"
-     )
-    (t
-     "User Buffer"))))
-
-(setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
-
 ;; Custom ______________________________________________________________________
 
 (if (< emacs-major-version 24)
@@ -743,6 +711,7 @@ Emacs buffer are those starting with “*”."
  '(buffer-offer-save nil)
  '(canlock-password "cf5f7a7261c5832898abfc7ea08ba333a36ed78c")
  '(comment-style (quote extra-line))
+ '(completion-auto-help (quote lazy))
  '(custom-enabled-themes (quote (tango-dark)))
  '(delete-selection-mode t)
  '(display-time-24hr-format t)
