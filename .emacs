@@ -8,23 +8,13 @@
 ;;  (normal-top-level-add-to-load-path '("."))
   (normal-top-level-add-subdirs-to-load-path))
 
-(add-to-list 'load-path "/usr/share/emacs/site-lisp/bbdb/")
-;; (autoload 'wl "wl" "Wanderlust" t)
-;; (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
-;; (autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
-
-;; (if (member (convert-standard-filename (expand-file-name (concat
-;; 		user-emacs-directory "lisp/tabbar"))) load-path)
-;; 		(message "yow"))
-
+;; External libs
 (eval-and-compile
-	(require 'tabbar nil 'noerror)
-	(require 'tabbar-ruler nil 'noerror)
-	(require 'bbdb nil 'noerror)
-	(require 'undo-tree nil 'noerror)
-	(require 'marker-visit nil 'noerror)
-	(require 'cl nil 'noerror)
-	(require 'edmacro nil 'noerror)
+	(require 'tabbar nil 'noerror)				; Tabs to switch buffer
+	(require 'tabbar-ruler nil 'noerror)	; Additional functions for tabbar
+	(require 'undo-tree nil 'noerror)			; Visualize undo (and allow sane redo)
+	(require 'cl nil 'noerror)						; Built-in : Common Lisp lib
+	(require 'edmacro nil 'noerror)				; Built-in : Required by iswitchb
 	;; (require 'tabkey2 nil t)
 	;; (require 'elid)
 	;; (require 'mail-bug nil t)
@@ -40,27 +30,10 @@
   (progn
     (require 'php-mode nil t)
     (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
-    ;; (add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
-    ;; (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode)
-    ))
+    (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))))
 
-;; (setq redisplay-dont-pause t)
 (setq delete-by-moving-to-trash t)
 (setq list-colors-sort 'hsv)
-
-(defun notify-send (title message icon)
-  (start-process "notify" " notify"
-								 libnotify-program "--expire-time=5000"
-								 "--urgency=low" (concat "--icon=" icon) title message))
-
-;; ;; Message alert hooks
-;; (define-jabber-alert echo "Show a message in the echo area"
-;;   (lambda (msg)
-;;     (unless (minibuffer-prompt)
-;;       (message "%s" msg))))
-
-
-;; (message "we are at line %s" (line-number-at-pos))
 
 (setq default-major-mode 'text-mode
 			text-mode-hook 'turn-on-auto-fill
@@ -75,8 +48,6 @@
   (funcall (if insert 'insert 'message)
 					 (format-time-string "%a, %d %b %Y %T %Z"
 															 (current-time))))
-
-;; End XPs
 
 ;;----------------------------------------
 ;; Tramp settings
@@ -112,76 +83,7 @@
 (defvar px-newName)
 (defvar px-minibuffer-history)
 
-;; Server! ____________________________________________________________________
-
-(server-start)
-(defun px-raise-and-focus ()
-  (when window-system
-    (raise-frame)
-    (x-focus-frame (selected-frame))
-    (set-mouse-pixel-position (selected-frame) 4 4)
-    (delete-other-windows)
-    ))
-(add-hook 'server-switch-hook 'px-raise-and-focus)
-
 ;; Funcs! _________________________________________________________________
-
-
-;; (defadvice kill-buffer (around my-kill-buffer-check activate)
-;;   "Prompt when a buffer is about to be killed."
-;;   (let* ((buffer-file-name (buffer-file-name))
-;;          backup-file)
-;;     ;; see 'backup-buffer
-;;     (if (and (buffer-modified-p)
-;;              buffer-file-name
-;;              (file-exists-p buffer-file-name)
-;;              (setq backup-file (car (find-backup-file-name buffer-file-name))))
-;;         (let ((answer (completing-read (format "Buffer modified %s, (d)iff, (s)ave, (k)ill? " (buffer-name))
-;;                                        '("d" "s" "k") nil t)))
-;;           (cond ((equal answer "d")
-;;                  (set-buffer-modified-p nil)
-;;                  (let ((orig-buffer (current-buffer))
-;;                        (file-to-diff (if (file-newer-than-file-p buffer-file-name backup-file)
-;;                                          buffer-file-name
-;;                                        backup-file)))
-;;                    (set-buffer (get-buffer-create (format "%s last-revision" (file-name-nondirectory file-to-diff))))
-;;                    (buffer-disable-undo)
-;;                    (insert-file-contents file-to-diff nil nil nil t)
-;;                    (set-buffer-modified-p nil)
-;;                    (setq buffer-read-only t)
-;;                    (ediff-buffers (current-buffer) orig-buffer)))
-;;                 ((equal answer "k")
-;;                  (set-buffer-modified-p nil)
-;;                  ad-do-it)
-;;                 (t
-;;                  (save-buffer)
-;;                  ad-do-it)))
-;;       ad-do-it)))
-
-;; (defadvice kill-buffer (around kill-buffer-ask-first activate)
-;;   "if called interactively, prompt before killing"
-;;   (if (and (or buffer-offer-save (interactive-p))
-;;            (buffer-modified-p)
-;;            (not (buffer-file-name)))
-;;       (let ((answ (completing-read
-;;                    (format "Buffer '%s' modified and not associated with a file, what do you want to do? (k)ill (s)ave (a)bort? " (buffer-name))
-;;                    '("k" "s" "a")
-;;                    nil
-;;                    t)))
-;;         (when (cond ((string-match answ "k")
-;;                      ;; kill
-;;                      t)
-;;                     ((string-match answ "s")
-;;                      ;; write then kill
-;;                      (call-interactively 'write-file)
-;;                      t)
-;;                     (nil))
-;;           ad-do-it)
-
-;;         t)
-;;     ;; not prompting, just do it
-;;     ad-do-it))
-
 
 (defun unpop-to-mark-command ()
   "Unpop off mark ring into the buffer's actual mark.
@@ -383,7 +285,6 @@ Does not set point.  Does nothing if mark ring is empty."
 (defun insert-pair-squote () (interactive) (insert-or-enclose-with-signs "'" "'"))
 (defun insert-pair-dbquote () (interactive) (insert-or-enclose-with-signs "\"" "\""))
 
-
 (defun px-frigo ()
   (interactive)
   "Copy the current region, paste it in frigo.txt with a time tag, and save this file"
@@ -541,10 +442,10 @@ Does not set point.  Does nothing if mark ring is empty."
 (setq yas/trigger-key (kbd "TAB"))
 ;; (global-set-key (kbd "C-²") 'yas/expand-from-trigger-key)
 
-;; Desktop (session - open buffers - file)
-(setq desktop-path '("~/.bkp/"))
-(setq desktop-dirname "~/.bkp/")
-(setq desktop-base-file-name "emacs-desktop")
+;; ;; Desktop (session - open buffers - file)
+;; (setq desktop-path '("~/.bkp/"))
+;; (setq desktop-dirname "~/.bkp/")
+;; (setq desktop-base-file-name "emacs-desktop")
 
 ;; Ediff
 (setq ediff-window-setup-function (quote ediff-setup-windows-plain))
@@ -606,7 +507,7 @@ Does not set point.  Does nothing if mark ring is empty."
 (global-set-key (kbd "<s-right>") 'marker-visit-next)
 (global-set-key (kbd "<s-up>") (kbd "C-u C-SPC"))
 
-;; THIS NEX ONE BROKE HAVOC!!
+;; THIS NEXT ONE BROKE HAVOC!!
 ;; (global-set-key (kbd "C-d") nil)	; I kept deleting stuff
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
 (global-set-key (kbd "C-o") 'find-file)
@@ -615,17 +516,15 @@ Does not set point.  Does nothing if mark ring is empty."
 (global-set-key (kbd "C-z") 'undo-tree-undo)
 (global-set-key (kbd "C-S-z") 'undo-tree-redo)
 
-;; (global-set-key (kbd "<C-next>") 'forward-page)
-;; (global-set-key (kbd "<C-prior>") 'backward-page)
 (global-set-key (kbd "C-<tab>") 'tabbar-forward)
 (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
 
-(global-set-key (kbd "C-\"") 'insert-pair-dbquote)		;""
-(global-set-key (kbd "C-)") 'insert-pair-paren)			;()
-(global-set-key (kbd "C-=") 'insert-pair-brace)			;{}
-(global-set-key (kbd "C-'") 'insert-pair-squote)			;{}
-(global-set-key (kbd "C-(") 'insert-pair-bracket)		;[]
-(global-set-key (kbd "C-<") 'insert-pair-single-angle)		;<>
+(global-set-key (kbd "C-\"") 'insert-pair-dbquote)		 ;""
+(global-set-key (kbd "C-)") 'insert-pair-paren)				 ;()
+(global-set-key (kbd "C-=") 'insert-pair-brace)				 ;{}
+(global-set-key (kbd "C-'") 'insert-pair-squote)			 ;{}
+(global-set-key (kbd "C-(") 'insert-pair-bracket)			 ;[]
+(global-set-key (kbd "C-<") 'insert-pair-single-angle) ;<>
 
 (global-set-key (kbd "M-s") 'save-buffer) ; Meta+s saves !! (see C-h b for all bindings, and C-h k + keystroke(s) for help)
 (global-set-key (kbd "M-DEL") 'kill-word)
@@ -867,6 +766,7 @@ Emacs buffer are those starting with “*”."
  '(scroll-conservatively 200)
  '(scroll-margin 3)
  '(send-mail-function (quote mailclient-send-it))
+ '(server-mode t)
  '(show-paren-delay 0)
  '(show-paren-mode t)
  '(show-paren-style (quote mixed))
