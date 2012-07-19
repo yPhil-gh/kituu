@@ -35,26 +35,6 @@
 
 (put 'overwrite-mode 'disabled t)
 
-(defun date (&optional insert)
-  "Display the current date and time.
-  With a prefix arg, INSERT it into the buffer."
-  (interactive "P")
-  (funcall (if insert 'insert 'message)
-					 (format-time-string "%a, %d %b %Y %T %Z"
-															 (current-time))))
-
-;;----------------------------------------
-;; Tramp settings
-;;----------------------------------------
-;; (add-to-list 'load-path "/usr/share/emacs21/site-lisp/tramp")
-;; (require 'tramp)
-;; (setq tramp-default-method "ssh")
-;; ;(setq shell-prompt-pattern ".*\}")
-;; (setq shell-prompt-pattern "^[\[].*[\]]*")
-;; ;(setq tramp-rcp-args "-C")
-;; (setq tramp-ssh-args "-C")
-;; (setq tramp-auto-save-directory "~/.emacs_backups")
-
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
 (defvar show-paren-delay)
@@ -744,6 +724,7 @@ git reset --hard HEAD@{7}           revert HEAD to 7
  '(tab-always-indent (quote complete))
  '(tab-stop-list (quote (2 4 8 16 24 32 40 48 56 64 72 80 88 96 104 112 120)))
  '(tab-width 2)
+ '(tramp-default-method "ssh")
  '(undo-tree-auto-save-history t)
  '(undo-tree-enable-undo-in-region nil)
  '(undo-tree-visualizer-diff t)
