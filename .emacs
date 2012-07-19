@@ -2,6 +2,7 @@
 ;; Keep it under 1k lines ;p
 ;; Remember to remove ~/.emacs.elc if you edit ~/.emacs, break it and repair it
 
+
 ;; Init! ______________________________________________________________________
 
 (let ((default-directory "~/.emacs.d/lisp/"))
@@ -31,13 +32,6 @@
     (require 'php-mode nil t)
     (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
     (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))))
-
-(setq delete-by-moving-to-trash t)
-(setq list-colors-sort 'hsv)
-
-(setq default-major-mode 'text-mode
-			text-mode-hook 'turn-on-auto-fill
-			fill-column 75)
 
 (put 'overwrite-mode 'disabled t)
 
@@ -461,11 +455,16 @@ Emacs buffer are those starting with “*”."
 (setq
  iswitchb-buffer-ignore '("^ " "*.")
  ispell-dictionary "francais"
-)
 
-;; Ediff
-(setq ediff-window-setup-function (quote ediff-setup-windows-plain))
-(setq ediff-split-window-function 'split-window-horizontally)
+ delete-by-moving-to-trash t
+ list-colors-sort 'hsv
+
+ default-major-mode 'text-mode
+ text-mode-hook 'turn-on-auto-fill
+ fill-column 75
+
+ ediff-window-setup-function (quote ediff-setup-windows-plain)
+ ediff-split-window-function 'split-window-horizontally)
 
 ;; Window title (with edited status + remote indication)
 (setq frame-title-format
@@ -552,6 +551,7 @@ Emacs buffer are those starting with “*”."
 (setq px-minibuffer-history (concat user-emacs-directory "px-minibuffer-history"))
 (setq savehist-file px-minibuffer-history)
 (when (functionp 'savehist-mode) (savehist-mode 1))
+
 
 ;; ;; Help! ______________________________________________________________________
 
