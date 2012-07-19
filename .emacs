@@ -9,25 +9,56 @@
   (normal-top-level-add-subdirs-to-load-path))
 
 (add-to-list 'load-path "/usr/share/emacs/site-lisp/bbdb/")
-(autoload 'wl "wl" "Wanderlust" t)
-(autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
-(autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
+;; (autoload 'wl "wl" "Wanderlust" t)
+;; (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
+;; (autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
+
+;; (if (member (convert-standard-filename (expand-file-name (concat
+;; 		user-emacs-directory "lisp/tabbar"))) load-path)
+;; 		(message "yow"))
 
 (eval-and-compile
-(require 'tabbar nil t)
-(require 'tabbar-ruler)
-;; (require 'elid)
-;; (require 'mail-bug nil t)
-(require 'bbdb nil t)
-;; (require 'tabkey2 nil t)
-(require 'undo-tree)
-(require 'marker-visit)
-(require 'cl)
-;; (require 'imapua)
-;; Required by my iswitchb hack
-(require 'edmacro)
-)
+	(require 'tabbar nil 'noerror)
+	(require 'tabbar-ruler nil 'noerror)
+	(require 'bbdb nil 'noerror)
+	(require 'undo-tree nil 'noerror)
+	(require 'marker-visit nil 'noerror)
+	(require 'cl nil 'noerror)
+	(require 'edmacro nil 'noerror)
+	;; (require 'tabkey2 nil t)
+	;; (require 'elid)
+	;; (require 'mail-bug nil t)
+	;; (require 'imapua)
+	;; Required by my iswitchb hack
+	)
 ;; (mail-bug-init)
+
+;; (eval-and-compile
+;; 	(require 'tabbar)
+;; 	(require 'tabbar-ruler)
+;; 	;; (require 'elid)
+;; 	;; (require 'mail-bug nil t)
+;; ;;	(require 'bbdb)
+;; 	;; (require 'tabkey2 nil t)
+;; 	(require 'undo-tree)
+;; ;;	(require 'marker-visit)
+;; 	(require 'cl)
+;; 	;; (require 'imapua)
+;; 	;; Required by my iswitchb hack
+;; 	(require 'edmacro)
+;; 	)
+;; ;; (mail-bug-init)
+
+(condition-case nil               ; ignore errors if this is not found
+    (require 'dired-x)
+  (error nil))
+
+(defvar requires)
+
+;;(add-to-list 'requires "plop")
+
+;; 	(require 'plop)
+
 
 ;; (load "~/.emacs.d/lisp/nxhtml/autostart.el")
 ;; (add-hook 'after-change-major-mode-hook 'linum-mode 'auto-fill-function)
@@ -49,8 +80,8 @@
 
 (defun notify-send (title message icon)
   (start-process "notify" " notify"
-		 libnotify-program "--expire-time=5000"
-  "--urgency=low" (concat "--icon=" icon) title message))
+								 libnotify-program "--expire-time=5000"
+								 "--urgency=low" (concat "--icon=" icon) title message))
 
 ;; ;; Message alert hooks
 ;; (define-jabber-alert echo "Show a message in the echo area"
@@ -81,8 +112,8 @@
 ;; start
 
 (setq default-major-mode 'text-mode
-  text-mode-hook 'turn-on-auto-fill
-  fill-column 75)
+			text-mode-hook 'turn-on-auto-fill
+			fill-column 75)
 
 (put 'overwrite-mode 'disabled t)
 
@@ -91,8 +122,8 @@
   With a prefix arg, INSERT it into the buffer."
   (interactive "P")
   (funcall (if insert 'insert 'message)
-	   (format-time-string "%a, %d %b %Y %T %Z"
-			       (current-time))))
+					 (format-time-string "%a, %d %b %Y %T %Z"
+															 (current-time))))
 
 ;; End XPs
 
@@ -143,6 +174,63 @@
 (add-hook 'server-switch-hook 'px-raise-and-focus)
 
 ;; Funcs! _________________________________________________________________
+
+
+;; (defadvice kill-buffer (around my-kill-buffer-check activate)
+;;   "Prompt when a buffer is about to be killed."
+;;   (let* ((buffer-file-name (buffer-file-name))
+;;          backup-file)
+;;     ;; see 'backup-buffer
+;;     (if (and (buffer-modified-p)
+;;              buffer-file-name
+;;              (file-exists-p buffer-file-name)
+;;              (setq backup-file (car (find-backup-file-name buffer-file-name))))
+;;         (let ((answer (completing-read (format "Buffer modified %s, (d)iff, (s)ave, (k)ill? " (buffer-name))
+;;                                        '("d" "s" "k") nil t)))
+;;           (cond ((equal answer "d")
+;;                  (set-buffer-modified-p nil)
+;;                  (let ((orig-buffer (current-buffer))
+;;                        (file-to-diff (if (file-newer-than-file-p buffer-file-name backup-file)
+;;                                          buffer-file-name
+;;                                        backup-file)))
+;;                    (set-buffer (get-buffer-create (format "%s last-revision" (file-name-nondirectory file-to-diff))))
+;;                    (buffer-disable-undo)
+;;                    (insert-file-contents file-to-diff nil nil nil t)
+;;                    (set-buffer-modified-p nil)
+;;                    (setq buffer-read-only t)
+;;                    (ediff-buffers (current-buffer) orig-buffer)))
+;;                 ((equal answer "k")
+;;                  (set-buffer-modified-p nil)
+;;                  ad-do-it)
+;;                 (t
+;;                  (save-buffer)
+;;                  ad-do-it)))
+;;       ad-do-it)))
+
+;; (defadvice kill-buffer (around kill-buffer-ask-first activate)
+;;   "if called interactively, prompt before killing"
+;;   (if (and (or buffer-offer-save (interactive-p))
+;;            (buffer-modified-p)
+;;            (not (buffer-file-name)))
+;;       (let ((answ (completing-read
+;;                    (format "Buffer '%s' modified and not associated with a file, what do you want to do? (k)ill (s)ave (a)bort? " (buffer-name))
+;;                    '("k" "s" "a")
+;;                    nil
+;;                    t)))
+;;         (when (cond ((string-match answ "k")
+;;                      ;; kill
+;;                      t)
+;;                     ((string-match answ "s")
+;;                      ;; write then kill
+;;                      (call-interactively 'write-file)
+;;                      t)
+;;                     (nil))
+;;           ad-do-it)
+
+;;         t)
+;;     ;; not prompting, just do it
+;;     ad-do-it))
+
 
 (defun unpop-to-mark-command ()
   "Unpop off mark ring into the buffer's actual mark.
@@ -200,9 +288,40 @@ Does not set point.  Does nothing if mark ring is empty."
   (switch-to-buffer "*scratch*"))
 
 (defun px-kill-buffer ()
+  "Prompt when a buffer is about to be killed."
   (interactive)
-  (kill-buffer (current-buffer))
-  (delete-window))
+	(if (and (buffer-modified-p)
+					 buffer-file-name
+					 (file-exists-p buffer-file-name)
+					 (setq backup-file (car (find-backup-file-name buffer-file-name))))
+			(let ((answer (completing-read (format "Buffer modified %s, (d)iff, (s)ave, (k)ill? " (buffer-name))
+																		 '("d" "s" "k") nil t)))
+				(cond
+				 ((equal answer "d")
+					(set-buffer-modified-p nil)
+					(let ((orig-buffer (current-buffer))
+								(file-to-diff (if (file-newer-than-file-p buffer-file-name backup-file)
+																	buffer-file-name
+																backup-file)))
+						(set-buffer (get-buffer-create (format "%s last-revision" (file-name-nondirectory file-to-diff))))
+						(buffer-disable-undo)
+						(insert-file-contents file-to-diff nil nil nil t)
+						(set-buffer-modified-p nil)
+						(setq buffer-read-only t)
+						(ediff-buffers (current-buffer) orig-buffer)))
+				 ((equal answer "k")
+					(progn
+						(kill-buffer (current-buffer))
+						(delete-window)))
+				 (t
+					(progn
+						(save-buffer)
+						(kill-buffer (current-buffer))
+						(delete-window)
+					))))
+		(progn
+			(kill-buffer (current-buffer))
+			(delete-window))))
 
 (defun this-buffer-is-visible (buffer)
   "Test if BUFFER is actually on screen"
@@ -333,54 +452,83 @@ Does not set point.  Does nothing if mark ring is empty."
       (save-buffer)
       (message "Region refrigerated!"))))
 
-;; (the lock file is ~/.bkp/.emacs.desktop.lock)
-(defun px-saved-session ()
-  (file-exists-p (concat desktop-dirname "/" desktop-base-file-name)))
+;; Sessions! ______________________________________________________________________
 
-(defun Session-restore-px ()
-  "Restore a saved emacs session."
+(require 'desktop)
+
+(defvar my-desktop-session-dir
+  (concat (getenv "HOME") "/.emacs.d/desktop-sessions/")
+  "Directory to save desktop sessions in")
+
+(defvar my-desktop-session-name-hist nil
+  "Desktop session name history")
+
+(defun my-desktop-save (&optional name)
+  "Save desktop by name."
   (interactive)
-  (if (px-saved-session)
-      (progn
-	;; (delete-file (concat desktop-dirname "/.emacs.desktop.lock"))
-	(desktop-read)
-	(recenter-top-bottom 15))
-    (message "No desktop (session) file found.")))
+  (unless name
+    (setq name (my-desktop-get-session-name "Save session" t)))
+  (when name
+    (make-directory (concat my-desktop-session-dir name) t)
+    (desktop-save (concat my-desktop-session-dir name) t)))
 
-(defun px-session-save ()
-  "Save an emacs session."
+(defun my-desktop-save-and-clear ()
+  "Save and clear desktop."
   (interactive)
-  (if (px-saved-session)
-      (if (y-or-n-p "Save session? ")
-	  (desktop-save-in-desktop-dir)
-	(message "Session not saved."))
-  (desktop-save-in-desktop-dir)))
+  (call-interactively 'my-desktop-save)
+  (desktop-clear)
+  (setq desktop-dirname nil))
 
-(defun px-session-save-named (px-session-named-name)
-  "Prompt the user for a session name."
-  (interactive "MSession name: ")
-  (message "So what do I do with this: %s ?" px-session-named-name)
-  (desktop-save (concat desktop-dirname "/" px-session-named-name
-			".session") t))
-
-(defun px-session-save-named ()
-  "Save a named emacs session."
+(defun my-desktop-read (&optional name)
+  "Read desktop by name."
   (interactive)
-  (if (px-saved-session)
-      (if (y-or-n-p "Save session? ")
-	  (desktop-save-in-desktop-dir)
-	(message "Session not saved."))
-  (desktop-save-in-desktop-dir)))
+  (unless name
+    (setq name (my-desktop-get-session-name "Load session")))
+  (when name
+    (desktop-clear)
+    (desktop-read (concat my-desktop-session-dir name))))
 
-(add-hook 'after-init-hook
-	  '(lambda ()
-	     (if (px-saved-session)
-		 (if (y-or-n-p "Restore session? ")
-		     (Session-restore-px)))))
+(defun my-desktop-change (&optional name)
+  "Change desktops by name."
+  (interactive)
+  (let ((name (my-desktop-get-current-name)))
+    (when name
+      (my-desktop-save name))
+    (call-interactively 'my-desktop-read)))
 
-(add-hook 'kill-emacs-hook
-	  '(lambda ()
-	     (px-session-save)))
+(defun my-desktop-name ()
+  "Return the current desktop name."
+  (interactive)
+  (let ((name (my-desktop-get-current-name)))
+    (if name
+        (message (concat "Desktop name: " name))
+      (message "No named desktop loaded"))))
+
+(defun my-desktop-get-current-name ()
+  "Get the current desktop name."
+  (when desktop-dirname
+    (let ((dirname (substring desktop-dirname 0 -1)))
+      (when (string= (file-name-directory dirname) my-desktop-session-dir)
+        (file-name-nondirectory dirname)))))
+
+(defun my-desktop-get-session-name (prompt &optional use-default)
+  "Get a session name."
+  (let* ((default (and use-default (my-desktop-get-current-name)))
+         (full-prompt (concat prompt (if default
+                                         (concat " (default " default "): ")
+                                       ": "))))
+    (completing-read full-prompt (and (file-exists-p my-desktop-session-dir)
+                                      (directory-files my-desktop-session-dir))
+                     nil nil nil my-desktop-session-name-hist default)))
+
+(defun my-desktop-kill-emacs-hook ()
+  "Save desktop before killing emacs."
+  (when (file-exists-p (concat my-desktop-session-dir "last-session"))
+    (setq desktop-file-modtime
+          (nth 5 (file-attributes (desktop-full-file-name (concat my-desktop-session-dir "last-session"))))))
+  (my-desktop-save "last-session"))
+
+(add-hook 'kill-emacs-hook 'my-desktop-kill-emacs-hook)
 
 (defun stop-using-minibuffer ()
   "kill the minibuffer when going back to emacs using the mouse"
@@ -436,8 +584,8 @@ Does not set point.  Does nothing if mark ring is empty."
  ;; completion-auto-help nil
 )
 
-(set-face-attribute 'show-paren-mismatch-face nil
-                    :weight 'bold)
+;; (set-face-attribute 'show-paren-mismatch-face nil
+;;                    :weight 'bold)
 
 (setq yas/trigger-key (kbd "TAB"))
 ;; (global-set-key (kbd "C-²") 'yas/expand-from-trigger-key)
@@ -503,14 +651,15 @@ Does not set point.  Does nothing if mark ring is empty."
 (global-set-key (kbd "s-d") 'wl-draft-mode)
 (global-set-key (kbd "s-m") 'kmacro-end-and-call-macro)
 (global-set-key (kbd "C-s-m") 'apply-macro-to-region-lines)
-(global-set-key (kbd "<s-left>") 'marker-visit-prev)
+(global-set-key (kbd "<s-left>") (kbd "C-x C-SPC"))
 (global-set-key (kbd "<s-right>") 'marker-visit-next)
+(global-set-key (kbd "<s-up>") (kbd "C-u C-SPC"))
 
 ;; THIS NEX ONE BROKE HAVOC!!
 ;; (global-set-key (kbd "C-d") nil)	; I kept deleting stuff
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
 (global-set-key (kbd "C-o") 'find-file)
-(global-set-key (kbd "C-S-o") 'desktop-read)
+(global-set-key (kbd "C-S-o") 'my-desktop-read)
 (global-set-key (kbd "C-S-<mouse-1>") 'flyspell-correct-word)
 (global-set-key (kbd "C-z") 'undo-tree-undo)
 (global-set-key (kbd "C-S-z") 'undo-tree-redo)
@@ -604,6 +753,10 @@ Does not set point.  Does nothing if mark ring is empty."
 *enclose region in <tag> (sgml-tag)  s-t RET tag [ args... ]*
 *select 'this' or <that> (enclosed)  s-SPC**
 
+*php-mode                            s-p*
+*html-mode                           s-h*
+*js-mode                             s-j*
+
 *** EMACSEN
 Recenter window around current line C-l
 Intelligently recenter window       C-S-l
@@ -615,23 +768,23 @@ Close HTML tag                      sgml-close-tag
 Switch to *Messages* buffer         C-h e
 
 *** MISC EDITING
-M-c		                    capitalize-word		Capitalize the first letter of the current word.
-M-u		                    upcase-word		Make the word all uppercase.
-M-l		                    downcase-word		Make the word all lowercase.
-C-x C-l		                    downcase-region		Make the region all lowercase.
-C-x C-u		                    uppercase-region	Make the region all uppercase.
+M-c		                              capitalize-word		Capitalize the first letter of the current word.
+M-u		                              upcase-word		Make the word all uppercase.
+M-l		                              downcase-word		Make the word all lowercase.
+C-x C-l		                          downcase-region		Make the region all lowercase.
+C-x C-u		                          uppercase-region	Make the region all uppercase.
 
 *** MACROS
-C-x (		                    start-kbd-macro		Start a new macro definition.
-C-x )		                    end-kbd-macro		End the current macro definition.
-C-x e		                    call-last-kbd-macro	Execute the last defined macro.
-M-(number) C-x e	            call-last-kbd-maco	Do that last macro (number times).
-C-u C-x (	                    stat-kbd-macro		Execute last macro and add to it.
-		                    name-last-kbd-macro	Name the last macro before saving it.
-		                    insert-last-keyboard-macro	Insert the macro you made into a file.
-		                    load-file			Load a file with macros in it.
-C-x q		                    kbd-macro-query		Insert a query into a keyboard macro.
-M-C-c		                    exit-recursive-edit		Get the hell out of a recursive edit.
+C-x (		                            start-kbd-macro		Start a new macro definition.
+C-x )		                            end-kbd-macro		End the current macro definition.
+C-x e		                            call-last-kbd-macro	Execute the last defined macro.
+M-(number) C-x e	                  call-last-kbd-maco	Do that last macro (number times).
+C-u C-x (	                          stat-kbd-macro		Execute last macro and add to it.
+		                                name-last-kbd-macro	Name the last macro before saving it.
+            		                    insert-last-keyboard-macro	Insert the macro you made into a file.
+		                                load-file			Load a file with macros in it.
+C-x q		                            kbd-macro-query		Insert a query into a keyboard macro.
+M-C-c		                            exit-recursive-edit		Get the hell out of a recursive edit.
 
 *** RECTANGLES
 C-x r k/c                           Kill/clear rectangle
@@ -659,45 +812,45 @@ D                                   Delete MSG (mark)
 rx                                  Execute marks
 
 *** VERSION CONTROL
-C-x v v                                               vc-next-action
+C-x v v                             vc-next-action
 perform the next logical control operation on file
-C-x v i                                               vc-register
+C-x v i                             vc-register
 add a new file to version control
 
-C-x v +                                               vc-update
+C-x v +                             vc-update
 Get latest changes from version control
-C-x v ~                                               vc-version-other-window
+C-x v ~                             vc-version-other-window
 look at other revisions
-C-x v =                                               vc-diff
+C-x v =                             vc-diff
 diff with other revisions
-C-x v u                                               vc-revert-buffer
+C-x v u                             vc-revert-buffer
 undo checkout
-C-x v c                                               vc-cancel-version
+C-x v c                             vc-cancel-version
 delete latest rev (look at an old rev and re-check it)
 
-C-x v d                                               vc-directory
+C-x v d                             vc-directory
 show all files which are not up to date
-C-x v g                                               vc-annotate
+C-x v g                             vc-annotate
 show when each line in a tracked file was added and by whom
-C-x v s                                               vc-create-snapshot
+C-x v s                             vc-create-snapshot
 tag all the files with a symbolic name
-C-x v r                                               vc-retrieve-snapshot
+C-x v r                             vc-retrieve-snapshot
 undo checkouts and return to a snapshot with a symbolic name
 
-C-x v l                                               vc-print-log
+C-x v l                             vc-print-log
 show log (not in ChangeLog format)
-C-x v a                                               vc-update-change-log
+C-x v a                             vc-update-change-log
 update ChangeLog
 
-C-x v m     vc-merge
-C-x v h     vc-insert-headers
+C-x v m                             vc-merge
+C-x v h                             vc-insert-headers
 
-M-x                                                   vc-resolve-conflicts
+M-x                                 vc-resolve-conflicts
 ediff-merge session on a file with conflict markers
 
 *** OTHER
-git reflog                                            view log
-git reset --hard HEAD@{7}                             revert HEAD to 7
+git reflog                          view log
+git reset --hard HEAD@{7}           revert HEAD to 7
 
 "
          (generate-new-buffer "px-help-emacs"))
@@ -705,97 +858,6 @@ git reset --hard HEAD@{7}                             revert HEAD to 7
   (org-mode)
   (goto-char (point-min))
   (org-show-subtree))
-
-;; ;; ;; Toggling email! _____________________________________________________________
-
-"Key used to switch to mail and back"
-(defvar px-toggle-mail-key [(meta f1)])
-
-"Mail client, use wl or gnus"
-(fset 'px-mail-client 'wl)
-(defvar px-no-mail-window-configuration (current-window-configuration))
-(defvar px-mail-window-configuration t)
-
-(defun px-prefs (arg)
-  "toggle pref bits"
-  (tabbar-mode arg)
-  (scroll-bar-mode arg)
-  (global-linum-mode arg)
-  (fringe-mode arg))
-
-(defun px-reset-prefs nil
-  "reset my fucking prefs"
-  (interactive)
-  (px-prefs 0))
-
-(defun px-set-prefs nil
-  "reset my fucking prefs"
-  (interactive)
-  (px-prefs 1))
-
-(defun px-exit-mail nil
-  "called after switch back from mail"
-  (set-window-configuration px-no-mail-window-configuration)
-  (px-prefs t))
-
-(defun px-go-mail nil
-  "switch to mail client or launch it"
-  (interactive)
-  (if (or (get-buffer "Folder")		; Wanderlust
-	  (get-buffer "*Group*"))	; Gnus
-      (progn
-	(setq px-no-mail-window-configuration (current-window-configuration))
-	(px-prefs 0)
-	(set-window-configuration px-mail-window-configuration))
-    (progn
-      (setq px-no-mail-window-configuration (current-window-configuration))
-      (px-prefs 0)
-      (px-mail-client))))
-
-(defun px-no-mail nil
-  "switch back from mail"
-  (interactive)
-  (setq px-mail-window-configuration (current-window-configuration))
-  (set-window-configuration px-no-mail-window-configuration)
-  (px-prefs t))
-
-(eval-after-load "wl-folder"
-  '(define-key wl-folder-mode-map px-toggle-mail-key 'px-no-mail))
-
-(eval-after-load "wl-summary"
-  '(progn
-     (define-key wl-summary-mode-map [f3] 'wl-summary-pick)
-     (define-key wl-summary-mode-map px-toggle-mail-key 'px-no-mail)))
-
-(eval-after-load "wl-draft"
-  '(define-key wl-draft-mode-map px-toggle-mail-key 'px-no-mail))
-
-(eval-after-load "gnus"
-  '(progn
-     (define-key gnus-summary-mode-map px-toggle-mail-key 'px-no-mail)
-     (define-key gnus-group-mode-map px-toggle-mail-key 'px-no-mail)
-     (define-key gnus-article-mode-map px-toggle-mail-key 'px-no-mail)))
-
-(eval-after-load "message"
-  '(define-key message-mode-map px-toggle-mail-key 'px-no-mail))
-
-(add-hook
- 'mime-view-mode-hook
- '(lambda ()
-    (local-set-key px-toggle-mail-key 'px-no-mail)))
-
-(define-key global-map px-toggle-mail-key 'px-go-mail)
-
-;; This is sufficient apart from exiting
-(add-hook 'wl-mail-setup-hook 'px-reset-prefs)
-(add-hook 'wl-draft-send-hook 'px-reset-prefs)
-(add-hook 'wl-mail-send-pre-hook 'px-reset-prefs)
-(add-hook 'wl-news-send-pre-hook 'px-reset-prefs)
-(add-hook 'wl-message-buffer-created-hook 'px-reset-prefs)
-(add-hook 'wl-message-redisplay-hook 'px-reset-prefs)
-(add-hook 'wl-message-exit-hook 'px-reset-prefs)
-(add-hook 'wl-summary-exit-pre-hook 'px-reset-prefs)
-(add-hook 'wl-summary-exit-hook 'px-reset-prefs)
 
 (defun tabbar-buffer-groups ()
   "Return the list of group names the current buffer belongs to.
@@ -816,38 +878,6 @@ Emacs buffer are those starting with “*”."
 
 (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
 
-;; ;; Faces ______________________________________________________________________
-
-;; (if (window-system)
-;;     (progn
-;;       (set-face-attribute 'default nil :background "#2e3436" :foreground "#eeeeec")
-;;       (set-face-attribute 'cursor nil :background "#fce94f" :foreground "#2e3436")
-;;       (set-face-attribute 'highlight nil :background "dark red" :foreground
-;;     "#fce94f")
-;;       (set-face-attribute 'font-lock-builtin-face nil :foreground "#ad7fa8")
-;;       (set-face-attribute 'font-lock-comment-face nil :slant 'oblique :foreground "#73d216")
-;;       (set-face-attribute 'font-lock-constant-face nil :foreground "#e6a8df")
-;;       (set-face-attribute 'font-lock-function-name-face nil :foreground "#fce84f")
-;;       (set-face-attribute 'font-lock-keyword-face nil :foreground "#8cc4ff")
-;;       (set-face-attribute 'font-lock-string-face nil :foreground "#e9b96e")
-;;       (set-face-attribute 'font-lock-type-face nil :foreground "#a5ff4d")
-;;       (set-face-attribute 'font-lock-variable-name-face nil :foreground "#fcaf3e")
-;;       (set-face-attribute 'font-lock-warning-face nil :foreground "#ef2929")
-;;       (set-face-attribute 'fringe nil :background "#2c2c2c")
-;;       (set-face-attribute 'header-line nil :background "#555753" :foreground "#ffffff")
-;;       (set-face-attribute 'isearch nil :background "#ce5c00" :foreground "#ffffff")
-;;       (set-face-attribute 'lazy-highlight nil :background "#8f5902")
-;;       (set-face-attribute 'link nil :foreground "#729fcf" :underline t)
-;;       (set-face-attribute 'link-visited nil :foreground "#3465a4" :underline t)
-;;       (set-face-attribute 'minibuffer-prompt nil :foreground "#fce94f")
-;;       (set-face-attribute 'mode-line nil :background "gray10" :foreground "#eeeeee")
-;;       (set-face-attribute 'mode-line-inactive nil :background "#555753" :foreground "#ffffff")
-;;       (set-face-attribute 'mode-line-highlight nil :inverse-video t)
-;;       (set-face-attribute 'region nil :background "#555753"))
-;;   (set-face-attribute 'default nil :background "black" :foreground
-;;     "white")
-;;   (set-face-attribute 'mode-line nil :background "blue" :foreground "yellow"))
-
 ;; Custom ______________________________________________________________________
 
 (if (< emacs-major-version 24)
@@ -860,6 +890,7 @@ Emacs buffer are those starting with “*”."
  '(auto-save-file-name-transforms (quote ((".*" "~/.bkp/\\1" t))))
  '(backup-directory-alist (quote ((".*" . "~/.bkp/"))))
  '(bbdb-use-pop-up nil)
+ '(buffer-offer-save nil)
  '(canlock-password "cf5f7a7261c5832898abfc7ea08ba333a36ed78c")
  '(comment-style (quote extra-line))
  '(custom-enabled-themes (quote (tango-dark)))
@@ -870,7 +901,7 @@ Emacs buffer are those starting with “*”."
  '(global-font-lock-mode t)
  '(global-linum-mode t)
  '(global-undo-tree-mode t)
- '(indent-tabs-mode nil)
+ '(indent-tabs-mode t)
  '(inhibit-startup-echo-area-message (user-login-name))
  '(inhibit-startup-screen t)
  '(iswitchb-mode t)

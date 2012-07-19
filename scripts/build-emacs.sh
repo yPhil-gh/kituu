@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# plip
+
 EMACS_BZR_DIR=~/src/emacs-tmp
 EMACS_SRC_DIR=~/src/emacs-src
 
