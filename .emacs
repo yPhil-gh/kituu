@@ -24,7 +24,10 @@
 	)
 ;; (mail-bug-init)
 
-(if (< emacs-major-version 24)
+(if
+		(and
+		 (file-exists-p "~/.emacs.d/lisp/nxhtml/autostart.el")
+		 (< emacs-major-version 24))
     (progn
       (load "~/.emacs.d/lisp/nxhtml/autostart.el")
       (tabkey2-mode t))
@@ -154,6 +157,7 @@ Does not set point.  Does nothing if mark ring is empty."
 	nil)))
 
 (defun px-byte-compile-user-init-file ()
+	"byte-compile .emacs each time it is edited"
   (let ((byte-compile-warnings '(unresolved)))
     ;; in case compilation fails, don't leave the old .elc around:
     (when (file-exists-p (concat user-init-file ".elc"))

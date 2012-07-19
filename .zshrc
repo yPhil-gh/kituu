@@ -113,7 +113,7 @@ Find-this-and-do-that () {
 }
 
 pss () {
-    ps aux | grep -i "[${1:0:1}]${1:1}"
+    ps aux | grep -i $1
 }
 
 bkp () {
