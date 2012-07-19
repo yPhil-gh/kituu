@@ -33,36 +33,6 @@
 	)
 ;; (mail-bug-init)
 
-;; (eval-and-compile
-;; 	(require 'tabbar)
-;; 	(require 'tabbar-ruler)
-;; 	;; (require 'elid)
-;; 	;; (require 'mail-bug nil t)
-;; ;;	(require 'bbdb)
-;; 	;; (require 'tabkey2 nil t)
-;; 	(require 'undo-tree)
-;; ;;	(require 'marker-visit)
-;; 	(require 'cl)
-;; 	;; (require 'imapua)
-;; 	;; Required by my iswitchb hack
-;; 	(require 'edmacro)
-;; 	)
-;; ;; (mail-bug-init)
-
-(condition-case nil               ; ignore errors if this is not found
-    (require 'dired-x)
-  (error nil))
-
-(defvar requires)
-
-;;(add-to-list 'requires "plop")
-
-;; 	(require 'plop)
-
-
-;; (load "~/.emacs.d/lisp/nxhtml/autostart.el")
-;; (add-hook 'after-change-major-mode-hook 'linum-mode 'auto-fill-function)
-
 (if (< emacs-major-version 24)
     (progn
       (load "~/.emacs.d/lisp/nxhtml/autostart.el")
@@ -91,25 +61,6 @@
 
 
 ;; (message "we are at line %s" (line-number-at-pos))
-
-;; (has ital)
-;; Liberation Mono-11
-;; Liberation Sans-11
-;; (no ital)
-;; Haramain-13
-;; Inconsolata-12
-
-;; (set-default-font
-;;  "-*-lucida-*-*-*-*-*-*-*-*-*-*-*-*")
-
-;; (set-face-font "-b&h-lucida-*-i-*-*-11-*-*-*-*-*-*-*")
-
-;; (set-face-attribute 'default nil :family "Inconsolata" :height 140)
-;;----------------------------------------
-;;default to text-mode with auto-fill at column 75 [TUCKERM Feb2002]
-;;----------------------------------------
-
-;; start
 
 (setq default-major-mode 'text-mode
 			text-mode-hook 'turn-on-auto-fill
@@ -928,22 +879,6 @@ Emacs buffer are those starting with “*”."
  '(undo-tree-visualizer-diff t)
  '(vc-make-backup-files t)
  '(web-vcs-default-download-directory (quote site-lisp-dir)))
-
-;; ;; Garbage ______________________________________________________________________
-;; ;; (setq yas/root-directory "~/.emacs.d/el-get/yasnippet/snippets")
-;; ;; (add-hook 'php-mode-hook 'yas/global-mode)
-
-;; (set-face-attribute 'default nil
-;; :font "Monospace"
-;; :height 110
-;; :weight 'normal
-
-;; :width 'normal
-;; :font "Inconsolata"
-;; :slant 'reverse-italic
-;; :weight 'bold
-;; :width 'wide
-;; )
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
