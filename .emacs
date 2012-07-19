@@ -696,6 +696,7 @@ git reset --hard HEAD@{7}           revert HEAD to 7
   (goto-char (point-min))
   (org-show-subtree))
 
+
 ;; Custom ______________________________________________________________________
 
 (if (< emacs-major-version 24)
