@@ -3,10 +3,10 @@
 ;; Remember to remove ~/.emacs.elc if you edit ~/.emacs, break it and repair it
 ;; Use C-h x to read about what this .emacs can do for you (quite a bit)
 
+
 ;; Init! ______________________________________________________________________
 
 (let ((default-directory "~/.emacs.d/lisp/"))
-	;;  (normal-top-level-add-to-load-path '("."))
   (normal-top-level-add-subdirs-to-load-path))
 
 ;; External libs
@@ -15,11 +15,10 @@
 	(require 'tabbar-ruler nil 'noerror)	; Additional functions for tabbar
 	(require 'undo-tree nil 'noerror)			; Visualize undo (and allow sane redo)
 	(require 'cl nil 'noerror)						; Built-in : Common Lisp lib
-	(require 'edmacro nil 'noerror)				; Built-in : Required by iswitchb
-	;; (require 'tabkey2 nil t)
+	(require 'edmacro nil 'noerror)				; Built-in : Macro bits (Required by iswitchb)
 	;; (require 'elid)
 	;; (require 'mail-bug nil t)
-	;; (require 'imapua)
+	(require 'imapua)
 	;; Required by my iswitchb hack
 	)
 ;; (mail-bug-init)
@@ -30,7 +29,8 @@
 		 (< emacs-major-version 24))
     (progn
       (load "~/.emacs.d/lisp/nxhtml/autostart.el")
-      (tabkey2-mode t))
+      ;; (tabkey2-mode t)
+			)
   (progn
     (require 'php-mode nil t)
     (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
@@ -49,28 +49,9 @@
 (defvar ediff-window-setup-function)
 (defvar ediff-split-window-function)
 (defvar tabbar-buffer-groups-function)
-(defvar savehist-file)
 (defvar px-newName)
-(defvar px-minibuffer-history)
-
 
 ;; Funcs! _________________________________________________________________
-
-(defun unpop-to-mark-command ()
-  "Unpop off mark ring into the buffer's actual mark.
-Does not set point.  Does nothing if mark ring is empty."
-  (interactive)
-  (let ((num-times (if (equal last-command 'pop-to-mark-command) 2
-                     (if (equal last-command 'unpop-to-mark-command) 1
-                       (error "Previous command was not a (un)pop-to-mark-command")))))
-    (dotimes (x num-times)
-      (when mark-ring
-        (setq mark-ring (cons (copy-marker (mark-marker)) mark-ring))
-        (set-marker (mark-marker) (+ 0 (car (last mark-ring))) (current-buffer))
-        (when (null (mark t)) (ding))
-        (setq mark-ring (nbutlast mark-ring))
-        (goto-char (mark t)))
-      (deactivate-mark))))
 
 (defun px-match-paren (arg)
   "Go to the matching paren if on a paren; otherwise insert <key>."
@@ -162,7 +143,7 @@ Does not set point.  Does nothing if mark ring is empty."
   (message "backuped %s" px-newName))
 
 (defun px-query-replace-in-open-buffers (arg1 arg2)
-  "query-replace in open files"
+  "query-replace in all open files"
   (interactive "sRegexp:\nsReplace with:")
   (mapcar
    (lambda (x)
@@ -269,22 +250,18 @@ Does not set point.  Does nothing if mark ring is empty."
 
 (defun px-toggle-comments ()
   "If region is set, [un]comments it. Otherwise [un]comments current line."
-  (interactive) ;; apparently I need this line so it can move the cursor
-  ;; (save-excursion ;; don't mess with mark
-  (if (eq mark-active nil) ;; no region active
+  (interactive)
+  (if (eq mark-active nil)
       (progn (beginning-of-line 1)
 						 (set-mark (point))
 						 (forward-line)
 						 (comment-dwim nil))
-    (comment-dwim nil)) ;; [un]comment
-  (deactivate-mark)) ;; don't mess with selection
+    (comment-dwim nil))
+  (deactivate-mark))
 
 (defun tabbar-buffer-groups ()
   "Return the list of group names the current buffer belongs to.
-This function is a custom function for tabbar-mode's tabbar-buffer-groups.
-This function groups all buffers into 3 groups:
-Those Dired, those user buffer, and those emacs buffer.
-Emacs buffer are those starting with “*”."
+This function is a custom function for tabbar-mode's tabbar-buffer-groups."
   (list
    (cond
     ((string-equal "*" (substring (buffer-name) 0 1))
@@ -297,6 +274,7 @@ Emacs buffer are those starting with “*”."
      "User Buffer"))))
 
 (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
+
 
 ;; Sessions! ______________________________________________________________________
 
@@ -386,7 +364,9 @@ Emacs buffer are those starting with “*”."
 
 (add-hook 'kill-emacs-hook 'my-desktop-kill-emacs-hook)
 
+
 ;; Modes! ______________________________________________________________________
+
 (set-scroll-bar-mode `right)
 (auto-fill-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -394,6 +374,7 @@ Emacs buffer are those starting with “*”."
 
 (setq c-default-style "bsd"
       c-basic-offset 2)
+;; (when (functionp 'savehist-mode) (savehist-mode 1))
 
 ;; Hooks! _____________________________________________________________________
 
@@ -412,7 +393,7 @@ Emacs buffer are those starting with “*”."
  iswitchb-buffer-ignore '("^ " "*.")
  ispell-dictionary "francais"
 
- delete-by-moving-to-trash t
+ ;; delete-by-moving-to-trash t
  list-colors-sort 'hsv
 
  default-major-mode 'text-mode
@@ -429,7 +410,7 @@ Emacs buffer are those starting with “*”."
 																														"%b")) " [%*]"))
 
 
-;; ;; ;; Keys! ______________________________________________________________________
+;; Keys! ______________________________________________________________________
 
 (global-set-key (kbd "C-h x") 'px-help-emacs)
 
@@ -491,22 +472,18 @@ Emacs buffer are those starting with “*”."
 (global-set-key (kbd "C-<tab>") 'tabbar-forward)
 (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
 
-(global-set-key (kbd "C-\"") 'insert-pair-dbquote)		 ;""
-(global-set-key (kbd "C-)") 'insert-pair-paren)				 ;()
 (global-set-key (kbd "C-=") 'insert-pair-brace)				 ;{}
-(global-set-key (kbd "C-'") 'insert-pair-squote)			 ;{}
+(global-set-key (kbd "C-)") 'insert-pair-paren)				 ;()
 (global-set-key (kbd "C-(") 'insert-pair-bracket)			 ;[]
 (global-set-key (kbd "C-<") 'insert-pair-single-angle) ;<>
+(global-set-key (kbd "C-'") 'insert-pair-squote)			 ;''
+(global-set-key (kbd "C-\"") 'insert-pair-dbquote)		 ;""
 
 (global-set-key (kbd "M-s") 'save-buffer) ; Meta+s saves !! (see C-h b for all bindings, and C-h k + keystroke(s) for help)
 (global-set-key (kbd "M-DEL") 'kill-word)
 (global-set-key (kbd "M-<backspace>") 'backward-kill-word)
 (global-set-key (kbd "M-o") 'recentf-open-files)
 (global-set-key (kbd "M-d") 'px-toggle-comments)
-
-(setq px-minibuffer-history (concat user-emacs-directory "px-minibuffer-history"))
-(setq savehist-file px-minibuffer-history)
-(when (functionp 'savehist-mode) (savehist-mode 1))
 
 
 ;; ;; Help! ______________________________________________________________________
@@ -523,7 +500,7 @@ Emacs buffer are those starting with “*”."
 *Open file                           C-o*
 *Open recent file                    M-o*
 *Open file path at point             s-o*
-*Open last session (buffers)         C-s-o*
+*Open last session (buffers)         C-S-o*
 
 *Save buffer                         M-s*
 *Kill current buffer                 s-k*
@@ -532,17 +509,18 @@ Emacs buffer are those starting with “*”."
 *Switch last buffer                  s-²*
 *Scroll other buffer                 M-<arrow>*
 
-*match brace                         ù*
-*next brace pair                     C-ù*
-*Previous brace pair                 C-S-ù*
-
 *Close other window (frame)          F1*
 *Switch to other window (frame)      F2*
 *Split horizontally                  F3*
 *Split vertically                    F4*
 *Switch to buffer                    F5*
+*Toggle two last buffers             s-²*
 *Spell-check buffer                  F7*
 *Word-wrap toggle                    F10*
+
+*match brace                         ù*
+*next brace pair                     C-ù*
+*Previous brace pair                 C-S-ù*
 *enclose region in <tag> (sgml-tag)  s-t RET tag [ args... ]*
 *select 'this' or <that> (enclosed)  s-SPC**
 
@@ -551,100 +529,98 @@ Emacs buffer are those starting with “*”."
 *js-mode                             s-j*
 
 *** EMACSEN
-Recenter window around current line C-l
-Intelligently recenter window       C-S-l
-Copy to register A                  C-x r s A
-Paste from register A               C-x r g A
-Clone emacs (!?)                    C-x 5 2
-Set bookmark at point               C-x r m RET
-Close HTML tag                      sgml-close-tag
-Switch to *Messages* buffer         C-h e
-
-*** MISC EDITING
-M-c		                              capitalize-word		Capitalize the first letter of the current word.
-M-u		                              upcase-word		Make the word all uppercase.
-M-l		                              downcase-word		Make the word all lowercase.
-C-x C-l		                          downcase-region		Make the region all lowercase.
-C-x C-u		                          uppercase-region	Make the region all uppercase.
-
-*** MACROS
-C-x (		                            start-kbd-macro		Start a new macro definition.
-C-x )		                            end-kbd-macro		End the current macro definition.
-C-x e		                            call-last-kbd-macro	Execute the last defined macro.
-M-(number) C-x e	                  call-last-kbd-maco	Do that last macro (number times).
-C-u C-x (	                          stat-kbd-macro		Execute last macro and add to it.
-		                                name-last-kbd-macro	Name the last macro before saving it.
-            		                    insert-last-keyboard-macro	Insert the macro you made into a file.
-		                                load-file			Load a file with macros in it.
-C-x q		                            kbd-macro-query		Insert a query into a keyboard macro.
-M-C-c		                            exit-recursive-edit		Get the hell out of a recursive edit.
+Recenter window around current line  C-l
+Intelligently recenter window        C-S-l
+Copy to register A                   C-x r s A
+Paste from register A                C-x r g A
+Set bookmark at point                C-x r m RET
+Close HTML tag                       sgml-close-tag
+Switch to *Messages* buffer          C-h e
 
 *** RECTANGLES
-C-x r k/c                           Kill/clear rectangle
-C-x r y                             yank-rectangle (upper left corner at point)
-C-x r t string <RET>                Insert STRING on each rectangle line.
+C-x r k/c                            Kill/clear rectangle
+C-x r y                              yank-rectangle (upper left corner at point)
+C-x r t string <RET>                 Insert STRING on each rectangle line.
+
+*** MISC EDITING
+M-c		                               capitalize-word		Capitalize the first letter of the current word.
+M-u		                               upcase-word		Make the word all uppercase.
+M-l		                               downcase-word		Make the word all lowercase.
+C-x C-l		                           downcase-region		Make the region all lowercase.
+C-x C-u		                           uppercase-region	Make the region all uppercase.
+
+*** MACROS
+C-x (		                             start-kbd-macro		Start a new macro definition.
+C-x )		                             end-kbd-macro		End the current macro definition.
+C-x e		                             call-last-kbd-macro	Execute the last defined macro.
+M-(number) C-x e	                   call-last-kbd-maco	Do that last macro (number times).
+C-u C-x (	                           stat-kbd-macro		Execute last macro and add to it.
+		                                 name-last-kbd-macro	Name the last macro before saving it.
+            		                     insert-last-keyboard-macro	Insert the macro you made into a file.
+		                                 load-file			Load a file with macros in it.
+C-x q		                             kbd-macro-query		Insert a query into a keyboard macro.
+M-C-c		                             exit-recursive-edit		Get the hell out of a recursive edit.
 
 *** EDIFF
-Next / previous diff                n / p
-Copy a diff into b / opposite       a / b
-Save a / b buffer                   wa / wb
+Next / previous diff                 n / p
+Copy a diff into b / opposite        a / b
+Save a / b buffer                    wa / wb
 
 *** GNUS
-Sort summary by author/date         C-c C-s C-a/d
-Search selected imap folder         G G
-Mark thread read                    T k
+Sort summary by author/date          C-c C-s C-a/d
+Search selected imap folder          G G
+Mark thread read                     T k
 
 *** PHP-MODE
-C-c C-f                             Search PHP manual for point.
-C-c RET / C-c C-m                   Browse PHP manual in a Web browser.
+C-c C-f                              Search PHP manual for point.
+C-c RET / C-c C-m                    Browse PHP manual in a Web browser.
 
 *** WANDERLUST
-T                                   Toggle Threading
-d                                   Dispose MSG (mark)
-D                                   Delete MSG (mark)
-rx                                  Execute marks
+T                                    Toggle Threading
+d                                    Dispose MSG (mark)
+D                                    Delete MSG (mark)
+rx                                   Execute marks
 
 *** VERSION CONTROL
-C-x v v                             vc-next-action
+C-x v v                              vc-next-action
 perform the next logical control operation on file
-C-x v i                             vc-register
+C-x v i                              vc-register
 add a new file to version control
 
-C-x v +                             vc-update
+C-x v +                              vc-update
 Get latest changes from version control
-C-x v ~                             vc-version-other-window
+C-x v ~                              vc-version-other-window
 look at other revisions
-C-x v =                             vc-diff
+C-x v =                              vc-diff
 diff with other revisions
-C-x v u                             vc-revert-buffer
+C-x v u                              vc-revert-buffer
 undo checkout
-C-x v c                             vc-cancel-version
+C-x v c                              vc-cancel-version
 delete latest rev (look at an old rev and re-check it)
 
-C-x v d                             vc-directory
+C-x v d                              vc-directory
 show all files which are not up to date
-C-x v g                             vc-annotate
+C-x v g                              vc-annotate
 show when each line in a tracked file was added and by whom
-C-x v s                             vc-create-snapshot
+C-x v s                              vc-create-snapshot
 tag all the files with a symbolic name
-C-x v r                             vc-retrieve-snapshot
+C-x v r                              vc-retrieve-snapshot
 undo checkouts and return to a snapshot with a symbolic name
 
-C-x v l                             vc-print-log
+C-x v l                              vc-print-log
 show log (not in ChangeLog format)
-C-x v a                             vc-update-change-log
+C-x v a                              vc-update-change-log
 update ChangeLog
 
-C-x v m                             vc-merge
-C-x v h                             vc-insert-headers
+C-x v m                              vc-merge
+C-x v h                              vc-insert-headers
 
-M-x                                 vc-resolve-conflicts
+M-x                                  vc-resolve-conflicts
 ediff-merge session on a file with conflict markers
 
 *** OTHER
-git reflog                          view log
-git reset --hard HEAD@{7}           revert HEAD to 7
-
+git reflog                           view log
+git reset --hard HEAD@{7}            revert HEAD to 7
 "
          (generate-new-buffer "px-help-emacs"))
   (switch-to-buffer "px-help-emacs")
@@ -653,10 +629,11 @@ git reset --hard HEAD@{7}           revert HEAD to 7
   (org-show-subtree))
 
 
-;; Custom ______________________________________________________________________
+;; Custom ! ______________________________________________________________________
 
 (if (< emacs-major-version 24)
 		(set-face-attribute 'default nil :background "#2e3436" :foreground "#eeeeec"))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -666,10 +643,14 @@ git reset --hard HEAD@{7}           revert HEAD to 7
  '(backup-directory-alist (quote ((".*" . "~/.bkp/"))))
  '(bbdb-use-pop-up nil)
  '(buffer-offer-save nil)
+ '(c-basic-offset (quote set-from-style))
+ '(c-default-style "gnu")
  '(canlock-password "cf5f7a7261c5832898abfc7ea08ba333a36ed78c")
  '(comment-style (quote extra-line))
  '(completion-auto-help (quote lazy))
+ '(cursor-in-non-selected-windows nil)
  '(custom-enabled-themes (quote (tango-dark)))
+ '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
  '(display-time-24hr-format t)
  '(display-time-mode t)
@@ -689,6 +670,7 @@ git reset --hard HEAD@{7}           revert HEAD to 7
  '(recentf-mode t)
  '(recentf-save-file "~/.bkp/recentf")
  '(require-final-newline (quote ask))
+ '(savehist-mode t)
  '(scroll-conservatively 200)
  '(scroll-margin 3)
  '(send-mail-function (quote mailclient-send-it))
@@ -727,8 +709,3 @@ git reset --hard HEAD@{7}           revert HEAD to 7
  '(tabbar-highlight ((t (:foreground "red" :underline nil))))
  '(tabbar-selected ((t (:inherit tabbar-default :background "#2e3436" :foreground "yellow" :box (:line-width 3 :color "#2e3436")))))
  '(tabbar-unselected ((t (:inherit tabbar-default :background "dim gray" :box (:line-width 3 :color "dim gray"))))))
-
-(add-hook 'php-mode-hook
-          (function (lambda ()
-                      (setq indent-tabs-mode nil
-                            tab-width 2))))

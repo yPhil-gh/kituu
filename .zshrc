@@ -108,6 +108,33 @@ zebra () {cat $1 | awk 'NR%2 == 1 {printf("\033[30m\033[47m%s\033[0m\n", $0); ne
 # do a du -hs on each dir on current path
 alias lsdir="for dir in *;do;if [ -d \$dir ];then;du -hsL \$dir;fi;done"
 
+## BASH locate function for exact match
+## Thanks Dark_Helmet : http://solarum.com/v.php?l=1149LV99
+function flocate
+{
+  if [ $# -gt 1 ] ; then
+    display_divider=1
+  else
+    display_divider=0
+  fi
+
+  current_argument=0
+  total_arguments=$#
+  while [ ${current_argument} -lt ${total_arguments} ] ; do
+    current_file=$1
+    if [ "${display_divider}" = "1" ] ; then
+      echo "----------------------------------------"
+      echo "Matches for ${current_file}"
+      echo "----------------------------------------"
+    fi
+
+    filename_re="^\(.*/\)*$( echo ${current_file} | sed s%\\.%\\\\.%g )$"
+    locate -r "${filename_re}"
+    shift
+    (( current_argument = current_argument + 1 ))
+  done
+}
+
 Find-this-and-do-that () {
     find . -name $1 -exec ls -l '{}' \;
 }
@@ -123,6 +150,9 @@ bkp () {
 cleanup-turds () {
     find ./ -name "*~" -exec rm '{}' \; -print -or -name ".*~" -exec rm {} \; -print -or -name "#*#" -exec rm '{}' \; -print -or -name "*.swp" -exec rm '{}' \; -print
 }
+
+# Notes
+# ssh machine -L127.0.0.1:3306:127.0.0.1:3306
 
 # prompt
 function precmd {
