@@ -391,7 +391,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (auto-fill-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
 (put 'overwrite-mode 'disabled t)
-
+;; (tabbar-mode t)
+(tool-bar-mode nil)
 (setq c-default-style "bsd"
       c-basic-offset 2)
 ;; (when (functionp 'savehist-mode) (savehist-mode 1))
@@ -705,6 +706,7 @@ git reset --hard HEAD@{7}            revert HEAD to 7
  '(tab-always-indent (quote complete))
  '(tab-stop-list (quote (2 4 8 16 24 32 40 48 56 64 72 80 88 96 104 112 120)))
  '(tab-width 2)
+ '(tabbar-ruler-excluded-buffers (quote ("*Messages*" "*scratch*" "\\*.\\*")))
  '(tramp-default-method "ssh")
  '(undo-tree-auto-save-history t)
  '(undo-tree-enable-undo-in-region nil)
