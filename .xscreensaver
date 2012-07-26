@@ -2,10 +2,10 @@
 # Written by xscreensaver-demo 5.14 for px on Wed Jul  4 14:06:02 2012.
 # http://www.jwz.org/xscreensaver/
 
-timeout:	0:01:00
-cycle:		0:01:00
-lock:		False
-lockTimeout:	0:00:00
+timeout:	0:45:00
+cycle:		0:15:00
+lock:		True
+lockTimeout:	0:02:00
 passwdTimeout:	0:00:30
 visualID:	default
 installColormap:    True
@@ -32,14 +32,14 @@ dpmsOff:	4:00:00
 grabDesktopImages:  True
 grabVideoFrames:    False
 chooseRandomImages: False
-imageDirectory:	
+imageDirectory:
 
 mode:		random
 selected:	-1
 
 textMode:	url
 textLiteral:	XScreenSaver
-textFile:	
+textFile:
 textProgram:	fortune
 textURL:	http://fridge.ubuntu.com/node/feed
 
@@ -258,4 +258,3 @@ GetViewPortIsFullOfLies:False
 procInterrupts:	True
 xinputExtensionDev: False
 overlayStderr:	True
-

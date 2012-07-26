@@ -8,8 +8,8 @@
 (gnus-demon-add-handler 'Chk-mail-px 5 nil) ; 5 minutes
 ;; (gnus-demon-add-rescan)
 
-(require 'olimap)
-(require 'gnus-notify-)
+;; (require 'olimap)
+;; (require 'gnus-notify-)
 (require 'nnir)
 ;; (require 'bbdb)
 ;; (require 'moy-bbdb)

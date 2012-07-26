@@ -11,17 +11,37 @@
 
 ;; External libs
 (eval-and-compile
-	(require 'tabbar nil 'noerror)				; Tabs to switch buffer
-	(require 'tabbar-ruler nil 'noerror)	; Additional functions for tabbar
+	(require 'tabbar nil 'noerror)				; Tabs
+	(require 'tabbar-ruler nil 'noerror)	; Nice tabs
 	(require 'undo-tree nil 'noerror)			; Visualize undo (and allow sane redo)
 	(require 'cl nil 'noerror)						; Built-in : Common Lisp lib
 	(require 'edmacro nil 'noerror)				; Built-in : Macro bits (Required by iswitchb)
 	;; (require 'elid)
 	;; (require 'mail-bug nil t)
-	(require 'imapua)
+	(require 'imapua nil 'noerror)
+	;; (require 'emacs-imap)
 	;; Required by my iswitchb hack
 	)
 ;; (mail-bug-init)
+
+;; Mew
+(autoload 'mew "mew" nil t)
+(autoload 'mew-send "mew" nil t)
+
+;; Optional setup (Read Mail menu):
+(setq read-mail-command 'mew)
+
+;; Optional setup (e.g. C-xm for sending a message):
+(autoload 'mew-user-agent-compose "mew" nil t)
+(if (boundp 'mail-user-agent)
+    (setq mail-user-agent 'mew-user-agent))
+(if (fboundp 'define-mail-user-agent)
+    (define-mail-user-agent
+      'mew-user-agent
+      'mew-user-agent-compose
+      'mew-draft-send-message
+      'mew-draft-kill
+      'mew-send-hook))
 
 (if
 		(and
@@ -227,7 +247,7 @@
       (save-buffer)
       (message "Region refrigerated!"))))
 
-(defun stop-using-minibuffer ()
+(defun px-exit-minibuffer ()
   "kill the minibuffer when going back to emacs using the mouse"
   (when (and (>= (recursion-depth) 1) (active-minibuffer-window))
     (abort-recursive-edit)))
@@ -380,7 +400,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 (add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)
 (add-hook 'find-file-hooks 'turn-on-font-lock)
-(add-hook 'mouse-leave-buffer-hook 'stop-using-minibuffer)
+(add-hook 'mouse-leave-buffer-hook 'px-exit-minibuffer)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 
@@ -523,12 +543,14 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 *Previous brace pair                 C-S-ù*
 *enclose region in <tag> (sgml-tag)  s-t RET tag [ args... ]*
 *select 'this' or <that> (enclosed)  s-SPC**
+*Search selection in google          s-g*
 
 *php-mode                            s-p*
 *html-mode                           s-h*
 *js-mode                             s-j*
 
 *** EMACSEN
+Go back to \"where you were\"        C-u C-SPC
 Recenter window around current line  C-l
 Intelligently recenter window        C-S-l
 Copy to register A                   C-x r s A
@@ -662,6 +684,7 @@ git reset --hard HEAD@{7}            revert HEAD to 7
  '(inhibit-startup-echo-area-message (user-login-name))
  '(inhibit-startup-screen t)
  '(iswitchb-mode t)
+ '(mail-interactive t)
  '(menu-bar-mode nil)
  '(mumamo-margin-use (quote (left-margin 13)))
  '(recenter-redisplay nil)
@@ -670,7 +693,7 @@ git reset --hard HEAD@{7}            revert HEAD to 7
  '(recentf-mode t)
  '(recentf-save-file "~/.bkp/recentf")
  '(require-final-newline (quote ask))
- '(savehist-mode t)
+ '(savehist-mode t nil (savehist))
  '(scroll-conservatively 200)
  '(scroll-margin 3)
  '(send-mail-function (quote mailclient-send-it))
@@ -699,11 +722,11 @@ git reset --hard HEAD@{7}            revert HEAD to 7
  '(minibuffer-prompt ((t (:foreground "#fce94f" :height 1.0))))
  '(mode-line ((t (:background "gray10" :foreground "white" :box nil))))
  '(mode-line-inactive ((t (:inherit mode-line :background "#555753" :foreground "#eeeeec" :box nil :weight light))))
- '(mumamo-background-chunk-major ((t (:background "gray10"))) t)
- '(mumamo-background-chunk-submode1 ((t (:background "gray15"))) t)
- '(mumamo-background-chunk-submode2 ((t (:background "gray20"))) t)
- '(mumamo-background-chunk-submode3 ((t (:background "gray25"))) t)
- '(mumamo-background-chunk-submode4 ((t (:background "gray30"))) t)
+ '(mumamo-background-chunk-major ((t (:background "gray10"))))
+ '(mumamo-background-chunk-submode1 ((t (:background "gray15"))))
+ '(mumamo-background-chunk-submode2 ((t (:background "gray20"))))
+ '(mumamo-background-chunk-submode3 ((t (:background "gray25"))))
+ '(mumamo-background-chunk-submode4 ((t (:background "gray30"))))
  '(show-paren-match ((t (:background "salmon4"))))
  '(tabbar-default ((t (:inherit default))))
  '(tabbar-highlight ((t (:foreground "red" :underline nil))))

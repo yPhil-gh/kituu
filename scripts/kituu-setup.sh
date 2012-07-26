@@ -44,7 +44,7 @@ lisp[tabbar]="git clone https://github.com/dholm/tabbar.git"
 lisp[tabbar-ruler]="git clone ${vc_prefix}xaccrocheur/tabbar-ruler.git"
 lisp[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
 lisp[marker-visit]="git clone https://github.com/emacsmirror/marker-visit.git"
-# lisp[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
+lisp[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
 # lisp[nxhtml]="bzr branch lp:nxhtml"
 
 echo -e $sep"Kituu! #################
