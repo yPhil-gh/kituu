@@ -14,7 +14,7 @@
 	(require 'undo-tree nil 'noerror)			; Visualize undo (and allow sane redo)
 	(require 'cl nil 'noerror)						; Built-in : Common Lisp lib
 	(require 'edmacro nil 'noerror)				; Built-in : Macro bits (Required by iswitchb)
-	(require 'tls nil 'noerror)
+	(require 'imap nil 'noerror)
 	;; (require 'elid)
 	;; (require 'mail-bug nil t)
 	(require 'imapua nil 'noerror)
