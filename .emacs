@@ -23,12 +23,14 @@
 	)
 ;; (mail-bug-init)
 
-(add-to-list 'Info-default-directory-list
-(expand-file-name "~/.emacs.d/lisp/vm/info/"))
-(require 'vm-autoloads)
-;; (setq vm-stunnel-program "/usr/bin/X11/stunnel4")
-(setq vm-stunnel-program nil)
-(setq vm-mime-text/html-handler 'emacs-w3m)
+(if (file-exists-p "~/.emacs.d/lisp/vm/README")
+		(progn
+			(add-to-list 'Info-default-directory-list
+									 (expand-file-name "~/.emacs.d/lisp/vm/info/"))
+			(require 'vm-autoloads)
+			;; (setq vm-stunnel-program "/usr/bin/X11/stunnel4")
+			(setq vm-stunnel-program nil)
+			(setq vm-mime-text/html-handler 'emacs-w3m)))
 
 (if
 		(and
