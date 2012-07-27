@@ -22,8 +22,6 @@
 	;; Required by my iswitchb hack
 	)
 ;; (mail-bug-init)
-(tabbar-mode t)
-(tool-bar-mode -1)
 
 (add-to-list 'Info-default-directory-list
 (expand-file-name "~/.emacs.d/lisp/vm/info/"))
@@ -58,7 +56,7 @@
 (defvar ediff-window-setup-function)
 (defvar ediff-split-window-function)
 (defvar tabbar-buffer-groups-function)
-(defvar px-newName)
+(defvar px-bkp-new-name)
 
 ;; Funcs! _________________________________________________________________
 
@@ -116,21 +114,21 @@
 			(kill-buffer (current-buffer))
 			(delete-window))))
 
-(defun px-byte-compile-user-init-file ()
-	"byte-compile .emacs each time it is edited"
-  (let ((byte-compile-warnings '(unresolved)))
-    ;; in case compilation fails, don't leave the old .elc around:
-    (when (file-exists-p (concat user-init-file ".elc"))
-      (delete-file (concat user-init-file ".elc")))
-    (byte-compile-file user-init-file)
-    (message "%s compiled" user-init-file)
-    ))
+;; (defun px-byte-compile-user-init-file ()
+;; 	"byte-compile .emacs each time it is edited"
+;;   (let ((byte-compile-warnings '(unresolved)))
+;;     ;; in case compilation fails, don't leave the old .elc around:
+;;     (when (file-exists-p (concat user-init-file ".elc"))
+;;       (delete-file (concat user-init-file ".elc")))
+;;     (byte-compile-file user-init-file)
+;;     (message "%s compiled" user-init-file)
+;;     ))
 
-(defun px-emacs-lisp-mode-hook ()
-  (when (string-match "\\.emacs" (buffer-name))
-    (add-hook 'after-save-hook 'px-byte-compile-user-init-file t t)))
+;; (defun px-emacs-lisp-mode-hook ()
+;;   (when (string-match "\\.emacs" (buffer-name))
+;;     (add-hook 'after-save-hook 'px-byte-compile-user-init-file t t)))
 
-(add-hook 'emacs-lisp-mode-hook 'px-emacs-lisp-mode-hook)
+;; (add-hook 'emacs-lisp-mode-hook 'px-emacs-lisp-mode-hook)
 
 (defun make-backup-dir-px (dirname)
   "create backup dir"
@@ -139,17 +137,17 @@
 			(make-directory dirname t)))
 (make-backup-dir-px "~/.bkp/")
 
-(defun bkp-px ()
+(defun px-bkp ()
   "Write the current buffer to a new file - silently - and append the date+time to the filename, retaining extention"
   (interactive)
-  (setq px-newName
+  (setq px-bkp-new-name
 				(concat
 				 (file-name-sans-extension buffer-file-name) "-"
 				 (format-time-string  "%Y-%m-%d") "."
 				 (format-time-string "%Hh%M") "."
 				 (file-name-extension buffer-file-name)))
-  (write-region (point-min) (point-max) px-newName)
-  (message "backuped %s" px-newName))
+  (write-region (point-min) (point-max) px-bkp-new-name)
+  (message "backuped %s" px-bkp-new-name))
 
 (defun px-query-replace-in-open-buffers (arg1 arg2)
   "query-replace in all open files"
@@ -374,7 +372,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (add-hook 'kill-emacs-hook 'my-desktop-kill-emacs-hook)
 
 
-;; Modes! ______________________________________________________________________
+;; Modes! _____________________________________________________________________
 
 (set-scroll-bar-mode `right)
 (auto-fill-mode t)
@@ -385,6 +383,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (setq c-default-style "bsd"
       c-basic-offset 2)
 ;; (when (functionp 'savehist-mode) (savehist-mode 1))
+(tabbar-mode t)
+(tool-bar-mode -1)
 
 ;; Hooks! _____________________________________________________________________
 
@@ -496,7 +496,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "M-d") 'px-toggle-comments)
 
 
-;; ;; Help! ______________________________________________________________________
+;; Help! ______________________________________________________________________
 
 (defun px-help-emacs ()
   (interactive)
@@ -643,10 +643,6 @@ git reset --hard HEAD@{7}            revert HEAD to 7
 
 ;; Custom ! ______________________________________________________________________
 
-;; (set-face-attribute 'tabbar-button nil
-;;                     :inherit 'tabbar-default
-;;                     :box nil)
-
 (if (< emacs-major-version 24)
 		(set-face-attribute 'default nil :background "#2e3436" :foreground "#eeeeec"))
 
@@ -699,7 +695,6 @@ git reset --hard HEAD@{7}            revert HEAD to 7
  '(tab-always-indent (quote complete))
  '(tab-stop-list (quote (2 4 8 16 24 32 40 48 56 64 72 80 88 96 104 112 120)))
  '(tab-width 2)
- '(tabbar-ruler-excluded-buffers (quote ("*Messages*" "*scratch*" "\\*.\\*")))
  '(tramp-default-method "ssh")
  '(undo-tree-auto-save-history t)
  '(undo-tree-enable-undo-in-region nil)
