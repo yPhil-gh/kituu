@@ -57,6 +57,7 @@
 (defvar tabbar-buffer-groups-function)
 (defvar px-bkp-new-name)
 
+
 ;; Funcs! _________________________________________________________________
 
 (defun px-push-mark-once-and-back ()
@@ -86,11 +87,13 @@
    (t (self-insert-command (or arg 1)))))
 
 (defun px-scratch ()
+	"Switch to scratch buffer"
   (interactive)
   (switch-to-buffer "*scratch*"))
 
 (defun px-kill-buffer ()
-  "Prompt when a buffer is about to be killed."
+  "Prompt when a buffer is about to be killed.
+Do the right thing and delete window."
   (interactive)
 	(if (and (buffer-modified-p)
 					 buffer-file-name
@@ -520,14 +523,14 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 - Bits in *Bold* are custom ones (eg specific to this emacs config)
 - A newline is added at the EOF and all trailing spaces are removed at each
   file save.
-- The last session is availaible by running C-S-o and selecting \"last
-  session\"
-- The \"emacs buffers\" like *Scratch* are hidden from the main buffer list
-\(F5\). If you really must see them, use the usual C-x C-b
-- Tabs and spaces are allowed. Emacs tries to do the smartes thing
-depending on context
+- The last session is availaible by running C-S-o and selecting 'last
+  session'.
+- The 'emacs buffers' like '*Scratch*' are hidden from the main - F5, C-x b -
+buffer list. If you really must see them, use the usual C-x C-b.
+- Tabs and spaces are mixed. Emacs tries to do the smart thing depending on
+context.
 - 's' (super) on a PC keyboard, is the 'windows logo' key
-
+- Kill-ring doesn't work in macros :(. Use registers instead.
 
 ** THIS VERY EMACS CONFIG
 *Open file                           															C-o*

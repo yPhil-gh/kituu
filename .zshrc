@@ -76,7 +76,7 @@ alias cp="cp -i"
 alias z="zile"
 
 alias lss="ls -la | grep $1"
-alias hss="history | grep $1"
+alias hss="history 0 | grep $1"
 alias mss="sudo cat /var/log/messages | grep $1"
 alias uss="urpmq -Y --summary"
 alias rss="rpm -qa|grep -i"
