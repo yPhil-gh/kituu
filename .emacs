@@ -1,6 +1,5 @@
 ;;; See https://github.com/xaccrocheur/kituu/
 ;; Keep it under 1k lines ;p
-;; Remember to remove ~/.emacs.elc if you edit ~/.emacs, break it and repair it
 ;; Use C-h x to read about what this .emacs can do for you (quite a bit)
 
 
@@ -59,6 +58,18 @@
 (defvar px-bkp-new-name)
 
 ;; Funcs! _________________________________________________________________
+
+(defun px-push-mark-once-and-back ()
+	"Mark current point (`push-mark') and `set-mark-command' (C-u C-SPC) away."
+	(interactive)
+	(let ((current-prefix-arg '(4))) ; C-u
+		(if (not (eq last-command 'px-push-mark-once-and-back))
+				(progn
+					(push-mark)
+					(call-interactively 'set-mark-command))
+			(call-interactively 'set-mark-command))))
+
+(global-set-key (kbd "<s-left>") 'px-push-mark-once-and-back)
 
 (defun px-match-paren (arg)
   "Go to the matching paren if on a paren; otherwise insert <key>."
@@ -157,7 +168,6 @@
      (find-file x)
      (save-excursion
        (goto-char (point-min))
-       ;; (beginning-of-buffer)
        (query-replace-regexp arg1 arg2)))
    (delq
     nil
@@ -191,7 +201,7 @@
 
 (global-set-key (kbd "s-SPC") 'select-text-in-quote-px)
 
-(defun insert-or-enclose-with-signs (leftSign rightSign)
+(defun px-insert-or-enclose-with-signs (leftSign rightSign)
   "Insert a matching bracket and place the cursor between them."
   (interactive)
   (if mark-active
@@ -208,12 +218,12 @@
       (insert leftSign rightSign)
       (backward-char 1))))
 
-(defun insert-pair-paren () (interactive) (insert-or-enclose-with-signs "(" ")"))
-(defun insert-pair-brace () (interactive) (insert-or-enclose-with-signs "{" "}"))
-(defun insert-pair-bracket () (interactive) (insert-or-enclose-with-signs "[" "]"))
-(defun insert-pair-single-angle () (interactive) (insert-or-enclose-with-signs "<" ">"))
-(defun insert-pair-squote () (interactive) (insert-or-enclose-with-signs "'" "'"))
-(defun insert-pair-dbquote () (interactive) (insert-or-enclose-with-signs "\"" "\""))
+(defun insert-pair-paren () (interactive) (px-insert-or-enclose-with-signs "(" ")"))
+(defun insert-pair-brace () (interactive) (px-insert-or-enclose-with-signs "{" "}"))
+(defun insert-pair-bracket () (interactive) (px-insert-or-enclose-with-signs "[" "]"))
+(defun insert-pair-single-angle () (interactive) (px-insert-or-enclose-with-signs "<" ">"))
+(defun insert-pair-squote () (interactive) (px-insert-or-enclose-with-signs "'" "'"))
+(defun insert-pair-dbquote () (interactive) (px-insert-or-enclose-with-signs "\"" "\""))
 
 (defun px-frigo ()
   (interactive)
@@ -259,10 +269,11 @@
   "If region is set, [un]comments it. Otherwise [un]comments current line."
   (interactive)
   (if (eq mark-active nil)
-      (progn (beginning-of-line 1)
-						 (set-mark (point))
-						 (forward-line)
-						 (comment-dwim nil))
+      (progn
+				(beginning-of-line 1)
+				(set-mark (point))
+				(forward-line)
+				(comment-dwim nil))
     (comment-dwim nil))
   (deactivate-mark))
 
@@ -425,8 +436,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 (global-set-key "ù" 'px-match-paren)
 
-(global-set-key (kbd "²") 'dabbrev-expand)
-(global-set-key (kbd "M-²") 'hippie-expand)
+;; (global-set-key (kbd "²") 'dabbrev-expand)
+(global-set-key (kbd "²") 'hippie-expand)
 
 (define-key global-map [(meta up)] '(lambda() (interactive) (scroll-other-window -1)))
 (define-key global-map [(meta down)] '(lambda() (interactive) (scroll-other-window 1)))
@@ -435,7 +446,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (define-key global-map [S-f1] 'px-help-emacs)
 (define-key global-map [f2] 'other-window)
 (define-key global-map [M-f2] 'swap-buffers-in-windows)
-(define-key global-map [f3] 'isearch-forward)
+(define-key global-map [f3] 'split-window-vertically)
 (define-key global-map [f4] 'split-window-horizontally)
 (define-key global-map [f5] 'iswitchb-buffer) ;new way
 (define-key global-map [f7] 'flyspell-buffer)
@@ -468,6 +479,10 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "<s-left>") (kbd "C-x C-SPC"))
 (global-set-key (kbd "<s-right>") 'marker-visit-next)
 (global-set-key (kbd "<s-up>") (kbd "C-u C-SPC"))
+(global-set-key (kbd "<s-down>") (kbd "C-- C-SPC"))
+
+(global-set-key (kbd "s-l") (kbd "C-u C-SPC"))
+
 
 ;; THIS NEXT ONE BROKE HAVOC!!
 ;; (global-set-key (kbd "C-d") nil)	; I kept deleting stuff
@@ -499,139 +514,161 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 (defun px-help-emacs ()
   (interactive)
-  (princ "* My EMACS cheat cheet
+  (princ "* EMACS cheat cheet
 
 ** notes
-'s' (super) on a PC keyboard, is the 'windows logo' key
-*bold* denotes a custom bit (eg specific to this emacs config)
+- Bits in *Bold* are custom ones (eg specific to this emacs config)
+- A newline is added at the EOF and all trailing spaces are removed at each
+  file save.
+- The last session is availaible by running C-S-o and selecting \"last
+  session\"
+- The \"emacs buffers\" like *Scratch* are hidden from the main buffer list
+\(F5\). If you really must see them, use the usual C-x C-b
+- Tabs and spaces are allowed. Emacs tries to do the smartes thing
+depending on context
+- 's' (super) on a PC keyboard, is the 'windows logo' key
 
-*** THIS VERY EMACS CONFIG
-*Open file                           C-o*
-*Open recent file                    M-o*
-*Open file path at point             s-o*
-*Open last session (buffers)         C-S-o*
 
-*Save buffer                         M-s*
-*Kill current buffer                 s-k*
-*Undo                                C-z*
-*Redo                                C-S-z*
-*Switch last buffer                  s-²*
-*Scroll other buffer                 M-<arrow>*
+** THIS VERY EMACS CONFIG
+*Open file                           															C-o*
+*Open recent file                    															M-o*
+*Open file path at point             															s-o*
+*Open last session (buffers)         															C-S-o*
+*Save named session (buffers)         														s-s*
 
-*Close other window (frame)          F1*
-*Switch to other window (frame)      F2*
-*Split horizontally                  F3*
-*Split vertically                    F4*
-*Switch to buffer                    F5*
-*Toggle two last buffers             s-²*
-*Spell-check buffer                  F7*
-*Word-wrap toggle                    F10*
+*Save buffer                         															M-s*
+*Kill buffer                        															s-k*
+*Undo                                															C-z*
+*Redo                                															C-S-z*
+*Switch last buffer                  															s-²*
+*Scroll buffer in other window/pane  															M-<arrow>*
 
-*match brace                         ù*
-*next brace pair                     C-ù*
-*Previous brace pair                 C-S-ù*
-*enclose region in <tag> (sgml-tag)  s-t RET tag [ args... ]*
-*select 'this' or <that> (enclosed)  s-SPC**
-*Search selection in google          s-g*
+*Go back to previous position (marking current)										s-<left>*
 
-*php-mode                            s-p*
-*html-mode                           s-h*
-*js-mode                             s-j*
+*Next buffer                         															C-TAB*
+*Previous buffer                     															C-S-TAB*
+*Toggle two last buffers             															s-²*
 
-*** EMACSEN
-Go back to \"where you were\"        C-u C-SPC
-Recenter window around current line  C-l
-Intelligently recenter window        C-S-l
-Copy to register A                   C-x r s A
-Paste from register A                C-x r g A
-Set bookmark at point                C-x r m RET
-Close HTML tag                       sgml-close-tag
-Switch to *Messages* buffer          C-h e
+*Close other window/pane            															F1*
+*Switch to other window/pane        															F2*
+*Split horizontally                  															F3*
+*Split vertically                    															F4*
+*Switch to buffer (list)             															F5*
+*Spell-check buffer                  															F7*
+*Word-wrap toggle                    															F10*
 
-*** RECTANGLES
-C-x r k/c                            Kill/clear rectangle
-C-x r y                              yank-rectangle (upper left corner at point)
-C-x r t string <RET>                 Insert STRING on each rectangle line.
+*Match brace (() and {})             															ù*
+*Next brace pair                     															C-ù*
+*Previous brace pair                 															C-S-ù*
+*Enclose region in <tag> (sgml-tag)  															s-t RET tag [ args... ]*
+*Select 'this' or <that> (enclosed)  															s-SPC*
+*Search selection in google          															s-g*
+*Complete with every possible match                               ²*
 
-*** MISC EDITING
-M-c		                               capitalize-word		Capitalize the first letter of the current word.
-M-u		                               upcase-word		Make the word all uppercase.
-M-l		                               downcase-word		Make the word all lowercase.
-C-x C-l		                           downcase-region		Make the region all lowercase.
-C-x C-u		                           uppercase-region	Make the region all uppercase.
+*Php-mode                            															s-p*
+*Html-mode                           															s-h*
+*Js-mode                             															s-j*
 
-*** MACROS
-C-x (		                             start-kbd-macro		Start a new macro definition.
-C-x )		                             end-kbd-macro		End the current macro definition.
-C-x e		                             call-last-kbd-macro	Execute the last defined macro.
-M-(number) C-x e	                   call-last-kbd-maco	Do that last macro (number times).
-C-u C-x (	                           stat-kbd-macro		Execute last macro and add to it.
-		                                 name-last-kbd-macro	Name the last macro before saving it.
-            		                     insert-last-keyboard-macro	Insert the macro you made into a file.
-		                                 load-file			Load a file with macros in it.
-C-x q		                             kbd-macro-query		Insert a query into a keyboard macro.
-M-C-c		                             exit-recursive-edit		Get the hell out of a recursive edit.
+** EMACSEN
+Go to line                                                        M-g M-g
+Go back to previous position  (w/o marking current -?!)						C-u C-SPC
+Recenter window around current line  															C-l
+Intelligently recenter window        															C-S-l
+Copy to register A                   															C-x r s A
+Paste from register A                															C-x r g A
+Set bookmark at point                															C-x r m RET
+Close HTML tag                       															sgml-close-tag
+Switch to *Messages* buffer          															C-h e
+Transpose current line with previous one                          C-x C-t
 
-*** EDIFF
-Next / previous diff                 n / p
-Copy a diff into b / opposite        a / b
-Save a / b buffer                    wa / wb
+** RECTANGLES
+Kill/clear rectangle                                              C-x r k/c
+yank-rectangle (upper left corner at point)                       C-x r y
+Insert STRING on each rectangle line.                             C-x r t string <RET>
 
-*** GNUS
-Sort summary by author/date          C-c C-s C-a/d
-Search selected imap folder          G G
-Mark thread read                     T k
+** MISC EDITING
+capitalize-word		           															        M-c
+upcase-word                  															        M-u
+downcase-word                															        M-l
+downcase-region              															        C-x C-l
+uppercase-region             															        C-x C-u
 
-*** PHP-MODE
-C-c C-f                              Search PHP manual for point.
-C-c RET / C-c C-m                    Browse PHP manual in a Web browser.
+** MACROS
+start-kbd-macro		                                                C-x (
+Start a new macro definition.
+end-kbd-macro		                                                  C-x )
+End the current macro definition.
+call-last-kbd-macro	                                              C-x e
+Execute the last defined macro.
+call-last-kbd-maco	                                              M-(number) C-x e
+Do that last macro (number times).
+stat-kbd-macro		                                                C-u C-x (
+Execute last macro and add to it.
+name-last-kbd-macro
+Name the last macro before saving it.
+insert-last-keyboard-macro
+Insert the macro you made into a file.
+load-file
+Load a file with macros in it.
+kbd-macro-query		                                                C-x q
+Insert a query into a keyboard macro.
+exit-recursive-edit		                                            M-C-c
+Get the hell out of a recursive edit.
 
-*** WANDERLUST
-T                                    Toggle Threading
-d                                    Dispose MSG (mark)
-D                                    Delete MSG (mark)
-rx                                   Execute marks
+** EDIFF
+Next / previous diff                 															n / p
+Copy a diff into b / opposite        															a / b
+Save a / b buffer                    															wa / wb
 
-*** VERSION CONTROL
-C-x v v                              vc-next-action
-perform the next logical control operation on file
-C-x v i                              vc-register
-add a new file to version control
+** GNUS
+Sort summary by author/date          															C-c C-s C-a/d
+Search selected imap folder          															G G
+Mark thread read                     															T k
 
-C-x v +                              vc-update
+** PHP-MODE
+Search PHP manual for <point>.                                    C-c C-f
+Browse PHP manual in a Web browser.                               C-c RET / C-c C-m
+
+** VERSION CONTROL
+vc-next-action                                                    C-x v v
+Perform the next logical control operation on file
+vc-register                                                       C-x v i
+Add a new file to version control
+
+vc-update                                                         C-x v +
 Get latest changes from version control
-C-x v ~                              vc-version-other-window
-look at other revisions
-C-x v =                              vc-diff
-diff with other revisions
-C-x v u                              vc-revert-buffer
-undo checkout
-C-x v c                              vc-cancel-version
-delete latest rev (look at an old rev and re-check it)
+vc-version-other-window              															C-x v ~
+Look at other revisions
+vc-diff                             															C-x v =
+Diff with other revisions
+vc-revert-buffer                    															C-x v u
+Undo checkout
+vc-cancel-version                   															C-x v c
+Delete latest rev (look at an old rev and re-check it)
 
-C-x v d                              vc-directory
-show all files which are not up to date
-C-x v g                              vc-annotate
-show when each line in a tracked file was added and by whom
-C-x v s                              vc-create-snapshot
-tag all the files with a symbolic name
-C-x v r                              vc-retrieve-snapshot
-undo checkouts and return to a snapshot with a symbolic name
+vc-directory              			          												C-x v d
+Show all files which are not up to date
+vc-annotate              									            						C-x v g
+Show when each line in a tracked file was added and by whom
+vc-create-snapshot              											    				C-x v s
+Tag all the files with a symbolic name
+vc-retrieve-snapshot              		  													C-x v r
+Undo checkouts and return to a snapshot with a symbolic name
 
-C-x v l                              vc-print-log
-show log (not in ChangeLog format)
-C-x v a                              vc-update-change-log
-update ChangeLog
+vc-print-log              															          C-x v l
+Show log (not in ChangeLog format)
+vc-update-change-log              															  C-x v a
+Update changelog
 
-C-x v m                              vc-merge
-C-x v h                              vc-insert-headers
+vc-merge              															              C-x v m
+vc-insert-headers              															      C-x v h
 
-M-x                                  vc-resolve-conflicts
-ediff-merge session on a file with conflict markers
+M-x vc-resolve-conflicts
+Ediff-merge session on a file with conflict markers
 
-*** OTHER
-git reflog                           view log
-git reset --hard HEAD@{7}            revert HEAD to 7
+** OTHER
+View git log              															          git reflog
+Revert HEAD to 7              															      git reset --hard HEAD@{7}
 "
          (generate-new-buffer "px-help-emacs"))
   (switch-to-buffer "px-help-emacs")
@@ -639,6 +676,8 @@ git reset --hard HEAD@{7}            revert HEAD to 7
   (goto-char (point-min))
   (org-show-subtree))
 
+
+;; Expermiments!
 
 ;; Custom ! ______________________________________________________________________
 
@@ -673,6 +712,7 @@ git reset --hard HEAD@{7}            revert HEAD to 7
  '(inhibit-startup-screen t)
  '(iswitchb-mode t)
  '(mail-interactive t)
+ '(mark-ring-max 4)
  '(menu-bar-mode nil)
  '(mumamo-margin-use (quote (left-margin 13)))
  '(recenter-redisplay nil)
@@ -717,8 +757,8 @@ git reset --hard HEAD@{7}            revert HEAD to 7
  '(mumamo-background-chunk-submode3 ((t (:background "gray25"))))
  '(mumamo-background-chunk-submode4 ((t (:background "gray30"))))
  '(show-paren-match ((t (:background "salmon4"))))
- '(tabbar-default ((t (:inherit default))))
  '(tabbar-button ((t (:inherit tabbar-default))))
+ '(tabbar-default ((t (:inherit default))))
  '(tabbar-highlight ((t (:foreground "red" :underline nil))))
  '(tabbar-selected ((t (:inherit tabbar-default :background "#2e3436" :foreground "yellow" :box (:line-width 3 :color "#2e3436")))))
  '(tabbar-unselected ((t (:inherit tabbar-default :background "dim gray" :box (:line-width 3 :color "dim gray"))))))
