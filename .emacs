@@ -12,7 +12,6 @@
 ;; External libs
 (eval-and-compile
 	(require 'tabbar nil 'noerror)				; Tabs
-	(require 'tabbar-ruler nil 'noerror)	; Nice tabs
 	(require 'undo-tree nil 'noerror)			; Visualize undo (and allow sane redo)
 	(require 'cl nil 'noerror)						; Built-in : Common Lisp lib
 	(require 'edmacro nil 'noerror)				; Built-in : Macro bits (Required by iswitchb)
@@ -23,25 +22,15 @@
 	;; Required by my iswitchb hack
 	)
 ;; (mail-bug-init)
+(tabbar-mode t)
+(tool-bar-mode -1)
 
-;; Mew
-(autoload 'mew "mew" nil t)
-(autoload 'mew-send "mew" nil t)
-
-;; Optional setup (Read Mail menu):
-(setq read-mail-command 'mew)
-
-;; Optional setup (e.g. C-xm for sending a message):
-(autoload 'mew-user-agent-compose "mew" nil t)
-(if (boundp 'mail-user-agent)
-    (setq mail-user-agent 'mew-user-agent))
-(if (fboundp 'define-mail-user-agent)
-    (define-mail-user-agent
-      'mew-user-agent
-      'mew-user-agent-compose
-      'mew-draft-send-message
-      'mew-draft-kill
-      'mew-send-hook))
+(add-to-list 'Info-default-directory-list
+(expand-file-name "~/.emacs.d/lisp/vm/info/"))
+(require 'vm-autoloads)
+;; (setq vm-stunnel-program "/usr/bin/X11/stunnel4")
+(setq vm-stunnel-program "stunnel")
+(setq vm-mime-text/html-handler 'emacs-w3m)
 
 (if
 		(and
@@ -654,6 +643,10 @@ git reset --hard HEAD@{7}            revert HEAD to 7
 
 ;; Custom ! ______________________________________________________________________
 
+;; (set-face-attribute 'tabbar-button nil
+;;                     :inherit 'tabbar-default
+;;                     :box nil)
+
 (if (< emacs-major-version 24)
 		(set-face-attribute 'default nil :background "#2e3436" :foreground "#eeeeec"))
 
@@ -710,6 +703,7 @@ git reset --hard HEAD@{7}            revert HEAD to 7
  '(tramp-default-method "ssh")
  '(undo-tree-auto-save-history t)
  '(undo-tree-enable-undo-in-region nil)
+ '(undo-tree-history-directory-alist (quote (("." . "~/tmp"))))
  '(undo-tree-visualizer-diff t)
  '(vc-make-backup-files t)
  '(web-vcs-default-download-directory (quote site-lisp-dir)))
@@ -731,6 +725,7 @@ git reset --hard HEAD@{7}            revert HEAD to 7
  '(mumamo-background-chunk-submode4 ((t (:background "gray30"))))
  '(show-paren-match ((t (:background "salmon4"))))
  '(tabbar-default ((t (:inherit default))))
+ '(tabbar-button ((t (:inherit tabbar-default))))
  '(tabbar-highlight ((t (:foreground "red" :underline nil))))
  '(tabbar-selected ((t (:inherit tabbar-default :background "#2e3436" :foreground "yellow" :box (:line-width 3 :color "#2e3436")))))
  '(tabbar-unselected ((t (:inherit tabbar-default :background "dim gray" :box (:line-width 3 :color "dim gray"))))))
