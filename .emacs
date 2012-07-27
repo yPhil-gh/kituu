@@ -419,7 +419,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 																															(abbreviate-file-name (buffer-file-name))
 																														"%b")) " [%*]"))
 
-
 ;; Keys! ______________________________________________________________________
 
 (global-set-key (kbd "C-h x") 'px-help-emacs)
@@ -657,7 +656,6 @@ git reset --hard HEAD@{7}            revert HEAD to 7
  '(buffer-offer-save nil)
  '(c-basic-offset (quote set-from-style))
  '(c-default-style "gnu")
- '(canlock-password "cf5f7a7261c5832898abfc7ea08ba333a36ed78c")
  '(comment-style (quote extra-line))
  '(completion-auto-help (quote lazy))
  '(cursor-in-non-selected-windows nil)
