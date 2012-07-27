@@ -14,6 +14,7 @@
 	(require 'undo-tree nil 'noerror)			; Visualize undo (and allow sane redo)
 	(require 'cl nil 'noerror)						; Built-in : Common Lisp lib
 	(require 'edmacro nil 'noerror)				; Built-in : Macro bits (Required by iswitchb)
+	(require 'tls nil 'noerror)
 	;; (require 'elid)
 	;; (require 'mail-bug nil t)
 	(require 'imapua nil 'noerror)
@@ -26,7 +27,7 @@
 (expand-file-name "~/.emacs.d/lisp/vm/info/"))
 (require 'vm-autoloads)
 ;; (setq vm-stunnel-program "/usr/bin/X11/stunnel4")
-(setq vm-stunnel-program "stunnel")
+(setq vm-stunnel-program nil)
 (setq vm-mime-text/html-handler 'emacs-w3m)
 
 (if
@@ -681,6 +682,27 @@ Revert HEAD to 7              															      git reset --hard HEAD@{7}
 
 
 ;; Expermiments!
+
+(defun my-test-imap ()
+	"plop"
+	(interactive)
+  (switch-to-buffer (imap-open "imap.gmail.com"))
+  (with-current-buffer (current-buffer)
+    (imap-authenticate "philippe.coatmeur@gmail.com" "Amiga520")
+    (setq mailbox (imap-mailbox-list "INBOX"))
+    (imap-mailbox-select mailbox)
+    (imap-mailbox-get 'uidvalidity)                     ;; Returns nothing
+    (setq status (imap-mailbox-status mailbox 'unseen)) ;; Returns even less
+    (imap-mailbox-examine mailbox)                      ;; This does nothing too
+    (imap-search "ALL")                                 ;; Everything else works
+    (setq my-msg (imap-fetch 1 "RFC822" 'RFC822))
+    (message "HOY! %s" my-msg)
+    (imap-close)
+		))
+
+(defun test-imap-cmd ()
+(interactive)
+(test-imap))
 
 ;; Custom ! ______________________________________________________________________
 
