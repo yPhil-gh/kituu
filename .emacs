@@ -2,7 +2,6 @@
 ;; Keep it under 1k lines ;p
 ;; Use C-h x to read about what this .emacs can do for you (quite a bit)
 
-
 ;; Init! ______________________________________________________________________
 
 (let ((default-directory "~/.emacs.d/lisp/"))
@@ -73,6 +72,7 @@
 					(call-interactively 'set-mark-command))
 			(call-interactively 'set-mark-command))))
 
+
 (global-set-key (kbd "<s-left>") 'px-push-mark-once-and-back)
 
 (defun px-match-paren (arg)
@@ -128,8 +128,13 @@ Do the right thing and delete window."
 						(delete-window)
 						))))
 		(progn
-			(kill-buffer (current-buffer))
-			(delete-window))))
+			;; (message "Buffer is %s" (current-buffer))
+			(kill-buffer)
+			;; (switch-to-buffer (current-buffer))
+			;; (message "Buffer is %s" (current-buffer))
+			(delete-window)
+			;; (switch-to-buffer (other-buffer))
+			)))
 
 ;; (defun px-byte-compile-user-init-file ()
 ;; 	"byte-compile .emacs each time it is edited"
@@ -299,76 +304,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
 
-
-;; Sessions! ______________________________________________________________________
-
-(require 'desktop)
-
-(defvar my-desktop-session-dir
-  (concat (getenv "HOME") "/.emacs.d/desktop-sessions/")
-  "Directory to save desktop sessions in")
-
-(defvar my-desktop-session-name-hist nil
-  "Desktop session name history")
-
-(defun my-desktop-save (&optional name)
-  "Save desktop by name."
-  (interactive)
-  (unless name
-    (setq name (my-desktop-get-session-name "Save session" t)))
-  (when name
-    (make-directory (concat my-desktop-session-dir name) t)
-    (desktop-save (concat my-desktop-session-dir name) t)))
-
-(defun my-desktop-save-and-clear ()
-  "Save and clear desktop."
-  (interactive)
-  (call-interactively 'my-desktop-save)
-  (desktop-clear)
-  (setq desktop-dirname nil))
-
-(defun my-desktop-read (&optional name)
-  "Read desktop by name."
-  (interactive)
-  (unless name
-    (setq name (my-desktop-get-session-name "Load session")))
-  (when name
-    (desktop-clear)
-    (desktop-read (concat my-desktop-session-dir name))))
-
-(defun my-desktop-change (&optional name)
-  "Change desktops by name."
-  (interactive)
-  (let ((name (my-desktop-get-current-name)))
-    (when name
-      (my-desktop-save name))
-    (call-interactively 'my-desktop-read)))
-
-(defun my-desktop-name ()
-  "Return the current desktop name."
-  (interactive)
-  (let ((name (my-desktop-get-current-name)))
-    (if name
-        (message (concat "Desktop name: " name))
-      (message "No named desktop loaded"))))
-
-(defun my-desktop-get-current-name ()
-  "Get the current desktop name."
-  (when desktop-dirname
-    (let ((dirname (substring desktop-dirname 0 -1)))
-      (when (string= (file-name-directory dirname) my-desktop-session-dir)
-        (file-name-nondirectory dirname)))))
-
-(defun my-desktop-get-session-name (prompt &optional use-default)
-  "Get a session name."
-  (let* ((default (and use-default (my-desktop-get-current-name)))
-         (full-prompt (concat prompt (if default
-                                         (concat " (default " default "): ")
-                                       ": "))))
-    (completing-read full-prompt (and (file-exists-p my-desktop-session-dir)
-                                      (directory-files my-desktop-session-dir))
-                     nil nil nil my-desktop-session-name-hist default)))
-
 (defun iswitchb-local-keys ()
 	"easily switch buffers (F5 or C-x b)"
   (mapc (lambda (K)
@@ -379,14 +314,133 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 					("<up>"    . ignore             )
 					("<down>"  . ignore             ))))
 
-(defun my-desktop-kill-emacs-hook ()
-  "Save desktop before killing emacs."
-  (when (file-exists-p (concat my-desktop-session-dir "last-session"))
-    (setq desktop-file-modtime
-          (nth 5 (file-attributes (desktop-full-file-name (concat my-desktop-session-dir "last-session"))))))
-  (my-desktop-save "last-session"))
+;; Sessions! ______________________________________________________________________
 
-(add-hook 'kill-emacs-hook 'my-desktop-kill-emacs-hook)
+(require 'desktop)
+
+;; px-session (is broken with undo)
+;; Desktop
+(setq desktop-path '("~/.bkp/"))
+(setq desktop-dirname "~/.bkp/")
+(setq desktop-base-file-name "emacs-desktop")
+
+;; (the lock file is ~/.bkp/.emacs.desktop.lock)
+(defun px-saved-session ()
+  (file-exists-p (concat desktop-dirname "/" desktop-base-file-name)))
+
+(defun Session-restore-px ()
+  "Restore a saved emacs session."
+  (interactive)
+  (if (px-saved-session)
+      (progn
+				;; (delete-file (concat desktop-dirname "/.emacs.desktop.lock"))
+				(desktop-read)
+				(recenter-top-bottom 15))
+    (message "No desktop (session) file found.")))
+
+(defun px-session-save ()
+  "Save an emacs session."
+  (interactive)
+  (if (px-saved-session)
+      (if (y-or-n-p "Save session? ")
+					(desktop-save-in-desktop-dir)
+				(message "Session not saved."))
+		(desktop-save-in-desktop-dir)))
+
+(defun px-session-save-named (px-session-named-name)
+  "Prompt the user for a session name."
+  (interactive "MSession name: ")
+  (message "So what do I do with this: %s ?" px-session-named-name)
+  (desktop-save (concat desktop-dirname "/" px-session-named-name
+												".session") t)
+	)
+
+;; This will only work for one session
+;; (add-hook 'after-init-hook
+;; 					'(lambda ()
+;; 						 (if (px-saved-session)
+;; 								 (if (y-or-n-p "Restore session? ")
+;; 										 (Session-restore-px)))))
+
+;; (add-hook 'kill-emacs-hook
+;; 					'(lambda ()
+;; 						 (px-session-save)))
+
+
+;; my-session (is broken with undo too)
+;; (defvar my-desktop-session-dir
+;;   (concat (getenv "HOME") "/.emacs.d/desktop-sessions/")
+;;   "Directory to save desktop sessions in")
+
+;; (defvar my-desktop-session-name-hist nil
+;;   "Desktop session name history")
+
+;; (defun my-desktop-save (&optional name)
+;;   "Save desktop by name."
+;;   (interactive)
+;;   (unless name
+;;     (setq name (my-desktop-get-session-name "Save session" t)))
+;;   (when name
+;;     (make-directory (concat my-desktop-session-dir name) t)
+;;     (desktop-save (concat my-desktop-session-dir name) t)))
+
+;; (defun my-desktop-save-and-clear ()
+;;   "Save and clear desktop."
+;;   (interactive)
+;;   (call-interactively 'my-desktop-save)
+;;   (desktop-clear)
+;;   (setq desktop-dirname nil))
+
+;; (defun my-desktop-read (&optional name)
+;;   "Read desktop by name."
+;;   (interactive)
+;;   (unless name
+;;     (setq name (my-desktop-get-session-name "Load session")))
+;;   (when name
+;;     ;; (desktop-clear)
+;;     (desktop-read (concat my-desktop-session-dir name))))
+
+;; (defun my-desktop-change (&optional name)
+;;   "Change desktops by name."
+;;   (interactive)
+;;   (let ((name (my-desktop-get-current-name)))
+;;     (when name
+;;       (my-desktop-save name))
+;;     (call-interactively 'my-desktop-read)))
+
+;; (defun my-desktop-name ()
+;;   "Return the current desktop name."
+;;   (interactive)
+;;   (let ((name (my-desktop-get-current-name)))
+;;     (if name
+;;         (message (concat "Desktop name: " name))
+;;       (message "No named desktop loaded"))))
+
+;; (defun my-desktop-get-current-name ()
+;;   "Get the current desktop name."
+;;   (when desktop-dirname
+;;     (let ((dirname (substring desktop-dirname 0 -1)))
+;;       (when (string= (file-name-directory dirname) my-desktop-session-dir)
+;;         (file-name-nondirectory dirname)))))
+
+;; (defun my-desktop-get-session-name (prompt &optional use-default)
+;;   "Get a session name."
+;;   (let* ((default (and use-default (my-desktop-get-current-name)))
+;;          (full-prompt (concat prompt (if default
+;;                                          (concat " (default " default "): ")
+;;                                        ": "))))
+;;     (completing-read full-prompt (and (file-exists-p my-desktop-session-dir)
+;;                                       (directory-files my-desktop-session-dir))
+;;                      nil nil nil my-desktop-session-name-hist default)))
+
+;; (defun my-desktop-kill-emacs-hook ()
+;;   "Save desktop before killing emacs."
+;;   (when (file-exists-p (concat my-desktop-session-dir "last-session"))
+;;     (setq desktop-file-modtime
+;;           (nth 5 (file-attributes (desktop-full-file-name (concat my-desktop-session-dir "last-session"))))))
+;;   (my-desktop-save "last-session"))
+
+;; (add-hook 'kill-emacs-hook 'my-desktop-kill-emacs-hook)
 
 
 ;; Modes! _____________________________________________________________________
@@ -685,26 +739,55 @@ Revert HEAD to 7              															      git reset --hard HEAD@{7}
 
 ;; Expermiments!
 
-(defun my-test-imap ()
+;; Its value is (gssapi kerberos4 starttls tls ssl network shell)
+
+
+(setq imap-log nil)
+
+(defun px-imap-logging ()
+  (interactive)
+  (if imap-log
+      (setq imap-log nil)
+    (setq imap-log (get-buffer-create "imap-log"))))
+
+(defun px-test-imap ()
 	"plop"
 	(interactive)
-  (switch-to-buffer (imap-open "imap.gmail.com"))
+	(setq imap-debug (get-buffer-create "imap-debug"))
+  ;; (switch-to-buffer (imap-open "imap.gmail.com" 993 'ssl))
+  (switch-to-buffer (imap-open "mail.gandi.net" 993 'ssl))
   (with-current-buffer (current-buffer)
-    (imap-authenticate "philippe.coatmeur@gmail.com" "Amiga520")
-    (setq mailbox (imap-mailbox-list "INBOX"))
-    (imap-mailbox-select mailbox)
-    (imap-mailbox-get 'uidvalidity)                     ;; Returns nothing
-    (setq status (imap-mailbox-status mailbox 'unseen)) ;; Returns even less
-    (imap-mailbox-examine mailbox)                      ;; This does nothing too
+    ;; (imap-authenticate "philippe.coatmeur@gmail.com" "Amiga520")
+    (imap-authenticate "contact@adamweb.net" "Amiga261")
+    ;; (setq mailboxes (imap-mailbox-list "*"))
+    ;; (setq mailbox (last mailboxes))
+		;; (imap-mailbox-lsub "*")
+    (imap-mailbox-select "INBOX")
+		(imap-current-mailbox)
+    (message "exists %s" (imap-mailbox-get 'exists))
+    ;; (imap-mailbox-get 'uidvalidity)                     ;; Returns nothing
+    ;; (setq status (imap-mailbox-status mailbox 'unseen)) ;; Returns even less
+    (message "box %s" (imap-mailbox-examine "INBOX"))                      ;; This does nothing too
     (imap-search "ALL")                                 ;; Everything else works
-    (setq my-msg (imap-fetch 1 "RFC822" 'RFC822))
+    ;; (setq my-msg (imap-fetch 1 "RFC822"))
+		(setq my-msg (imap-fetch 15 "RFC822.PEEK" 'RFC822))
     (message "HOY! %s" my-msg)
-    (imap-close)
+    ;; (imap-close)
 		))
 
 (defun test-imap-cmd ()
 (interactive)
 (test-imap))
+
+;; Enter!
+(defun enter-again-if-enter ()
+  "Make the return key select the current item in minibuf and shell history isearch.
+An alternate approach would be after-advice on isearch-other-meta-char."
+  (when (and (not isearch-mode-end-hook-quit)
+             (equal (this-command-keys-vector) [13])) ; == return
+    (cond ((active-minibuffer-window) (minibuffer-complete-and-exit))
+          ((member (buffer-name) my-shells) (comint-send-input)))))
+(add-hook 'isearch-mode-end-hook 'enter-again-if-enter)
 
 ;; Custom ! ______________________________________________________________________
 
@@ -728,6 +811,7 @@ Revert HEAD to 7              															      git reset --hard HEAD@{7}
  '(custom-enabled-themes (quote (tango-dark)))
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
+ '(desktop-locals-to-save (quote (desktop-locals-to-save truncate-lines case-fold-search case-replace fill-column overwrite-mode change-log-default-name line-number-mode column-number-mode size-indication-mode buffer-file-coding-system indent-tabs-mode tab-width indicate-buffer-boundaries indicate-empty-lines show-trailing-whitespace)))
  '(display-time-24hr-format t)
  '(display-time-mode t)
  '(epa-popup-info-window nil)
@@ -756,6 +840,7 @@ Revert HEAD to 7              															      git reset --hard HEAD@{7}
  '(show-paren-delay 0)
  '(show-paren-mode t)
  '(show-paren-style (quote mixed))
+ '(smtpmail-smtp-server "smtp.gmail.com")
  '(standard-indent 2)
  '(tab-always-indent (quote complete))
  '(tab-stop-list (quote (2 4 8 16 24 32 40 48 56 64 72 80 88 96 104 112 120)))
