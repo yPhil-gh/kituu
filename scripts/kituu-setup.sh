@@ -117,7 +117,7 @@ if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
     fi
 fi
 
-if [ ! -d "$lispdir" ] ; then mkdir -p $lispdir ; fi
+if [ ! -d "$lispdir" ] ; then mkdir -p $lispdir/ ; fi
 
 for project in "${!lisp[@]}" ; do
     vcsystem=${lisp[$project]:0:3}
