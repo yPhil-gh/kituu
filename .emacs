@@ -17,19 +17,22 @@
 	;; (require 'elid)
 	;; (require 'mail-bug nil t)
 	(require 'imapua nil 'noerror)
+	(require 'w3m nil 'noerror)
 	;; (require 'emacs-imap)
 	;; Required by my iswitchb hack
 	)
 ;; (mail-bug-init)
 
-(if (file-exists-p "~/.emacs.d/lisp/vm/README")
-		(progn
-			(add-to-list 'Info-default-directory-list
-									 (expand-file-name "~/.emacs.d/lisp/vm/info/"))
-			(require 'vm-autoloads)
-			;; (setq vm-stunnel-program "/usr/bin/X11/stunnel4")
-			(setq vm-stunnel-program nil)
-			(setq vm-mime-text/html-handler 'emacs-w3m)))
+(setq browse-url-browser-function 'w3m-browse-url)
+(autoload 'w3m-browse-url "w3m" "Ask a WWW browser to show a URL." t)
+;; optional keyboard short-cut
+(global-set-key "\C-xm" 'browse-url-at-point)
+(setq vm-mime-text/html-handler 'emacs-w3m)
+
+(setq gnus-mime-display-multipart-related-as-mixed nil)
+(setq mm-text-html-renderer 'w3m)
+(setq mm-inline-text-html-with-images t)
+(setq mm-inline-text-html-with-w3m-keymap nil)
 
 (if
 		(and
@@ -823,9 +826,14 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(inhibit-startup-echo-area-message (user-login-name))
  '(inhibit-startup-screen t)
  '(iswitchb-mode t)
+ '(mail-host-address "philcm@gnu.org")
  '(mail-interactive t)
  '(mark-ring-max 4)
  '(menu-bar-mode nil)
+ '(message-confirm-send t)
+ ;; '(message-send-mail-function (quote ignore))
+ '(mm-enable-external (quote ask))
+ '(mm-text-html-renderer (quote w3m))
  '(mumamo-margin-use (quote (left-margin 13)))
  '(recenter-redisplay nil)
  '(recentf-max-menu-items 60)
@@ -836,12 +844,12 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(savehist-mode t nil (savehist))
  '(scroll-conservatively 200)
  '(scroll-margin 3)
- '(send-mail-function (quote mailclient-send-it))
+ '(send-mail-function (quote smtpmail-send-it))
  '(server-mode t)
  '(show-paren-delay 0)
  '(show-paren-mode t)
  '(show-paren-style (quote mixed))
- '(smtpmail-smtp-server "smtp.gmail.com")
+ '(smtpmail-debug-info t)
  '(standard-indent 2)
  '(tab-always-indent (quote complete))
  '(tab-stop-list (quote (2 4 8 16 24 32 40 48 56 64 72 80 88 96 104 112 120)))
