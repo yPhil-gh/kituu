@@ -1,11 +1,11 @@
 # XScreenSaver Preferences File
-# Written by xscreensaver-demo 5.14 for px on Wed Jul  4 14:06:02 2012.
+# Written by xscreensaver-demo 5.14 for px on Mon Jul 30 11:09:45 2012.
 # http://www.jwz.org/xscreensaver/
 
-timeout:	0:45:00
+timeout:	2:20:00
 cycle:		0:15:00
 lock:		True
-lockTimeout:	0:02:00
+lockTimeout:	0:01:00
 passwdTimeout:	0:00:30
 visualID:	default
 installColormap:    True
@@ -24,22 +24,22 @@ fadeTicks:	20
 captureStderr:	True
 ignoreUninstalledPrograms:False
 font:		*-medium-r-*-140-*-m-*
-dpmsEnabled:	False
-dpmsQuickOff:	False
-dpmsStandby:	2:00:00
-dpmsSuspend:	2:00:00
+dpmsEnabled:	True
+dpmsQuickOff:	True
+dpmsStandby:	2:30:00
+dpmsSuspend:	2:30:00
 dpmsOff:	4:00:00
 grabDesktopImages:  True
 grabVideoFrames:    False
 chooseRandomImages: False
-imageDirectory:
+imageDirectory:	
 
 mode:		random
 selected:	-1
 
 textMode:	url
 textLiteral:	XScreenSaver
-textFile:
+textFile:	
 textProgram:	fortune
 textURL:	http://fridge.ubuntu.com/node/feed
 
@@ -190,11 +190,11 @@ programs:								      \
   GL: 				flyingtoasters -root			    \n\
 				fontglide -root				    \n\
 - GL: 				gleidescope -root			    \n\
-  GL: 				glknots -root -delay 0 -speed 0.7111	      \
+- GL: 				glknots -root -delay 0 -speed 0.7111	      \
 				  -segments 1498 -thickness 0.2227	    \n\
 - GL: 				glmatrix -root				    \n\
 - GL: 				glslideshow -root			    \n\
-  GL: 				hypertorus -root			    \n\
+- GL: 				hypertorus -root			    \n\
 - GL: 				jigglypuff -root			    \n\
 -				metaballs -root				    \n\
 - GL: 				mirrorblob -root			    \n\
@@ -212,7 +212,7 @@ programs:								      \
 				interaggregate -root			    \n\
 -				intermomentary -root			    \n\
 -				memscroller -root			    \n\
-  GL: 				noof -root				    \n\
+- GL: 				noof -root				    \n\
 -				pacman -root				    \n\
 - GL: 				pinion -root				    \n\
 - GL: 				polyhedra -root				    \n\
@@ -258,3 +258,4 @@ GetViewPortIsFullOfLies:False
 procInterrupts:	True
 xinputExtensionDev: False
 overlayStderr:	True
+
