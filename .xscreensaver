@@ -1,8 +1,8 @@
 # XScreenSaver Preferences File
-# Written by xscreensaver-demo 5.14 for px on Mon Jul 30 11:09:45 2012.
+# Written by xscreensaver-demo 5.14 for px on Mon Jul 30 11:11:27 2012.
 # http://www.jwz.org/xscreensaver/
 
-timeout:	2:20:00
+timeout:	2:21:00
 cycle:		0:15:00
 lock:		True
 lockTimeout:	0:01:00
