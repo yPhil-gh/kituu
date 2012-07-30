@@ -539,12 +539,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "s-d") 'wl-draft-mode)
 (global-set-key (kbd "s-m") 'kmacro-end-and-call-macro)
 (global-set-key (kbd "C-s-m") 'apply-macro-to-region-lines)
-(global-set-key (kbd "<s-left>") (kbd "C-x C-SPC"))
-(global-set-key (kbd "<s-right>") 'marker-visit-next)
-(global-set-key (kbd "<s-up>") (kbd "C-u C-SPC"))
-(global-set-key (kbd "<s-down>") (kbd "C-- C-SPC"))
-
-(global-set-key (kbd "s-l") (kbd "C-u C-SPC"))
+(global-set-key (kbd "<s-up>") (kbd "C-x C-SPC")) ; global mark ring
+;; (global-set-key (kbd "<s-down>") (kbd "C-- C-SPC"))
 
 
 ;; THIS NEXT ONE BROKE HAVOC!!
