@@ -838,6 +838,7 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(buffer-offer-save nil)
  '(c-basic-offset (quote set-from-style))
  '(c-default-style "gnu")
+ '(canlock-password "ebef4a12d0fad1c648b4b829291adb16cdefb9da")
  '(comment-style (quote extra-line))
  '(completion-auto-help (quote lazy))
  '(cursor-in-non-selected-windows nil)
