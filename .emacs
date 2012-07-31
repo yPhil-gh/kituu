@@ -66,6 +66,13 @@ point."
 (add-hook 'sh-mode-hook         'px-tab-fix)
 (add-hook 'emacs-lisp-mode-hook 'px-tab-fix)
 
+(set-face-underline 'font-lock-warning-face "yellow")
+
+(add-hook 'emacs-lisp-mode-hook
+										(lambda ()
+												(font-lock-add-keywords nil
+																																				'(("\\<\\(FIXME\\|HACK\\|BUG\\):" 1 font-lock-warning-face t)))))
+
 (if
 		(and
 		 (file-exists-p "~/.emacs.d/lisp/nxhtml/autostart.el")
@@ -97,6 +104,7 @@ point."
 
 
 ;; Funcs! _________________________________________________________________
+
 
 (defun px-push-mark-once-and-back ()
 	"Mark current point (`push-mark') and `set-mark-command' (C-u C-SPC) away."
@@ -852,6 +860,7 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(global-font-lock-mode t)
  '(global-linum-mode t)
  '(global-undo-tree-mode t)
+ '(imapua-folder-color "#cc0000")
  '(imapua-modal t)
  '(indent-tabs-mode t)
  '(inhibit-startup-echo-area-message (user-login-name))
@@ -906,7 +915,8 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(mumamo-background-chunk-submode2 ((t (:background "gray20"))))
  '(mumamo-background-chunk-submode3 ((t (:background "gray25"))))
  '(mumamo-background-chunk-submode4 ((t (:background "gray30"))))
- '(show-paren-match ((t (:background "salmon4"))))
+ '(region ((t (:background "salmon4"))))
+ '(show-paren-match ((t (:background "gray35"))))
  '(tabbar-button ((t (:inherit tabbar-default))))
  '(tabbar-default ((t (:inherit default))))
  '(tabbar-highlight ((t (:foreground "red" :underline nil))))
