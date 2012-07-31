@@ -44,47 +44,47 @@
 
 (global-set-key (kbd "<f8>") 'tf-toggle-tab-width-setting)
 
-(defun indent-or-expand (arg)
-  "Either indent according to mode, or expand the word preceding
-point."
-  (interactive "*P")
-  (if (and
-       (or (bobp) (= ?w (char-syntax (char-before))))
-       (or (eobp) (not (= ?w (char-syntax (char-after))))))
-      (dabbrev-expand arg)
-    (indent-for-tab-command)))
+;; (defun indent-or-expand (arg)
+;;   "Either indent according to mode, or expand the word preceding
+;; point."
+;;   (interactive "*P")
+;;   (if (and
+;;        (or (bobp) (= ?w (char-syntax (char-before))))
+;;        (or (eobp) (not (= ?w (char-syntax (char-after))))))
+;;       (dabbrev-expand arg)
+;;     (indent-for-tab-command)))
 
-(defun px-tab-fix ()
-  (local-set-key [tab] 'indent-or-expand))
+;; (defun px-tab-fix ()
+;;   (local-set-key [tab] 'indent-or-expand))
 
-(defun px-tab-width-fix ()
-  (setq tab-width 1))
+;; (defun px-tab-width-fix ()
+;;   (setq tab-width 1))
 
-(add-hook 'emacs-lisp-mode-hook 'px-tab-width-fix)
+;; (add-hook 'emacs-lisp-mode-hook 'px-tab-width-fix)
 
-(add-hook 'c-mode-hook          'px-tab-fix)
-(add-hook 'sh-mode-hook         'px-tab-fix)
-(add-hook 'emacs-lisp-mode-hook 'px-tab-fix)
+;; (add-hook 'c-mode-hook          'px-tab-fix)
+;; (add-hook 'sh-mode-hook         'px-tab-fix)
+;; (add-hook 'emacs-lisp-mode-hook 'px-tab-fix)
 
 (set-face-underline 'font-lock-warning-face "yellow")
 
 (add-hook 'emacs-lisp-mode-hook
-										(lambda ()
-												(font-lock-add-keywords nil
-																																				'(("\\<\\(FIXME\\|HACK\\|BUG\\):" 1 font-lock-warning-face t)))))
+					(lambda ()
+						(font-lock-add-keywords nil
+																		'(("\\<\\(FIXME\\|HACK\\|BUG\\):" 1 font-lock-warning-face t)))))
 
-(if
-		(and
-		 (file-exists-p "~/.emacs.d/lisp/nxhtml/autostart.el")
-		 (< emacs-major-version 24))
-    (progn
-      (load "~/.emacs.d/lisp/nxhtml/autostart.el")
-      ;; (tabkey2-mode t)
-			)
-  (progn
-    (require 'php-mode nil t)
-    (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
-    (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))))
+;; (if
+;; 		(and
+;; 		 (file-exists-p "~/.emacs.d/lisp/nxhtml/autostart.el")
+;; 		 (< emacs-major-version 24))
+;;     (progn
+;;       (load "~/.emacs.d/lisp/nxhtml/autostart.el")
+;;       ;; (tabkey2-mode t)
+;; 			)
+;;   (progn
+;;     (require 'php-mode nil t)
+;;     (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
+;;     (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))))
 
 
 (defvar iswitchb-mode-map)
