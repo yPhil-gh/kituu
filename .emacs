@@ -18,21 +18,53 @@
 	;; (require 'mail-bug nil t)
 	(require 'imapua nil 'noerror)
 	(require 'w3m nil 'noerror)
+	;; (require 'tabkey2 nil 'noerror)
 	;; (require 'emacs-imap)
 	;; Required by my iswitchb hack
 	)
 ;; (mail-bug-init)
 
-(setq browse-url-browser-function 'w3m-browse-url)
-(autoload 'w3m-browse-url "w3m" "Ask a WWW browser to show a URL." t)
-;; optional keyboard short-cut
-(global-set-key "\C-xm" 'browse-url-at-point)
-(setq vm-mime-text/html-handler 'emacs-w3m)
 
-(setq gnus-mime-display-multipart-related-as-mixed nil)
-(setq mm-text-html-renderer 'w3m)
-(setq mm-inline-text-html-with-images t)
-(setq mm-inline-text-html-with-w3m-keymap nil)
+;; (setq browse-url-browser-function 'w3m-browse-url)
+;; (autoload 'w3m-browse-url "w3m" "Ask a WWW browser to show a URL." t)
+;; ;; optional keyboard short-cut
+;; (global-set-key "\C-xm" 'browse-url-at-point)
+;; (setq vm-mime-text/html-handler 'emacs-w3m)
+
+;; (setq gnus-mime-display-multipart-related-as-mixed nil)
+;; (setq mm-text-html-renderer 'w3m)
+;; (setq mm-inline-text-html-with-images t)
+;; (setq mm-inline-text-html-with-w3m-keymap nil)
+
+(defun tf-toggle-tab-width-setting ()
+		"Toggle setting tab widths between 1 and 2"
+		(interactive)
+		(setq tab-width (if (= tab-width 2) 1 2))
+		(redraw-display))
+
+(global-set-key (kbd "<f8>") 'tf-toggle-tab-width-setting)
+
+(defun indent-or-expand (arg)
+  "Either indent according to mode, or expand the word preceding
+point."
+  (interactive "*P")
+  (if (and
+       (or (bobp) (= ?w (char-syntax (char-before))))
+       (or (eobp) (not (= ?w (char-syntax (char-after))))))
+      (dabbrev-expand arg)
+    (indent-for-tab-command)))
+
+(defun px-tab-fix ()
+  (local-set-key [tab] 'indent-or-expand))
+
+(defun px-tab-width-fix ()
+  (setq tab-width 1))
+
+(add-hook 'emacs-lisp-mode-hook 'px-tab-width-fix)
+
+(add-hook 'c-mode-hook          'px-tab-fix)
+(add-hook 'sh-mode-hook         'px-tab-fix)
+(add-hook 'emacs-lisp-mode-hook 'px-tab-fix)
 
 (if
 		(and
@@ -46,6 +78,7 @@
     (require 'php-mode nil t)
     (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
     (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))))
+
 
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
@@ -818,6 +851,7 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(global-font-lock-mode t)
  '(global-linum-mode t)
  '(global-undo-tree-mode t)
+ '(imapua-modal t)
  '(indent-tabs-mode t)
  '(inhibit-startup-echo-area-message (user-login-name))
  '(inhibit-startup-screen t)
@@ -827,7 +861,6 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(mark-ring-max 4)
  '(menu-bar-mode nil)
  '(message-confirm-send t)
- ;; '(message-send-mail-function (quote ignore))
  '(mm-enable-external (quote ask))
  '(mm-text-html-renderer (quote w3m))
  '(mumamo-margin-use (quote (left-margin 13)))
@@ -847,7 +880,6 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(show-paren-style (quote mixed))
  '(smtpmail-debug-info t)
  '(standard-indent 2)
- '(tab-always-indent (quote complete))
  '(tab-stop-list (quote (2 4 8 16 24 32 40 48 56 64 72 80 88 96 104 112 120)))
  '(tab-width 2)
  '(tramp-default-method "ssh")
