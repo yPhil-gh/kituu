@@ -71,7 +71,7 @@
 (add-hook 'emacs-lisp-mode-hook
 					(lambda ()
 						(font-lock-add-keywords nil
-																		'(("\\<\\(FIXME\\|HACK\\|BUG\\):" 1 font-lock-warning-face t)))))
+																		'(("\\<\\(FIXME\\|HACK\\|BUG\\|pX\\):" 1 font-lock-warning-face t)))))
 
 ;; (if
 ;; 		(and
@@ -868,7 +868,7 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(keyboard-coding-system (quote utf-8) nil nil "nil before, now utf-8.")
  '(mail-host-address "philcm@gnu.org")
  '(mail-interactive t)
- '(mark-ring-max 4)
+ '(mark-ring-max 8)
  '(menu-bar-mode nil)
  '(message-confirm-send t)
  '(message-default-charset (quote utf-8))
@@ -894,6 +894,8 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(tab-stop-list (quote (2 4 8 16 24 32 40 48 56 64 72 80 88 96 104 112 120)))
  '(tab-width 2)
  '(tramp-default-method "ssh")
+ '(undo-limit 4000)
+ '(undo-strong-limit 6000)
  '(undo-tree-auto-save-history t)
  '(undo-tree-enable-undo-in-region nil)
  '(undo-tree-history-directory-alist (quote (("." . "~/tmp"))))
