@@ -17,7 +17,6 @@
 	;; (require 'elid)
 	;; (require 'mail-bug nil t)
 	(require 'imapua nil 'noerror)
-	;; (require 'w3m nil 'noerror)
 	;; (require 'tabkey2 nil 'noerror)
 	;; (require 'emacs-imap)
 	;; Required by my iswitchb hack
@@ -29,12 +28,13 @@
 ;; (autoload 'w3m-browse-url "w3m" "Ask a WWW browser to show a URL." t)
 ;; ;; optional keyboard short-cut
 ;; (global-set-key "\C-xm" 'browse-url-at-point)
-;; (setq vm-mime-text/html-handler 'emacs-w3m)
 
 ;; (setq gnus-mime-display-multipart-related-as-mixed nil)
-;; (setq mm-text-html-renderer 'w3m)
-;; (setq mm-inline-text-html-with-images t)
-;; (setq mm-inline-text-html-with-w3m-keymap nil)
+
+(require 'w3m nil 'noerror)
+(setq mm-text-html-renderer 'w3m)
+(setq mm-inline-text-html-with-images t)
+(setq mm-inline-text-html-with-w3m-keymap nil)
 
 (defun tf-toggle-tab-width-setting ()
 		"Toggle setting tab widths between 1 and 2"
@@ -908,20 +908,21 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 110 :width normal :foundry "unknown" :family "Monospace"))))
+ '(default ((t (:inherit nil :stipple nil :background "gray20" :foreground "#eeeeec" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 113 :width normal :foundry "unknown" :family "DejaVu Sans Mono"))))
  '(font-lock-comment-face ((t (:foreground "#73d216" :slant italic))))
  '(minibuffer-prompt ((t (:foreground "#fce94f" :height 1.0))))
  '(mode-line ((t (:background "gray10" :foreground "white" :box nil))))
- '(mode-line-inactive ((t (:inherit mode-line :background "#555753" :foreground "#eeeeec" :box nil :weight light))))
- '(mumamo-background-chunk-major ((t (:background "gray10"))))
- '(mumamo-background-chunk-submode1 ((t (:background "gray15"))))
- '(mumamo-background-chunk-submode2 ((t (:background "gray20"))))
- '(mumamo-background-chunk-submode3 ((t (:background "gray25"))))
- '(mumamo-background-chunk-submode4 ((t (:background "gray30"))))
+ '(mode-line-inactive ((t (:inherit mode-line :background "gray33" :foreground "#eeeeec" :box nil :weight light))))
+ '(mumamo-background-chunk-major ((t (:background "gray10"))) t)
+ '(mumamo-background-chunk-submode1 ((t (:background "gray15"))) t)
+ '(mumamo-background-chunk-submode2 ((t (:background "gray20"))) t)
+ '(mumamo-background-chunk-submode3 ((t (:background "gray25"))) t)
+ '(mumamo-background-chunk-submode4 ((t (:background "gray30"))) t)
  '(region ((t (:background "salmon4"))))
  '(show-paren-match ((t (:background "gray35"))))
  '(tabbar-button ((t (:inherit tabbar-default))))
- '(tabbar-default ((t (:inherit default))))
+ '(tabbar-default ((t (:inherit default :background "gray33"))))
  '(tabbar-highlight ((t (:foreground "red" :underline nil))))
- '(tabbar-selected ((t (:inherit tabbar-default :background "#2e3436" :foreground "yellow" :box (:line-width 3 :color "#2e3436")))))
- '(tabbar-unselected ((t (:inherit tabbar-default :background "dim gray" :box (:line-width 3 :color "dim gray"))))))
+ '(tabbar-selected ((t (:inherit default :background "gray20" :foreground "yellow"))))
+ '(tabbar-separator ((t (:height 0.1))))
+ '(tabbar-unselected ((t (:inherit tabbar-default :background "dark gray")))))
