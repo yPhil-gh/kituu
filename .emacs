@@ -456,16 +456,16 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
                         ".session") t)
   )
 
-;; This will only work for one session
+;; ;; This will only work for one session
 ;; (add-hook 'after-init-hook
-;;                                      '(lambda ()
-;;                                               (if (px-saved-session)
-;;                                                               (if (y-or-n-p "Restore session? ")
-;;                                                                               (Session-restore-px)))))
+;;           '(lambda ()
+;;              (if (px-saved-session)
+;;                  (if (y-or-n-p "Restore session? ")
+;;                      (Session-restore-px)))))
 
 ;; (add-hook 'kill-emacs-hook
-;;                                      '(lambda ()
-;;                                               (px-session-save)))
+;;           '(lambda ()
+;;              (px-session-save)))
 
 
 ;; my-session (is broken with undo too)
@@ -997,7 +997,7 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(region ((t (:background "salmon4"))))
  '(show-paren-match ((t (:background "gray35"))))
  '(tabbar-button ((t (:inherit tabbar-default))))
- '(tabbar-default ((t (:inherit default :background "dim gray" :box (:line-width 1 :color "dim gray")))))
+ '(tabbar-default ((t (:inherit default :background "dim gray" :box (:line-width 1 :color "gray35")))))
  '(tabbar-highlight ((t (:foreground "red" :underline nil))))
  '(tabbar-selected ((t (:inherit default :background "gray20" :foreground "yellow"))))
  '(tabbar-separator ((t (:height 1.0))))
