@@ -9,20 +9,69 @@
 
 ;; External libs
 (eval-and-compile
-	(require 'tabbar nil 'noerror)				; Tabs
-	(require 'undo-tree nil 'noerror)			; Visualize undo (and allow sane redo)
-	(require 'cl nil 'noerror)						; Built-in : Common Lisp lib
-	(require 'edmacro nil 'noerror)				; Built-in : Macro bits (Required by iswitchb)
-	(require 'imap nil 'noerror)
-	;; (require 'elid)
-	;; (require 'mail-bug nil t)
-	(require 'imapua nil 'noerror)
-	;; (require 'tabkey2 nil 'noerror)
-	;; (require 'emacs-imap)
-	;; Required by my iswitchb hack
-	)
+  (require 'tabbar nil 'noerror)                          ; Tabs
+  (require 'undo-tree nil 'noerror)                       ; Visualize undo (and allow sane redo)
+  (require 'cl nil 'noerror)                                              ; Built-in : Common Lisp lib
+  (require 'edmacro nil 'noerror)                         ; Built-in : Macro bits (Required by iswitchb)
+  (require 'imap nil 'noerror)
+  ;; (require 'elid)
+  ;; (require 'mail-bug nil t)
+  (require 'imapua nil 'noerror)
+  ;; (require 'tabkey2 nil 'noerror)
+  ;; (require 'emacs-imap)
+  ;; Required by my iswitchb hack
+  )
 ;; (mail-bug-init)
 
+(defun ido-goto-symbol (&optional symbol-list)
+  "Refresh imenu and jump to a place in the buffer using Ido."
+  (interactive)
+  (unless (featurep 'imenu)
+    (require 'imenu nil t))
+  (cond
+   ((not symbol-list)
+    (let ((ido-mode ido-mode)
+          (ido-enable-flex-matching
+           (if (boundp 'ido-enable-flex-matching)
+               ido-enable-flex-matching t))
+          name-and-pos symbol-names position)
+      (unless ido-mode
+        (ido-mode 1)
+        (setq ido-enable-flex-matching t))
+      (while (progn
+               (imenu--cleanup)
+               (setq imenu--index-alist nil)
+               (ido-goto-symbol (imenu--make-index-alist))
+               (setq selected-symbol
+                     (ido-completing-read "Symbol? " symbol-names))
+               (string= (car imenu--rescan-item) selected-symbol)))
+      (unless (and (boundp 'mark-active) mark-active)
+        (push-mark nil t nil))
+      (setq position (cdr (assoc selected-symbol name-and-pos)))
+      (cond
+       ((overlayp position)
+        (goto-char (overlay-start position)))
+       (t
+        (goto-char position)))))
+   ((listp symbol-list)
+    (dolist (symbol symbol-list)
+      (let (name position)
+        (cond
+         ((and (listp symbol) (imenu--subalist-p symbol))
+          (ido-goto-symbol symbol))
+         ((listp symbol)
+          (setq name (car symbol))
+          (setq position (cdr symbol)))
+         ((stringp symbol)
+          (setq name symbol)
+          (setq position
+                (get-text-property 1 'org-imenu-marker symbol))))
+        (unless (or (null position) (null name)
+                    (string= (car imenu--rescan-item) name))
+          (add-to-list 'symbol-names name)
+          (add-to-list 'name-and-pos (cons name position))))))))
+
+(global-set-key (kbd "M-i") 'ido-goto-symbol)
 
 ;; (setq browse-url-browser-function 'w3m-browse-url)
 ;; (autoload 'w3m-browse-url "w3m" "Ask a WWW browser to show a URL." t)
@@ -31,16 +80,12 @@
 
 ;; (setq gnus-mime-display-multipart-related-as-mixed nil)
 
-(require 'w3m nil 'noerror)
-(setq mm-text-html-renderer 'w3m)
-(setq mm-inline-text-html-with-images t)
-(setq mm-inline-text-html-with-w3m-keymap nil)
 
 (defun tf-toggle-tab-width-setting ()
-		"Toggle setting tab widths between 1 and 2"
-		(interactive)
-		(setq tab-width (if (= tab-width 2) 1 2))
-		(redraw-display))
+  "Toggle setting tab widths between 1 and 2"
+  (interactive)
+  (setq tab-width (if (= tab-width 2) 1 2))
+  (redraw-display))
 
 (global-set-key (kbd "<f8>") 'tf-toggle-tab-width-setting)
 
@@ -69,18 +114,18 @@
 (set-face-underline 'font-lock-warning-face "yellow")
 
 (add-hook 'emacs-lisp-mode-hook
-					(lambda ()
-						(font-lock-add-keywords nil
-																		'(("\\<\\(FIXME\\|HACK\\|BUG\\|pX\\):" 1 font-lock-warning-face t)))))
+          (lambda ()
+            (font-lock-add-keywords nil
+                                    '(("\\<\\(FIXME\\|HACK\\|BUG\\|pX\\):" 1 font-lock-warning-face t)))))
 
 ;; (if
-;; 		(and
-;; 		 (file-exists-p "~/.emacs.d/lisp/nxhtml/autostart.el")
-;; 		 (< emacs-major-version 24))
+;;              (and
+;;               (file-exists-p "~/.emacs.d/lisp/nxhtml/autostart.el")
+;;               (< emacs-major-version 24))
 ;;     (progn
 ;;       (load "~/.emacs.d/lisp/nxhtml/autostart.el")
 ;;       ;; (tabkey2-mode t)
-;; 			)
+;;                      )
 ;;   (progn
 ;;     (require 'php-mode nil t)
 ;;     (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
@@ -106,15 +151,27 @@
 ;; Funcs! _________________________________________________________________
 
 
+(defadvice bookmark-jump (after bookmark-jump activate)
+  "Bubble last bookmark to the top of the alist"
+  (let ((latest (bookmark-get-bookmark bookmark)))
+    (setq bookmark-alist (delq latest bookmark-alist))
+    (add-to-list 'bookmark-alist latest)))
+
+(defun px-bookmarks-toggle-last ()
+  "Jump to last bookmark"
+  (interactive)
+  (bookmark-jump (second bookmark-alist)))
+
+
 (defun px-push-mark-once-and-back ()
-	"Mark current point (`push-mark') and `set-mark-command' (C-u C-SPC) away."
-	(interactive)
-	(let ((current-prefix-arg '(4))) ; C-u
-		(if (not (eq last-command 'px-push-mark-once-and-back))
-				(progn
-					(push-mark)
-					(call-interactively 'set-mark-command))
-			(call-interactively 'set-mark-command))))
+  "Mark current point (`push-mark') and `set-mark-command' (C-u C-SPC) away."
+  (interactive)
+  (let ((current-prefix-arg '(4))) ; C-u
+    (if (not (eq last-command 'px-push-mark-once-and-back))
+        (progn
+          (push-mark)
+          (call-interactively 'set-mark-command))
+      (call-interactively 'set-mark-command))))
 
 
 (global-set-key (kbd "<s-left>") 'px-push-mark-once-and-back)
@@ -134,7 +191,7 @@
    (t (self-insert-command (or arg 1)))))
 
 (defun px-scratch ()
-	"Switch to scratch buffer"
+  "Switch to scratch buffer"
   (interactive)
   (switch-to-buffer "*scratch*"))
 
@@ -142,46 +199,46 @@
   "Prompt when a buffer is about to be killed.
 Do the right thing and delete window."
   (interactive)
-	(if (and (buffer-modified-p)
-					 buffer-file-name
-					 (file-exists-p buffer-file-name)
-					 (setq backup-file (car (find-backup-file-name buffer-file-name))))
-			(let ((answer (completing-read (format "Buffer modified %s, (d)iff, (s)ave, (k)ill? " (buffer-name))
-																		 '("d" "s" "k") nil t)))
-				(cond
-				 ((equal answer "d")
-					(set-buffer-modified-p nil)
-					(let ((orig-buffer (current-buffer))
-								(file-to-diff (if (file-newer-than-file-p buffer-file-name backup-file)
-																	buffer-file-name
-																backup-file)))
-						(set-buffer (get-buffer-create (format "%s last-revision" (file-name-nondirectory file-to-diff))))
-						(buffer-disable-undo)
-						(insert-file-contents file-to-diff nil nil nil t)
-						(set-buffer-modified-p nil)
-						(setq buffer-read-only t)
-						(ediff-buffers (current-buffer) orig-buffer)))
-				 ((equal answer "k")
-					(progn
-						(kill-buffer (current-buffer))
-						(delete-window)))
-				 (t
-					(progn
-						(save-buffer)
-						(kill-buffer (current-buffer))
-						(delete-window)
-						))))
-		(progn
-			;; (message "Buffer is %s" (current-buffer))
-			(kill-buffer)
-			;; (switch-to-buffer (current-buffer))
-			;; (message "Buffer is %s" (current-buffer))
-			(delete-window)
-			;; (switch-to-buffer (other-buffer))
-			)))
+  (if (and (buffer-modified-p)
+           buffer-file-name
+           (file-exists-p buffer-file-name)
+           (setq backup-file (car (find-backup-file-name buffer-file-name))))
+      (let ((answer (completing-read (format "Buffer modified %s, (d)iff, (s)ave, (k)ill? " (buffer-name))
+                                     '("d" "s" "k") nil t)))
+        (cond
+         ((equal answer "d")
+          (set-buffer-modified-p nil)
+          (let ((orig-buffer (current-buffer))
+                (file-to-diff (if (file-newer-than-file-p buffer-file-name backup-file)
+                                  buffer-file-name
+                                backup-file)))
+            (set-buffer (get-buffer-create (format "%s last-revision" (file-name-nondirectory file-to-diff))))
+            (buffer-disable-undo)
+            (insert-file-contents file-to-diff nil nil nil t)
+            (set-buffer-modified-p nil)
+            (setq buffer-read-only t)
+            (ediff-buffers (current-buffer) orig-buffer)))
+         ((equal answer "k")
+          (progn
+            (kill-buffer (current-buffer))
+            (delete-window)))
+         (t
+          (progn
+            (save-buffer)
+            (kill-buffer (current-buffer))
+            (delete-window)
+            ))))
+    (progn
+      ;; (message "Buffer is %s" (current-buffer))
+      (kill-buffer)
+      ;; (switch-to-buffer (current-buffer))
+      ;; (message "Buffer is %s" (current-buffer))
+      (delete-window)
+      ;; (switch-to-buffer (other-buffer))
+      )))
 
 ;; (defun px-byte-compile-user-init-file ()
-;; 	"byte-compile .emacs each time it is edited"
+;;      "byte-compile .emacs each time it is edited"
 ;;   (let ((byte-compile-warnings '(unresolved)))
 ;;     ;; in case compilation fails, don't leave the old .elc around:
 ;;     (when (file-exists-p (concat user-init-file ".elc"))
@@ -199,19 +256,19 @@ Do the right thing and delete window."
 (defun make-backup-dir-px (dirname)
   "create backup dir"
   (interactive)
-	(if (not (file-exists-p dirname))
-			(make-directory dirname t)))
+  (if (not (file-exists-p dirname))
+      (make-directory dirname t)))
 (make-backup-dir-px "~/.bkp/")
 
 (defun px-bkp ()
   "Write the current buffer to a new file - silently - and append the date+time to the filename, retaining extention"
   (interactive)
   (setq px-bkp-new-name
-				(concat
-				 (file-name-sans-extension buffer-file-name) "-"
-				 (format-time-string  "%Y-%m-%d") "."
-				 (format-time-string "%Hh%M") "."
-				 (file-name-extension buffer-file-name)))
+        (concat
+         (file-name-sans-extension buffer-file-name) "-"
+         (format-time-string  "%Y-%m-%d") "."
+         (format-time-string "%Hh%M") "."
+         (file-name-extension buffer-file-name)))
   (write-region (point-min) (point-max) px-bkp-new-name)
   (message "backuped %s" px-bkp-new-name))
 
@@ -242,7 +299,7 @@ Do the right thing and delete window."
   (interactive "r")
   (let ((q (buffer-substring-no-properties start end)))
     (browse-url (concat "http://www.google.com/search?&q="
-												(url-hexify-string q)))))
+                        (url-hexify-string q)))))
 
 (defun select-text-in-quote-px ()
   "Select text between the nearest left and right delimiters."
@@ -264,11 +321,11 @@ Do the right thing and delete window."
         (save-excursion
           (setq debut (region-beginning)
                 fin (+ 1(region-end)))
-					(goto-char debut)
-					(insert leftSign)
-					(goto-char fin)
-					(insert rightSign)
-					(forward-char 1)))
+          (goto-char debut)
+          (insert leftSign)
+          (goto-char fin)
+          (insert rightSign)
+          (forward-char 1)))
     (progn
       (insert leftSign rightSign)
       (backward-char 1))))
@@ -325,10 +382,10 @@ Do the right thing and delete window."
   (interactive)
   (if (eq mark-active nil)
       (progn
-				(beginning-of-line 1)
-				(set-mark (point))
-				(forward-line)
-				(comment-dwim nil))
+        (beginning-of-line 1)
+        (set-mark (point))
+        (forward-line)
+        (comment-dwim nil))
     (comment-dwim nil))
   (deactivate-mark))
 
@@ -349,14 +406,14 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
 
 (defun iswitchb-local-keys ()
-	"easily switch buffers (F5 or C-x b)"
+  "easily switch buffers (F5 or C-x b)"
   (mapc (lambda (K)
-					(let* ((key (car K)) (fun (cdr K)))
-						(define-key iswitchb-mode-map (edmacro-parse-keys key) fun)))
-				'(("<right>" . iswitchb-next-match)
-					("<left>"  . iswitchb-prev-match)
-					("<up>"    . ignore             )
-					("<down>"  . ignore             ))))
+          (let* ((key (car K)) (fun (cdr K)))
+            (define-key iswitchb-mode-map (edmacro-parse-keys key) fun)))
+        '(("<right>" . iswitchb-next-match)
+          ("<left>"  . iswitchb-prev-match)
+          ("<up>"    . ignore             )
+          ("<down>"  . ignore             ))))
 
 ;; Sessions! ______________________________________________________________________
 
@@ -377,9 +434,9 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
   (interactive)
   (if (px-saved-session)
       (progn
-				;; (delete-file (concat desktop-dirname "/.emacs.desktop.lock"))
-				(desktop-read)
-				(recenter-top-bottom 15))
+        ;; (delete-file (concat desktop-dirname "/.emacs.desktop.lock"))
+        (desktop-read)
+        (recenter-top-bottom 15))
     (message "No desktop (session) file found.")))
 
 (defun px-session-save ()
@@ -387,28 +444,28 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
   (interactive)
   (if (px-saved-session)
       (if (y-or-n-p "Save session? ")
-					(desktop-save-in-desktop-dir)
-				(message "Session not saved."))
-		(desktop-save-in-desktop-dir)))
+          (desktop-save-in-desktop-dir)
+        (message "Session not saved."))
+    (desktop-save-in-desktop-dir)))
 
 (defun px-session-save-named (px-session-named-name)
   "Prompt the user for a session name."
   (interactive "MSession name: ")
   (message "So what do I do with this: %s ?" px-session-named-name)
   (desktop-save (concat desktop-dirname "/" px-session-named-name
-												".session") t)
-	)
+                        ".session") t)
+  )
 
 ;; This will only work for one session
 ;; (add-hook 'after-init-hook
-;; 					'(lambda ()
-;; 						 (if (px-saved-session)
-;; 								 (if (y-or-n-p "Restore session? ")
-;; 										 (Session-restore-px)))))
+;;                                      '(lambda ()
+;;                                               (if (px-saved-session)
+;;                                                               (if (y-or-n-p "Restore session? ")
+;;                                                                               (Session-restore-px)))))
 
 ;; (add-hook 'kill-emacs-hook
-;; 					'(lambda ()
-;; 						 (px-session-save)))
+;;                                      '(lambda ()
+;;                                               (px-session-save)))
 
 
 ;; my-session (is broken with undo too)
@@ -515,6 +572,10 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (setq-default cursor-type 'bar)
 
 (setq
+
+ bookmark-default-file "~/.emacs.d/bookmarks" ;; keep my ~/ clean
+ bookmark-save-flag 1
+
  iswitchb-buffer-ignore '("^ " "*.")
  ispell-dictionary "francais"
 
@@ -530,15 +591,27 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; Window title (with edited status + remote indication)
 (setq frame-title-format
-      '("" invocation-name " " emacs-version " %@ "(:eval (if (buffer-file-name)
-																															(abbreviate-file-name (buffer-file-name))
-																														"%b")) " [%*]"))
+      '(""
+        invocation-name
+        " "
+        emacs-version
+        " %@ "
+        (:eval (if (buffer-file-name)
+                   (abbreviate-file-name (buffer-file-name))
+                 "%b"))
+        " [%*]"))
 
 ;; Keys! ______________________________________________________________________
 
-(global-set-key (kbd "C-h x") 'px-help-emacs)
+(setq-default indent-tabs-mode nil)
 
-(global-set-key "ù" 'px-match-paren)
+(global-set-key (kbd "M-s-b") 'bookmark-set)
+(global-set-key (kbd "s-b") 'bookmark-jump)
+(define-key global-map [M-f1] 'px-bookmarks-toggle-last)
+;; (define-key global-map [s-b] 'bookmark-set)
+
+(global-set-key (kbd "C-h x") 'px-help-emacs)
+(global-set-key (kbd "C-h *") 'px-scratch)
 
 ;; (global-set-key (kbd "²") 'dabbrev-expand)
 (global-set-key (kbd "²") 'hippie-expand)
@@ -565,6 +638,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (define-key isearch-mode-map "\C-f" 'isearch-repeat-forward)
 (define-key isearch-mode-map (kbd "C-S-f") 'isearch-repeat-backward)
 
+(global-set-key "ù" 'px-match-paren)
 (global-set-key (kbd "C-ù") 'forward-sexp)
 (global-set-key (kbd "C-%") 'backward-sexp)
 
@@ -585,7 +659,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 
 ;; THIS NEXT ONE BROKE HAVOC!!
-;; (global-set-key (kbd "C-d") nil)	; I kept deleting stuff
+;; (global-set-key (kbd "C-d") nil) ; I kept deleting stuff
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
 (global-set-key (kbd "C-o") 'find-file)
 (global-set-key (kbd "C-S-o") 'my-desktop-read)
@@ -596,12 +670,12 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-<tab>") 'tabbar-forward)
 (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
 
-(global-set-key (kbd "C-=") 'insert-pair-brace)				 ;{}
-(global-set-key (kbd "C-)") 'insert-pair-paren)				 ;()
-(global-set-key (kbd "C-(") 'insert-pair-bracket)			 ;[]
+(global-set-key (kbd "C-=") 'insert-pair-brace)        ;{}
+(global-set-key (kbd "C-)") 'insert-pair-paren)        ;()
+(global-set-key (kbd "C-(") 'insert-pair-bracket)      ;[]
 (global-set-key (kbd "C-<") 'insert-pair-single-angle) ;<>
-(global-set-key (kbd "C-'") 'insert-pair-squote)			 ;''
-(global-set-key (kbd "C-\"") 'insert-pair-dbquote)		 ;""
+(global-set-key (kbd "C-'") 'insert-pair-squote)       ;''
+(global-set-key (kbd "C-\"") 'insert-pair-dbquote)     ;""
 
 (global-set-key (kbd "M-s") 'save-buffer) ; Meta+s saves !! (see C-h b for all bindings, and C-h k + keystroke(s) for help)
 (global-set-key (kbd "M-DEL") 'kill-word)
@@ -630,55 +704,55 @@ context.
 - Kill-ring doesn't work in macros :(. Use registers instead.
 
 ** THIS VERY EMACS CONFIG
-*Open file                           															C-o*
-*Open recent file                    															M-o*
-*Open file path at point             															s-o*
-*Open last session (buffers)         															C-S-o*
-*Save named session (buffers)         														s-s*
+*Open file                                                        C-o*
+*Open recent file                                                 M-o*
+*Open file path at point                                          s-o*
+*Open last session (buffers)                                      C-S-o*
+*Save named session (buffers)                                     s-s*
 
-*Save buffer                         															M-s*
-*Kill buffer                        															s-k*
-*Undo                                															C-z*
-*Redo                                															C-S-z*
-*Switch last buffer                  															s-²*
-*Scroll buffer in other window/pane  															M-<arrow>*
+*Save buffer                                                      M-s*
+*Kill buffer                                                      s-k*
+*Undo                                                             C-z*
+*Redo                                                             C-S-z*
+*Switch last buffer                                               s-²*
+*Scroll buffer in other window/pane                               M-<arrow>*
 
-*Go back to previous position (marking current)										s-<left>*
+*Go back to previous position (marking current)                   s-<left>*
 
-*Next buffer                         															C-TAB*
-*Previous buffer                     															C-S-TAB*
-*Toggle two last buffers             															s-²*
+*Next buffer                                                      C-TAB*
+*Previous buffer                                                  C-S-TAB*
+*Toggle two last buffers                                          s-²*
 
-*Close other window/pane            															F1*
-*Switch to other window/pane        															F2*
-*Split horizontally                  															F3*
-*Split vertically                    															F4*
-*Switch to buffer (list)             															F5*
-*Spell-check buffer                  															F7*
-*Word-wrap toggle                    															F10*
+*Close other window/pane                                          F1*
+*Switch to other window/pane                                      F2*
+*Split horizontally                                               F3*
+*Split vertically                                                 F4*
+*Switch to buffer (list)                                          F5*
+*Spell-check buffer                                               F7*
+*Word-wrap toggle                                                 F10*
 
-*Match brace (() and {})             															ù*
-*Next brace pair                     															C-ù*
-*Previous brace pair                 															C-S-ù*
-*Enclose region in <tag> (sgml-tag)  															s-t RET tag [ args... ]*
-*Select 'this' or <that> (enclosed)  															s-SPC*
-*Search selection in google          															s-g*
+*Match brace (() and {})                                          ù*
+*Next brace pair                                                  C-ù*
+*Previous brace pair                                              C-S-ù*
+*Enclose region in <tag> (sgml-tag)                               s-t RET tag [ args... ]*
+*Select 'this' or <that> (enclosed)                               s-SPC*
+*Search selection in google                                       s-g*
 *Complete with every possible match                               ²*
 
-*Php-mode                            															s-p*
-*Html-mode                           															s-h*
-*Js-mode                             															s-j*
+*Php-mode                                                         s-p*
+*Html-mode                                                        s-h*
+*Js-mode                                                          s-j*
 
 ** EMACSEN
 Go to line                                                        M-g M-g
-Go back to previous position  (w/o marking current -?!)						C-u C-SPC
-Recenter window around current line  															C-l
-Intelligently recenter window        															C-S-l
-Copy to register A                   															C-x r s A
-Paste from register A                															C-x r g A
-Set bookmark at point                															C-x r m RET
-Close HTML tag                       															sgml-close-tag
-Switch to *Messages* buffer          															C-h e
+Go back to previous position  (w/o marking current -?!)           C-u C-SPC
+Recenter window around current line                               C-l
+Intelligently recenter window                                     C-S-l
+Copy to register A                                                C-x r s A
+Paste from register A                                             C-x r g A
+Set bookmark at point                                             C-x r m RET
+Close HTML tag                                                    sgml-close-tag
+Switch to *Messages* buffer                                       C-h e
 Transpose current line with previous one                          C-x C-t
 
 ** RECTANGLES
@@ -687,22 +761,22 @@ yank-rectangle (upper left corner at point)                       C-x r y
 Insert STRING on each rectangle line.                             C-x r t string <RET>
 
 ** MISC EDITING
-capitalize-word		           															        M-c
-upcase-word                  															        M-u
-downcase-word                															        M-l
-downcase-region              															        C-x C-l
-uppercase-region             															        C-x C-u
+capitalize-word                                                   M-c
+upcase-word                                                       M-u
+downcase-word                                                     M-l
+downcase-region                                                   C-x C-l
+uppercase-region                                                  C-x C-u
 
 ** MACROS
-start-kbd-macro		                                                C-x (
+start-kbd-macro                                                   C-x (
 Start a new macro definition.
-end-kbd-macro		                                                  C-x )
+end-kbd-macro                                                     C-x )
 End the current macro definition.
-call-last-kbd-macro	                                              C-x e
+call-last-kbd-macro                                               C-x e
 Execute the last defined macro.
-call-last-kbd-maco	                                              M-(number) C-x e
+call-last-kbd-maco                                                M-(number) C-x e
 Do that last macro (number times).
-stat-kbd-macro		                                                C-u C-x (
+stat-kbd-macro                                                    C-u C-x (
 Execute last macro and add to it.
 name-last-kbd-macro
 Name the last macro before saving it.
@@ -710,20 +784,20 @@ insert-last-keyboard-macro
 Insert the macro you made into a file.
 load-file
 Load a file with macros in it.
-kbd-macro-query		                                                C-x q
+kbd-macro-query                                                   C-x q
 Insert a query into a keyboard macro.
-exit-recursive-edit		                                            M-C-c
+exit-recursive-edit                                               M-C-c
 Get the hell out of a recursive edit.
 
 ** EDIFF
-Next / previous diff                 															n / p
-Copy a diff into b / opposite        															a / b
-Save a / b buffer                    															wa / wb
+Next / previous diff                                              n / p
+Copy a diff into b / opposite                                     a / b
+Save a / b buffer                                                 wa / wb
 
 ** GNUS
-Sort summary by author/date          															C-c C-s C-a/d
-Search selected imap folder          															G G
-Mark thread read                     															T k
+Sort summary by author/date                                       C-c C-s C-a/d
+Search selected imap folder                                       G G
+Mark thread read                                                  T k
 
 ** PHP-MODE
 Search PHP manual for <point>.                                    C-c C-f
@@ -737,38 +811,38 @@ Add a new file to version control
 
 vc-update                                                         C-x v +
 Get latest changes from version control
-vc-version-other-window              															C-x v ~
+vc-version-other-window                                           C-x v ~
 Look at other revisions
-vc-diff                             															C-x v =
+vc-diff                                                           C-x v =
 Diff with other revisions
-vc-revert-buffer                    															C-x v u
+vc-revert-buffer                                                  C-x v u
 Undo checkout
-vc-cancel-version                   															C-x v c
+vc-cancel-version                                                 C-x v c
 Delete latest rev (look at an old rev and re-check it)
 
-vc-directory              			          												C-x v d
+vc-directory                                                      C-x v d
 Show all files which are not up to date
-vc-annotate              									            						C-x v g
+vc-annotate                                                       C-x v g
 Show when each line in a tracked file was added and by whom
-vc-create-snapshot              											    				C-x v s
+vc-create-snapshot                                                C-x v s
 Tag all the files with a symbolic name
-vc-retrieve-snapshot              		  													C-x v r
+vc-retrieve-snapshot                                              C-x v r
 Undo checkouts and return to a snapshot with a symbolic name
 
-vc-print-log              															          C-x v l
+vc-print-log                                                      C-x v l
 Show log (not in ChangeLog format)
-vc-update-change-log              															  C-x v a
+vc-update-change-log                                              C-x v a
 Update changelog
 
-vc-merge              															              C-x v m
-vc-insert-headers              															      C-x v h
+vc-merge                                                          C-x v m
+vc-insert-headers                                                 C-x v h
 
 M-x vc-resolve-conflicts
 Ediff-merge session on a file with conflict markers
 
 ** OTHER
-View git log              															          git reflog
-Revert HEAD to 7              															      git reset --hard HEAD@{7}
+View git log                                                      git reflog
+Revert HEAD to 7                                                  git reset --hard HEAD@{7}
 "
          (generate-new-buffer "px-help-emacs"))
   (switch-to-buffer "px-help-emacs")
@@ -792,9 +866,9 @@ Revert HEAD to 7              															      git reset --hard HEAD@{7}
     (setq imap-log (get-buffer-create "imap-log"))))
 
 (defun px-test-imap ()
-	"plop"
-	(interactive)
-	(setq imap-debug (get-buffer-create "imap-debug"))
+  "plop"
+  (interactive)
+  (setq imap-debug (get-buffer-create "imap-debug"))
   ;; (switch-to-buffer (imap-open "imap.gmail.com" 993 'ssl))
   (switch-to-buffer (imap-open "mail.gandi.net" 993 'ssl))
   (with-current-buffer (current-buffer)
@@ -802,23 +876,23 @@ Revert HEAD to 7              															      git reset --hard HEAD@{7}
     (imap-authenticate "contact@adamweb.net" "Amiga261")
     ;; (setq mailboxes (imap-mailbox-list "*"))
     ;; (setq mailbox (last mailboxes))
-		;; (imap-mailbox-lsub "*")
+    ;; (imap-mailbox-lsub "*")
     (imap-mailbox-select "INBOX")
-		(imap-current-mailbox)
+    (imap-current-mailbox)
     (message "exists %s" (imap-mailbox-get 'exists))
     ;; (imap-mailbox-get 'uidvalidity)                     ;; Returns nothing
     ;; (setq status (imap-mailbox-status mailbox 'unseen)) ;; Returns even less
     (message "box %s" (imap-mailbox-examine "INBOX"))                      ;; This does nothing too
     (imap-search "ALL")                                 ;; Everything else works
     ;; (setq my-msg (imap-fetch 1 "RFC822"))
-		(setq my-msg (imap-fetch 15 "RFC822.PEEK" 'RFC822))
+    (setq my-msg (imap-fetch 15 "RFC822.PEEK" 'RFC822))
     (message "HOY! %s" my-msg)
     ;; (imap-close)
-		))
+    ))
 
 (defun test-imap-cmd ()
-(interactive)
-(test-imap))
+  (interactive)
+  (test-imap))
 
 ;; Enter!
 (defun enter-again-if-enter ()
@@ -833,7 +907,7 @@ An alternate approach would be after-advice on isearch-other-meta-char."
 ;; Custom ! ______________________________________________________________________
 
 (if (< emacs-major-version 24)
-		(set-face-attribute 'default nil :background "#2e3436" :foreground "#eeeeec"))
+    (set-face-attribute 'default nil :background "#2e3436" :foreground "#eeeeec"))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -843,6 +917,7 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(auto-save-file-name-transforms (quote ((".*" "~/.bkp/\\1" t))))
  '(backup-directory-alist (quote ((".*" . "~/.bkp/"))))
  '(bbdb-use-pop-up nil)
+ '(bookmark-sort-flag nil)
  '(buffer-offer-save nil)
  '(c-basic-offset (quote set-from-style) t)
  '(c-default-style "gnu" t)
@@ -853,7 +928,7 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(custom-enabled-themes (quote (tango-dark)))
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
- '(desktop-locals-to-save (quote (desktop-locals-to-save truncate-lines case-fold-search case-replace fill-column overwrite-mode change-log-default-name line-number-mode column-number-mode size-indication-mode buffer-file-coding-system indent-tabs-mode tab-width indicate-buffer-boundaries indicate-empty-lines show-trailing-whitespace)))
+ ;; '(desktop-locals-to-save (quote (desktop-locals-to-save truncate-lines case-fold-search case-replace fill-column overwrite-mode change-log-default-name line-number-mode column-number-mode size-indication-mode buffer-file-coding-system indent-tabs-mode tab-width indicate-buffer-boundaries indicate-empty-lines show-trailing-whitespace)))
  '(display-time-24hr-format t)
  '(display-time-mode t)
  '(epa-popup-info-window nil)
@@ -861,6 +936,7 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(global-linum-mode t)
  '(global-undo-tree-mode t)
  '(imapua-folder-color "#cc0000")
+ '(imapua-inline-images nil)
  '(imapua-modal t)
  '(inhibit-startup-echo-area-message (user-login-name))
  '(inhibit-startup-screen t)
@@ -912,6 +988,7 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(font-lock-comment-face ((t (:foreground "#73d216" :slant italic))))
  '(minibuffer-prompt ((t (:foreground "#fce94f" :height 1.0))))
  '(mode-line ((t (:background "gray10" :foreground "white" :box nil))))
+ '(mode-line-buffer-id ((t (:weight bold))))
  '(mode-line-inactive ((t (:inherit mode-line :background "gray33" :foreground "#eeeeec" :box nil :weight light))))
  '(mumamo-background-chunk-major ((t (:background "gray10"))) t)
  '(mumamo-background-chunk-submode1 ((t (:background "gray15"))) t)
@@ -921,8 +998,8 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(region ((t (:background "salmon4"))))
  '(show-paren-match ((t (:background "gray35"))))
  '(tabbar-button ((t (:inherit tabbar-default))))
- '(tabbar-default ((t (:inherit default :background "gray33"))))
+ '(tabbar-default ((t (:inherit default :background "dim gray"))))
  '(tabbar-highlight ((t (:foreground "red" :underline nil))))
  '(tabbar-selected ((t (:inherit default :background "gray20" :foreground "yellow"))))
- '(tabbar-separator ((t (:height 0.1))))
- '(tabbar-unselected ((t (:inherit tabbar-default :background "dark gray")))))
+ '(tabbar-separator ((t (:height 1.0))))
+ '(tabbar-unselected ((t (:inherit tabbar-default :background "gray35")))))
