@@ -153,9 +153,11 @@
 
 (defadvice bookmark-jump (after bookmark-jump activate)
   "Bubble last bookmark to the top of the alist"
-  (let ((latest (bookmark-get-bookmark bookmark)))
-    (setq bookmark-alist (delq latest bookmark-alist))
-    (add-to-list 'bookmark-alist latest)))
+  (progn
+    (let ((latest (bookmark-get-bookmark bookmark)))
+      (setq bookmark-alist (delq latest bookmark-alist))
+      (add-to-list 'bookmark-alist latest))
+    (recenter-top-bottom 5)))
 
 (defun px-bookmarks-toggle-last ()
   "Jump to last bookmark"
@@ -603,6 +605,12 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; Keys! ______________________________________________________________________
 
+
+(defun px-join-line ()
+  (join-line 1))
+
+;; (global-set-key (kbd "C-j") 'join-line)
+
 (setq-default indent-tabs-mode nil)
 
 (global-set-key (kbd "M-s-b") 'bookmark-set)
@@ -935,7 +943,7 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(global-linum-mode t)
  '(global-undo-tree-mode t)
  '(imapua-folder-color "#cc0000")
- '(imapua-inline-images nil)
+ '(imapua-inline-images t)
  '(imapua-modal t)
  '(inhibit-startup-echo-area-message (user-login-name))
  '(inhibit-startup-screen t)
@@ -997,8 +1005,9 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(region ((t (:background "salmon4"))))
  '(show-paren-match ((t (:background "gray35"))))
  '(tabbar-button ((t (:inherit tabbar-default))))
+ '(tabbar-button-highlight ((t (:inherit tabbar-default :background "light gray"))))
  '(tabbar-default ((t (:inherit default :background "dim gray" :box (:line-width 1 :color "gray35")))))
- '(tabbar-highlight ((t (:foreground "red" :underline nil))))
- '(tabbar-selected ((t (:inherit default :background "gray20" :foreground "yellow"))))
+ '(tabbar-highlight ((t (:background "gray20" :foreground "red"))))
+ '(tabbar-selected ((t (:inherit tabbar-default :background "gray20" :foreground "yellow" :box (:line-width 1 :color "gray20")))))
  '(tabbar-separator ((t (:height 1.0))))
  '(tabbar-unselected ((t (:inherit tabbar-default :background "gray35")))))
