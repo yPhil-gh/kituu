@@ -21,7 +21,7 @@ pack[dev_env]="perl-doc"
 pack[glamp]="apache2 mysql-server phpmyadmin"
 pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev libqt4-dev libjack-dev"
 pack[emacs&friends]="emacs bbdb mailutils vim w3m-el"
-pack[image_tools]="gimp inkscape blender"
+pack[image_tools]="gimp inkscape blender okular eog"
 pack[multimedia]="smplayer gstreamer0.10-plugins mpd gmpc"
 pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk qmidinet calf-plugins nekobee"
 pack[games]="extremetuxracer supertuxkart torcs nexuiz"
@@ -46,7 +46,7 @@ lisp[tabbar]="git clone https://github.com/dholm/tabbar.git"
 lisp[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
 # lisp[marker-visit]="git clone https://github.com/emacsmirror/marker-visit.git"
 lisp[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
-# lisp[nxhtml]="bzr branch lp:nxhtml"
+lisp[nxhtml]="bzr branch lp:nxhtml"
 
 echo -e $sep"Kituu! #################
 
