@@ -1,30 +1,21 @@
 #!/bin/bash
 
-# plip
+SRC_DIR=~/src
 
-EMACS_BZR_DIR=~/src/emacs-tmp
-EMACS_SRC_DIR=~/src/emacs-src
+cd $HOME && pwd
 
-if [ ! -d "$EMACS_BZR_DIR" ]; then mkdir -pv $EMACS_BZR_DIR; fi
-if [ ! -d "$EMACS_SRC_DIR" ]; then mkdir -pv $EMACS_SRC_DIR; fi
+if [ ! -d "$SRC_DIR" ]; then mkdir $SRC_DIR; fi
 
-cd $EMACS_BZR_DIR && pwd
-
-if [ ! -d "trunk" ]; then
-    bzr branch bzr://bzr.savannah.gnu.org/emacs/trunk &&  cd trunk && pwd
+if [ ! -d "$SRC_DIR/emacs" ]; then
+		cd $SRC_DIR && git clone git://git.sv.gnu.org/emacs.git && cd emacs
 else
-    cd trunk && pwd
+		cd $SRC_DIR/emacs
 fi
 
-bzr pull 1>&1 | grep "No revisions to pull"
+pwd && git pull 1>&1 | grep "Already up-to-date."
 if [ ! $? -eq 0 ]; then
-    read -e -p "## Build and install emacs (revision $(bzr revno))? [Y/n] " yn
+    read -e -p "## Build and install emacs? [Y/n] " yn
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-	cd $EMACS_SRC_DIR && pwd
-
-	if [ -d "trunk" ]; then cp -r trunk trunk.bkp && rm -rf trunk; fi
-
-	cp -Rv $EMACS_BZR_DIR/trunk/ $EMACS_SRC_DIR/
-	cd trunk && autoreconf -i -I m4 && ./configure && make bootstrap && make && sudo make install
+				make distclean && autoreconf -i -I m4 && ./configure && make && sudo make install
     fi
 fi
