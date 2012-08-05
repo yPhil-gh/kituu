@@ -8,6 +8,10 @@
 (let ((default-directory "~/.emacs.d/lisp/"))
   (normal-top-level-add-subdirs-to-load-path))
 
+(require 'package)
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
+
 ;; External libs
 (eval-and-compile
   (require 'tabbar nil 'noerror)                          ; Tabs
@@ -551,7 +555,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; Modes! _____________________________________________________________________
 
-(set-scroll-bar-mode `right)
+;; (set-scroll-bar-mode `right)
 (auto-fill-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
 (put 'overwrite-mode 'disabled t)
@@ -948,6 +952,7 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(imapua-folder-color "#cc0000")
  '(imapua-inline-images t)
  '(imapua-modal t)
+ '(imapua-short-headers nil)
  '(inhibit-startup-echo-area-message (user-login-name))
  '(inhibit-startup-screen t)
  '(iswitchb-mode t)
@@ -959,7 +964,6 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(message-confirm-send t)
  '(message-default-charset (quote utf-8))
  '(mm-enable-external (quote ask))
-;; '(mm-text-html-renderer (quote w3m))
  '(mumamo-margin-use (quote (left-margin 13)))
  '(recenter-redisplay nil)
  '(recentf-max-menu-items 60)
@@ -998,7 +1002,7 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(font-lock-comment-face ((t (:foreground "#73d216" :slant italic))))
  '(minibuffer-prompt ((t (:foreground "#fce94f" :height 1.0))))
  '(mode-line ((t (:background "gray10" :foreground "white" :box nil))))
- '(mode-line-buffer-id ((t (:weight bold))))
+ '(mode-line-buffer-id ((t (:weight bold :foreground "yellow"))))
  '(mode-line-inactive ((t (:inherit mode-line :background "gray33" :foreground "#eeeeec" :box nil :weight light))))
  '(mumamo-background-chunk-major ((t (:background "gray10"))) t)
  '(mumamo-background-chunk-submode1 ((t (:background "gray15"))) t)
