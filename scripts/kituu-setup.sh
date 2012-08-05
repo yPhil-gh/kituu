@@ -9,7 +9,7 @@ rw=false
 
 type -P aptitude &>/dev/null || { debian=true >&2; }
 if [[ $1 = "-rw" ]]; then rw=true; fi
-if ($rw); then vc_prefix="git@github.com:" && message="RW mode ON";else vc_prefix="https://github.com/" && message="RW mode OFF"; fi
+if ($rw); then vc_prefix="git@github.com:" && message="RW mode ON" && git config --global user.name "xaccrocheur" && git config --global user.email xaccrocheur@gmail.com ; else vc_prefix="https://github.com/" && message="RW mode OFF"; fi
 
 # My binary packages
 declare -A pack
@@ -118,7 +118,7 @@ if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
     fi
 fi
 
-if [ ! -d "$lispdir" ] ; then mkdir -p $lispdir ; fi
+if [ ! -d "$lispdir" ] ; then mkdir -p $lispdir/ ; fi
 
 for project in "${!lisp[@]}" ; do
     vcsystem=${lisp[$project]:0:3}

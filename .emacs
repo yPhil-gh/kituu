@@ -566,7 +566,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 (add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)
 (add-hook 'find-file-hooks 'turn-on-font-lock)
-(add-hook 'mouse-leave-buffer-hook 'px-exit-minibuffer)
+;; (add-hook 'mouse-leave-buffer-hook 'px-exit-minibuffer)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 
