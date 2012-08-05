@@ -13,8 +13,8 @@ if ($rw); then vc_prefix="git@github.com:" && message="RW mode ON" && git config
 
 # My binary packages
 declare -A pack
-pack[base]="zsh curl zile wget apt-file sox htop bc unison thunderbird firefox locate filelight gparted"
-pack[xfce]="gdm xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager"
+pack[base]="zsh curl wget sox htop bc unison thunderbird firefox locate filelight gparted"
+pack[xfce]="xubuntu"
 pack[xscreensaver]="xscreensaver-gl xscreensaver-gl-extra xscreensaver-data-extra xscreensaver-data"
 pack[dev_tools]="gcc autoconf automake texinfo libtool bzr git cvs subversion"
 pack[dev_env]="perl-doc"
@@ -178,3 +178,7 @@ if [ -e $scriptdir/build-emacs.sh ]; then
 fi
 
 echo -e $sep"...Done."
+
+# NOTES
+# packages in probation: apt-file zile gdm xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager
+#
