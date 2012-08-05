@@ -3,7 +3,6 @@
 
 # 1. Text (text)
 # ==============
-
 text/html; firefox %s ; nametemplate=%s.html; test=test -n "$DISPLAY"
 # text/html; elinks %s ; nametemplate=%s.html; test=test -z "$DISPLAY"
 # text/html; elinks -dump %s ; nametemplate=%s.html; copiousoutput
@@ -12,18 +11,14 @@ application/pdf ; okular %s ; test=test -n "$DISPLAY"
 
 # 2. Media (audio/image/video)
 # ============================
-
-
 # audio/* ; mplayer %s ; needsterminal
 # image/*; eog %s ; test=test -n "$DISPLAY"; edit=gimp %s
 # video/* ; mplayer %s ; needsterminal; test=test -n "$DISPLAY"
 # application/ogg ; mplayer %s ; needsterminal
 image/jpeg; eog %s; test=test -n "$DISPLAY"
 
-
 # 3. Applications (application)
 # =============================
-
 # TODO: should really used edit flag in Zsh ‘e’ command
 application/x-msdos-program ; wine %s ; test=test -n "$DISPLAY"
 application/octet-stream; screen-terminal-vimless %s
