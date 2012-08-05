@@ -20,7 +20,9 @@
   ;; (require 'tabkey2 nil 'noerror)
   ;; (require 'emacs-imap)
   ;; Required by my iswitchb hack
+  ;; (require 'w3m-load)
   )
+
 ;; (mail-bug-init)
 
 (defun ido-goto-symbol (&optional symbol-list)
@@ -956,7 +958,7 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(message-confirm-send t)
  '(message-default-charset (quote utf-8))
  '(mm-enable-external (quote ask))
- '(mm-text-html-renderer (quote w3m))
+;; '(mm-text-html-renderer (quote w3m))
  '(mumamo-margin-use (quote (left-margin 13)))
  '(recenter-redisplay nil)
  '(recentf-max-menu-items 60)
