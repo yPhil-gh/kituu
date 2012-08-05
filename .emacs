@@ -8,9 +8,14 @@
 (let ((default-directory "~/.emacs.d/lisp/"))
   (normal-top-level-add-subdirs-to-load-path))
 
-(require 'package)
-(add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/"))
+(require 'package nil 't)
+
+(if
+    (>= emacs-major-version 24)
+    (add-to-list 'package-archives
+		 '("marmalade" . "http://marmalade-repo.org/packages/"))
+  )
+
 
 ;; External libs
 (eval-and-compile
@@ -555,7 +560,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; Modes! _____________________________________________________________________
 
-;; (set-scroll-bar-mode `right)
+(set-scroll-bar-mode `right)
 (auto-fill-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
 (put 'overwrite-mode 'disabled t)
@@ -644,7 +649,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (define-key global-map [f7] 'flyspell-buffer)
 (define-key global-map [M-f7] 'flyspell-mode)
 (define-key global-map [f10] 'toggle-truncate-lines)
-(define-key global-map [f11] 'px-fullscreen)
+(define-key global-map [f12] 'px-fullscreen)
 
 (global-set-key (kbd "C-s-g") 'goto-line)
 (global-set-key (kbd "C-s-t") 'sgml-close-tag)
