@@ -75,6 +75,9 @@ alias rm="rm -i"
 alias cp="cp -i"
 alias z="zile"
 
+alias k="cd ~/.kituu/"
+alias m="cd ~/.emacs.d/lisp/mail-bug/"
+
 alias lss="ls -la | grep $1"
 alias hss="history 0 | grep $1"
 alias mss="sudo cat /var/log/messages | grep $1"
