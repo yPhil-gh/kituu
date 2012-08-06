@@ -19,7 +19,7 @@ pack[xscreensaver]="xscreensaver-gl xscreensaver-gl-extra xscreensaver-data-extr
 pack[dev_tools]="gcc autoconf automake texinfo libtool bzr git cvs subversion"
 pack[dev_env]="perl-doc"
 pack[glamp]="apache2 mysql-server phpmyadmin"
-pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libgtk2.0-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev libqt4-dev libgtk-3-dev"
+pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev libqt4-dev libgtk-3-dev"
 pack[emacs&friends]="emacs bbdb mailutils vim w3m-el"
 pack[image_tools]="gimp inkscape blender okular eog imagemagick"
 pack[multimedia]="smplayer gstreamer0.10-plugins clementine"
@@ -180,5 +180,5 @@ fi
 echo -e $sep"...Done."
 
 # NOTES
-# packages in probation: apt-file zile gdm xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager
+# packages in probation: apt-file zile gdm xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager libgtk2.0-dev
 #

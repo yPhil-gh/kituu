@@ -8,12 +8,12 @@
 (let ((default-directory "~/.emacs.d/lisp/"))
   (normal-top-level-add-subdirs-to-load-path))
 
-(require 'package nil 't)
 
-(if
-    (>= emacs-major-version 24)
-    (add-to-list 'package-archives
-		 '("marmalade" . "http://marmalade-repo.org/packages/"))
+(if (>= emacs-major-version 24)
+    (progn
+      (require 'package nil 'noerror)
+      (add-to-list 'package-archives
+                   '("marmalade" . "http://marmalade-repo.org/packages/")))
   )
 
 
