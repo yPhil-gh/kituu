@@ -162,6 +162,10 @@
 
 ;; Funcs! _________________________________________________________________
 
+(defun toggle-fullscreen ()
+  "Real, mozilla-like full screen."
+  (interactive)
+  (set-frame-parameter nil 'fullscreen (if (frame-parameter nil 'fullscreen) nil 'fullboth)))
 
 (defadvice bookmark-jump (after bookmark-jump activate)
   "Bubble last bookmark to the top of the alist"
