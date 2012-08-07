@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name           Sane Inputs
 // @author         pX
-// @description    Style Corrector (by pX) reset the input text color for dark env
-// @namespace      userscripts.org/scripts/show/36850
+// @description    Style Fixer (by pX) Various fixes but mostly reset the input text color for dark system environments
+// @namespace      raw.github.com/xaccrocheur/kituu/master/scripts/
 // @include        *
 // @exclude        http://*.stackoverflow.com/*
 // ==/UserScript==
