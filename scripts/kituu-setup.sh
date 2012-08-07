@@ -40,6 +40,7 @@ moz[tabmix+]="https://addons.mozilla.org/firefox/downloads/latest/1122/addon-112
 moz[adblock+]="https://addons.mozilla.org/firefox/downloads/latest/1865/addon-1865-latest.xpi"
 moz[color_picker]="https://addons.mozilla.org/firefox/downloads/latest/271/addon-271-latest.xpi"
 
+
 # My lisp packages
 declare -A lisp
 lisp[tabbar]="git clone https://github.com/dholm/tabbar.git"
