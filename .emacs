@@ -252,7 +252,9 @@ Do the right thing and delete window."
       (kill-buffer)
       ;; (switch-to-buffer (current-buffer))
       ;; (message "Buffer is %s" (current-buffer))
-      (delete-window)
+      (if (> (length (window-list)) 1)
+          (delete-window))
+      (kbd "C-x b <return>")
       ;; (switch-to-buffer (other-buffer))
       )))
 
@@ -621,7 +623,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
         " [%*]"))
 
 ;; Keys! ______________________________________________________________________
-
 
 (defun px-join-line ()
   (join-line 1))
