@@ -34,6 +34,8 @@
   ;; (require 'w3m-load)
   )
 
+(autoload 'notify "notify" "Notify TITLE, BODY.")
+
 ;; (mail-bug-init)
 
 (defun ido-goto-symbol (&optional symbol-list)
