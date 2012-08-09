@@ -1028,3 +1028,4 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(tabbar-selected ((t (:inherit tabbar-default :background "gray20" :foreground "yellow" :box (:line-width 1 :color "gray20")))))
  '(tabbar-separator ((t (:height 1.0))))
  '(tabbar-unselected ((t (:inherit tabbar-default :background "gray35")))))
+(setq linum-format "%d")
