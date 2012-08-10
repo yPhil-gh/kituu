@@ -13,8 +13,7 @@
     (progn
       (require 'package nil 'noerror)
       (add-to-list 'package-archives
-                   '("marmalade" . "http://marmalade-repo.org/packages/")))
-  )
+                   '("marmalade" . "http://marmalade-repo.org/packages/"))))
 
 
 ;; External libs
@@ -971,6 +970,8 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(mail-host-address "philcm@gnu.org")
  '(mail-interactive t)
  '(mark-ring-max 8)
+ '(max-lisp-eval-depth 6000)
+ '(max-specpdl-size 13800)
  '(mbug-short-headers t)
  '(menu-bar-mode nil)
  '(message-confirm-send t)
