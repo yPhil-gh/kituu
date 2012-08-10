@@ -16,6 +16,7 @@ git pull 1>&1 | grep "Already up-to-date."
 if [ ! $? -eq 0 ]; then
     read -e -p "## Branch moved, build and install emacs? [Y/n] " yn
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-				make distclean && autoreconf -i -I m4 && ./configure --with-x-toolkit=gtk3 && make && sudo make install
+				make distclean && autoreconf -i -I m4 && ./configure && make && sudo make install
+				# make distclean && autoreconf -i -I m4 && ./configure --with-x-toolkit=gtk3 && make && sudo make install
     fi
 fi
