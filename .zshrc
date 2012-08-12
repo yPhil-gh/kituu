@@ -259,6 +259,9 @@ setprompt () {
 	unfunction preexec
 	PS1='%(?..[%?])%!:%~%# '
     else
+
+	# PROMPT="%{$fg[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg[yellow]%}%~ %{$reset_color%}\$ "
+
 	PROMPT='$PR_SET_CHARSET$PR_STITLE${(e)PR_TITLEBAR}\
 $PR_BLUE$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT(\
 $PR_GREEN%(!.%SROOT%s.%n)$PR_GREEN@%m:%l\
@@ -269,8 +272,7 @@ $PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_URCORNER$PR_SHIFT_OUT\
 $PR_SHIFT_IN$PR_LLCORNER$PR_BLUE$PR_HBAR$PR_SHIFT_OUT(\
 %(?..$PR_LIGHT_RED%?$PR_BLUE:)\
 ${(e)PR_APM}$PR_YELLOW%D{%H:%M}\
-$PR_LIGHT_BLUE:%(!.$PR_RED.$PR_WHITE)%#$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
-$PR_SHIFT_IN$PR_SHIFT_OUT$PR_WHITE> $PR_NO_COLOUR'
+$PR_LIGHT_BLUE) %(!.$PR_RED.$PR_WHITE)\$$PR_BLUE$PR_NO_COLOUR '
 
 # This breaks in console
     # RPROMPT='\
