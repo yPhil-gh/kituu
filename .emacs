@@ -18,10 +18,10 @@
 
 ;; External libs
 (eval-and-compile
-  (require 'tabbar nil 'noerror)                          ; Tabs
-  (require 'undo-tree nil 'noerror)                       ; Visualize undo (and allow sane redo)
-  (require 'cl nil 'noerror)                                              ; Built-in : Common Lisp lib
-  (require 'edmacro nil 'noerror)                         ; Built-in : Macro bits (Required by iswitchb)
+  (require 'tabbar nil 'noerror)      ; Tabs
+  (require 'undo-tree nil 'noerror)   ; Visualize undo (and allow sane redo)
+  (require 'cl nil 'noerror)          ; Built-in : Common Lisp lib
+  (require 'edmacro nil 'noerror)     ; Built-in : Macro bits (Required by iswitchb)
   (require 'imap nil 'noerror)
   ;; (require 'elid)
   ;; (require 'mail-bug nil t)
@@ -678,9 +678,10 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "s-p") 'php-mode) ;; zob
 (global-set-key (kbd "s-h") 'html-mode) ;; zob
 (global-set-key (kbd "s-j") 'js-mode) ;; zob
+(global-set-key (kbd "s-m") 'message-mail)
 (global-set-key (kbd "s-o") 'find-file-at-point)
 (global-set-key (kbd "s-d") 'wl-draft-mode)
-(global-set-key (kbd "s-m") 'kmacro-end-and-call-macro)
+(global-set-key (kbd "s-<") 'kmacro-end-and-call-macro)
 (global-set-key (kbd "C-s-m") 'apply-macro-to-region-lines)
 (global-set-key (kbd "<s-up>") (kbd "C-x C-SPC")) ; global mark ring
 ;; (global-set-key (kbd "<s-down>") (kbd "C-- C-SPC"))
@@ -1003,43 +1004,36 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(undo-tree-enable-undo-in-region nil)
  '(undo-tree-history-directory-alist (quote (("." . "~/tmp"))))
  '(undo-tree-visualizer-diff t)
+ '(user-full-name "Philippe Coatmeur-Marin")
+ '(user-mail-address "philcm@gmx.com")
  '(vc-make-backup-files t)
  '(web-vcs-default-download-directory (quote site-lisp-dir)))
 
 (custom-set-faces
- ;;  ;; custom-set-faces was added by Custom.
- ;;  ;; If you edit it by hand, you could mess it up, so be careful.
- ;;  ;; Your init file should contain only one such instance.
- ;;  ;; If there is more than one, they won't work right.
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 113 :width normal :foundry "unknown" :family "DejaVu Sans Mono"))))
- ;; '(default ((t (:inherit nil :stipple nil :background "gray20" :foreground "#eeeeec" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 113 :width normal :foundry "unknown" :family "DejaVu Sans Mono"))))
- ;;  '(font-lock-comment-face ((t (:foreground "#73d216" :slant italic))))
- ;;  '(minibuffer-prompt ((t (:foreground "#fce94f" :height 1.0))))
- ;;  '(mode-line ((t (:background "gray10" :foreground "white" :box nil))))
- ;;  '(mode-line-buffer-id ((t (:weight bold :foreground "yellow"))))
- ;;  '(mode-line-inactive ((t (:inherit mode-line :background "gray33" :foreground "#eeeeec" :box nil :weight light))))
- ;;  '(mumamo-background-chunk-major ((t (:background "gray10"))) t)
- ;;  '(mumamo-background-chunk-submode1 ((t (:background "gray15"))) t)
- ;;  '(mumamo-background-chunk-submode2 ((t (:background "gray20"))) t)
- ;;  '(mumamo-background-chunk-submode3 ((t (:background "gray25"))) t)
- ;;  '(mumamo-background-chunk-submode4 ((t (:background "gray30"))) t)
- ;;  '(region ((t (:background "salmon4"))))
- ;;  '(show-paren-match ((t (:background "gray35"))))
-  '(tabbar-button ((t (:inherit tabbar-default))))
-  '(tabbar-button-highlight ((t (:inherit tabbar-default :background "light gray"))))
-  '(tabbar-default ((t (:inherit default :background "dim gray" :box (:line-width 1 :color "gray35")))))
-  '(tabbar-highlight ((t (:background "gray20" :foreground "red"))))
-  '(tabbar-selected ((t (:inherit tabbar-default :background "gray20" :foreground "yellow" :box (:line-width 1 :color "gray20")))))
-  '(tabbar-separator ((t (:height 0.1))))
-  '(tabbar-unselected ((t (:inherit tabbar-default :background "gray35"))))
- )
+ '(font-lock-comment-face ((t (:slant italic))))
+ '(mode-line ((t (:background "gray10" :foreground "white" :box nil))))
+ '(mode-line-buffer-id ((t (:weight bold :foreground "yellow"))))
+ '(mode-line-inactive ((t (:inherit mode-line :background "gray33" :foreground "#eeeeec" :box nil :weight light))))
+ '(show-paren-match ((t (:background "#000000"))))
+ '(tabbar-button ((t (:inherit tabbar-default))))
+ '(tabbar-button-highlight ((t (:inherit tabbar-default :background "light gray"))))
+ '(tabbar-default ((t (:inherit default :background "dim gray" :box (:line-width 1 :color "gray35")))))
+ '(tabbar-highlight ((t (:background "gray20" :foreground "red"))))
+ '(tabbar-selected ((t (:inherit tabbar-default :background "gray20" :foreground "yellow" :box (:line-width 1 :color "gray20")))))
+ '(tabbar-separator ((t (:height 0.1))))
+ '(tabbar-unselected ((t (:inherit tabbar-default :background "gray35")))))
 
-(defun laptop-mode ()
+(defun px-laptop-mode ()
   "smaller default size"
   (interactive)
   (set-face-attribute 'default nil :height 100))
 
-(defun desktop-mode ()
+(defun px-desktop-mode ()
   "default font size"
   (interactive)
   (set-face-attribute 'default nil :height 110))
