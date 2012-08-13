@@ -176,6 +176,11 @@
       (add-to-list 'bookmark-alist latest))
     (recenter-top-bottom 5)))
 
+(defadvice view-echo-area-messages (after view-echo-area-messages-in-help-mode)
+  "Toggle `help-mode' to use the keys (mostly 'q' to quit)."
+  (help-mode))
+
+(ad-activate 'view-echo-area-messages)
 
 
 (defun px-bookmarks-toggle-last ()
