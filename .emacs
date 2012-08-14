@@ -1019,7 +1019,7 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 113 :width normal :foundry "unknown" :family "DejaVu Sans Mono"))))
+ '(default ((t (:inherit nil :stipple nil :background "gray14" :foreground "#eeeeec" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "unknown" :family "DejaVu Sans Mono"))))
  '(font-lock-comment-face ((t (:slant italic))))
  '(mode-line ((t (:background "gray10" :foreground "white" :box nil))))
  '(mode-line-buffer-id ((t (:weight bold :foreground "yellow"))))
@@ -1036,7 +1036,7 @@ An alternate approach would be after-advice on isearch-other-meta-char."
 (defun px-laptop-mode ()
   "smaller default size"
   (interactive)
-  (set-face-attribute 'default nil :height 100))
+  (set-face-attribute 'default nil :height 90))
 
 (defun px-desktop-mode ()
   "default font size"
