@@ -27,13 +27,15 @@
   ;; (require 'mail-bug nil t)
   (require 'imapua nil 'noerror)
   (require 'mbug nil 'noerror)
+  (require 'cedet)
   ;; (require 'tabkey2 nil 'noerror)
   ;; (require 'emacs-imap)
   ;; Required by my iswitchb hack
   ;; (require 'w3m-load)
   )
 
-(autoload 'notify "notify" "Notify TITLE, BODY.")
+
+;; (autoload 'notify "notify" "Notify TITLE, BODY.")
 
 ;; (mail-bug-init)
 
@@ -585,7 +587,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 ;; (when (functionp 'savehist-mode) (savehist-mode 1))
 (tabbar-mode t)
 (tool-bar-mode -1)
-
+(semantic-mode t)
+(which-function-mode t)
 ;; Hooks! _____________________________________________________________________
 
 (add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)
@@ -977,6 +980,7 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(mail-host-address "philcm@gnu.org")
  '(mail-interactive t)
  '(mark-ring-max 8)
+ '(mbug-inline-images t)
  '(mbug-modal t)
  '(mbug-short-headers t)
  '(menu-bar-mode nil)
@@ -1031,7 +1035,8 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(tabbar-highlight ((t (:background "gray20" :foreground "red"))))
  '(tabbar-selected ((t (:inherit tabbar-default :background "gray20" :foreground "yellow" :box (:line-width 1 :color "gray20")))))
  '(tabbar-separator ((t (:height 0.1))))
- '(tabbar-unselected ((t (:inherit tabbar-default :background "gray35")))))
+ '(tabbar-unselected ((t (:inherit tabbar-default :background "gray35"))))
+ '(which-func ((t (:foreground "OrangeRed1")))))
 
 (defun px-laptop-mode ()
   "smaller default size"
