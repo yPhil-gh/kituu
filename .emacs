@@ -20,12 +20,12 @@
 (eval-and-compile
   (require 'tabbar nil 'noerror)      ; Tabs
   (require 'undo-tree nil 'noerror)   ; Visualize undo (and allow sane redo)
-  (require 'cl nil 'noerror)          ; Built-in : Common Lisp lib
+  ;; (require 'cl nil 'noerror)          ; Built-in : Common Lisp lib
   (require 'edmacro nil 'noerror)     ; Built-in : Macro bits (Required by iswitchb)
-  (require 'imap nil 'noerror)
+  ;; (require 'imap nil 'noerror)
   ;; (require 'elid)
   ;; (require 'mail-bug nil t)
-  (require 'imapua nil 'noerror)
+  ;; (require 'imapua nil 'noerror)
   (require 'mbug nil 'noerror)
   (require 'cedet)
   ;; (require 'tabkey2 nil 'noerror)
@@ -1026,14 +1026,14 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(default ((t (:inherit nil :stipple nil :background "gray14" :foreground "#eeeeec" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "unknown" :family "DejaVu Sans Mono"))))
  '(font-lock-comment-face ((t (:slant italic))))
  '(mode-line ((t (:background "gray10" :foreground "white" :box nil))))
- '(mode-line-buffer-id ((t (:weight bold :foreground "yellow"))))
+ '(mode-line-buffer-id ((t (:weight bold :foreground "OrangeRed1"))))
  '(mode-line-inactive ((t (:inherit mode-line :background "gray33" :foreground "#eeeeec" :box nil :weight light))))
  '(show-paren-match ((t (:background "#000000"))))
  '(tabbar-button ((t (:inherit tabbar-default))))
  '(tabbar-button-highlight ((t (:inherit tabbar-default :background "light gray"))))
  '(tabbar-default ((t (:inherit default :background "dim gray" :box (:line-width 1 :color "gray35")))))
  '(tabbar-highlight ((t (:background "gray20" :foreground "red"))))
- '(tabbar-selected ((t (:inherit tabbar-default :background "gray20" :foreground "yellow" :box (:line-width 1 :color "gray20")))))
+ '(tabbar-selected ((t (:inherit tabbar-default :background "gray20" :foreground "OrangeRed1" :box (:line-width 1 :color "gray20")))))
  '(tabbar-separator ((t (:height 0.1))))
  '(tabbar-unselected ((t (:inherit tabbar-default :background "gray35"))))
  '(which-func ((t (:foreground "OrangeRed1")))))
