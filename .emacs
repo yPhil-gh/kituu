@@ -34,6 +34,8 @@
   ;; (require 'w3m-load)
   )
 
+(when (require 'rainbow-delimiters nil 'noerror)
+  (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode))
 
 ;; (autoload 'notify "notify" "Notify TITLE, BODY.")
 
@@ -1033,7 +1035,7 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(tabbar-button-highlight ((t (:inherit tabbar-default :background "light gray"))))
  '(tabbar-default ((t (:inherit default :background "dim gray" :box (:line-width 1 :color "gray35")))))
  '(tabbar-highlight ((t (:background "gray20" :foreground "red"))))
- '(tabbar-selected ((t (:inherit tabbar-default :background "gray20" :foreground "OrangeRed1" :box (:line-width 1 :color "gray20")))))
+ '(tabbar-selected ((t (:inherit tabbar-default :background "gray14" :foreground "OrangeRed1" :box (:line-width 1 :color "gray14")))))
  '(tabbar-separator ((t (:height 0.1))))
  '(tabbar-unselected ((t (:inherit tabbar-default :background "gray35"))))
  '(which-func ((t (:foreground "OrangeRed1")))))
