@@ -20,7 +20,7 @@
 (eval-and-compile
   (require 'tabbar nil 'noerror)      ; Tabs
   (require 'undo-tree nil 'noerror)   ; Visualize undo (and allow sane redo)
-  ;; (require 'cl nil 'noerror)          ; Built-in : Common Lisp lib
+  (require 'cl nil 'noerror)          ; Built-in : Common Lisp lib
   (require 'edmacro nil 'noerror)     ; Built-in : Macro bits (Required by iswitchb)
   ;; (require 'imap nil 'noerror)
   ;; (require 'elid)
@@ -895,7 +895,6 @@ Revert HEAD to 7                                                  git reset --ha
 
 ;; Its value is (gssapi kerberos4 starttls tls ssl network shell)
 
-
 (setq imap-log nil)
 
 (defun px-imap-logging ()
@@ -933,16 +932,6 @@ Revert HEAD to 7                                                  git reset --ha
   (interactive)
   (test-imap))
 
-;; Enter!
-(defun enter-again-if-enter ()
-  "Make the return key select the current item in minibuf and shell history isearch.
-An alternate approach would be after-advice on isearch-other-meta-char."
-  (when (and (not isearch-mode-end-hook-quit)
-             (equal (this-command-keys-vector) [13])) ; == return
-    (cond ((active-minibuffer-window) (minibuffer-complete-and-exit))
-          ((member (buffer-name) my-shells) (comint-send-input)))))
-(add-hook 'isearch-mode-end-hook 'enter-again-if-enter)
-
 ;; Custom ! ______________________________________________________________________
 
 ;; (if (< emacs-major-version 24)
@@ -971,10 +960,6 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(global-font-lock-mode t)
  '(global-linum-mode t)
  '(global-undo-tree-mode t)
- '(imapua-folder-color "#cc0000")
- '(imapua-inline-images t)
- '(imapua-modal t)
- '(imapua-short-headers nil)
  '(inhibit-startup-echo-area-message (user-login-name))
  '(inhibit-startup-screen t)
  '(iswitchb-mode t)
@@ -982,9 +967,11 @@ An alternate approach would be after-advice on isearch-other-meta-char."
  '(mail-host-address "philcm@gnu.org")
  '(mail-interactive t)
  '(mark-ring-max 8)
+ '(mbug-host-name "imap.gmx.com")
  '(mbug-inline-images t)
  '(mbug-modal t)
  '(mbug-short-headers t)
+ '(mbug-username "philcm@gmx.com")
  '(menu-bar-mode nil)
  '(message-confirm-send t)
  '(message-default-charset (quote utf-8))
