@@ -167,6 +167,11 @@
 
 ;; Funcs! _________________________________________________________________
 
+(defun px-date ()
+  "Insert date"
+  (interactive)
+  (insert (format-time-string "%d %B %Y - %H:%M:%S - %3Nms" (current-time))))
+
 (defun toggle-fullscreen ()
   "Real, mozilla-like full screen."
   (interactive)
@@ -690,7 +695,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "s-j") 'js-mode) ;; zob
 (global-set-key (kbd "s-m") 'message-mail)
 (global-set-key (kbd "s-o") 'find-file-at-point)
-(global-set-key (kbd "s-d") 'wl-draft-mode)
+(global-set-key (kbd "s-d") 'px-date)
 (global-set-key (kbd "s-<") 'kmacro-end-and-call-macro)
 (global-set-key (kbd "C-s-m") 'apply-macro-to-region-lines)
 (global-set-key (kbd "<s-up>") (kbd "C-x C-SPC")) ; global mark ring
@@ -992,9 +997,8 @@ Revert HEAD to 7                                                  git reset --ha
  '(show-paren-mode t)
  '(smtpmail-debug-info t)
  '(standard-indent 2)
- '(tab-stop-list (quote (2 4 8 16 24 32 40 48 56 64 72 80 88 96 104 112 120)))
- '(tab-width 2)
- '(tabbar-separator (quote (1)))
+ ;; '(tab-stop-list (quote (2 4 8 16 24 32 40 48 56 64 72 80 88 96 104 112 120)))
+ ;; '(tab-width 2)
  '(tramp-default-method "ssh")
  '(undo-limit 4000)
  '(undo-strong-limit 6000)
@@ -1019,7 +1023,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(mode-line-inactive ((t (:inherit mode-line :background "gray33" :foreground "#eeeeec" :box nil :weight light))))
  '(show-paren-match ((t (:background "OrangeRed1"))))
  '(tabbar-button ((t (:inherit tabbar-default))))
- '(tabbar-button-highlight ((t (:inherit tabbar-default :background "light gray"))))
+ '(tabbar-button-highlight ((t (:inherit tabbar-default :background "OrangeRed1"))))
  '(tabbar-default ((t (:inherit default :background "dim gray" :box (:line-width 1 :color "gray35")))))
  '(tabbar-highlight ((t (:background "OrangeRed1" :foreground "white" :box (:line-width 1 :color "OrangeRed1")))))
  '(tabbar-selected ((t (:inherit tabbar-default :background "#2e3436" :foreground "OrangeRed1" :box (:line-width 1 :color "#2e3436")))))
