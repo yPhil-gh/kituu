@@ -589,8 +589,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 ;; (when (functionp 'savehist-mode) (savehist-mode 1))
 (tabbar-mode t)
 (tool-bar-mode -1)
-(semantic-mode t)
-(which-function-mode t)
+;; (semantic-mode t)
+;; (which-function-mode t)
 ;; Hooks! _____________________________________________________________________
 
 (add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)
@@ -982,7 +982,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(recentf-max-saved-items 120)
  '(recentf-mode t)
  '(recentf-save-file "~/.bkp/recentf")
- '(require-final-newline (quote ask))
+ '(require-final-newline t)
  '(savehist-mode t nil (savehist))
  '(scroll-conservatively 200)
  '(scroll-margin 3)
@@ -990,7 +990,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(server-mode t)
  '(show-paren-delay 0)
  '(show-paren-mode t)
- '(show-paren-style (quote mixed))
+ ;; '(show-paren-style (quote mixed))
  '(smtpmail-debug-info t)
  '(standard-indent 2)
  '(tab-stop-list (quote (2 4 8 16 24 32 40 48 56 64 72 80 88 96 104 112 120)))
@@ -1012,20 +1012,20 @@ Revert HEAD to 7                                                  git reset --ha
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "gray14" :foreground "#eeeeec" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 98 :width normal :foundry "unknown" :family "DejaVu Sans Mono"))))
+ '(default ((t (:family "DejaVu Sans Mono" :height 105))))
  '(font-lock-comment-face ((t (:slant italic))))
  '(mode-line ((t (:background "gray10" :foreground "white" :box nil))))
  '(mode-line-buffer-id ((t (:weight bold :foreground "OrangeRed1"))))
  '(mode-line-inactive ((t (:inherit mode-line :background "gray33" :foreground "#eeeeec" :box nil :weight light))))
- '(show-paren-match ((t (:background "#000000"))))
+ '(show-paren-match ((t (:background "OrangeRed1"))))
  '(tabbar-button ((t (:inherit tabbar-default))))
  '(tabbar-button-highlight ((t (:inherit tabbar-default :background "light gray"))))
  '(tabbar-default ((t (:inherit default :background "dim gray" :box (:line-width 1 :color "gray35")))))
- '(tabbar-highlight ((t (:background "gray20" :foreground "red"))))
- '(tabbar-selected ((t (:inherit tabbar-default :background "gray14" :foreground "OrangeRed1" :box (:line-width 1 :color "gray14")))))
+ '(tabbar-highlight ((t (:background "OrangeRed1" :foreground "white" :box (:line-width 1 :color "OrangeRed1")))))
+ '(tabbar-selected ((t (:inherit tabbar-default :background "#2e3436" :foreground "OrangeRed1" :box (:line-width 1 :color "#2e3436")))))
  '(tabbar-separator ((t (:height 0.1))))
  '(tabbar-unselected ((t (:inherit tabbar-default :background "gray35"))))
- '(which-func ((t (:foreground "OrangeRed1")))))
+ '(which-func ((t (:foreground "OrangeRed1"))) t))
 
 (defun px-laptop-mode ()
   "smaller default size"
@@ -1035,7 +1035,8 @@ Revert HEAD to 7                                                  git reset --ha
 (defun px-desktop-mode ()
   "default font size"
   (interactive)
-  (set-face-attribute 'default nil :height 110))
+  (set-face-attribute 'default nil :height 105))
 
+;; (set-face-attribute 'default nil :width 'normal)
 
 ;; (setq linum-format "%d")

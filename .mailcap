@@ -8,6 +8,7 @@ text/html; firefox %s ; nametemplate=%s.html; test=test -n "$DISPLAY"
 # text/html; elinks -dump %s ; nametemplate=%s.html; copiousoutput
 # text/*; vimless %s ; needsterminal; edit=vim %s
 application/pdf ; okular %s ; test=test -n "$DISPLAY"
+application/ps ; evince -f %s ; test=test -n "$DISPLAY"
 
 # 2. Media (audio/image/video)
 # ============================
@@ -22,10 +23,10 @@ image/jpeg; eog %s; test=test -n "$DISPLAY"
 # TODO: should really used edit flag in Zsh ‘e’ command
 application/x-msdos-program ; wine %s ; test=test -n "$DISPLAY"
 application/octet-stream; screen-terminal-vimless %s
-application/ps ; evince -f %s ; test=test -n "$DISPLAY"
 application/pgp-keys ; gpg -f < %s ; copiousoutput
 application/x-tar ; tar tvvf %s ; copiousoutput
 application/x-dvi ; evince -f %s ; test=test -n "$DISPLAY"
 application/x-gtar ; tar tzvvf %s ; copiousoutput
 application/x-tex ; cat %s ; copiousoutput
 application/x-zip-comp ; unzip -l %s ; copiousoutput
+application/x-gzip ; file-roller %s

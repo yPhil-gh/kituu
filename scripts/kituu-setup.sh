@@ -14,14 +14,14 @@ if ($rw); then vc_prefix="git@github.com:" && message="RW mode ON" && git config
 # My binary packages
 declare -A pack
 pack[view&players]="sox okular eog imagemagick smplayer gstreamer0.10-plugins clementine"
-pack[base]="zsh curl wget htop bc unison thunderbird firefox locate filelight gparted libnotify-bin"
-pack[xfce]="xubuntu"
+pack[base]="zsh emacs vim curl wget htop bc unison locate filelight gparted"
+pack[xubuntu]="xubuntu"
 pack[xscreensaver]="xscreensaver-gl xscreensaver-gl-extra xscreensaver-data-extra xscreensaver-data"
 pack[dev_tools]="gcc autoconf automake texinfo libtool bzr git cvs subversion"
-pack[dev_env]="perl-doc"
+# pack[dev_env]="perl-doc"
 pack[glamp]="apache2 mysql-server phpmyadmin"
-pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev libqt4-dev libgtk-3-dev"
-pack[emacs&friends]="emacs bbdb mailutils vim w3m-el"
+# pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev libqt4-dev libgtk-3-dev"
+# pack[emacs_friends]="bbdb mailutils w3m-el"
 pack[image_tools]="gimp inkscape blender"
 pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk qmidinet calf-plugins nekobee"
 pack[games]="extremetuxracer supertuxkart torcs nexuiz"
@@ -105,7 +105,7 @@ if (! grep -q "ubuntusatanic" /etc/apt/sources.list); then
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 	wget -q http://ubuntusatanic.org/ubuntu-se-key.gpg -O- | sudo apt-key add -
 	echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list && sudo apt-get update
-	sudo apt-get install satanic-gnome-themes satanic-icon-themes
+	sudo apt-get install satanic-gnome-themes satanic-icon-themes ttf-dejavu
     fi
 fi
 
