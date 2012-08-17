@@ -41,6 +41,19 @@
 
 ;; (mail-bug-init)
 
+(autoload 'notmuch "notmuch" "notmuch mail" t)
+
+;; Auto-BCC
+;; (defadvice message-mail (after mbug-message-mail-bcc)
+;;   "BCC to sender."
+;;   (message-replace-header "BCC" user-mail-address "AFTER" "FORCE")
+;;   (message-replace-header "Reply-To" "Philippe Coatmeur-Marin <philcm@gnu.org>" "AFTER" "FORCE")
+;;   (message "advised")
+;;   (message-sort-headers)
+;;   (set-buffer-modified-p nil)
+;;   ;; (kill-line)
+;;   )
+
 (defun ido-goto-symbol (&optional symbol-list)
   "Refresh imenu and jump to a place in the buffer using Ido."
   (interactive)
@@ -603,6 +616,9 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 ;; (add-hook 'mouse-leave-buffer-hook 'px-exit-minibuffer)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
+(add-to-list 'fill-nobreak-predicate 'fill-french-nobreak-p)
+(setq paragraph-start "\\*\\|$"
+      paragraph-separate "$")
 
 ;; Vars! ______________________________________________________________________
 
@@ -686,7 +702,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-%") 'backward-sexp)
 
 (global-set-key (kbd "s-g") 'px-google-that-bitch) ;; zob
-(global-set-key (kbd "s-r") 'replace-string)
+(global-set-key (kbd "s-r") 'replace-regexp)
 (global-set-key (kbd "s-²") (kbd "C-x b <return>")) ; Keyboard macro! (toggle last buffer)
 (global-set-key (kbd "s-t") 'sgml-tag) ;; zob
 (global-set-key (kbd "s-k") 'px-kill-buffer) ;; zob
@@ -972,11 +988,9 @@ Revert HEAD to 7                                                  git reset --ha
  '(mail-host-address "philcm@gnu.org")
  '(mail-interactive t)
  '(mark-ring-max 8)
- '(mbug-host-name "imap.gmx.com")
  '(mbug-inline-images t)
  '(mbug-modal t)
  '(mbug-short-headers t)
- '(mbug-username "philcm@gmx.com")
  '(menu-bar-mode nil)
  '(message-confirm-send t)
  '(message-default-charset (quote utf-8))
@@ -995,10 +1009,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(server-mode t)
  '(show-paren-delay 0)
  '(show-paren-mode t)
- '(smtpmail-debug-info t)
  '(standard-indent 2)
- ;; '(tab-stop-list (quote (2 4 8 16 24 32 40 48 56 64 72 80 88 96 104 112 120)))
- ;; '(tab-width 2)
  '(tramp-default-method "ssh")
  '(undo-limit 4000)
  '(undo-strong-limit 6000)
