@@ -221,7 +221,6 @@
           (call-interactively 'set-mark-command))
       (call-interactively 'set-mark-command))))
 
-
 (global-set-key (kbd "<s-left>") 'px-push-mark-once-and-back)
 
 (defun px-match-paren (arg)
@@ -311,7 +310,8 @@ Do the right thing and delete window."
 (make-backup-dir-px "~/.bkp/")
 
 (defun px-bkp ()
-  "Write the current buffer to a new file - silently - and append the date+time to the filename, retaining extention"
+  "Write the current buffer to a new file - silently - and append the date+time to the filename, retaining extention
+This dates from old times, before VC, I'm keeping it out of pure nostalgy."
   (interactive)
   (setq px-bkp-new-name
         (concat
@@ -367,18 +367,33 @@ Do the right thing and delete window."
   "Insert a matching bracket and place the cursor between them."
   (interactive)
   (if mark-active
-      (progn
+      (let ((st (point))
+            (ed (mark)))
+        (goto-char ed)
         (save-excursion
-          (setq debut (region-beginning)
-                fin (+ 1(region-end)))
-          (goto-char debut)
-          (insert leftSign)
-          (goto-char fin)
-          (insert rightSign)
-          (forward-char 1)))
+          (if (> st ed)
+              (progn (message "sup st: %s ed: %s" st ed)
+                     (insert leftSign)
+                     (goto-char st)
+                     (forward-char 1)
+                     (insert rightSign)
+                     )
+            (progn (message "end st: %s ed: %s" st ed)
+                   (insert rightSign)
+                   (goto-char st)
+                   (insert leftSign)
+                   (goto-char (+ 1 ed))
+                   ))
+          )
+        (if (> st ed)
+              (goto-char (+ 2 st))
+          (goto-char (+ 2 ed))))
     (progn
       (insert leftSign rightSign)
       (backward-char 1))))
+
+
+;; (test string)
 
 (defun insert-pair-paren () (interactive) (px-insert-or-enclose-with-signs "(" ")"))
 (defun insert-pair-brace () (interactive) (px-insert-or-enclose-with-signs "{" "}"))
