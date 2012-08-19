@@ -200,14 +200,26 @@ setprompt () {
     ###
     # See if we can use colors.
 
+    # autoload colors zsh/terminfo
+    # if [[ "$terminfo[colors]" -ge 8 ]]; then
+    #           colors
+    # fi
+    # for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
+    #           eval PR_$color='%{$terminfo[srg0]$fg[${(L)color}]%}'
+    #           eval PR_LIGHT_$color='%{$fg[${(L)color}]%}'
+    #           (( count = $count + 1 ))
+    # done
+    # PR_NO_COLOUR="%{$terminfo[sgr0]%}"
+
+
     autoload colors zsh/terminfo
     if [[ "$terminfo[colors]" -ge 8 ]]; then
-	      colors
+        colors
     fi
     for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
-	      eval PR_$color='%{$terminfo[srg0]$fg[${(L)color}]%}'
-	      eval PR_LIGHT_$color='%{$fg[${(L)color}]%}'
-	      (( count = $count + 1 ))
+        eval PR_$color='%{$terminfo[bold]$fg[${(L)color}]%}'
+        eval PR_LIGHT_$color='%{$fg[${(L)color}]%}'
+        (( count = $count + 1 ))
     done
     PR_NO_COLOUR="%{$terminfo[sgr0]%}"
 
@@ -263,26 +275,26 @@ setprompt () {
 	# PROMPT="%{$fg[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg[yellow]%}%~ %{$reset_color%}\$ "
 
 	PROMPT='$PR_SET_CHARSET$PR_STITLE${(e)PR_TITLEBAR}\
-$PR_BLUE$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT(\
-$PR_GREEN%(!.%SROOT%s.%n)$PR_GREEN@%m:%l\
-$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_HBAR${(e)PR_FILLBAR}$PR_BLUE$PR_HBAR$PR_SHIFT_OUT(\
-$PR_RED%$PR_PWDLEN<...<%~%<<\
-$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_URCORNER$PR_SHIFT_OUT\
+$PR_NO_COLOUR$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT(\
+$PR_GREEN%(!.%SROOT%s.%n)$PR_NO_COLOUR@$PR_RED%m$PR_NO_COLOUR:$PR_GREEN%l\
+$PR_NO_COLOUR)$PR_SHIFT_IN$PR_HBAR$PR_HBAR${(e)PR_FILLBAR}$PR_HBAR$PR_SHIFT_OUT(\
+$PR_GREEN%$PR_PWDLEN<...<%~%<<\
+$PR_NO_COLOUR)$PR_SHIFT_IN$PR_HBAR$PR_URCORNER$PR_SHIFT_OUT\
 
-$PR_SHIFT_IN$PR_LLCORNER$PR_BLUE$PR_HBAR$PR_SHIFT_OUT(\
-%(?..$PR_LIGHT_RED%?$PR_BLUE:)\
-${(e)PR_APM}$PR_YELLOW%D{%H:%M}\
-$PR_LIGHT_BLUE) %(!.$PR_RED.$PR_WHITE)\$$PR_BLUE$PR_NO_COLOUR '
+$PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT(\
+%(?..$PR_LIGHT_RED%?$PR_NO_COLOUR:)\
+${(e)PR_APM}$PR_NO_COLOUR%D{%H:%M}\
+) %(!..)\$$PR_NO_COLOUR$PR_NO_COLOUR '
 
 # This breaks in console
     # RPROMPT='\
-# ($PR_YELLOW%D{%a,%b%d}$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_LRCORNER$PR_SHIFT_OUT$PR_NO_COLOUR'
+# ($PR_YELLOW%D{%a,%b%d}$PR_WHITE)$PR_SHIFT_IN$PR_HBAR$PR_LRCORNER$PR_SHIFT_OUT$PR_NO_COLOUR'
 
 	RPROMPT=''
 
-	PS2='$PR_CYAN$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
-$PR_BLUE$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT(\
-$PR_LIGHT_GREEN%_$PR_BLUE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
+	PS2='$PR_NO_COLOUR$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
+$PR_WHITE$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT(\
+$PR_LIGHT_GREEN%_$PR_WHITE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
 $PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT$PR_NO_COLOUR '
 
     fi

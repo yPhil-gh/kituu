@@ -30,3 +30,5 @@ application/x-gtar ; tar tzvvf %s ; copiousoutput
 application/x-tex ; cat %s ; copiousoutput
 application/x-zip-comp ; unzip -l %s ; copiousoutput
 application/x-gzip ; file-roller %s
+
+application/zip ; file-roller %s ; test=test -n "$DISPLAY"
