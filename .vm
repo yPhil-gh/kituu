@@ -1,4 +1,0 @@
-;; (setq vm-primary-inbox "imap-ssl:yourmailserver.com:993:Inbox:login:yourusername:*")
-;; (setq vm-primary-inbox "imap:mail.gandi.net:143:inbox:login:contact@adamweb.net:Amiga260")
-(setq vm-primary-inbox "imap-ssl:imap.gmail.com:993:Inbox:login:philippe.coatmeur@gmail.com:*")
-(setq vm-crash-box "~/email/inbox.crash.mbox")

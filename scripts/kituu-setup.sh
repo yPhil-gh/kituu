@@ -29,12 +29,6 @@ pack[3xscreensaver]="xscreensaver-gl xscreensaver-gl-extra xscreensaver-data-ext
 # http://archive.canonical.com/ubuntu/pool/partner/a/adobe-flashplugin/adobe-flashplugin_11.2.202.236-0precise1_i386.deb
 
 
-for k in "${!pack[@]}"
-do
-    echo $k ' - ' ${authors["$k"]}
-done |
-sort -rn -k3
-
 # My Mozilla addons
 declare -A moz
 moz[Uppity]="https://addons.mozilla.org/firefox/downloads/latest/869/addon-869-latest.xpi"
@@ -186,6 +180,7 @@ if [ -e $scriptdir/build-emacs.sh ]; then
     echo -e $sep"Emacs trunk"
     read -e -p "## Download, build and install / update (trunk: ~500Mb initial DL) emacs? [Y/n] " yn
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+        sudo apt-get install build-dep emacs23
 	build-emacs.sh
     fi
 fi
