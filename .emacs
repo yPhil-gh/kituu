@@ -970,8 +970,8 @@ Revert HEAD to 7                                                  git reset --ha
 
 ;; Custom ! ______________________________________________________________________
 
-;; (if (< emacs-major-version 24)
-;;     (set-face-attribute 'default nil :background "#2e3436" :foreground "#eeeeec"))
+(if (< emacs-major-version 24)
+    (set-face-attribute 'default nil :background "#2e3436" :foreground "#eeeeec"))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
