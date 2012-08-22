@@ -18,9 +18,9 @@ and re-do over time.
 *** Features
    -Install and maintain the things I (and you too I guess) need on every machine I install :
      -Binary packages (debian only, sorry. I mean of course I can detect your distro - in the dark - but every single one has its own package naming scheme, what are you gonna do?)
-     -Mozilla (Firefox, Thunderbird, ABroswer, whatever) add-ons
-     -Various scripts from Version Control repositories
-   -Manage multiple VC systems 
+     -Mozilla (Firefox, Thunderbird, ABrowser, whatever) add-ons
+     -Various scripts from Version Controlled repositories
+   -Manage multiple VC systems
      -GIT
      -SVN
      -BZR
