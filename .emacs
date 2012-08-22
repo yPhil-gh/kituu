@@ -32,6 +32,7 @@
   ;; (require 'emacs-imap)
   ;; Required by my iswitchb hack
   ;; (require 'w3m-load)
+  (require 'ecb)
   )
 
 (when (require 'rainbow-delimiters nil 'noerror)
@@ -40,6 +41,8 @@
 ;; (autoload 'notify "notify" "Notify TITLE, BODY.")
 
 ;; (mail-bug-init)
+
+(setq stack-trace-on-error t)
 
 (autoload 'notmuch "notmuch" "notmuch mail" t)
 
