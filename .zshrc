@@ -197,9 +197,6 @@ setprompt () {
 
     setopt prompt_subst
 
-    ###
-    # See if we can use colors.
-
     # autoload colors zsh/terminfo
     # if [[ "$terminfo[colors]" -ge 8 ]]; then
     #           colors
@@ -211,6 +208,7 @@ setprompt () {
     # done
     # PR_NO_COLOUR="%{$terminfo[sgr0]%}"
 
+# http://lucentbeing.com/blog/that-256-color-thing/
 
     autoload colors zsh/terminfo
     if [[ "$terminfo[colors]" -ge 8 ]]; then
@@ -222,6 +220,24 @@ setprompt () {
         (( count = $count + 1 ))
     done
     PR_NO_COLOUR="%{$terminfo[sgr0]%}"
+
+
+    typeset -Ag FX FG BG
+
+    FX=(
+        reset "[00m"
+        bold "[01m" no-bold "[22m"
+        italic "[03m" no-italic "[23m"
+        underline "[04m" no-underline "[24m"
+        blink "[05m" no-blink "[25m"
+        reverse "[07m" no-reverse "[27m"
+    )
+
+    for color in {000..255}; do
+        FG[$color]="[38;5;${color}m"
+        BG[$color]="[48;5;${color}m"
+    done
+
 
     ###
     # See if we can use extended characters to look nicer.
@@ -243,9 +259,13 @@ setprompt () {
     case $TERM in
 	xterm*)
 	    PR_TITLEBAR=$'%{\e]0;%(!.-=*[ROOT]*=- | .)%n@%m:%~ | ${COLUMNS}x${LINES} | %y\a%}'
+	    kolor=242
 	    ;;
 	screen)
 	    PR_TITLEBAR=$'%{\e_screen \005 (\005t) | %(!.-=[ROOT]=- | .)%n@%m:%~ | ${COLUMNS}x${LINES} | %y\e\\%}'
+	    ;;
+	linux)
+	    kolor=reset
 	    ;;
 	*)
 	    PR_TITLEBAR=''
@@ -275,27 +295,27 @@ setprompt () {
 	# PROMPT="%{$fg[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg[yellow]%}%~ %{$reset_color%}\$ "
 
 	PROMPT='$PR_SET_CHARSET$PR_STITLE${(e)PR_TITLEBAR}\
-$PR_NO_COLOUR$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT(\
-$PR_GREEN%(!.%SROOT%s.%n)$PR_NO_COLOUR@$PR_RED%m$PR_NO_COLOUR:$PR_GREEN%l\
-$PR_NO_COLOUR)$PR_SHIFT_IN$PR_HBAR$PR_HBAR${(e)PR_FILLBAR}$PR_HBAR$PR_SHIFT_OUT(\
-$PR_GREEN%$PR_PWDLEN<...<%~%<<\
-$PR_NO_COLOUR)$PR_SHIFT_IN$PR_HBAR$PR_URCORNER$PR_SHIFT_OUT\
+$FG[$kolor]$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT(\
+$FG[214]%(!.%SROOT%s.%n)$FG[$kolor]@$FX[bold]$FG[214]%m$FX[reset]$FG[$kolor]:$FG[214]%l\
+$FG[$kolor])$PR_SHIFT_IN$PR_HBAR$PR_HBAR${(e)PR_FILLBAR}$PR_HBAR$PR_SHIFT_OUT(\
+$FG[214]%$PR_PWDLEN<...<%~%<<\
+$FG[$kolor])$PR_SHIFT_IN$PR_HBAR$PR_URCORNER$PR_SHIFT_OUT\
 
 $PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT(\
-%(?..$PR_LIGHT_RED%?$PR_NO_COLOUR:)\
-${(e)PR_APM}$PR_NO_COLOUR%D{%H:%M}\
-) %(!..)\$$PR_NO_COLOUR$PR_NO_COLOUR '
+%(?..$PR_LIGHT_RED%?$FG[$kolor]:)\
+${(e)PR_APM}$FG[192]%D{%H:%M}\
+$FG[$kolor]) %(!..)\$$FG[$kolor]$FX[reset]$FG[reset] '
 
 # This breaks in console
     # RPROMPT='\
-# ($PR_YELLOW%D{%a,%b%d}$PR_WHITE)$PR_SHIFT_IN$PR_HBAR$PR_LRCORNER$PR_SHIFT_OUT$PR_NO_COLOUR'
+# ($PR_YELLOW%D{%a,%b%d}$PR_WHITE)$PR_SHIFT_IN$PR_HBAR$PR_LRCORNER$PR_SHIFT_OUT$FX[reset]$FG[reset]'
 
 	RPROMPT=''
 
-	PS2='$PR_NO_COLOUR$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
-$PR_WHITE$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT(\
-$PR_LIGHT_GREEN%_$PR_WHITE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
-$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT$PR_NO_COLOUR '
+	PS2='$FX[reset]$FG[reset]$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
+$FG[$kolor]$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT(\
+$FG[$kolor]%_$PR_WHITE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
+$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT$FX[reset]$FG[reset] '
 
     fi
 }
