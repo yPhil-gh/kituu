@@ -313,6 +313,7 @@ $PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT(\
 ${(e)PR_APM}%D{%H:%M}\
 ) %(!..)\$ '
 
+
 # This breaks in console
     # RPROMPT='\
 # ($PR_YELLOW%D{%a,%b%d}$PR_WHITE)$PR_SHIFT_IN$PR_HBAR$PR_LRCORNER$PR_SHIFT_OUT$FX[reset]$FG[reset]'
