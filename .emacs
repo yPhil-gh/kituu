@@ -32,7 +32,7 @@
   ;; (require 'emacs-imap)
   ;; Required by my iswitchb hack
   ;; (require 'w3m-load)
-  (require 'ecb)
+  (require 'ecb nil 'noerror)
   )
 
 (when (require 'rainbow-delimiters nil 'noerror)

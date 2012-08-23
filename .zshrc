@@ -294,17 +294,24 @@ setprompt () {
 
 	# PROMPT="%{$fg[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg[yellow]%}%~ %{$reset_color%}\$ "
 
+# 	PROMPT='$PR_SET_CHARSET$PR_STITLE${(e)PR_TITLEBAR}\
+# $FG[$kolor]$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT(\
+# $FG[214]%(!.%SROOT%s.%n)$FG[$kolor]@$FX[bold]$FG[214]%m$FX[reset]$FG[$kolor]:$FG[214]%l\
+# $FG[$kolor])$PR_SHIFT_IN$PR_HBAR$PR_HBAR${(e)PR_FILLBAR}$PR_HBAR$PR_SHIFT_OUT(\
+# $FG[214]%$PR_PWDLEN<...<%~%<<\
+# $FG[$kolor])$PR_SHIFT_IN$PR_HBAR$PR_URCORNER$PR_SHIFT_OUT\
+
 	PROMPT='$PR_SET_CHARSET$PR_STITLE${(e)PR_TITLEBAR}\
-$FG[$kolor]$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT(\
-$FG[214]%(!.%SROOT%s.%n)$FG[$kolor]@$FX[bold]$FG[214]%m$FX[reset]$FG[$kolor]:$FG[214]%l\
-$FG[$kolor])$PR_SHIFT_IN$PR_HBAR$PR_HBAR${(e)PR_FILLBAR}$PR_HBAR$PR_SHIFT_OUT(\
-$FG[214]%$PR_PWDLEN<...<%~%<<\
-$FG[$kolor])$PR_SHIFT_IN$PR_HBAR$PR_URCORNER$PR_SHIFT_OUT\
+$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT(\
+%(!.%SROOT%s.%n)@%m:%l\
+)$PR_SHIFT_IN$PR_HBAR$PR_HBAR${(e)PR_FILLBAR}$PR_HBAR$PR_SHIFT_OUT(\
+%$PR_PWDLEN<...<%~%<<\
+)$PR_SHIFT_IN$PR_HBAR$PR_URCORNER$PR_SHIFT_OUT\
 
 $PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT(\
-%(?..$PR_LIGHT_RED%?$FG[$kolor]:)\
-${(e)PR_APM}$FG[192]%D{%H:%M}\
-$FG[$kolor]) %(!..)\$$FG[$kolor]$FX[reset]$FG[reset] '
+%(?..%?:)\
+${(e)PR_APM}%D{%H:%M}\
+) %(!..)\$ '
 
 # This breaks in console
     # RPROMPT='\
@@ -312,10 +319,10 @@ $FG[$kolor]) %(!..)\$$FG[$kolor]$FX[reset]$FG[reset] '
 
 	RPROMPT=''
 
-	PS2='$FX[reset]$FG[reset]$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
-$FG[$kolor]$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT(\
-$FG[$kolor]%_$PR_WHITE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
-$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT$FX[reset]$FG[reset] '
+	PS2='$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
+$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT(\
+%_$PR_WHITE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
+$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT '
 
     fi
 }
