@@ -9,19 +9,13 @@
   (normal-top-level-add-subdirs-to-load-path))
 
 
-(if (>= emacs-major-version 24)
-    (progn
-      (require 'package nil 'noerror)
-      (add-to-list 'package-archives
-                   '("marmalade" . "http://marmalade-repo.org/packages/"))))
-
-
 ;; External libs
 (eval-and-compile
   (require 'tabbar nil 'noerror)      ; Tabs
   (require 'undo-tree nil 'noerror)   ; Visualize undo (and allow sane redo)
   (require 'cl nil 'noerror)          ; Built-in : Common Lisp lib
   (require 'edmacro nil 'noerror)     ; Built-in : Macro bits (Required by iswitchb)
+  (require 'package nil 'noerror)
   ;; (require 'imap nil 'noerror)
   ;; (require 'elid)
   ;; (require 'mail-bug nil t)
@@ -34,6 +28,19 @@
   ;; (require 'w3m-load)
   (require 'ecb)
   )
+
+
+
+(if (>= emacs-major-version 24)
+    (progn
+      (add-to-list 'package-archives
+                   '("melpa" . "http://melpa.milkbox.net/packages/") t)
+      ;; (add-to-list 'package-archives
+      ;;              '("marmalade" . "http://marmalade-repo.org/packages/"))
+      ))
+
+
+
 
 (when (require 'rainbow-delimiters nil 'noerror)
   (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode))
