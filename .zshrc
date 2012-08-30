@@ -197,6 +197,9 @@ setprompt () {
 
     setopt prompt_subst
 
+    ###
+    # See if we can use colors.
+
     # autoload colors zsh/terminfo
     # if [[ "$terminfo[colors]" -ge 8 ]]; then
     #           colors
@@ -208,7 +211,6 @@ setprompt () {
     # done
     # PR_NO_COLOUR="%{$terminfo[sgr0]%}"
 
-# http://lucentbeing.com/blog/that-256-color-thing/
 
     autoload colors zsh/terminfo
     if [[ "$terminfo[colors]" -ge 8 ]]; then
@@ -220,24 +222,6 @@ setprompt () {
         (( count = $count + 1 ))
     done
     PR_NO_COLOUR="%{$terminfo[sgr0]%}"
-
-
-    typeset -Ag FX FG BG
-
-    FX=(
-        reset "[00m"
-        bold "[01m" no-bold "[22m"
-        italic "[03m" no-italic "[23m"
-        underline "[04m" no-underline "[24m"
-        blink "[05m" no-blink "[25m"
-        reverse "[07m" no-reverse "[27m"
-    )
-
-    for color in {000..255}; do
-        FG[$color]="[38;5;${color}m"
-        BG[$color]="[48;5;${color}m"
-    done
-
 
     ###
     # See if we can use extended characters to look nicer.
@@ -259,13 +243,9 @@ setprompt () {
     case $TERM in
 	xterm*)
 	    PR_TITLEBAR=$'%{\e]0;%(!.-=*[ROOT]*=- | .)%n@%m:%~ | ${COLUMNS}x${LINES} | %y\a%}'
-	    kolor=242
 	    ;;
 	screen)
 	    PR_TITLEBAR=$'%{\e_screen \005 (\005t) | %(!.-=[ROOT]=- | .)%n@%m:%~ | ${COLUMNS}x${LINES} | %y\e\\%}'
-	    ;;
-	linux)
-	    kolor=reset
 	    ;;
 	*)
 	    PR_TITLEBAR=''
@@ -313,17 +293,15 @@ $PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT(\
 ${(e)PR_APM}%D{%H:%M}\
 ) %(!..)\$ '
 
-
 # This breaks in console
     # RPROMPT='\
-# ($PR_YELLOW%D{%a,%b%d}$PR_WHITE)$PR_SHIFT_IN$PR_HBAR$PR_LRCORNER$PR_SHIFT_OUT$FX[reset]$FG[reset]'
+# ($PR_YELLOW%D{%a,%b%d}$PR_WHITE)$PR_SHIFT_IN$PR_HBAR$PR_LRCORNER$PR_SHIFT_OUT$PR_NO_COLOUR'
 
 	RPROMPT=''
-
-	PS2='$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
-$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT(\
-%_$PR_WHITE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
-$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT '
+	PS2='$PR_NO_COLOUR$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
+$PR_WHITE$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT(\
+$PR_LIGHT_GREEN%_$PR_WHITE)$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT\
+$PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT$PR_NO_COLOUR '
 
     fi
 }
