@@ -16,6 +16,7 @@
   (require 'cl nil 'noerror)          ; Built-in : Common Lisp lib
   (require 'edmacro nil 'noerror)     ; Built-in : Macro bits (Required by iswitchb)
   (require 'package nil 'noerror)
+  (require 'haml-mode nil 'noerror)
   ;; (require 'imap nil 'noerror)
   ;; (require 'elid)
   ;; (require 'mail-bug nil t)
@@ -634,7 +635,18 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (tool-bar-mode -1)
 ;; (semantic-mode t)
 ;; (which-function-mode t)
+
+
+(add-to-list 'auto-mode-alist
+             '("\\.py\\'" . python-mode)
+             '("\\.haml\\'" . haml-mode))
+
 ;; Hooks! _____________________________________________________________________
+
+(add-hook 'haml-mode-hook
+          (lambda ()
+            (setq indent-tabs-mode nil)
+            (define-key haml-mode-map "\C-m" 'newline-and-indent)))
 
 (add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)
 (add-hook 'find-file-hooks 'turn-on-font-lock)

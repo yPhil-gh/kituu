@@ -1,5 +1,10 @@
 # My .zshrc - created 01 Jul 2012
 
+# NOTES
+# middleman build --clean && git commit -a -m "new local build OK" && git push origin master
+# a && middleman build --clean && Commit "deployed" && Push master
+# if ("$term" == emacs) set term=dumb
+
 # Enable compsys completion.
 autoload -U compinit
 autoload -U complist
@@ -77,6 +82,7 @@ alias z="zile"
 
 alias k="cd ~/.kituu/"
 alias m="cd ~/.emacs.d/lisp/mail-bug/"
+alias a="cd /var/www/adamweb/git.adamweb"
 
 alias lss="ls -la | grep $1"
 alias hss="history 0 | grep $1"
@@ -200,16 +206,21 @@ setprompt () {
     ###
     # See if we can use colors.
 
-    # autoload colors zsh/terminfo
-    # if [[ "$terminfo[colors]" -ge 8 ]]; then
-    #           colors
-    # fi
-    # for color in RED GREEN YELLOW BLUE MAGENTA CYAN WHITE; do
-    #           eval PR_$color='%{$terminfo[srg0]$fg[${(L)color}]%}'
-    #           eval PR_LIGHT_$color='%{$fg[${(L)color}]%}'
-    #           (( count = $count + 1 ))
-    # done
-    # PR_NO_COLOUR="%{$terminfo[sgr0]%}"
+    typeset -Ag FX FG BG
+
+    FX=(
+        reset "[00m"
+        bold "[01m" no-bold "[22m"
+        italic "[03m" no-italic "[23m"
+        underline "[04m" no-underline "[24m"
+        blink "[05m" no-blink "[25m"
+        reverse "[07m" no-reverse "[27m"
+    )
+
+    for color in {000..255}; do
+        FG[$color]="[38;5;${color}m"
+        BG[$color]="[48;5;${color}m"
+    done
 
 
     autoload colors zsh/terminfo
@@ -275,16 +286,16 @@ setprompt () {
 	# PROMPT="%{$fg[red]%}%n%{$reset_color%}@%{$fg[blue]%}%m %{$fg[yellow]%}%~ %{$reset_color%}\$ "
 
 	PROMPT='$PR_SET_CHARSET$PR_STITLE${(e)PR_TITLEBAR}\
-$PR_NO_COLOUR$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT(\
+$PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT(\
 $PR_GREEN%(!.%SROOT%s.%n)$PR_NO_COLOUR@$PR_RED%m$PR_NO_COLOUR:$PR_GREEN%l\
 $PR_NO_COLOUR)$PR_SHIFT_IN$PR_HBAR$PR_HBAR${(e)PR_FILLBAR}$PR_HBAR$PR_SHIFT_OUT(\
 $PR_GREEN%$PR_PWDLEN<...<%~%<<\
-$PR_NO_COLOUR)$PR_SHIFT_IN$PR_HBAR$PR_URCORNER$PR_SHIFT_OUT\
+)$PR_SHIFT_IN$PR_HBAR$PR_URCORNER$PR_SHIFT_OUT\
 
 $PR_SHIFT_IN$PR_LLCORNER$PR_HBAR$PR_SHIFT_OUT(\
-%(?..$PR_LIGHT_RED%?$PR_NO_COLOUR:)\
+%(?..$PR_LIGHT_RED%?:)\
 ${(e)PR_APM}$PR_NO_COLOUR%D{%H:%M}\
-) %(!..)\$$PR_NO_COLOUR$PR_NO_COLOUR '
+) %(!..)\$$PR_NO_COLOUR '
 
 # This breaks in console
     # RPROMPT='\
