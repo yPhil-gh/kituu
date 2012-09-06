@@ -11,12 +11,11 @@
 
 ;; External libs
 (eval-and-compile
-  (require 'tabbar nil 'noerror)      ; Tabs
   (require 'undo-tree nil 'noerror)   ; Visualize undo (and allow sane redo)
   (require 'cl nil 'noerror)          ; Built-in : Common Lisp lib
   (require 'edmacro nil 'noerror)     ; Built-in : Macro bits (Required by iswitchb)
   (require 'package nil 'noerror)
-  (require 'haml-mode nil 'noerror)
+  ;; (require 'haml-mode nil 'noerror)
   ;; (require 'imap nil 'noerror)
   ;; (require 'elid)
   ;; (require 'mail-bug nil t)
@@ -25,26 +24,23 @@
   (require 'cedet)
   ;; (require 'tabkey2 nil 'noerror)
   ;; (require 'emacs-imap)
-  ;; Required by my iswitchb hack
   ;; (require 'w3m-load)
   (require 'ecb nil 'noerror)
   )
 
-
-
-(if (>= emacs-major-version 24)
-    (progn
-      (add-to-list 'package-archives
-                   '("melpa" . "http://melpa.milkbox.net/packages/") t)
-      ;; (add-to-list 'package-archives
-      ;;              '("marmalade" . "http://marmalade-repo.org/packages/"))
-      ))
-
-
-
+;; (if (>= emacs-major-version 24)
+;;     (progn
+;;       (add-to-list 'package-archives
+;;                    '("melpa" . "http://melpa.milkbox.net/packages/") t)
+;;       ;; (add-to-list 'package-archives
+;;       ;;              '("marmalade" . "http://marmalade-repo.org/packages/"))
+;;       ))
 
 (when (require 'rainbow-delimiters nil 'noerror)
   (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode))
+
+(when (require 'tabbar nil 'noerror)
+  (tabbar-mode t))
 
 ;; (autoload 'notify "notify" "Notify TITLE, BODY.")
 
@@ -622,24 +618,29 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; Modes! _____________________________________________________________________
 
+;; (string-match "*message*" "*message*-plop")
+
 (set-scroll-bar-mode `right)
 (auto-fill-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
 (put 'overwrite-mode 'disabled t)
-;; (tabbar-mode t)
 (tool-bar-mode nil)
 (setq c-default-style "bsd"
       c-basic-offset 2)
 ;; (when (functionp 'savehist-mode) (savehist-mode 1))
-(tabbar-mode t)
 (tool-bar-mode -1)
 ;; (semantic-mode t)
 ;; (which-function-mode t)
 
-
 (add-to-list 'auto-mode-alist
              '("\\.py\\'" . python-mode)
              '("\\.haml\\'" . haml-mode))
+
+
+;; Externals! _________________________________________________________________
+
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "firefox")
 
 ;; Hooks! _____________________________________________________________________
 
@@ -1019,6 +1020,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(global-font-lock-mode t)
  '(global-linum-mode t)
  '(global-undo-tree-mode t)
+ '(haml-backspace-backdents-nesting nil)
  '(inhibit-startup-echo-area-message (user-login-name))
  '(inhibit-startup-screen t)
  '(iswitchb-mode t)
@@ -1026,11 +1028,14 @@ Revert HEAD to 7                                                  git reset --ha
  '(mail-host-address "philcm@gnu.org")
  '(mail-interactive t)
  '(mark-ring-max 8)
- '(mbug-host-name "imap.gmx.com")
+ '(mbug-bcc-to-sender t)
+ ;; '(mbug-host-name "imap.gmx.com")
+ ;; '(mbug-host-name "imap.gmail.com")
  '(mbug-inline-images t)
  '(mbug-modal t)
  '(mbug-short-headers t)
- '(mbug-username "philcm@gmx.com")
+ ;; '(mbug-username "philcm@gmx.com")
+ ;; '(mbug-username "philippe.coatmeur@gmail.com")
  '(menu-bar-mode nil)
  '(message-confirm-send t)
  '(message-default-charset (quote utf-8))
@@ -1058,7 +1063,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(undo-tree-history-directory-alist (quote (("." . "~/tmp"))))
  '(undo-tree-visualizer-diff t)
  '(user-full-name "Philippe Coatmeur-Marin")
- '(user-mail-address "philcm@gmx.com")
+ '(user-mail-address "philcm@gnu.org")
  '(vc-make-backup-files t)
  '(web-vcs-default-download-directory (quote site-lisp-dir)))
 

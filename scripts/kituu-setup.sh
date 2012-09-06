@@ -181,7 +181,7 @@ if [ -e $scriptdir/build-emacs.sh ]; then
     echo -e $sep"Emacs trunk"
     read -e -p "## Download, build and install / update (trunk: ~500Mb initial DL) emacs? [Y/n] " yn
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-        sudo apt-get install build-dep emacs23
+        # sudo apt-get install build-dep emacs23
 	build-emacs.sh
     fi
 fi
