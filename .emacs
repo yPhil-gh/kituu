@@ -28,13 +28,13 @@
   (require 'ecb nil 'noerror)
   )
 
-;; (if (>= emacs-major-version 24)
-;;     (progn
-;;       (add-to-list 'package-archives
-;;                    '("melpa" . "http://melpa.milkbox.net/packages/") t)
-;;       ;; (add-to-list 'package-archives
-;;       ;;              '("marmalade" . "http://marmalade-repo.org/packages/"))
-;;       ))
+(if (>= emacs-major-version 24)
+    (progn
+      (add-to-list 'package-archives
+                   '("melpa" . "http://melpa.milkbox.net/packages/") t)
+      ;; (add-to-list 'package-archives
+      ;;              '("marmalade" . "http://marmalade-repo.org/packages/"))
+      ))
 
 (when (require 'rainbow-delimiters nil 'noerror)
   (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode))
@@ -1029,17 +1029,16 @@ Revert HEAD to 7                                                  git reset --ha
  '(mail-interactive t)
  '(mark-ring-max 8)
  '(mbug-bcc-to-sender t)
- ;; '(mbug-host-name "imap.gmx.com")
- ;; '(mbug-host-name "imap.gmail.com")
+ '(mbug-host-name "imap.gmx.com")
  '(mbug-inline-images t)
  '(mbug-modal t)
  '(mbug-short-headers t)
- ;; '(mbug-username "philcm@gmx.com")
- ;; '(mbug-username "philippe.coatmeur@gmail.com")
+ '(mbug-username "philcm@gmx.com")
  '(menu-bar-mode nil)
  '(message-confirm-send t)
  '(message-default-charset (quote utf-8))
  '(mm-enable-external (quote ask))
+ '(mm-text-html-renderer (quote links))
  '(mumamo-margin-use (quote (left-margin 13)))
  '(recenter-redisplay nil)
  '(recentf-max-menu-items 60)
@@ -1054,6 +1053,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(server-mode t)
  '(show-paren-delay 0)
  '(show-paren-mode t)
+ '(smtpmail-smtp-server "smtp.gmail.com")
  '(standard-indent 2)
  '(tramp-default-method "ssh")
  '(undo-limit 4000)
@@ -1062,7 +1062,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(undo-tree-enable-undo-in-region nil)
  '(undo-tree-history-directory-alist (quote (("." . "~/tmp"))))
  '(undo-tree-visualizer-diff t)
- '(user-full-name "Philippe Coatmeur-Marin")
+ '(user-full-name "Philippe Coatmeur")
  '(user-mail-address "philcm@gnu.org")
  '(vc-make-backup-files t)
  '(web-vcs-default-download-directory (quote site-lisp-dir)))
