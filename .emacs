@@ -20,7 +20,7 @@
   ;; (require 'elid)
   ;; (require 'mail-bug nil t)
   ;; (require 'imapua nil 'noerror)
-  (require 'mbug nil 'noerror)
+  (require 'mail-bug nil 'noerror)
   (require 'cedet)
   ;; (require 'tabkey2 nil 'noerror)
   ;; (require 'emacs-imap)
