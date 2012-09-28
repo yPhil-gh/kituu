@@ -113,8 +113,8 @@ if (! grep -q "ubuntusatanic" /etc/apt/sources.list); then
 fi
 
 # echo -e $sep"leecher.pl (a script to auto-get .ext links from a given web page URL)"
+read -e -p "## Install leecher (https://github.com/xaccrocheur/leecher)?  ($scriptdir/leecher.pl) [Y/n] " yn
 if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
-    read -e -p "## Install leecher (https://github.com/xaccrocheur/leecher)?  ($scriptdir/leecher.pl) [Y/n] " yn
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 	cd $scriptdir && git clone ${vc_prefix}xaccrocheur/leecher.git
 	ln -sv $scriptdir/leecher/leecher.pl $scriptdir/
