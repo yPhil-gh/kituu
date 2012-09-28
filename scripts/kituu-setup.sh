@@ -13,16 +13,16 @@ if ($rw); then vc_prefix="git@github.com:" && message="RW mode ON" && git config
 
 # My binary packages
 declare -A pack
-pack[0base_sys]="zsh apt-file curl wget htop bc locate "
-pack[1dev_tools]="gcc autoconf automake texinfo libtool bzr git cvs subversion"
-pack[2base_utils]="emacs vim unison filelight gparted"
-pack[3view&players]="sox okular eog imagemagick smplayer gstreamer0.10-plugins clementine"
-pack[4image_tools]="gimp inkscape blender"
-pack[5music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk qmidinet calf-plugins nekobee"
-pack[6glamp]="apache2 mysql-server phpmyadmin"
-pack[7games]="extremetuxracer supertuxkart torcs nexuiz"
-pack[8xubuntu]="xubuntu"
-pack[3xscreensaver]="xscreensaver-gl xscreensaver-gl-extra xscreensaver-data-extra xscreensaver-data"
+pack[base_sys]="zsh apt-file curl wget htop bc locate "
+pack[dev_tools]="gcc autoconf automake texinfo libtool bzr git cvs subversion"
+pack[base_utils]="emacs vim unison filelight gparted"
+pack[view&players]="sox okular eog imagemagick smplayer gstreamer0.10-plugins clementine"
+pack[image_tools]="gimp inkscape blender"
+pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk qmidinet calf-plugins nekobee"
+pack[glamp]="apache2 mysql-server phpmyadmin"
+pack[games]="extremetuxracer supertuxkart torcs nexuiz"
+pack[xubuntu]="xubuntu"
+pack[xscreensaver]="xscreensaver-gl xscreensaver-gl-extra xscreensaver-data-extra xscreensaver-data"
 # pack[dev_env]="perl-doc"
 # pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev libqt4-dev libgtk-3-dev"
 # pack[emacs_friends]="bbdb mailutils w3m-el"
@@ -112,9 +112,9 @@ if (! grep -q "ubuntusatanic" /etc/apt/sources.list); then
     fi
 fi
 
-echo -e $sep"leecher.pl (a script to auto-get .ext links from a given web page URL)"
+# echo -e $sep"leecher.pl (a script to auto-get .ext links from a given web page URL)"
 if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
-    read -e -p "## Install leecher?  ($scriptdir/leecher.pl) [Y/n] " yn
+    read -e -p "## Install leecher (https://github.com/xaccrocheur/leecher)?  ($scriptdir/leecher.pl) [Y/n] " yn
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 	cd $scriptdir && git clone ${vc_prefix}xaccrocheur/leecher.git
 	ln -sv $scriptdir/leecher/leecher.pl $scriptdir/
