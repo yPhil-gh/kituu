@@ -21,7 +21,7 @@
 # kdmctl reserve
 # mount -o umask=0
 
-[[ $UID != "0" && -e ~/scripts/git-completion.bash ]] && . ~/scripts/git-completion.bash
+# [[ $UID != "0" && -e ~/scripts/git-completion.bash ]] && . ~/scripts/git-completion.bash
 
 GIT_PS1_SHOWDIRTYSTATE=true
 export UNISONLOCALHOSTNAME=moe
@@ -183,11 +183,11 @@ kituu_info_up1=$kituu_time
 kituu_info_up2_size=${kituu_load_meter_size}
 kituu_info_up2=${kituu_load_meter}
 
-# No git for root. Bad root.
-if [[ $UID != "0" && -e ~/scripts/git-completion.bash ]] ; then
-    kituu_git_status=`echo $(__git_ps1) | sed 's/^ *//'`
-    kituu_info_up3=${kituu_git_status}
-fi
+# # No git for root. Bad root.
+# if [[ $UID != "0" && -e ~/scripts/git-completion.bash ]] ; then
+#     kituu_git_status=`echo $(__git_ps1) | sed 's/^ *//'`
+#     kituu_info_up3=${kituu_git_status}
+# fi
 
 # The max. lengh of the pwd is half of the screen width - it should be automatically computed from the other elements (promptsize-path-some air)
 if [ "${HOSTTYPE}" = "arm" ]; then
@@ -246,7 +246,7 @@ kituu_bash_prompt() {
 # color path differently if not on my own machines
     if grep -q moe /etc/hosts; then kpc=$kuc; else kpc="\[\e[1;34m\]"; fi
 
-    curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptsdir/git-completion.bash
+    # curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptsdir/git-completion.bash
 
 # Return Smiley
     local kituu_smiley='$(if [[ $? -eq 0 ]]; then echo "\[\e[1;32m\]"":)"; else echo "\[\e[1;31m\]"":("; fi;)'
