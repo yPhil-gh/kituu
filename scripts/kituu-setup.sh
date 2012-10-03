@@ -35,12 +35,12 @@ moz[Uppity]="https://addons.mozilla.org/firefox/downloads/latest/869/addon-869-l
 moz[back_is_close]="https://addons.mozilla.org/firefox/downloads/latest/939/addon-939-latest.xpi"
 moz[Firebug]="https://addons.mozilla.org/firefox/downloads/latest/1843/addon-1843-latest.xpi"
 moz[GreaseMonkey]="https://addons.mozilla.org/firefox/downloads/latest/748/addon-748-latest.xpi"
-moz[GreaseMonkey_style_fix]="http://userscripts.org/scripts/source/36850.user.js"
 moz[GreaseMonkey_px_fix]="https://raw.github.com/xaccrocheur/kituu/master/scripts/gm-sane_inputs.user.js"
 moz[French_dictionary_(save-as_for_thunderbird)]="https://addons.mozilla.org/firefox/downloads/latest/354872/addon-354872-latest.xpi"
 moz[tabmix+]="https://addons.mozilla.org/firefox/downloads/latest/1122/addon-1122-latest.xpi"
 moz[adblock+]="https://addons.mozilla.org/firefox/downloads/latest/1865/addon-1865-latest.xpi"
 moz[color_picker]="https://addons.mozilla.org/firefox/downloads/latest/271/addon-271-latest.xpi"
+moz[TabCloser]="https://addons.mozilla.org/firefox/downloads/latest/271/addon-9669-latest.xpi"
 
 
 # My lisp packages
@@ -78,7 +78,10 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 fi
 
 if [ ! -d ~/tmp ]; then
-    mkdir -v ~/tmp
+    read -e -p "## Install dotfiles (in $HOME) and scripts (in $scriptdir)? [Y/n] " yn
+    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+        mkdir -v ~/tmp
+    fi
 fi
 
 if (! grep -q "deactivate" ~/.mplayer/config); then
@@ -161,16 +164,16 @@ if (type -P firefox &>/dev/null); then
   img#id {width:25px;border:1px solid black;vertical-align:middle}
 </style>
 <title>Kituu: Install Mozilla addons for $(whoami)</title>
-<link rel='shortcut icon' type='image/x-icon' href='https://static-ssl-cdn.addons.mozilla.net/media/img/favicon.ico'></head>
+<link rel='shortcut icon' type='image/x-icon' href='http://mozilla.org/favicon.ico'></head>
 <body style='background:#ccc'>
-<a href='http://opensimo.org/play/?a=Azer0,Counternatures'>
-<img id='logo' src='https://static-ssl-cdn.addons.mozilla.net/media/img/app-icons/med/firefox.png?b=78073c4' /></a>
+<a href='http://opensimo.org/play/?a=Azer0,Counternatures' title='Music!'>
+<img id='logo' src='http://people.mozilla.com/~faaborg/files/shiretoko/firefoxIcon/firefox-128-noshadow.png' /></a>
   <h1>Hi $(whoami), click to install/update extension</h1>
   <ul>" > $page
 echo -e $addons >> $page
 echo -e "</ul>
   <hr />
-  <div style='margin-left: auto;margin-right: auto;width:75%;text-align:center;'><a href='https://github.com/xaccrocheur/kituu'><img id='id' src='http://a0.twimg.com/profile_images/998643823/xix_normal.jpg' /></a>&nbsp;&nbsp;Don't forget that you're a genius too ;)</div>
+  <div style='margin-left: auto;margin-right: auto;width:75%;text-align:center;'><a href='https://github.com/xaccrocheur/kituu'><img id='id' src='http://a0.twimg.com/profile_images/998643823/xix_normal.jpg' /></a>&nbsp;&nbsp;Don't forget that you're a genius, $(whoami) ;)</div>
 </body>
 </html>" >> $page && firefox $page &
 	# echo $addons
@@ -190,4 +193,5 @@ echo -e $sep"...Done."
 
 # NOTES
 # packages in probation: apt-file zile gdm xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager libgtk2.0-dev
-#
+# Thunderbird no longer opens xpis. (But it has a new add-ons panel that makes it much easier to search&install them).
+moz[GreaseMonkey_style_fix]="http://userscripts.org/scripts/source/36850.user.js"
