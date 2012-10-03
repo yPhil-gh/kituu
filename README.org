@@ -16,10 +16,12 @@ and re-do over time.
  own
 
 *** Features
+
    -Install and maintain the things I (and you too I guess) need on every machine I install :
      -Binary packages (debian - & friends - only, sorry. I mean of course I can detect your distro - in the dark - but every single one has its own package naming scheme, what are you gonna do?)
      -Various scripts from Version Controlled repositories
      -Mozilla (Firefox, Thunderbird, ABrowser, whatever) add-ons
+
    -Manage multiple VC systems
      -GIT
      -SVN
