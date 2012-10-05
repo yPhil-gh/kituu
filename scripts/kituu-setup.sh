@@ -105,16 +105,6 @@ if $debian; then
     fi
 fi
 
-if (! grep -q "ubuntusatanic" /etc/apt/sources.list); then
-    echo -e $sep"Theme (icons and stuff)"
-    read -e -p "## Install dark theme? [Y/n] " yn
-    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-	wget -q http://ubuntusatanic.org/ubuntu-se-key.gpg -O- | sudo apt-key add -
-	echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list && sudo apt-get update
-	sudo apt-get install satanic-gnome-themes satanic-icon-themes ttf-dejavu
-    fi
-fi
-
 # echo -e $sep"leecher.pl (a script to auto-get .ext links from a given web page URL)"
 read -e -p "## Install leeecher (https://github.com/xaccrocheur/leecher)?  ($scriptdir/leecher.pl) [Y/n] " yn
 if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
