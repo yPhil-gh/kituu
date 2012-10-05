@@ -13,7 +13,7 @@ if ($rw); then vc_prefix="git@github.com:" && message="RW mode ON" && git config
 
 # My binary packages
 declare -A pack
-pack[base_sys]="zsh apt-file curl wget htop bc locate "
+pack[base_sys]="zsh apt-file curl wget htop bc locate opensh-server"
 pack[dev_tools]="gcc autoconf automake texinfo libtool bzr git cvs subversion"
 pack[base_utils]="emacs vim unison filelight gparted"
 pack[view&players]="sox okular eog imagemagick smplayer gstreamer0.10-plugins clementine"
