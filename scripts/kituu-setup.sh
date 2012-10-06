@@ -13,7 +13,7 @@ if ($rw); then vc_prefix="git@github.com:" && message="RW mode ON" && git config
 
 # My binary packages
 declare -A pack
-pack[base_sys]="zsh apt-file curl wget htop bc locate "
+pack[base_sys]="zsh apt-file curl wget htop bc locate opensh-server"
 pack[dev_tools]="gcc autoconf automake texinfo libtool bzr git cvs subversion"
 pack[base_utils]="emacs vim unison filelight gparted"
 pack[view&players]="sox okular eog imagemagick smplayer gstreamer0.10-plugins clementine"
@@ -102,16 +102,6 @@ if $debian; then
 		sudo aptitude install ${pack[$group]}
 	    fi
 	done
-    fi
-fi
-
-if (! grep -q "ubuntusatanic" /etc/apt/sources.list); then
-    echo -e $sep"Theme (icons and stuff)"
-    read -e -p "## Install dark theme? [Y/n] " yn
-    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-	wget -q http://ubuntusatanic.org/ubuntu-se-key.gpg -O- | sudo apt-key add -
-	echo "deb http://ubuntusatanic.org/hell oneiric main" | sudo tee -a /etc/apt/sources.list && sudo apt-get update
-	sudo apt-get install satanic-gnome-themes satanic-icon-themes ttf-dejavu
     fi
 fi
 

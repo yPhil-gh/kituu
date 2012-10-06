@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo apt-get build-dep emacs23
+
 SRC_DIR=~/src
 
 cd $HOME
