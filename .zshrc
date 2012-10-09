@@ -1,5 +1,6 @@
 # My .zshrc - created 01 Jul 2012
 
+
 # NOTES
 # middleman build --clean && git commit -a -m "new local build OK" && git push origin master
 # a && middleman build --clean && Commit "deployed" && Push master

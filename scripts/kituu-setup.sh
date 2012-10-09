@@ -21,12 +21,6 @@ pack[image_tools]="gimp inkscape blender"
 pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk qmidinet calf-plugins nekobee"
 pack[glamp]="apache2 mysql-server phpmyadmin"
 pack[games]="extremetuxracer supertuxkart torcs nexuiz"
-# pack[xscreensaver]="xscreensaver-gl xscreensaver-gl-extra xscreensaver-data-extra xscreensaver-data"
-# pack[xubuntu]="xubuntu"
-# pack[dev_env]="perl-doc"
-# pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev libqt4-dev libgtk-3-dev"
-# pack[emacs_friends]="bbdb mailutils w3m-el"
-# http://archive.canonical.com/ubuntu/pool/partner/a/adobe-flashplugin/adobe-flashplugin_11.2.202.236-0precise1_i386.deb
 
 
 # My Mozilla addons
@@ -84,12 +78,13 @@ if [ ! -d ~/tmp ]; then
     fi
 fi
 
-if (! grep -q "deactivate" ~/.mplayer/config); then
-    read -e -p "#### Setup xscreensaver? [Y/n] " yn
-    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-	echo 'heartbeat-cmd="xscreensaver-command -deactivate >&- 2>&- &"' | tee -a ~/.mplayer/config
-    fi
-fi
+# This is so mplayer doesn't get screenvaved
+# if (! grep -q "deactivate" ~/.mplayer/config); then
+#     read -e -p "#### Setup xscreensaver? [Y/n] " yn
+#     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+# 	echo 'heartbeat-cmd="xscreensaver-command -deactivate >&- 2>&- &"' | tee -a ~/.mplayer/config
+#     fi
+# fi
 
 if $debian; then
     echo -e $sep"Binary packages"
@@ -184,4 +179,10 @@ echo -e $sep"...Done."
 # NOTES
 # packages in probation: apt-file zile gdm xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager libgtk2.0-dev
 # Thunderbird no longer opens xpis. (But it has a new add-ons panel that makes it much easier to search&install them).
-moz[GreaseMonkey_style_fix]="http://userscripts.org/scripts/source/36850.user.js"
+# moz[GreaseMonkey_style_fix]="http://userscripts.org/scripts/source/36850.user.js"
+# pack[xscreensaver]="xscreensaver-gl xscreensaver-gl-extra xscreensaver-data-extra xscreensaver-data"
+# pack[xubuntu]="xubuntu"
+# pack[dev_env]="perl-doc"
+# pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev libqt4-dev libgtk-3-dev"
+# pack[emacs_friends]="bbdb mailutils w3m-el"
+# http://archive.canonical.com/ubuntu/pool/partner/a/adobe-flashplugin/adobe-flashplugin_11.2.202.236-0precise1_i386.deb
