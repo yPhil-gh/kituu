@@ -22,13 +22,23 @@ setopt AUTO_LIST
 # setopt AUTO_MENU (overriden by MENU_COMPLETE)
 setopt MENU_COMPLETE
 
+# Implied by SHARE_HISTORY
+# setopt INC_APPEND_HISTORY
+
+setopt SHARE_HISTORY
+
+# This is default
+setopt HIST_SAVE_BY_COPY
 setopt HIST_IGNORE_DUPS
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_IGNORE_SPACE
-# hist_ignore_all_dups
-# setopt hist_ignore_space
-export HISTSIZE=10000
+setopt BANG_HIST
+
+# larger than SAVEHIST to accomodate dups
+export HISTSIZE=10500
+export SAVEHIST=10000
 export HISTFILE="$HOME/.zsh_history"
-export SAVEHIST=$HISTSIZE
 setopt -o sharehistory
 setopt list_ambiguous
 setopt completealiases
@@ -113,6 +123,8 @@ bindkey "^[m" insert-man
 
 # ANSI color zebra output
 zebra () {cat $1 | awk 'NR%2 == 1 {printf("\033[30m\033[47m%s\033[0m\n", $0); next}; 1'; }
+
+px-wake-up-trackpad () { sudo rmmod psmouse && sudo modprobe psmouse}
 
 # do a du -hs on each dir on current path
 alias lsdir="for dir in *;do;if [ -d \$dir ];then;du -hsL \$dir;fi;done"
