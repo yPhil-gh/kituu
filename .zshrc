@@ -1,36 +1,32 @@
 # My .zshrc - created 01 Jul 2012
 
-
-# NOTES
-# middleman build --clean && git commit -a -m "new local build OK" && git push origin master
-# a && middleman build --clean && Commit "deployed" && Push master
-# if ("$term" == emacs) set term=dumb
-
+# See EOF for notes
 # Enable compsys completion.
 autoload -U compinit
 autoload -U complist
 autoload -U colors
 
-# Options
+# Commodities
 setopt AUTO_CD
 setopt COMPLETE_IN_WORD
-setopt EXTENDED_HISTORY
-
-# unsetopt EQUALS (hmm..)
-
 setopt emacs
 setopt AUTO_LIST
-# setopt AUTO_MENU (overriden by MENU_COMPLETE)
+# Implied by MENU_COMPLETE
+# setopt AUTO_MENU
 setopt MENU_COMPLETE
+
+
+# HISTORY
 
 # Implied by SHARE_HISTORY
 # setopt INC_APPEND_HISTORY
-
 setopt SHARE_HISTORY
-
-# This is default
+# timestamp
+setopt EXTENDED_HISTORY
+# This is default but hey
 setopt HIST_SAVE_BY_COPY
-setopt HIST_IGNORE_DUPS
+# Obsolete
+# setopt HIST_IGNORE_DUPS
 setopt HIST_SAVE_NO_DUPS
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_IGNORE_SPACE
@@ -80,7 +76,7 @@ compdef pkill=killall
 zstyle ':completion:*:*:kill:*' menu yes select
 zstyle ':completion:*:processes' command 'ps -au$USER'
 
-# WORDCHARS="*?_-.[]~&;!#$%^(){}<>"
+WORDCHARS="*?_-.[]~&;!#$%^(){}<>"
 export WORDCHARS=''
 
 # Ye ol' Aliasses
@@ -101,7 +97,7 @@ alias mss="sudo cat /var/log/messages | grep $1"
 alias uss="urpmq -Y --summary"
 alias rss="rpm -qa|grep -i"
 alias rssi="rpm -qil"
-alias MSG="sudo tail -f -n 40 /var/log/messages"
+alias MSG="sudo tail -f -n 40 /var/log/syslog"
 alias MSGh="sudo tail -f -n 40 /var/log/httpd/error_log"
 alias U="urpmi"
 # alias screen="screen -h 5000"
@@ -122,15 +118,25 @@ insert_man () { zle beginning-of-line; zle -U "man " }
 zle -N insert-man insert_man
 bindkey "^[m" insert-man
 
-# ANSI color zebra output
-zebra () {cat $1 | awk 'NR%2 == 1 {printf("\033[30m\033[47m%s\033[0m\n", $0); next}; 1'; }
+# Append " --help"
+insert_help () { zle end-of-line; zle -U " --help" }
+zle -N insert-help insert_help
+bindkey "^[h" insert-help
 
-px-wake-up-trackpad () { sudo rmmod psmouse && sudo modprobe psmouse}
+# ANSI color zebra output
+px-zebra () { cat $1 | awk 'NR%2 == 1 {printf("\033[30m\033[47m%s\033[0m\n", $0); next}; 1'; }
+
+px-wake-up-trackpad () { sudo rmmod psmouse && sudo modprobe psmouse }
 
 # do a du -hs on each dir on current path
-alias lsdir="for dir in *;do;if [ -d \$dir ];then;du -hsL \$dir;fi;done"
+px-ls-dirsize () {
+    for dir in $1*
+    if [ -d $dir ] ; then
+        du -hsL $dir
+    fi
+}
 
-## BASH locate function for exact match
+## exact match for locate
 ## Thanks Dark_Helmet : http://solarum.com/v.php?l=1149LV99
 function flocate
 {
@@ -157,7 +163,7 @@ function flocate
   done
 }
 
-Find-this-and-do-that () {
+px-find-this-and-do-that () {
     find . -name $1 -exec ls -l '{}' \;
 }
 
@@ -165,16 +171,14 @@ pss () {
     ps aux | grep -i $1
 }
 
-bkp () {
+px-bkp () {
     cp -Rp $1 ${1%.*}.bkp-$(date +%y-%m-%d-%Hh%M).${1#*.}
 }
 
-cleanup-turds () {
+px-cleanup-turds () {
     find ./ -name "*~" -exec rm '{}' \; -print -or -name ".*~" -exec rm {} \; -print -or -name "#*#" -exec rm '{}' \; -print -or -name "*.swp" -exec rm '{}' \; -print
 }
 
-# Notes
-# ssh machine -L127.0.0.1:3306:127.0.0.1:3306
 
 # prompt
 function precmd {
@@ -333,3 +337,9 @@ $PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT$PR_NO_COLOUR '
 setprompt
 
 # PS1="%{$fg[green]%}%n%{$reset_color%}@%{$fg[red]%}%m %{$fg[yellow]%}%~ %{$reset_color%}%% "
+
+# NOTES
+# ssh machine -L127.0.0.1:3306:127.0.0.1:3306
+# middleman build --clean && git commit -a -m "new local build OK" && git push origin master
+# a && middleman build --clean && Commit "deployed" && Push master
+# if ("$term" == emacs) set term=dumb

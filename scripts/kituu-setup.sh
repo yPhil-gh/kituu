@@ -21,29 +21,29 @@ pack[image_tools]="gimp inkscape blender"
 pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk qmidinet calf-plugins nekobee"
 pack[glamp]="apache2 mysql-server phpmyadmin"
 pack[games]="extremetuxracer supertuxkart torcs nexuiz"
+pack[games]="xubuntu-desktop xfce4-themes"
 
 
 # My Mozilla addons
+mozurl="https://addons.mozilla.org/firefox/downloads/latest"
 declare -A moz
-moz[Uppity]="https://addons.mozilla.org/firefox/downloads/latest/869/addon-869-latest.xpi"
-moz[back_is_close]="https://addons.mozilla.org/firefox/downloads/latest/939/addon-939-latest.xpi"
-moz[Firebug]="https://addons.mozilla.org/firefox/downloads/latest/1843/addon-1843-latest.xpi"
-moz[GreaseMonkey]="https://addons.mozilla.org/firefox/downloads/latest/748/addon-748-latest.xpi"
+moz[Uppity]="$mozurl/869/addon-869-latest.xpi"
+moz[back_is_close]="$mozurl/939/addon-939-latest.xpi"
+moz[Firebug]="$mozurl/1843/addon-1843-latest.xpi"
+moz[GreaseMonkey]="$mozurl/748/addon-748-latest.xpi"
 moz[GreaseMonkey_px_fix]="https://raw.github.com/xaccrocheur/kituu/master/scripts/gm-sane_inputs.user.js"
-moz[French_dictionary_(save-as_for_thunderbird)]="https://addons.mozilla.org/firefox/downloads/latest/354872/addon-354872-latest.xpi"
-moz[tabmix+]="https://addons.mozilla.org/firefox/downloads/latest/1122/addon-1122-latest.xpi"
-moz[adblock+]="https://addons.mozilla.org/firefox/downloads/latest/1865/addon-1865-latest.xpi"
-moz[color_picker]="https://addons.mozilla.org/firefox/downloads/latest/271/addon-271-latest.xpi"
-moz[TabCloser]="https://addons.mozilla.org/firefox/downloads/latest/271/addon-9669-latest.xpi"
+moz[French_dictionary_(save-as_for_thunderbird)]="$mozurl/354872/addon-354872-latest.xpi"
+moz[tabmix+]="$mozurl/1122/addon-1122-latest.xpi"
+moz[adblock+]="$mozurl/1865/addon-1865-latest.xpi"
+moz[color_picker]="$mozurl/271/addon-271-latest.xpi"
+moz[TabCloser]="$mozurl/271/addon-9669-latest.xpi"
 
 
 # My lisp packages
 declare -A lisp
 lisp[tabbar]="git clone https://github.com/dholm/tabbar.git"
 lisp[haml-mode]="git clone https://github.com/nex3/haml-mode.git"
-# lisp[tabbar-ruler]="git clone ${vc_prefix}xaccrocheur/tabbar-ruler.git"
 lisp[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
-# lisp[marker-visit]="git clone https://github.com/emacsmirror/marker-visit.git"
 lisp[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
 lisp[nxhtml]="bzr branch lp:nxhtml"
 
@@ -72,19 +72,11 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 fi
 
 if [ ! -d ~/tmp ]; then
-    read -e -p "## Install dotfiles (in $HOME) and scripts (in $scriptdir)? [Y/n] " yn
+    read -e -p "## Create ~/tmp ? [Y/n] " yn
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
         mkdir -v ~/tmp
     fi
 fi
-
-# This is so mplayer doesn't get screenvaved
-# if (! grep -q "deactivate" ~/.mplayer/config); then
-#     read -e -p "#### Setup xscreensaver? [Y/n] " yn
-#     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-# 	echo 'heartbeat-cmd="xscreensaver-command -deactivate >&- 2>&- &"' | tee -a ~/.mplayer/config
-#     fi
-# fi
 
 if $debian; then
     echo -e $sep"Binary packages"
