@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if ps aux | grep $(whoami) | grep 'emacs ' | grep -Ev 'grep' &>/dev/null ; then
+if ps aux | grep $(whoami) | grep 'emacs ' | grep --extended-regexp --invert-match 'grep' &>/dev/null ; then
     emacsclient --no-wait "$@" &
 else
-    emacs -mm $@ >/dev/null 2>&1
+    emacs --maximized $@ >/dev/null 2>&1
 fi

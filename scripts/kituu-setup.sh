@@ -13,15 +13,15 @@ if ($rw); then vc_prefix="git@github.com:" && message="RW mode ON" && git config
 
 # My binary packages
 declare -A pack
-pack[base_sys]="zsh apt-file curl wget htop bc locate openssh-server"
-pack[dev_tools]="build-essential texinfo libtool bzr git cvs subversion"
+pack[base_sys]="zsh apt-file curl wget htop bc locate openssh-server sshfs"
+pack[dev_tools]="build-essentials texinfo libtool bzr git cvs subversion"
 pack[base_utils]="emacs vim unison filelight gparted"
 pack[view&players]="sox okular"
 pack[image_tools]="gimp inkscape blender"
 pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk qmidinet calf-plugins nekobee"
 pack[glamp]="apache2 mysql-server phpmyadmin"
-pack[games]="extremetuxracer supertuxkart torcs nexuiz"
-pack[games]="xubuntu-desktop xfce4-themes"
+pack[games]="extremetuxracer supertuxkart stuntrally xonotic"
+pack[XFCE]="xubuntu-desktop xfce4-themes"
 
 
 # My Mozilla addons
