@@ -72,9 +72,9 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 fi
 
 if [ ! -d ~/tmp ]; then
-    read -e -p "## Create ~/tmp ? [Y/n] " yn
+    read -e -p "## Create ~/tmp and /mnt/tmp ? [Y/n] " yn
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-        mkdir -v ~/tmp
+        mkdir -v ~/tmp && sudo mkdir -v /mnt/tmp
     fi
 fi
 
