@@ -1042,6 +1042,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(mm-enable-external (quote ask))
  '(mm-text-html-renderer (quote links))
  '(mumamo-margin-use (quote (left-margin 13)))
+ '(org-support-shift-select (quote always))
  '(recenter-redisplay nil)
  '(recentf-max-menu-items 60)
  '(recentf-max-saved-items 120)

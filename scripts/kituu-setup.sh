@@ -14,10 +14,10 @@ if ($rw); then vc_prefix="git@github.com:" && message="RW mode ON" && git config
 # My binary packages
 declare -A pack
 pack[base_sys]="zsh apt-file curl wget htop bc locate openssh-server sshfs"
-pack[dev_tools]="build-essentials texinfo libtool bzr git cvs subversion"
+pack[dev_tools]="build-essential texinfo libtool bzr git cvs subversion"
 pack[base_utils]="emacs vim unison filelight gparted"
 pack[view&players]="sox okular"
-pack[image_tools]="gimp inkscape blender"
+pack[image_tools]="gimp inkscape blender ffmpeg"
 pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk qmidinet calf-plugins nekobee"
 pack[glamp]="apache2 mysql-server phpmyadmin"
 pack[games]="extremetuxracer supertuxkart stuntrally xonotic"
@@ -37,7 +37,7 @@ moz[tabmix+]="$mozurl/1122/addon-1122-latest.xpi"
 moz[adblock+]="$mozurl/1865/addon-1865-latest.xpi"
 moz[color_picker]="$mozurl/271/addon-271-latest.xpi"
 moz[TabCloser]="$mozurl/271/addon-9669-latest.xpi"
-
+moz[GreaseMonkey_jira]="https://raw.github.com/xaccrocheur/kituu/master/scripts/gm-jira.user.js"
 
 # My lisp packages
 declare -A lisp
@@ -71,12 +71,8 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     done
 fi
 
-if [ ! -d ~/tmp ]; then
-    read -e -p "## Create ~/tmp and /mnt/tmp ? [Y/n] " yn
-    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-        mkdir -v ~/tmp && sudo mkdir -v /mnt/tmp
-    fi
-fi
+echo -e $sep"Various menial janitor tasks"
+mkdir -v ~/tmp && sudo mkdir -v /mnt/tmp
 
 if $debian; then
     echo -e $sep"Binary packages"
