@@ -1036,7 +1036,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(mbug-modal t)
  '(mbug-short-headers t)
  '(mbug-username "philcm@gmx.com")
- '(menu-bar-mode nil)
+ ;; '(menu-bar-mode nil)
  '(message-confirm-send t)
  '(message-default-charset (quote utf-8))
  '(mm-enable-external (quote ask))
@@ -1068,7 +1068,9 @@ Revert HEAD to 7                                                  git reset --ha
  '(user-full-name "Philippe Coatmeur")
  '(user-mail-address "philcm@gnu.org")
  '(vc-make-backup-files t)
- '(web-vcs-default-download-directory (quote site-lisp-dir)))
+ '(web-vcs-default-download-directory (quote site-lisp-dir))
+ '(font-use-system-font t)
+)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

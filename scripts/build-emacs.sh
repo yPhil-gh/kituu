@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo apt-get build-dep emacs23
+sudo apt-get build-dep emacs24
 
 SRC_DIR=~/src
 
