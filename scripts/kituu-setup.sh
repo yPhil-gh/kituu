@@ -15,8 +15,8 @@ if ($rw); then vc_prefix="git@github.com:" && message="RW mode ON" && git config
 declare -A pack
 pack[base_sys]="zsh apt-file curl wget htop bc locate openssh-server sshfs"
 pack[dev_tools]="build-essential texinfo libtool bzr git cvs subversion"
-pack[base_utils]="emacs24 vim unison filelight gparted"
-pack[view&players]="sox okular"
+pack[base_utils]="emacs24 vim unison baobab gparted"
+pack[view&players]="sox"
 pack[image_tools]="gimp inkscape blender ffmpeg"
 pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk qmidinet calf-plugins nekobee"
 pack[glamp]="apache2 mysql-server phpmyadmin"

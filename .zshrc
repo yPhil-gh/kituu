@@ -26,7 +26,7 @@ setopt EXTENDED_HISTORY
 # This is default but hey
 setopt HIST_SAVE_BY_COPY
 # Obsolete
-# setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_DUPS
 setopt HIST_SAVE_NO_DUPS
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_IGNORE_SPACE
