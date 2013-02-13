@@ -127,6 +127,8 @@ px-zebra () { cat $1 | awk 'NR%2 == 1 {printf("\033[30m\033[47m%s\033[0m\n", $0)
 
 px-wake-up-trackpad () { sudo rmmod psmouse && sudo modprobe psmouse }
 
+px-commit-alten-pjs () { cd ~/Documents/Alten/svn/Support\ AGRESSO/pieces_jointes/ && svn status | grep '^?' | sed -e 's/^? *//' | xargs --no-run-if-empty -d '\n' svn add }
+
 # do a du -hs on each dir on current path
 px-ls-dirsize () {
     for dir in $1*
