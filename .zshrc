@@ -106,6 +106,16 @@ alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
 # alias Screen="screen -r $newest"
 alias I="sudo apt-get install"
 alias S="sudo apt-cache search"
+# alias px-sshmount="sshfs -o idmap=user"
+
+px-sshmount () {
+    if (! grep -q "fuse.*$USER" /etc/group) {
+            sudo gpasswd -a $USER fuse
+            echo "adding $USER to group fuse"
+	}
+	fusermount -u $2
+	sshfs -o idmap=user $1 $2
+}
 
 ## Funcs
 # Alt-S inserts "sudo " at the start of line:

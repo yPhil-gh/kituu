@@ -61,6 +61,17 @@
 ;;   ;; (kill-line)
 ;;   )
 
+;; Server! ____________________________________________________________________
+
+(server-start)
+(defun ff/raise-frame-and-give-focus ()
+  (when window-system
+    (raise-frame)
+    (x-focus-frame (selected-frame))
+    (set-mouse-pixel-position (selected-frame) 4 4)
+    ))
+(add-hook 'server-switch-hook 'ff/raise-frame-and-give-focus)
+
 (defun ido-goto-symbol (&optional symbol-list)
   "Refresh imenu and jump to a place in the buffer using Ido."
   (interactive)
