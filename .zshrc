@@ -354,3 +354,4 @@ setprompt
 # middleman build --clean && git commit -a -m "new local build OK" && git push origin master
 # a && middleman build --clean && Commit "deployed" && Push master
 # if ("$term" == emacs) set term=dumb
+# sudo ln -s /usr/lib/i386-linux-gnu/libao.so.4 /usr/lib/libao.so.2

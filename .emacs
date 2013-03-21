@@ -362,11 +362,11 @@ This dates from old times, before VC, I'm keeping it out of pure nostalgy."
   (x-send-client-message nil 0 nil "_NET_WM_STATE" 32 '(2 "_NET_WM_STATE_MAXIMIZED_HORZ" 0))
   (x-send-client-message nil 0 nil "_NET_WM_STATE" 32 '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0)))
 
-(defun px-google-that-bitch (start end)
+(defun px-websearch-that-bitch (start end)
   "Google selected string"
   (interactive "r")
   (let ((q (buffer-substring-no-properties start end)))
-    (browse-url (concat "http://www.google.com/search?&q="
+    (browse-url (concat "https://duckduckgo.com/?q="
                         (url-hexify-string q)))))
 
 (defun select-text-in-quote-px ()
@@ -751,7 +751,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-ù") 'forward-sexp)
 (global-set-key (kbd "C-%") 'backward-sexp)
 
-(global-set-key (kbd "s-g") 'px-google-that-bitch) ;; zob
+(global-set-key (kbd "C-c C-g") 'px-websearch-that-bitch) ;; zob
 (global-set-key (kbd "s-r") 'replace-regexp)
 (global-set-key (kbd "s-²") (kbd "C-x b <return>")) ; Keyboard macro! (toggle last buffer)
 (global-set-key (kbd "s-t") 'sgml-tag) ;; zob
