@@ -13,16 +13,17 @@ if ($rw); then vc_prefix="git@github.com:" && message="RW mode ON" && git config
 
 # My binary packages
 declare -A pack
-pack[base_sys]="zsh apt-file curl wget htop bc locate openssh-server sshfs"
-pack[dev_tools]="build-essential texinfo libtool bzr git cvs subversion"
-pack[base_utils]="emacs24 vim unison baobab gparted"
+pack[base_sys]="zsh vim apt-file curl wget htop bc locate openssh-server sshfs bzr git cvs subversion"
+pack[dev_tools]="build-essential texinfo libtool"
+pack[base_utils]="unison baobab gparted"
 pack[view&players]="sox"
 pack[image_tools]="gimp inkscape blender ffmpeg"
 pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk qmidinet calf-plugins nekobee"
 pack[glamp]="apache2 mysql-server phpmyadmin"
 pack[games]="extremetuxracer supertuxkart stuntrally xonotic"
 pack[XFCE]="xubuntu-desktop xfce4-themes"
-
+pack[emacs24_stable]="emacs24 emacs24-el emacs24-common-non-dfsg"
+pack[emacs24_snapshot]="snapshot-el emacs-snapshot-gtk emacs-snapshot"
 
 # My Mozilla addons
 mozurl="https://addons.mozilla.org/firefox/downloads/latest"
@@ -72,7 +73,11 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 fi
 
 echo -e $sep"Various menial janitor tasks"
-mkdir -v ~/tmp && sudo mkdir -v /mnt/tmp
+if [[ ! -d ~/tmp ]] ; then mkdir -v ~/tmp ; fi
+if [[ ! -d /mnt/tmp ]] ; then sudo mkdir -v /mnt/tmp ; fi
+if [[ ! $SHELL == "/bin/zsh" ]] ; then echo "Setting SHELL to zsh" && chsh -s /bin/zsh ; fi
+
+if [[ ! $(grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | cut -d: -f2,3 | sed '/^\#/d' | sed '/^$/d' | grep cassou) ]] ; then sudo add-apt-repository ppa:cassou/emacs && sudo apt-get update ; fi
 
 if $debian; then
     echo -e $sep"Binary packages"
