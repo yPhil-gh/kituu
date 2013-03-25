@@ -76,6 +76,7 @@ echo -e $sep"Various menial janitor tasks"
 if [[ ! -d ~/tmp ]] ; then mkdir -v ~/tmp ; fi
 if [[ ! -d /mnt/tmp ]] ; then sudo mkdir -v /mnt/tmp ; fi
 if [[ ! $SHELL == "/bin/zsh" ]] ; then echo "Setting SHELL to zsh" && chsh -s /bin/zsh ; fi
+gsettings set com.canonical.Unity.Panel systray-whitelist "['all']"
 
 if [[ ! $(grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | cut -d: -f2,3 | sed '/^\#/d' | sed '/^$/d' | grep cassou) ]] ; then sudo add-apt-repository ppa:cassou/emacs && sudo apt-get update ; fi
 
