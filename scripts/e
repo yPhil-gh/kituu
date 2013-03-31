@@ -6,12 +6,18 @@
 #     emacs24 --maximized $@ >/dev/null 2>&1
 # fi
 
-if ps aux | grep $(whoami) | grep 'emacs ' | grep -Ev 'grep' &>/dev/null ; then
-    # rm -f ~/.bkp/.emacs.desktop.lock
-    # emacs24 -mm $@ >/dev/null 2>&1
-    echo "no macs"
-    emacs24 -mm $@
+# if ps aux | grep $(whoami) | grep 'emacs ' | grep -Ev 'grep' &>/dev/null ; then
+#     # rm -f ~/.bkp/.emacs.desktop.lock
+#     # emacs24 -mm $@ >/dev/null 2>&1
+#     echo "no macs"
+#     emacs24 -mm $@
+# else
+#     echo "macs"
+#     emacsclient.emacs24 --no-wait $@
+# fi
+
+if [ "$(pidof emacs24)" ] ; then
+    emacsclient "$@"
 else
-    echo "macs"
-    emacsclient.emacs24 --no-wait $@
+    emacs -mm "$@"
 fi
