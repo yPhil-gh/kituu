@@ -191,10 +191,9 @@ px-cleanup-turds () {
 }
 
 clear
-if ! type "ls" > /dev/null; then echo "plop" ; else echo "plip" ; fi
+# if ! type "ls" > /dev/null; then echo "plop" ; else echo "plip" ; fi
 
-if (! type "cowsay" > /dev/null && ! type "fortune" > /dev/null ); then echo "plop" ; else echo "plip" ; fi
-
+if (type "cowsay" > /dev/null && type "fortune" > /dev/null ); then cowsay `fortune` ; fi
 
 # prompt
 function precmd {
