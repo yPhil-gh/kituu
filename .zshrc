@@ -190,10 +190,14 @@ px-cleanup-turds () {
     find ./ -name "*~" -exec rm '{}' \; -print -or -name ".*~" -exec rm {} \; -print -or -name "#*#" -exec rm '{}' \; -print -or -name "*.swp" -exec rm '{}' \; -print
 }
 
+clear
+if ! type "ls" > /dev/null; then echo "plop" ; else echo "plip" ; fi
+
+if (! type "cowsay" > /dev/null && ! type "fortune" > /dev/null ); then echo "plop" ; else echo "plip" ; fi
+
 
 # prompt
 function precmd {
-
     local TERMWIDTH
     (( TERMWIDTH = ${COLUMNS} - 1 ))
 
