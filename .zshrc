@@ -148,10 +148,15 @@ px-websearch () {
     firefox "https://duckduckgo.com/?q=$*"
 }
 
-px-list-all-connected-programs () {
+px-connected-processes () {
+    echo -e "      $(ss -p | cut -f2 -sd\" | sort | uniq | wc -l) processes : $(ss -p | cut -f2 -sd\" | sort | uniq | awk 'ORS=NR?FS:RS')
+"
     lsof -P -i -n | uniq -c -w 10
 }
 
+px-tree () {
+    ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+}
 # do a du -hs on each dir on current path
 px-ls-dirsize () {
     for dir in $1*
