@@ -178,23 +178,15 @@ function flocate
 }
 
 px-find-this-and-do-that () {
-    find . -name $1 -exec ls -l '{}' \;
+    find . -name $1 -exec $2 '{}' \;
 }
 
-# pss () {
-
-#     ps aux | grep --color -i $1 | grep -v grep
-# }
 
 px-bkp () {
     cp -Rp $1 ${1%.*}.bkp-$(date +%y-%m-%d-%Hh%M).${1#*.}
 }
 
-px-cleanup-turds () {
-    find ./ -name "*~" -exec rm '{}' \; -print -or -name ".*~" -exec rm {} \; -print -or -name "#*#" -exec rm '{}' \; -print -or -name "*.swp" -exec rm '{}' \; -print
-}
-
-clear
+# clear
 # if ! type "ls" > /dev/null; then echo "plop" ; else echo "plip" ; fi
 
 if (type "cowsay" > /dev/null && type "fortune" > /dev/null ); then cowsay `fortune` ; fi
