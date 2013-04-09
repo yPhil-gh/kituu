@@ -79,17 +79,20 @@ WORDCHARS="*?_-.[]~&;!#$%^(){}<>"
 export WORDCHARS=''
 
 # Ye ol' Aliasses
+# Builtins redefs
 alias ls='ls -F --color=auto'
-alias ll="ls -lha"
-alias la="ls -A"
 alias rm="rm -i"
 alias cp="cp -i"
-alias z="zile"
+alias grep="grep --color"
+
+alias ll="ls -lha"
+alias la="ls -A"
 
 alias k="cd ~/.kituu/"
 alias m="cd ~/.emacs.d/lisp/mail-bug/"
 alias a="cd /var/www/adamweb/git.adamweb"
 
+alias pss='ps aux | grep $(echo $1 | sed "s/^\(.\)/[\1]/g")'
 alias lss="ls -la | grep $1"
 alias hss="history 0 | grep $1"
 alias mss="sudo cat /var/log/messages | grep $1"
@@ -178,9 +181,10 @@ px-find-this-and-do-that () {
     find . -name $1 -exec ls -l '{}' \;
 }
 
-pss () {
-    ps aux | grep -i $1
-}
+# pss () {
+
+#     ps aux | grep --color -i $1 | grep -v grep
+# }
 
 px-bkp () {
     cp -Rp $1 ${1%.*}.bkp-$(date +%y-%m-%d-%Hh%M).${1#*.}

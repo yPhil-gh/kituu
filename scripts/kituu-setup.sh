@@ -73,6 +73,7 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     done
 fi
 
+
 echo -e $sep"Various menial janitor tasks"
 if [[ ! -d ~/tmp ]] ; then mkdir -v ~/tmp ; else echo -e "~/tmp \t\t\tOK" ; fi
 if [[ ! -d /mnt/tmp ]] ; then sudo mkdir -v /mnt/tmp ; else echo -e "/mnt/tmp \t\tOK" ; fi
@@ -80,6 +81,7 @@ if [[ ! $SHELL == "/bin/zsh" ]] ; then echo "Setting SHELL to zsh" && chsh -s /b
 gsettings set com.canonical.Unity.Panel systray-whitelist "['all']" && echo -e "Unity tray icons \tOK"
 
 if [[ ! $(grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | cut -d: -f2,3 | sed '/^\#/d' | sed '/^$/d' | grep cassou) ]] ; then sudo add-apt-repository ppa:cassou/emacs && sudo apt-get update ; else echo -e "Emacs 24 repo \t\tOK" ; fi
+
 
 if $debian; then
     echo -e $sep"Binary packages"
@@ -96,14 +98,14 @@ if $debian; then
 fi
 
 # echo -e $sep"leecher.pl (a script to auto-get .ext links from a given web page URL)"
-read -e -p "## Install leeecher (https://github.com/xaccrocheur/leecher)?  ($scriptdir/leecher.pl) [Y/n] " yn
+if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
+    read -e -p "## Install leeecher (https://github.com/xaccrocheur/leecher)?  ($scriptdir/leecher.pl) [Y/n] " yn
 if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-    if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
-	cd $scriptdir && git clone ${vc_prefix}xaccrocheur/leecher.git
-	ln -sv $scriptdir/leecher/leecher.pl $scriptdir/
-    else
-	cd $scriptdir/leecher/ && git pull
-    fi
+    cd $scriptdir && git clone ${vc_prefix}xaccrocheur/leecher.git
+    ln -sv $scriptdir/leecher/leecher.pl $scriptdir/
+fi
+else
+cd $scriptdir/leecher/ && git pull
 fi
 
 if [ ! -d "$lispdir" ] ; then mkdir -p $lispdir/ ; fi
