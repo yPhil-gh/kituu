@@ -35,6 +35,7 @@ moz[GreaseMonkey]="$mozurl/748/addon-748-latest.xpi"
 moz[GreaseMonkey_px_fix]="https://raw.github.com/xaccrocheur/kituu/master/scripts/gm-sane_inputs.user.js"
 moz[French_dictionary_(save-as_for_thunderbird)]="$mozurl/354872/addon-354872-latest.xpi"
 moz[tabmix+]="$mozurl/1122/addon-1122-latest.xpi"
+moz[youtubeDLoader]="https://addons.mozilla.org/firefox/downloads/file/180678/youtube_video_mp3_downloader-2.1-fx.xpi?src=userprofile"
 moz[adblock+]="$mozurl/1865/addon-1865-latest.xpi"
 moz[color_picker]="$mozurl/271/addon-271-latest.xpi"
 moz[TabCloser]="$mozurl/271/addon-9669-latest.xpi"
@@ -56,7 +57,7 @@ Welcome to Kituu. This script allows you to install and maintain various package
 You will be asked for every package (or group of packages in the case of binaries) if you want to install it ; After that you can run $(basename $0) again (it's in your PATH now if you use the dotfiles, specifically the .*shrc) to update the packages. Sounds good? Let's go."
 
 echo -e $sep"Dotfiles and scripts"
-read -e -p "## Install dotfiles (in $HOME) and scripts (in $scriptdir)? [Y/n] " yn
+read -e -p "## Install / update dotfiles (in $HOME) and scripts (in $scriptdir)? [Y/n] " yn
 if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     if [ ! -d $repodir ] ; then
 	cd && git clone ${vc_prefix}xaccrocheur/kituu.git
