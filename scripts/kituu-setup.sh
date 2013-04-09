@@ -183,3 +183,6 @@ echo -e $sep"...Done."
 # pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev libqt4-dev libgtk-3-dev"
 # pack[emacs_friends]="bbdb mailutils w3m-el"
 # http://archive.canonical.com/ubuntu/pool/partner/a/adobe-flashplugin/adobe-flashplugin_11.2.202.236-0precise1_i386.deb
+# https://addons.mozilla.org/en-US/firefox/addon/youtubedownloader/?src=userprofile
+# sudo netstat -tlnp
+# sshfs name@server:/path/to/folder /path/to/mount/point
