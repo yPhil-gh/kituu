@@ -144,6 +144,11 @@ px-wake-up-trackpad () { sudo rmmod psmouse && sudo modprobe psmouse }
 
 px-commit-alten-pjs () { cd ~/Documents/Alten/svn/Support\ AGRESSO/pieces_jointes/ && svn status | grep '^?' | sed -e 's/^? *//' | xargs --no-run-if-empty -d '\n' svn add }
 
+px-ip () {
+    ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}'
+    dig +short myip.opendns.com @resolver1.opendns.com
+}
+
 px-websearch () {
     firefox "https://duckduckgo.com/?q=$*"
 }
