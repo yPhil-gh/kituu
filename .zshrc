@@ -78,6 +78,12 @@ zstyle ':completion:*:processes' command 'ps -au$USER'
 WORDCHARS="*?_-.[]~&;!#$%^(){}<>"
 export WORDCHARS=''
 
+bindkey '^e' emacs-backward-word
+
+bindkey "^[^[[" forward-word      # Meta-RightArrow
+bindkey "^[^[[" backward-word     # Meta-LeftArrow
+
+
 # Ye ol' Aliasses
 # Builtins redefs
 alias ls='ls -F --color=auto'
@@ -161,18 +167,15 @@ px-netstats () {
 }
 
 px-sshmount () {
-    if (! grep -q "fuse.*$USER" /etc/group) {
-            sudo gpasswd -a $USER fuse
-            echo "adding $USER to group fuse"
-	}
-	fusermount -u $2
-	sshfs -o idmap=user $1 $2
+    if (! grep -q "fuse.*$USER" /etc/group) { sudo gpasswd -a $USER fuse && echo "added $USER to group fuse" }
+        if [ ! -n "$2" ]; then fusermount -u $1 && echo "Unmounted $1" ; else sshfs -o idmap=user $1 $2 ; fi
 }
 
 px-notes () {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
+encore une autre
 grep . * to cat a bunch of (small) files
 ssh machine -L127.0.0.1:3306:127.0.0.1:3306
 middleman build --clean && git commit -a -m 'new local build OK' && git push origin master
@@ -184,7 +187,7 @@ sshfs name@server:/path/to/folder /path/to/mount/point
 ## Use px-notes \"this is a new note\" to add a note
 "
 else
-        sed -i '/^################# NOTES/a '$1'' ~/.kituu/.zshrc
+        sed -i '/^################# NOTES/a '$1'' ~/.kituu/.zshrc && k && Commit "New note" && Push master && cd -
 fi
 }
 
