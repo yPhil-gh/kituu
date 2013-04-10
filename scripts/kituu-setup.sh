@@ -55,7 +55,7 @@ Welcome to Kituu, $(whoami). This script allows you to install and maintain vari
 You will be asked for every package (or group of packages in the case of binaries) if you want to install it ; After that you can run $(basename $0) again (it's in your PATH now if you use the dotfiles, specifically the .*shrc) to update the packages. Sounds good? Let's go."
 
 echo -e $sep"Mandatory packages (no questions asked)"
-sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git cvs subversion cowsay fortune fortunes-off zenity
+sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git cvs subversion cowsay fortune fortunes-off zenity vinagre
 
 
 echo -e $sep"Dotfiles and scripts"
@@ -188,4 +188,3 @@ echo -e $sep"...Done."
 # http://archive.canonical.com/ubuntu/pool/partner/a/adobe-flashplugin/adobe-flashplugin_11.2.202.236-0precise1_i386.deb
 # https://addons.mozilla.org/en-US/firefox/addon/youtubedownloader/?src=userprofile
 # sudo netstat -tlnp
-# sshfs name@server:/path/to/folder /path/to/mount/point
