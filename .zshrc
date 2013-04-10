@@ -117,8 +117,7 @@ alias I="sudo apt-get install"
 alias S="sudo apt-cache search"
 # alias px-sshmount="sshfs -o idmap=user"
 
-## Funcs
-# Alt-S inserts "sudo " at the start of line:
+## ZSH Funcs
 insert_sudo () { zle beginning-of-line; zle -U "sudo " }
 zle -N insert-sudo insert_sudo
 bindkey "^[s" insert-sudo
@@ -127,10 +126,14 @@ insert_man () { zle beginning-of-line; zle -U "man " }
 zle -N insert-man insert_man
 bindkey "^[m" insert-man
 
-# Append " --help"
 insert_help () { zle end-of-line; zle -U " --help" }
 zle -N insert-help insert_help
 bindkey "^[h" insert-help
+
+
+# Generic funcs
+
+px-lan-check () { for ip in $(seq 1 10); do ping -c 1 192.168.0.$ip>/dev/null; if [ $? -eq 0 ] ; then echo "192.168.0.$ip UP" ; else echo "192.168.0.$ip DOWN" ; fi ; done }
 
 px-wake-up-trackpad () { sudo rmmod psmouse && sudo modprobe psmouse }
 
