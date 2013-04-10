@@ -157,7 +157,6 @@ px-remind-me-this-in () {
     sleep $2 && zenity --info --text=$1
 }
 
-
 px-netstats () {
     echo -e "      $(ss -p | cut -f2 -sd\" | sort | uniq | wc -l) processes : $(ss -p | cut -f2 -sd\" | sort | uniq | xargs)
 "
@@ -168,7 +167,7 @@ px-netstats () {
     if [ $1 ] ; then
         for IP in $(netstat -an | grep ESTABLISHED | awk '{print $5}' | awk -F: '{print $1}' | sort | uniq); do host ${IP} | sed 's/\.in-addr.arpa domain name pointer/ \=\> /' ; done | grep -v '^;'
     else
-        echo "use -q to see machine names (slow)"
+        echo "use -a to see machine names (slow)"
     fi
 
 }
@@ -182,6 +181,26 @@ px-ls-dirsize () {
     if [ -d $dir ] ; then
         du -hsL $dir
     fi
+}
+
+px-notes () {
+
+    if [ ! $1 ] ; then
+echo -e "
+################# NOTES
+grep . * to cat a bunch of (small) files
+ssh machine -L127.0.0.1:3306:127.0.0.1:3306
+middleman build --clean && git commit -a -m 'new local build OK' && git push origin master
+a && middleman build --clean && Commit 'deployed' && Push master
+if ('$term' == emacs) set term=dumb
+sudo ln -s /usr/lib/i386-linux-gnu/libao.so.4 /usr/lib/libao.so.2
+sshfs name@server:/path/to/folder /path/to/mount/point
+
+## Use px-notes \"this is a new note\" to add a note
+"
+else
+        sed -i '/^################# NOTES/a '$1'' ~/.kituu/.zshrc
+fi
 }
 
 ## exact match for locate
@@ -381,10 +400,3 @@ $PR_SHIFT_IN$PR_HBAR$PR_SHIFT_OUT$PR_NO_COLOUR '
 setprompt
 
 # PS1="%{$fg[green]%}%n%{$reset_color%}@%{$fg[red]%}%m %{$fg[yellow]%}%~ %{$reset_color%}%% "
-
-# NOTES
-# ssh machine -L127.0.0.1:3306:127.0.0.1:3306
-# middleman build --clean && git commit -a -m "new local build OK" && git push origin master
-# a && middleman build --clean && Commit "deployed" && Push master
-# if ("$term" == emacs) set term=dumb
-# sudo ln -s /usr/lib/i386-linux-gnu/libao.so.4 /usr/lib/libao.so.2
