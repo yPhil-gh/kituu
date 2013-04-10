@@ -178,6 +178,11 @@ px-netstats () {
 px-tree () {
     ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
 }
+
+px-vnc () {
+    ssh -f -L 5900:127.0.0.1:5900 $1 "x11vnc -safer -localhost -nopw -once -display :0"; vinagre 127.0.0.1:5900
+}
+
 # do a du -hs on each dir on current path
 px-ls-dirsize () {
     for dir in $1*
