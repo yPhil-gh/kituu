@@ -168,13 +168,14 @@ px-netstats () {
 
 px-sshmount () {
     if (! grep -q "fuse.*$USER" /etc/group) { sudo gpasswd -a $USER fuse && echo "added $USER to group fuse" }
-        if [ ! -n "$2" ]; then fusermount -u $1 && echo "Unmounted $1" ; else sshfs -o idmap=user $1 $2 ; fi
+        if [ ! -n "$2" ] ; then fusermount -u $1 && echo "Unmounted $1" ; else sshfs -o idmap=user $1 $2 ; fi
 }
 
 px-notes () {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
+DNS1 212.217.1.1 DNS2 .12 p.nom PPPoE / LLC
 grep . * to cat a bunch of (small) files
 ssh machine -L127.0.0.1:3306:127.0.0.1:3306
 middleman build --clean && git commit -a -m 'new local build OK' && git push origin master
