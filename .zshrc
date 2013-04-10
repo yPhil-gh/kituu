@@ -163,11 +163,11 @@ px-netstats () {
     lsof -P -i -n | uniq -c -w 10
     echo -e "
 \t Distant connected IPs : \n $(netstat -an | grep ESTABLISHED | awk '{print $5}' | awk -F: '{print $1}' | sort | uniq -c | awk '{ printf("%s\t%s\t",$2,$1) ; for (i = 0; i < $1; i++) {printf("*")}; print "" }')
-
-\t Open ports :
 "
-    lsof -Pni4 | grep LISTEN
     if [ $1 ] ; then
+        netstat -luntp
+        echo -e "
+\t Connected hostnames"
         for IP in $(netstat -an | grep ESTABLISHED | awk '{print $5}' | awk -F: '{print $1}' | sort | uniq); do host ${IP} | sed 's/\.in-addr.arpa domain name pointer/ \=\> /' ; done | grep -v '^;'
     else
         echo "use -a to see machine names (slow)"
