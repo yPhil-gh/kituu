@@ -175,7 +175,6 @@ px-notes () {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
-encore une autre
 grep . * to cat a bunch of (small) files
 ssh machine -L127.0.0.1:3306:127.0.0.1:3306
 middleman build --clean && git commit -a -m 'new local build OK' && git push origin master
