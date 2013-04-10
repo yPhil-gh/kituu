@@ -111,15 +111,6 @@ alias I="sudo apt-get install"
 alias S="sudo apt-cache search"
 # alias px-sshmount="sshfs -o idmap=user"
 
-px-sshmount () {
-    if (! grep -q "fuse.*$USER" /etc/group) {
-            sudo gpasswd -a $USER fuse
-            echo "adding $USER to group fuse"
-	}
-	fusermount -u $2
-	sshfs -o idmap=user $1 $2
-}
-
 ## Funcs
 # Alt-S inserts "sudo " at the start of line:
 insert_sudo () { zle beginning-of-line; zle -U "sudo " }
@@ -135,27 +126,21 @@ insert_help () { zle end-of-line; zle -U " --help" }
 zle -N insert-help insert_help
 bindkey "^[h" insert-help
 
-alias pxip="ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}'"
-
-# ANSI color zebra output
-px-zebra () { cat $1 | awk 'NR%2 == 1 {printf("\033[30m\033[47m%s\033[0m\n", $0); next}; 1'; }
-
 px-wake-up-trackpad () { sudo rmmod psmouse && sudo modprobe psmouse }
 
 px-commit-alten-pjs () { cd ~/Documents/Alten/svn/Support\ AGRESSO/pieces_jointes/ && svn status | grep '^?' | sed -e 's/^? *//' | xargs --no-run-if-empty -d '\n' svn add }
 
-px-ip () {
-    ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}'
-    dig +short myip.opendns.com @resolver1.opendns.com
-}
+px-dirtree () { ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/' }
 
-px-websearch () {
-    firefox "https://duckduckgo.com/?q=$*"
-}
+px-vnc () { ssh -f -L 5900:127.0.0.1:5900 $1 "x11vnc -safer -localhost -nopw -once -display :0"; vinagre 127.0.0.1:5900 }
 
-px-remind-me-this-in () {
-    sleep $2 && zenity --info --text=$1
-}
+px-dirsizes () { for dir in $1* ; do if [ -d $dir ] ; then du -hsL $dir ; fi ; done }
+
+px-ip () { ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}' && dig +short myip.opendns.com @resolver1.opendns.com }
+
+px-websearch () { firefox "https://duckduckgo.com/?q=$*" }
+
+px-remind-me-this-in () { sleep $2 && zenity --info --text=$1 }
 
 px-netstats () {
     echo -e "      $(ss -p | cut -f2 -sd\" | sort | uniq | wc -l) processes : $(ss -p | cut -f2 -sd\" | sort | uniq | xargs)
@@ -175,20 +160,13 @@ px-netstats () {
 
 }
 
-px-tree () {
-    ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
-}
-
-px-vnc () {
-    ssh -f -L 5900:127.0.0.1:5900 $1 "x11vnc -safer -localhost -nopw -once -display :0"; vinagre 127.0.0.1:5900
-}
-
-# do a du -hs on each dir on current path
-px-ls-dirsize () {
-    for dir in $1*
-    if [ -d $dir ] ; then
-        du -hsL $dir
-    fi
+px-sshmount () {
+    if (! grep -q "fuse.*$USER" /etc/group) {
+            sudo gpasswd -a $USER fuse
+            echo "adding $USER to group fuse"
+	}
+	fusermount -u $2
+	sshfs -o idmap=user $1 $2
 }
 
 px-notes () {
@@ -210,48 +188,14 @@ else
 fi
 }
 
-## exact match for locate
-## Thanks Dark_Helmet : http://solarum.com/v.php?l=1149LV99
-function flocate
-{
-  if [ $# -gt 1 ] ; then
-    display_divider=1
-  else
-    display_divider=0
-  fi
+px-find-this-and-do-that () { find . -name $1 -exec $2 '{}' \; }
 
-  current_argument=0
-  total_arguments=$#
-  while [ ${current_argument} -lt ${total_arguments} ] ; do
-    current_file=$1
-    if [ "${display_divider}" = "1" ] ; then
-      echo "----------------------------------------"
-      echo "Matches for ${current_file}"
-      echo "----------------------------------------"
-    fi
+px-bkp () { cp -Rp $1 ${1%.*}.bkp-$(date +%y-%m-%d-%Hh%M).${1#*.} }
 
-    filename_re="^\(.*/\)*$( echo ${current_file} | sed s%\\.%\\\\.%g )$"
-    locate -r "${filename_re}"
-    shift
-    (( current_argument = current_argument + 1 ))
-  done
-}
-
-px-find-this-and-do-that () {
-    find . -name $1 -exec $2 '{}' \;
-}
-
-
-px-bkp () {
-    cp -Rp $1 ${1%.*}.bkp-$(date +%y-%m-%d-%Hh%M).${1#*.}
-}
-
-# clear
-# if ! type "ls" > /dev/null; then echo "plop" ; else echo "plip" ; fi
-
+# Init
 if (type "cowsay" > /dev/null && type "fortune" > /dev/null ); then cowsay `fortune -a` ; fi
 
-# prompt
+# Prompt
 function precmd {
     local TERMWIDTH
     (( TERMWIDTH = ${COLUMNS} - 1 ))
