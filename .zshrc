@@ -153,6 +153,10 @@ px-websearch () {
     firefox "https://duckduckgo.com/?q=$*"
 }
 
+px-remind-me-this-in () {
+    sleep $2 && zenity --info --text=$1
+}
+
 px-netstats () {
     echo -e "      $(ss -p | cut -f2 -sd\" | sort | uniq | wc -l) processes : $(ss -p | cut -f2 -sd\" | sort | uniq | xargs)
 "

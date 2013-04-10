@@ -7,19 +7,17 @@ scriptdir=~/scripts
 sep="\n################# "
 rw=false
 
-type -P aptitude &>/dev/null || { debian=true >&2; }
+type -P apt-get &>/dev/null || { debian=true >&2; }
 if [[ $1 = "-rw" ]]; then rw=true; fi
 if ($rw); then vc_prefix="git@github.com:" && message="RW mode ON" && git config --global user.name "xaccrocheur" && git config --global user.email xaccrocheur@gmail.com ; else vc_prefix="https://github.com/" && message="RW mode OFF"; fi
 
 # My binary packages
 declare -A pack
-pack[base_sys]="zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git cvs subversion cowsay fortune fortunes-off"
 pack[dev_tools]="build-essential texinfo libtool"
 pack[base_utils]="unison baobab gparted"
-pack[view&players]="sox"
+pack[view&players]="sox smplayer"
 pack[image_tools]="gimp inkscape blender ffmpeg"
 pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk qmidinet calf-plugins nekobee"
-pack[glamp]="apache2 mysql-server phpmyadmin"
 pack[games]="extremetuxracer supertuxkart stuntrally xonotic"
 pack[XFCE]="xubuntu-desktop xfce4-themes"
 pack[emacs24_stable]="emacs24 emacs24-el emacs24-common-non-dfsg"
@@ -55,6 +53,9 @@ $message
 
 Welcome to Kituu, $(whoami). This script allows you to install and maintain various packages from misc places. And well, do what you want done on every machine you install, and are tired of doing over and over again (tiny pedestrian things like create a "tmp" dir in your home).
 You will be asked for every package (or group of packages in the case of binaries) if you want to install it ; After that you can run $(basename $0) again (it's in your PATH now if you use the dotfiles, specifically the .*shrc) to update the packages. Sounds good? Let's go."
+
+echo -e $sep"Mandatory packages (no questions asked)"
+sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git cvs subversion cowsay fortune fortunes-off zenity
 
 echo -e $sep"Dotfiles and scripts"
 read -e -p "## Install / update dotfiles (in $HOME) and scripts (in $scriptdir)? [Y/n] " yn
@@ -175,6 +176,7 @@ echo -e $sep"...Done."
 
 # NOTES
 # packages in probation: apt-file zile gdm xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager libgtk2.0-dev
+# pack[glamp]="apache2 mysql-server phpmyadmin"
 # Thunderbird no longer opens xpis. (But it has a new add-ons panel that makes it much easier to search&install them).
 # moz[GreaseMonkey_style_fix]="http://userscripts.org/scripts/source/36850.user.js"
 # pack[xscreensaver]="xscreensaver-gl xscreensaver-gl-extra xscreensaver-data-extra xscreensaver-data"
