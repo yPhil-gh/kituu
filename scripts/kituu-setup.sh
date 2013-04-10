@@ -57,6 +57,7 @@ You will be asked for every package (or group of packages in the case of binarie
 echo -e $sep"Mandatory packages (no questions asked)"
 sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git cvs subversion cowsay fortune fortunes-off zenity
 
+
 echo -e $sep"Dotfiles and scripts"
 read -e -p "## Install / update dotfiles (in $HOME) and scripts (in $scriptdir)? [Y/n] " yn
 if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
