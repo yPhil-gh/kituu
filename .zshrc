@@ -141,6 +141,7 @@ px-sync-pr0n () {
     unison -batch pr0n && echo "Sync OK" && px-sshmount /home/px/tmp/n900/pr0n
 }
 
+
 px-lan-check () { for ip in $(seq 1 10); do ping -c 1 192.168.0.$ip>/dev/null; if [ $? -eq 0 ] ; then echo "192.168.0.$ip UP" ; else echo "192.168.0.$ip DOWN" ; fi ; done }
 
 px-wake-up-trackpad () { sudo rmmod psmouse && sudo modprobe psmouse }
