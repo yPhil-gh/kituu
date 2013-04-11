@@ -135,12 +135,17 @@ bindkey "^[h" insert-help
 
 
 # Generic funcs
-
-px-sync-pr0n () {
-    px-sshmount root@n900:/home/user/MyDocs/tmp/pr0n/ tmp/n900/pr0n && echo "n900 mounted"
-    unison -batch pr0n && echo "Sync OK" && px-sshmount /home/px/tmp/n900/pr0n
+px-sshmount () {
+    if (! grep -q "fuse.*$USER" /etc/group) { sudo gpasswd -a $USER fuse && echo "added $USER to group fuse" }
+        if [ ! -n "$2" ] ; then fusermount -u $1 && echo "Unmounted $1" ; else sshfs -o idmap=user $1 $2 ; fi
 }
 
+px-sync-pr0n () {
+    [[ -n "$2" ]] || echo "Usage : px-sync-pr0n [machine] [username]" && exit 1
+    # if [[ $1 == "n900" ]] ; then my_SyncUSER="root" ; my_SyncUSER=$2 ; fi
+    # px-sshmount $2@$1:/home/$2/tmp/pr0n/ ~/tmp/$1/pr0n && echo "$1 mounted"
+    # unison -batch ~/tmp/pr0n/ ~/tmp/$1/pr0n/ && echo "Sync OK" && px-sshmount /home/px/tmp/$1/pr0n
+}
 
 px-lan-check () { for ip in $(seq 1 10); do ping -c 1 192.168.0.$ip>/dev/null; if [ $? -eq 0 ] ; then echo "192.168.0.$ip UP" ; else echo "192.168.0.$ip DOWN" ; fi ; done }
 
@@ -176,11 +181,6 @@ px-netstats () {
         echo "use -a to see machine names (slow)"
     fi
 
-}
-
-px-sshmount () {
-    if (! grep -q "fuse.*$USER" /etc/group) { sudo gpasswd -a $USER fuse && echo "added $USER to group fuse" }
-        if [ ! -n "$2" ] ; then fusermount -u $1 && echo "Unmounted $1" ; else sshfs -o idmap=user $1 $2 ; fi
 }
 
 px-notes () {
