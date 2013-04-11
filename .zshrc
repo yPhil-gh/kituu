@@ -35,10 +35,13 @@ setopt BANG_HIST
 export HISTSIZE=10500
 export SAVEHIST=10000
 export HISTFILE="$HOME/.zsh_history"
+export UNISONLOCALHOSTNAME=$HOST
+
 setopt -o sharehistory
 setopt list_ambiguous
 setopt completealiases
 setopt HIST_VERIFY
+
 
 bindkey ';5D' backward-word
 bindkey ';5C' forward-word
@@ -132,6 +135,11 @@ bindkey "^[h" insert-help
 
 
 # Generic funcs
+
+px-sync-pr0n () {
+    px-sshmount root@n900:/home/user/MyDocs/tmp/pr0n/ tmp/n900/pr0n && echo "n900 mounted"
+    unison -batch pr0n && echo "Sync OK" && px-sshmount /home/px/tmp/n900/pr0n
+}
 
 px-lan-check () { for ip in $(seq 1 10); do ping -c 1 192.168.0.$ip>/dev/null; if [ $? -eq 0 ] ; then echo "192.168.0.$ip UP" ; else echo "192.168.0.$ip DOWN" ; fi ; done }
 
