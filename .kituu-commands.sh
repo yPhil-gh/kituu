@@ -1,5 +1,6 @@
 # Ye ol' Aliasses
 # Builtins redefs
+alias plop="echo "zob""
 alias ls='ls -F --color=auto'
 alias rm="rm -i"
 alias cp="cp -i"
