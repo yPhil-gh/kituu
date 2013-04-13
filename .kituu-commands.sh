@@ -120,4 +120,4 @@ fi
 
 px-find-this-and-do-that () { find . -name $1 -exec $2 '{}' \; }
 
-px-bkp () { cp -Rp $1 ${1%.*}.bkp-$(date +%y-%m-%d-%Hh%M).${1#*.} }
+# px-bkp () { cp -Rp $1 ${1%.*}.bkp-$(date +%y-%m-%d-%Hh%M).${1#*.} }
