@@ -132,7 +132,7 @@ fi
 
 
 px-notes () {
-    if [ ! $1 ] ; then
+    if [ $(hostname) == "N900" ] ; then
 echo -e "
 ################# NOTES
 gnome-terminal --command byobu --maximize --hide-menubar
@@ -148,5 +148,7 @@ sshfs name@server:/path/to/folder /path/to/mount/point
 
 ## Use px-notes \"this is a new note\" to add a note
 "
+else
+        grep () { command grep --color $* }
 fi
 }
