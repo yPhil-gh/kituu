@@ -26,9 +26,13 @@ alias I="sudo apt-get install"
 alias S="sudo apt-cache search"
 
 # Commands
-md () { mkdir -p $1 && cd $1 }
 
-for i in $(tmux list-windows -F '#{window_index}'); do panenames=$(tmux list-panes -t $i -F '#{pane_title}' | sed -e 's/:.*$//' -e 's/^.*@//' | uniq); windowname=$(echo ${panenames} | sed -e 's/ /|/g'); tmux rename-window -t $i $windowname; done
+px-ssh () {
+    ssh $1
+    tmux rename-window $1
+}
+
+md () { mkdir -p $1 && cd $1 }
 
 px-sshmount () {
     if (! grep -q "fuse.*$USER" /etc/group) { sudo gpasswd -a $USER fuse && echo "added $USER to group fuse" }
@@ -84,7 +88,6 @@ px-notes () {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
-This is a test note
 ESC DOT pops the last argument of the last command
 DNS1 212.217.1.1 DNS2 .12 p.nom PPPoE / LLC
 grep . * to cat a bunch of (small) files
@@ -105,3 +108,13 @@ fi
 px-find-this-and-do-that () { find . -name $1 -exec $2 '{}' \; }
 
 px-bkp () { cp -Rp $1 ${1%.*}.bkp-$(date +%y-%m-%d-%Hh%M).${1#*.} }
+
+nameTerminal() {
+    [ "${TERM:0:5}" = "xterm" ]   && local ansiNrTab=0
+    [ "$TERM"       = "rxvt" ]    && local ansiNrTab=61
+    [ "$TERM"       = "konsole" ] && local ansiNrTab=30 ansiNrWindow=0
+        # Change tab title
+    [ $ansiNrTab ] && echo -n $'\e'"]$ansiNrTab;$1"$'\a'
+        # If terminal<a href="http://www.edmondscommerce.co.uk/magento-support"> support </a>separate window title, change window title as well
+    [ $ansiNrWindow -a "$2" ] && echo -n $'\e'"]$ansiNrWindow;$2"$'\a'
+}

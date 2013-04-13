@@ -1,5 +1,11 @@
 # My .zshrc - created 01 Jul 2012
 
+# A TESTER
+# set -g default-terminal "screen-256color"
+# OR
+# for tmux: export 256color
+# [ -n "$TMUX" ] && export TERM=screen-256color
+
 # See EOF for notes
 # Enable compsys completion.
 autoload -U compinit
@@ -132,17 +138,17 @@ function precmd {
     fi
 }
 
-setopt extended_glob
-preexec () {
-    if [[ "$TERM" == "screen" ]]; then
-	local CMD=${1[(wr)^(*=*|sudo|-*)]}
-	echo -n "\ek$CMD\e\\"
-    fi
-}
+# setopt extended_glob
+# preexec () {
+#     if [[ "$TERM" == "screen" ]]; then
+# 	local CMD=${1[(wr)^(*=*|sudo|-*)]}
+# 	echo -n "\ek$CMD\e\\"
+#     fi
+# }
 
-# Activations
-compinit
-colors
+# # Activations
+# compinit
+# colors
 
 setprompt () {
     ###
@@ -210,13 +216,15 @@ setprompt () {
 	    ;;
     esac
 
-    ###
-    # Screen title
-    if [[ "$TERM" == "screen" ]]; then
-	PR_STITLE=$'%{\ekzsh\e\\%}'
-    else
-	PR_STITLE=''
-    fi
+    # ###
+    # # Screen title
+    # if [[ "$TERM" == "screen" ]]; then
+    #     PR_STITLE=$'%{\ekzsh\e\\%}'
+    # else
+    #     PR_STITLE=''
+    # fi
+
+    PR_STITLE=''
 
     # prompts
     if [[ $TERM == "dumb" ]]; then	# in emacs
