@@ -67,10 +67,10 @@ px-commit-alten-pjs () {
 
 # px-dirsizes () { for dir in $1* ; do if [ -d $dir ] ; then du -hsL $dir ; fi ; done }
 
-px-ip () {
-    ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}'
-    dig +short myip.opendns.com @resolver1.opendns.com
-}
+# px-ip () {
+#     ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}'
+#     dig +short myip.opendns.com @resolver1.opendns.com
+# }
 
 px-websearch () { firefox "https://duckduckgo.com/?q=$*" }
 
