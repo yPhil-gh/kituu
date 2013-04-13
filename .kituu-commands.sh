@@ -119,6 +119,18 @@ px-netstats () {
 
 }
 
+
+px-test () {
+    if [ ! $1 ] ; then
+echo -e "
+################# TEST
+yo"
+else
+        sed -i '/^################# NOTES/a '$1'' ~/.kituu/.kituu-commands.sh && k && Commit "New note : $1" && Push master && cd -
+fi
+}
+
+
 px-notes () {
     if [ ! $1 ] ; then
 echo -e "
