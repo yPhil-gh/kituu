@@ -41,7 +41,11 @@ px-sshmount () {
     if [ ! -n "$2" ] ; then fusermount -u $1 && echo "Unmounted $1" ; else sshfs -o idmap=user $1 $2 ; fi
 }
 
-
+px-update-N900 () {
+    rm .bashrc .kituu-commands.sh -f
+    wget --no-check-certificate -nc https://github.com/xaccrocheur/kituu/raw/master/.kituu-commands.sh https://github.com/xaccrocheur/kituu/raw/master/.bashrc
+    bash
+}
 px-sync-pr0n () {
     if [[ ! -n $2 ]] ; then echo "Usage : px-sync-pr0n [machine] [username]" && exit 1 ; fi
     if [[ $1 == "N900" ]] ; then my_LocalUSER="user" ; MyPath="$my_LocalUSER/MyDocs/tmp/" ; else my_LocalUSER=$2 ; fi
