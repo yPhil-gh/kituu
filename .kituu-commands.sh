@@ -84,6 +84,7 @@ px-notes () {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
+This is a test note
 ESC DOT pops the last argument of the last command
 DNS1 212.217.1.1 DNS2 .12 p.nom PPPoE / LLC
 grep . * to cat a bunch of (small) files
@@ -97,7 +98,7 @@ sshfs name@server:/path/to/folder /path/to/mount/point
 ## Use px-notes \"this is a new note\" to add a note
 "
 else
-        sed -i '/^################# NOTES/a '$1'' ~/.kituu/.kituu-commands.sh && k && Commit "New note" && Push master && cd -
+        sed -i '/^################# NOTES/a '$1'' ~/.kituu/.kituu-commands.sh && k && Commit "New note : $1" && Push master && cd -
 fi
 }
 
