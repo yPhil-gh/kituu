@@ -74,7 +74,9 @@ px-websearch () {
     firefox "https://duckduckgo.com/?q=$*"
 }
 
-# px-find-this-and-do-that () { find . -name $1 -exec $2 '{}' \; }
+px-find-this-and-do-that () {
+    find . -name $1 -exec $2 '{}' \;
+}
 
 # px-bkp () { cp -Rp $1 ${1%.*}.bkp-$(date +%y-%m-%d-%Hh%M).${1#*.} }
 
