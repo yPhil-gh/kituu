@@ -36,8 +36,9 @@ moz[tabmix+]="$mozurl/1122/addon-1122-latest.xpi"
 moz[youtubeDLoader]="https://addons.mozilla.org/firefox/downloads/file/180678/youtube_video_mp3_downloader-2.1-fx.xpi?src=userprofile"
 moz[adblock+]="$mozurl/1865/addon-1865-latest.xpi"
 moz[color_picker]="$mozurl/271/addon-271-latest.xpi"
-moz[TabCloser]="$mozurl/271/addon-9669-latest.xpi"
+moz[TabCloser]="$mozurl/9669/addon-9669-latest.xpi"
 moz[GreaseMonkey_jira]="https://raw.github.com/xaccrocheur/kituu/master/scripts/gm-jira.user.js"
+moz[RequestPolicy]="$mozurl/9727/addon-9727-latest.xpi"
 
 # My lisp packages
 declare -A lisp
