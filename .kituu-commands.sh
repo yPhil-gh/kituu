@@ -65,7 +65,7 @@ px-commit-alten-pjs () {
 
 # px-vnc () { ssh -f -L 5900:127.0.0.1:5900 $1 "x11vnc -safer -localhost -nopw -once -display :0" ; vinagre 127.0.0.1:5900 }
 
-px-dirsizes () { for dir in $1* ; do if [ -d $dir ] ; then du -hsL $dir ; fi ; done }
+# px-dirsizes () { for dir in $1* ; do if [ -d $dir ] ; then du -hsL $dir ; fi ; done }
 
 px-ip () {
     ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}'
