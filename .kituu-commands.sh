@@ -28,7 +28,7 @@ alias S="sudo apt-cache search"
 
 # ssh () {
 #     tmux rename-window `echo $1 | sed 's/.*@//g'`
-#     command ssh $1
+#     command ssh $1 ; echo "dead"
 # }
 
 md () {
@@ -117,6 +117,7 @@ px-notes () {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
+gnome-terminal --command byobu --maximize --hide-menubar
 ESC DOT pops the last argument of the last command
 DNS1 212.217.1.1 DNS2 .12 p.nom PPPoE / LLC
 grep . * to cat a bunch of (small) files
