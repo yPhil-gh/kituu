@@ -68,7 +68,7 @@ px-vnc () {
     vinagre 127.0.0.1:5900
 }
 
-# px-dirsizes () { for dir in $1* ; do if [ -d $dir ] ; then du -hsL $dir ; fi ; done }
+px-dirsizes () { for dir in $1* ; do if [ -d $dir ] ; then du -hsL $dir ; fi ; done }
 
 # px-websearch () { firefox "https://duckduckgo.com/?q=$*" }
 
