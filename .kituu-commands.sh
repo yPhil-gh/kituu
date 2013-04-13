@@ -58,7 +58,10 @@ px-wake-up-trackpad () {
     sudo modprobe psmouse
 }
 
-px-commit-alten-pjs () { cd ~/Documents/Alten/svn/Support\ AGRESSO/pieces_jointes/ && svn status | grep '^?' | sed -e 's/^? *//' | xargs --no-run-if-empty -d '\n' svn add }
+px-commit-alten-pjs () {
+    cd ~/Documents/Alten/svn/Support\ AGRESSO/pieces_jointes/
+    svn status | grep '^?' | sed -e 's/^? *//' | xargs --no-run-if-empty -d '\n' svn add
+}
 
 px-dirtree () { ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/' }
 
