@@ -39,14 +39,14 @@ px-sshmount () {
 }
 
 
-# px-sync-pr0n () {
-#     if [[ ! -n $2 ]] ; then echo "Usage : px-sync-pr0n [machine] [username]" && exit 1 ; fi
-#     if [[ $1 == "N900" ]] ; then my_LocalUSER="user" ; MyPath="$my_LocalUSER/MyDocs/tmp/" ; else my_LocalUSER=$2 ; fi
-#     # echo "plop"
-#     # echo "mounting $2@$1:/home/$my_LocalUSER/MyDocs/tmp/.pr0n/ to ~/tmp/$1/.pr0n/"
-#     px-sshmount $2@$1:/home/$my_LocalUSER/tmp/.pr0n/ ~/tmp/$1/.pr0n/ && echo "mounting $2@$1:/home/$my_LocalUSER/tmp/.pr0n/ to ~/tmp/$1/.pr0n/"
-#     unison -batch ~/tmp/.pr0n/ ~/tmp/$1/.pr0n/ && echo "Sync OK" && px-sshmount /home/px/tmp/$1/.pr0n
-# }
+px-sync-pr0n () {
+    if [[ ! -n $2 ]] ; then echo "Usage : px-sync-pr0n [machine] [username]" && exit 1 ; fi
+    if [[ $1 == "N900" ]] ; then my_LocalUSER="user" ; MyPath="$my_LocalUSER/MyDocs/tmp/" ; else my_LocalUSER=$2 ; fi
+    # echo "plop"
+    # echo "mounting $2@$1:/home/$my_LocalUSER/MyDocs/tmp/.pr0n/ to ~/tmp/$1/.pr0n/"
+    px-sshmount $2@$1:/home/$my_LocalUSER/tmp/.pr0n/ ~/tmp/$1/.pr0n/ && echo "mounting $2@$1:/home/$my_LocalUSER/tmp/.pr0n/ to ~/tmp/$1/.pr0n/"
+    unison -batch ~/tmp/.pr0n/ ~/tmp/$1/.pr0n/ && echo "Sync OK" && px-sshmount /home/px/tmp/$1/.pr0n
+}
 
 # px-lan-check () { for ip in $(seq 1 10); do ping -c 1 192.168.0.$ip>/dev/null; if [ $? -eq 0 ] ; then echo "192.168.0.$ip UP" ; else echo "192.168.0.$ip DOWN" ; fi ; done }
 
