@@ -97,26 +97,26 @@ px-netstats () {
 
 }
 
-# px-notes () {
-#     if [ ! $1 ] ; then
-# echo -e "
-# ################# NOTES
-# ESC DOT pops the last argument of the last command
-# DNS1 212.217.1.1 DNS2 .12 p.nom PPPoE / LLC
-# grep . * to cat a bunch of (small) files
-# ssh machine -L127.0.0.1:3306:127.0.0.1:3306
-# middleman build --clean && git commit -a -m 'new local build OK' && git push origin master
-# a && middleman build --clean && Commit 'deployed' && Push master
-# if ('$term' == emacs) set term=dumb
-# sudo ln -s /usr/lib/i386-linux-gnu/libao.so.4 /usr/lib/libao.so.2
-# sshfs name@server:/path/to/folder /path/to/mount/point
+px-notes () {
+    if [ ! $1 ] ; then
+echo -e "
+################# NOTES
+ESC DOT pops the last argument of the last command
+DNS1 212.217.1.1 DNS2 .12 p.nom PPPoE / LLC
+grep . * to cat a bunch of (small) files
+ssh machine -L127.0.0.1:3306:127.0.0.1:3306
+middleman build --clean && git commit -a -m 'new local build OK' && git push origin master
+a && middleman build --clean && Commit 'deployed' && Push master
+if ('$term' == emacs) set term=dumb
+sudo ln -s /usr/lib/i386-linux-gnu/libao.so.4 /usr/lib/libao.so.2
+sshfs name@server:/path/to/folder /path/to/mount/point
 
-# ## Use px-notes \"this is a new note\" to add a note
-# "
-# else
-#         sed -i '/^################# NOTES/a '$1'' ~/.kituu/.kituu-commands.sh && k && Commit "New note : $1" && Push master && cd -
-# fi
-# }
+## Use px-notes \"this is a new note\" to add a note
+"
+else
+        sed -i '/^################# NOTES/a '$1'' ~/.kituu/.kituu-commands.sh && k && Commit "New note : $1" && Push master && cd -
+fi
+}
 
 # px-find-this-and-do-that () { find . -name $1 -exec $2 '{}' \; }
 
