@@ -64,7 +64,7 @@ px-commit-alten-pjs () {
 }
 
 px-vnc () {
-    command ssh -f -L 5900:127.0.0.1:5900 $1 "x11vnc -safer -localhost -nopw -once -display :0"
+    ssh -f -L 5900:127.0.0.1:5900 $1 "x11vnc -safer -localhost -nopw -once -display :0"
     vinagre 127.0.0.1:5900
 }
 
