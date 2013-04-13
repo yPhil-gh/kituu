@@ -26,10 +26,10 @@ alias I="sudo apt-get install"
 alias S="sudo apt-cache search"
 # Commands
 
-# ssh () {
-#     tmux rename-window `echo $1 | sed 's/.*@//g'`
-#     command ssh $1
-# }
+ssh () {
+    tmux rename-window `echo $1 | sed 's/.*@//g'`
+    command ssh $1
+}
 
 # md () { mkdir -p $1 && cd $1 }
 
