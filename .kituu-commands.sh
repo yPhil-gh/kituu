@@ -26,10 +26,10 @@ alias I="sudo apt-get install"
 alias S="sudo apt-cache search"
 # Commands
 
-ssh () {
-    tmux rename-window `echo $1 | sed 's/.*@//g'`
-    command ssh $1
-}
+# ssh () {
+#     tmux rename-window `echo $1 | sed 's/.*@//g'`
+#     command ssh $1
+# }
 
 md () {
     mkdir -p $1
@@ -64,8 +64,7 @@ px-commit-alten-pjs () {
 }
 
 px-vnc () {
-    ssh -f -L 5900:127.0.0.1:5900 $1 "x11vnc -safer -localhost -nopw -once -display :0"
-    vinagre 127.0.0.1:5900
+    ssh -f -L 5900:127.0.0.1:5900 $1 "x11vnc -cache 10 -safer -localhost -nopw -once -display :0" ; vinagre 127.0.0.1:5900
 }
 
 px-dirsizes () { for dir in $1* ; do if [ -d $dir ] ; then du -hsL $dir ; fi ; done }
