@@ -2,8 +2,12 @@
 # alias ls='ls -F --color=auto'
 alias rm="rm -i"
 alias cp="cp -i"
-alias grep="grep -rnIs"
 
+if test "$HOSTNAME" = "N900" ; then echo "plop" ; fi
+
+# grep () { grep --color=always $* }
+
+alias grep="grep -rnIs"
 alias ll="ls -lha"
 alias la="ls -A"
 

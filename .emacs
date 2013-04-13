@@ -781,8 +781,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
 
 (global-set-key (kbd "C-=") 'insert-pair-brace)        ;{}
-(global-set-key (kbd "C-)") 'insert-pair-paren)        ;()
-(global-set-key (kbd "C-(") 'insert-pair-bracket)      ;[]
+(global-set-key (kbd "C-(") 'insert-pair-paren)        ;()
+(global-set-key (kbd "C-)") 'insert-pair-bracket)      ;[]
 (global-set-key (kbd "C-<") 'insert-pair-single-angle) ;<>
 (global-set-key (kbd "C-'") 'insert-pair-squote)       ;''
 (global-set-key (kbd "C-\"") 'insert-pair-dbquote)     ;""
