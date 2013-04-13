@@ -130,7 +130,7 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 fi
 
 if (type -P firefox &>/dev/null); then
-    page=~/tmp/addons.html
+    page=~/tmp/kituu-addons.html
     echo -e $sep"Mozilla add-ons"
     for addon in "${!moz[@]}" ; do
 	addons=$addons"    <li><a href='"${moz[$addon]}"'>$addon</a></li>\n"
