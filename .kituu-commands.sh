@@ -26,17 +26,17 @@ alias I="sudo apt-get install"
 alias S="sudo apt-cache search"
 # Commands
 
-# ssh () {
-#     tmux rename-window `echo $1 | sed 's/.*@//g'`
-#     command ssh $1
-# }
+ssh () {
+    tmux rename-window `echo $1 | sed 's/.*@//g'`
+    command ssh $1
+}
 
-# md () { mkdir -p $1 && cd $1 }
+md () { mkdir -p $1 && cd $1 }
 
-# px-sshmount () {
-#     if [ ! grep -q "fuse.*$USER" /etc/group ] ; then sudo gpasswd -a $USER fuse && echo "added $USER to group fuse" ; fi
-#     if [ ! -n "$2" ] ; then fusermount -u $1 && echo "Unmounted $1" ; else sshfs -o idmap=user $1 $2 ; fi
-# }
+px-sshmount () {
+    if [ ! grep -q "fuse.*$USER" /etc/group ] ; then sudo gpasswd -a $USER fuse && echo "added $USER to group fuse" ; fi
+    if [ ! -n "$2" ] ; then fusermount -u $1 && echo "Unmounted $1" ; else sshfs -o idmap=user $1 $2 ; fi
+}
 
 
 # px-sync-pr0n () {
