@@ -50,7 +50,7 @@ px-sync-pr0n () {
 
 px-lan-check () { for ip in $(seq 1 10); do ping -c 1 192.168.0.$ip>/dev/null; if [ $? -eq 0 ] ; then echo "192.168.0.$ip UP" ; else echo "192.168.0.$ip DOWN" ; fi ; done }
 
-px-wake-up-trackpad () { sudo rmmod psmouse && sudo modprobe psmouse }
+# px-wake-up-trackpad () { sudo rmmod psmouse && sudo modprobe psmouse }
 
 # px-commit-alten-pjs () { cd ~/Documents/Alten/svn/Support\ AGRESSO/pieces_jointes/ && svn status | grep '^?' | sed -e 's/^? *//' | xargs --no-run-if-empty -d '\n' svn add }
 
