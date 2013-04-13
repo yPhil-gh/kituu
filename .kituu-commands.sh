@@ -63,7 +63,7 @@ px-commit-alten-pjs () {
     svn status | grep '^?' | sed -e 's/^? *//' | xargs --no-run-if-empty -d '\n' svn add
 }
 
-px-vnc () { ssh -f -L 5900:127.0.0.1:5900 $1 "x11vnc -safer -localhost -nopw -once -display :0"; vinagre 127.0.0.1:5900 }
+# px-vnc () { ssh -f -L 5900:127.0.0.1:5900 $1 "x11vnc -safer -localhost -nopw -once -display :0"; vinagre 127.0.0.1:5900 }
 
 px-dirsizes () { for dir in $1* ; do if [ -d $dir ] ; then du -hsL $dir ; fi ; done }
 
