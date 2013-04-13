@@ -67,68 +67,8 @@ fi
 
 export HISTCONTROL=ignoreboth HISTFILESIZE=5000
 
-# Ye ol' Aliasses
-alias ll="ls -alh"
-alias la="ls -A"
-alias lss="ls -la | grep $1"
-alias hss="history | grep $1"
-alias mss="sudo cat /var/log/messages | grep $1"
-alias uss="urpmq -Y --summary"
-alias rss="rpm -qa|grep -i"
-alias rssi="rpm -qil"
-alias MSG="sudo tail -f -n 40 /var/log/messages"
-alias MSGh="sudo tail -f -n 40 /var/log/httpd/error_log"
-alias U="urpmi"
-# alias screen="screen -h 5000"
-alias Commit="git commit -am"
-alias Push="git push origin"
-alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
-# alias Screen="screen -r $newest"
-
-# if hash vim 2>&- ; then
-#     alias vi="vim"
-# fi
-
-# Console TTY special
-case "$TERM" in
-    xterm*|rxvt*|screen*|eterm-color)
-	zoblamouche="e"
-	;;
-    *)
-	alias e="e -nw -a"
-	;;
-esac
-
-Screen () {
-# session directory
-
-    sessdir=`screen -ls | sed -ne 's/.*Sockets* in \(.*\)\.$/\1/p'`
-    # screen -ls | sed -ne 's/.*Sockets* in \(.*\)\.$/\1/p'
-# display age of sessions:
-    # ls -l $sessdir
-# newest session
-    # newest=`ls -1t $sessdir | head -1`
-# Kill all sessions but newest
-    # ls -1t $sessdir| sed 1d | while read sess; do screen -m -S $sess -X quit; done
-    # screen -r $newest
-    # echo $newest
-}
-
-Find-this-and-do-that () {
-    find . -name $1 -exec ls -l \{} \;
-}
-
-pss () {
-    ps aux | grep -i "[${1:0:1}]${1:1}"
-}
-
-bkp () {
-    cp -Rp $1 ${1%.*}.bkp-$(date +%y-%m-%d-%Hh%M).${1#*.}
-}
-
-cleanup-turds () {
-    find ./ -name "*~" -exec rm '{}' \; -print -or -name ".*~" -exec rm {} \; -print -or -name "#*#" -exec rm '{}' \; -print -or -name "*.swp" -exec rm '{}' \; -print
-}
+# Generic funcs
+. ~/.kituu-commands.sh && echo "kituu-commands loaded"
 
 # Colors
 export GREP_COLOR='1;33'

@@ -81,10 +81,16 @@ zstyle ':completion:*:processes' command 'ps -au$USER'
 WORDCHARS="*?_-.[]~&;!#$%^(){}<>"
 export WORDCHARS=''
 
-bindkey '^e' emacs-backward-word
+# bindkey '^e' emacs-backward-word
 
 bindkey "^[^[[" forward-word      # Meta-RightArrow
 bindkey "^[^[[" backward-word     # Meta-LeftArrow
+
+# bindkey '^[[1;5C' emacs-forward-word
+# bindkey '^[[1;5D' emacs-backward-word
+
+bindkey "[C" emacs-forward-word   #control left
+bindkey "[D" backward-word        #control right
 
 ## ZSH Funcs
 insert_sudo () { zle beginning-of-line; zle -U "sudo " }

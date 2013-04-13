@@ -1,10 +1,10 @@
 # Ye ol' Aliasses
 # Builtins redefs
-alias plop="echo "zob""
 alias ls='ls -F --color=auto'
 alias rm="rm -i"
 alias cp="cp -i"
-alias grep="grep RnIs --color=always"
+# alias grep="grep RnIs --color"
+alias grep="grep -RnIs --color=always"
 
 alias ll="ls -lha"
 alias la="ls -A"
@@ -31,6 +31,11 @@ alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
 alias I="sudo apt-get install"
 alias S="sudo apt-cache search"
 # alias px-sshmount="sshfs -o idmap=user"
+
+
+md () { mkdir -p $1 && cd !:1 }
+
+for i in $(tmux list-windows -F '#{window_index}'); do panenames=$(tmux list-panes -t $i -F '#{pane_title}' | sed -e 's/:.*$//' -e 's/^.*@//' | uniq); windowname=$(echo ${panenames} | sed -e 's/ /|/g'); tmux rename-window -t $i $windowname; done
 
 px-sshmount () {
     if (! grep -q "fuse.*$USER" /etc/group) { sudo gpasswd -a $USER fuse && echo "added $USER to group fuse" }

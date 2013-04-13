@@ -1,17 +1,17 @@
 #!/bin/bash
 
+# Vars
 shopt -s dotglob
 repodir=~/.kituu
 lispdir=~/.emacs.d/lisp
 scriptdir=~/scripts
 sep="\n################# "
 rw=false
-
 type -P apt-get &>/dev/null || { debian=true >&2; }
 if [[ $1 = "-rw" ]]; then rw=true; fi
 if ($rw); then vc_prefix="git@github.com:" && message="RW mode ON" && git config --global user.name "xaccrocheur" && git config --global user.email xaccrocheur@gmail.com ; else vc_prefix="https://github.com/" && message="RW mode OFF"; fi
 
-# My binary packages
+# Packages
 declare -A pack
 pack[dev_tools]="build-essential texinfo libtool"
 pack[base_utils]="unison baobab gparted"
@@ -23,7 +23,7 @@ pack[XFCE]="xubuntu-desktop xfce4-themes"
 pack[emacs24_stable]="emacs24 emacs24-el emacs24-common-non-dfsg"
 pack[emacs24_snapshot]="snapshot-el emacs-snapshot-gtk emacs-snapshot"
 
-# My Mozilla addons
+# Mozilla addons
 mozurl="https://addons.mozilla.org/firefox/downloads/latest"
 declare -A moz
 moz[Uppity]="$mozurl/869/addon-869-latest.xpi"
@@ -40,7 +40,7 @@ moz[TabCloser]="$mozurl/9669/addon-9669-latest.xpi"
 moz[GreaseMonkey_jira]="https://raw.github.com/xaccrocheur/kituu/master/scripts/gm-jira.user.js"
 moz[RequestPolicy]="$mozurl/9727/addon-9727-latest.xpi"
 
-# My lisp packages
+# Lisp packages
 declare -A lisp
 lisp[tabbar]="git clone https://github.com/dholm/tabbar.git"
 lisp[haml-mode]="git clone https://github.com/nex3/haml-mode.git"
