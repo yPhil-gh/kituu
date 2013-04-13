@@ -3,7 +3,7 @@
 alias rm="rm -i"
 alias cp="cp -i"
 
-if test "$HOSTNAME" = "N900" ; then echo "plop" ; fi
+if test "$HOSTNAME" = "N900" ; then alias grep="grep --color=always" ; fi
 
 # grep () { grep --color=always $* }
 
