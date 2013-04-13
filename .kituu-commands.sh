@@ -108,13 +108,3 @@ fi
 px-find-this-and-do-that () { find . -name $1 -exec $2 '{}' \; }
 
 px-bkp () { cp -Rp $1 ${1%.*}.bkp-$(date +%y-%m-%d-%Hh%M).${1#*.} }
-
-nameTerminal() {
-    [ "${TERM:0:5}" = "xterm" ]   && local ansiNrTab=0
-    [ "$TERM"       = "rxvt" ]    && local ansiNrTab=61
-    [ "$TERM"       = "konsole" ] && local ansiNrTab=30 ansiNrWindow=0
-        # Change tab title
-    [ $ansiNrTab ] && echo -n $'\e'"]$ansiNrTab;$1"$'\a'
-        # If terminal<a href="http://www.edmondscommerce.co.uk/magento-support"> support </a>separate window title, change window title as well
-    [ $ansiNrWindow -a "$2" ] && echo -n $'\e'"]$ansiNrWindow;$2"$'\a'
-}
