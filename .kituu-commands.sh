@@ -48,7 +48,7 @@ px-sync-pr0n () {
     unison -batch ~/tmp/.pr0n/ ~/tmp/$1/.pr0n/ && echo "Sync OK" && px-sshmount /home/px/tmp/$1/.pr0n
 }
 
-# px-lan-check () { for ip in $(seq 1 10); do ping -c 1 192.168.0.$ip>/dev/null; if [ $? -eq 0 ] ; then echo "192.168.0.$ip UP" ; else echo "192.168.0.$ip DOWN" ; fi ; done }
+px-lan-check () { for ip in $(seq 1 10); do ping -c 1 192.168.0.$ip>/dev/null; if [ $? -eq 0 ] ; then echo "192.168.0.$ip UP" ; else echo "192.168.0.$ip DOWN" ; fi ; done }
 
 # px-wake-up-trackpad () { sudo rmmod psmouse && sudo modprobe psmouse }
 
