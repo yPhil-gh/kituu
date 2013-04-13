@@ -69,6 +69,10 @@ px-commit-alten-pjs () {
 
 # px-websearch () { firefox "https://duckduckgo.com/?q=$*" }
 
+# px-find-this-and-do-that () { find . -name $1 -exec $2 '{}' \; }
+
+# px-bkp () { cp -Rp $1 ${1%.*}.bkp-$(date +%y-%m-%d-%Hh%M).${1#*.} }
+
 px-ip () {
     ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}'
     dig +short myip.opendns.com @resolver1.opendns.com
@@ -117,7 +121,3 @@ else
         sed -i '/^################# NOTES/a '$1'' ~/.kituu/.kituu-commands.sh && k && Commit "New note : $1" && Push master && cd -
 fi
 }
-
-px-find-this-and-do-that () { find . -name $1 -exec $2 '{}' \; }
-
-# px-bkp () { cp -Rp $1 ${1%.*}.bkp-$(date +%y-%m-%d-%Hh%M).${1#*.} }
