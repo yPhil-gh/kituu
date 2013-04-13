@@ -24,12 +24,11 @@ alias Push="git push origin"
 alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
 alias I="sudo apt-get install"
 alias S="sudo apt-cache search"
-
 # Commands
 
-px-ssh () {
-    ssh $1
-    tmux rename-window $1
+ssh () {
+    tmux rename-window `echo $1 | sed 's/.*@//g'`
+    command ssh $1
 }
 
 md () { mkdir -p $1 && cd $1 }
