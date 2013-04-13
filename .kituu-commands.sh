@@ -1,9 +1,7 @@
-# Ye ol' Aliasses
-# Builtins redefs
+# Aliases
 alias ls='ls -F --color=auto'
 alias rm="rm -i"
 alias cp="cp -i"
-# alias grep="grep RnIs --color"
 alias grep="grep -RnIs --color=always"
 
 alias ll="ls -lha"
@@ -13,9 +11,7 @@ alias k="cd ~/.kituu/"
 alias m="cd ~/.emacs.d/lisp/mail-bug/"
 alias a="cd /var/www/adamweb/git.adamweb"
 
-alias pss='ps aux | grep $(echo $1 | sed "s/^\(.\)/[\1]/g")'
-alias lss="ls -la | grep $1"
-alias hss="history 0 | grep $1"
+alias pss='ps aux | \grep --color $(echo $1 | sed "s/^\(.\)/[\1]/g")'
 alias mss="sudo cat /var/log/messages | grep $1"
 alias uss="urpmq -Y --summary"
 alias rss="rpm -qa|grep -i"
@@ -23,17 +19,14 @@ alias rssi="rpm -qil"
 alias MSG="sudo tail -f -n 40 /var/log/syslog"
 alias MSGh="sudo tail -f -n 40 /var/log/httpd/error_log"
 alias U="urpmi"
-# alias screen="screen -h 5000"
 alias Commit="git commit -am"
 alias Push="git push origin"
 alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
-# alias Screen="screen -r $newest"
 alias I="sudo apt-get install"
 alias S="sudo apt-cache search"
-# alias px-sshmount="sshfs -o idmap=user"
 
-
-md () { mkdir -p $1 && cd !:1 }
+# Commands
+md () { mkdir -p $1 && cd $1 }
 
 for i in $(tmux list-windows -F '#{window_index}'); do panenames=$(tmux list-panes -t $i -F '#{pane_title}' | sed -e 's/:.*$//' -e 's/^.*@//' | uniq); windowname=$(echo ${panenames} | sed -e 's/ /|/g'); tmux rename-window -t $i $windowname; done
 
@@ -50,7 +43,6 @@ px-sync-pr0n () {
     px-sshmount $2@$1:/home/$my_LocalUSER/tmp/.pr0n/ ~/tmp/$1/.pr0n/ && echo "mounting $2@$1:/home/$my_LocalUSER/tmp/.pr0n/ to ~/tmp/$1/.pr0n/"
     unison -batch ~/tmp/.pr0n/ ~/tmp/$1/.pr0n/ && echo "Sync OK" && px-sshmount /home/px/tmp/$1/.pr0n
 }
-
 
 px-lan-check () { for ip in $(seq 1 10); do ping -c 1 192.168.0.$ip>/dev/null; if [ $? -eq 0 ] ; then echo "192.168.0.$ip UP" ; else echo "192.168.0.$ip DOWN" ; fi ; done }
 
@@ -92,6 +84,7 @@ px-notes () {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
+ESC DOT pops the last argument of the last command
 DNS1 212.217.1.1 DNS2 .12 p.nom PPPoE / LLC
 grep . * to cat a bunch of (small) files
 ssh machine -L127.0.0.1:3306:127.0.0.1:3306
@@ -104,7 +97,7 @@ sshfs name@server:/path/to/folder /path/to/mount/point
 ## Use px-notes \"this is a new note\" to add a note
 "
 else
-        sed -i '/^################# NOTES/a '$1'' ~/.kituu/.zshrc && k && Commit "New note" && Push master && cd -
+        sed -i '/^################# NOTES/a '$1'' ~/.kituu/.kituu-commands.sh && k && Commit "New note" && Push master && cd -
 fi
 }
 
