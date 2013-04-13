@@ -2,7 +2,7 @@
 alias ls='ls -F --color=auto'
 alias rm="rm -i"
 alias cp="cp -i"
-# alias grep="grep -RnIs --color=always"
+alias grep="grep -RnIs --color=always"
 
 alias ll="ls -lha"
 alias la="ls -A"
@@ -26,10 +26,10 @@ alias I="sudo apt-get install"
 alias S="sudo apt-cache search"
 # Commands
 
-# ssh () {
-#     tmux rename-window `echo $1 | sed 's/.*@//g'`
-#     command ssh $1 ; echo "dead"
-# }
+ssh () {
+    tmux rename-window `echo $1 | sed 's/.*@//g'`
+    command ssh $1 ; echo "dead"
+}
 
 md () {
     mkdir -p $1
