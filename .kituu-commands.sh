@@ -70,7 +70,7 @@ px-vnc () {
 
 px-dirsizes () { for dir in $1* ; do if [ -d $dir ] ; then du -hsL $dir ; fi ; done }
 
-# px-websearch () { firefox "https://duckduckgo.com/?q=$*" }
+px-websearch () { firefox "https://duckduckgo.com/?q=$*" }
 
 # px-find-this-and-do-that () { find . -name $1 -exec $2 '{}' \; }
 
