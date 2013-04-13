@@ -67,17 +67,17 @@ px-commit-alten-pjs () {
 
 # px-dirsizes () { for dir in $1* ; do if [ -d $dir ] ; then du -hsL $dir ; fi ; done }
 
-# px-ip () {
-#     ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}'
-#     dig +short myip.opendns.com @resolver1.opendns.com
-# }
+# px-websearch () { firefox "https://duckduckgo.com/?q=$*" }
 
-px-websearch () { firefox "https://duckduckgo.com/?q=$*" }
+px-ip () {
+    ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}'
+    dig +short myip.opendns.com @resolver1.opendns.com
+}
 
-# px-remind-me-this-in () {
-#     sleep $2
-#     zenity --info --text=$1
-# }
+px-remind-me-this-in () {
+    sleep $2
+    zenity --info --text=$1
+}
 
 # px-netstats () {
 #     echo -e "      $(ss -p | cut -f2 -sd\" | sort | uniq | wc -l) processes : $(ss -p | cut -f2 -sd\" | sort | uniq | xargs)
