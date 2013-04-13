@@ -2,7 +2,7 @@
 # alias ls='ls -F --color=auto'
 alias rm="rm -i"
 alias cp="cp -i"
-alias grep="grep -rnIs --color"
+alias grep="grep -rnIs"
 
 alias ll="ls -lha"
 alias la="ls -A"
