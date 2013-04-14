@@ -68,7 +68,7 @@ fi
 export HISTCONTROL=ignoreboth HISTFILESIZE=5000
 
 # Generic funcs
-. ~/.kituu-commands.sh && echo "kituu-commands loaded"
+. ~/.kituu-commands.sh
 
 # Colors
 export GREP_COLOR='1;33'
