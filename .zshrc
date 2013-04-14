@@ -112,7 +112,7 @@ zle -N insert-help insert_help
 bindkey "^[h" insert-help
 
 # Generic funcs
-. ~/.kituu-commands.sh && echo "kituu-commands loaded"
+. ~/.kituu-commands.sh
 
 # Init
 if (type "cowsay" > /dev/null && type "fortune" > /dev/null ); then cowsay `fortune -a` ; fi

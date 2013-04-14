@@ -9,7 +9,8 @@ alias cp="cp -i"
 
 # grep () { grep --color=always $* }
 
-# alias grep="grep -RnIs"
+alias grep="grep -RnIs --color"
+
 alias ll="ls -lha"
 alias la="ls -A"
 
@@ -151,3 +152,5 @@ sshfs name@server:/path/to/folder /path/to/mount/point
 "
 fi
 }
+
+echo "kituu-commands loaded OK"
