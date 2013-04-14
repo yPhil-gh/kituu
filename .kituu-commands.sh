@@ -11,7 +11,7 @@ alias cp="cp -i"
 
 
 if [[ ! $HOSTNAME == "N900" ]] ; then
-    echo "kk"
+    # echo "kk"
     # alias grep="grep --color"
     alias grep="grep -RnIs --color"
 fi
@@ -23,7 +23,7 @@ alias k="cd ~/.kituu/"
 alias m="cd ~/.emacs.d/lisp/mail-bug/"
 alias a="cd /var/www/adamweb/git.adamweb"
 
-alias pss='ps aux | \grep --color $(echo $1 | sed "s/^\(.\)/[\1]/g")'
+alias pss='ps aux | grep $(echo $1 | sed "s/^\(.\)/[\1]/g")'
 alias mss="sudo cat /var/log/syslog | grep $1"
 alias uss="urpmq -Y --summary"
 alias rss="rpm -qa|grep -i"
