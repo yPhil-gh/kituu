@@ -42,8 +42,10 @@ alias S="sudo apt-cache search"
 # alias ssh='tmux rename-window $1 ; echo "plop"'
 
 function ssh () {
-    tmux rename-window `echo $1 | sed 's/.*@//g'`
-    command ssh $1 ; echo "dead"
+    if [ $# -eq 1 ] ; then
+        tmux rename-window `echo $1 | sed 's/.*@//g'`
+    fi
+    command ssh $*
 }
 
 md () {
