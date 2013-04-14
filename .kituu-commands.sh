@@ -19,7 +19,7 @@ alias m="cd ~/.emacs.d/lisp/mail-bug/"
 alias a="cd /var/www/adamweb/git.adamweb"
 
 alias pss='ps aux | \grep --color $(echo $1 | sed "s/^\(.\)/[\1]/g")'
-alias mss="sudo cat /var/log/messages | grep $1"
+alias mss="sudo cat /var/log/syslog | grep $1"
 alias uss="urpmq -Y --summary"
 alias rss="rpm -qa|grep -i"
 alias rssi="rpm -qil"
@@ -33,10 +33,12 @@ alias I="sudo apt-get install"
 alias S="sudo apt-cache search"
 # Commands
 
-ssh () {
-    tmux rename-window `echo $1 | sed 's/.*@//g'`
-    command ssh $1 ; echo "dead"
-}
+alias ssh="tmux rename-window `echo $1 | sed 's/.*@//g'` ; command ssh $*"
+
+# ssh () {
+#     tmux rename-window `echo $1 | sed 's/.*@//g'`
+#     command ssh $1 ; echo "dead"
+# }
 
 md () {
     mkdir -p $1
@@ -75,7 +77,7 @@ px-commit-alten-pjs () {
 }
 
 px-vnc () {
-    ssh -f -L 5900:127.0.0.1:5900 $1 "x11vnc -cache 10 -safer -localhost -nopw -once -display :0" ; vinagre 127.0.0.1:5900
+    \ssh -f -L 5900:127.0.0.1:5900 $1 "x11vnc -cache 10 -safer -localhost -nopw -once -display :0" ; vinagre 127.0.0.1:5900
 }
 
 px-dirsizes () { for dir in $1* ; do if [ -d $dir ] ; then du -hsL $dir ; fi ; done }
