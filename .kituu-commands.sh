@@ -119,21 +119,7 @@ px-netstats () {
     else
         echo "use -a to see machine names (slow)"
     fi
-
 }
-
-
-px-test () {
-    if [ ! $(hostname) == "N900" ] ; then
-
-        grep () { command grep --color $* }
-
-echo -e "
-################# TEST
-yo"
-fi
-}
-
 
 px-notes () {
     if [ ! $1 ] ; then
