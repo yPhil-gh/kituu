@@ -11,6 +11,8 @@ alias cp="cp -i"
 
 alias grep="grep -rnIs --color"
 
+# if [ ! $HOSTNAME == "N900" ] ; then alias grep="grep --color" ; fi
+
 alias ll="ls -lha"
 alias la="ls -A"
 
