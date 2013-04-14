@@ -19,7 +19,6 @@ pack[view&players]="sox smplayer"
 pack[image_tools]="gimp inkscape blender ffmpeg"
 pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk qmidinet calf-plugins nekobee"
 pack[games]="extremetuxracer supertuxkart stuntrally xonotic"
-pack[XFCE]="xubuntu-desktop xfce4-themes"
 pack[emacs24_stable]="emacs24 emacs24-el emacs24-common-non-dfsg"
 pack[emacs24_snapshot]="snapshot-el emacs-snapshot-gtk emacs-snapshot"
 
@@ -59,7 +58,7 @@ echo -e $sep"Mandatory packages (no questions asked)"
 sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git cvs subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze
 
 echo -e $sep"Dotfiles and scripts"
-read -e -p "## Install / update dotfiles (in $HOME) and scripts (in $scriptdir)? [Y/n] " yn
+read -e -p "#### Install / update dotfiles (in $HOME) and scripts (in $scriptdir)? [Y/n] " yn
 if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     if [ ! -d $repodir ] ; then
 	cd && git clone ${vc_prefix}xaccrocheur/kituu.git
@@ -111,6 +110,7 @@ fi
 
 if [ ! -d "$lispdir" ] ; then mkdir -p $lispdir/ ; fi
 
+echo -e $sep"Various repositories"
 read -e -p "#### (e)Lisp stuff? [Y/n] " yn
 if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     for project in "${!lisp[@]}" ; do
