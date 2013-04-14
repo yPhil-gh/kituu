@@ -9,11 +9,11 @@ alias cp="cp -i"
 
 # grep () { grep --color=always $* }
 
-alias grep="grep -rnIs --color"
 
 if [[ ! $HOSTNAME == "N900" ]] ; then
-    # echo "kk"
-    alias grep="grep --color"
+    echo "kk"
+    # alias grep="grep --color"
+    alias grep="grep -RnIs --color"
 fi
 
 alias ll="ls -lha"
