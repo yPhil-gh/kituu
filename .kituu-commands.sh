@@ -9,7 +9,7 @@ alias cp="cp -i"
 
 # grep () { grep --color=always $* }
 
-alias grep="grep -RnIs --color"
+# alias grep="grep -RnIs --color"
 
 alias ll="ls -lha"
 alias la="ls -A"
@@ -33,12 +33,13 @@ alias I="sudo apt-get install"
 alias S="sudo apt-cache search"
 # Commands
 
-alias ssh="tmux rename-window `echo $1 | sed 's/.*@//g'` ; command ssh $*"
+# alias ssh="tmux rename-window `echo $1 | sed 's/.*@//g'` ; command ssh $*"
+# alias ssh='tmux rename-window $1 ; echo "plop"'
 
-# ssh () {
-#     tmux rename-window `echo $1 | sed 's/.*@//g'`
-#     command ssh $1 ; echo "dead"
-# }
+function ssh () {
+    tmux rename-window `echo $1 | sed 's/.*@//g'`
+    command ssh $1 ; echo "dead"
+}
 
 md () {
     mkdir -p $1
