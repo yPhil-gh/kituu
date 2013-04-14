@@ -9,7 +9,7 @@ alias cp="cp -i"
 
 # grep () { grep --color=always $* }
 
-# alias grep="grep -RnIs --color"
+alias grep="grep -rnIs --color"
 
 alias ll="ls -lha"
 alias la="ls -A"
