@@ -56,8 +56,7 @@ Welcome to Kituu, $(whoami). This script allows you to install and maintain vari
 You will be asked for every package (or group of packages in the case of binaries) if you want to install it ; After that you can run $(basename $0) again (it's in your PATH now if you use the dotfiles, specifically the .*shrc) to update the packages. Sounds good? Let's go."
 
 echo -e $sep"Mandatory packages (no questions asked)"
-sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git cvs subversion cowsay fortune fortunes-off zenity vinagre x11vnc
-
+sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git cvs subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze
 
 echo -e $sep"Dotfiles and scripts"
 read -e -p "## Install / update dotfiles (in $HOME) and scripts (in $scriptdir)? [Y/n] " yn

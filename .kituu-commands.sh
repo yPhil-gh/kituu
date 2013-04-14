@@ -22,7 +22,7 @@ alias mss="sudo cat /var/log/messages | grep $1"
 alias uss="urpmq -Y --summary"
 alias rss="rpm -qa|grep -i"
 alias rssi="rpm -qil"
-alias MSG="sudo tail -f -n 40 /var/log/syslog"
+alias MSG="sudo tail -f -n 40 /var/log/syslog | ccze"
 alias MSGh="sudo tail -f -n 40 /var/log/httpd/error_log"
 alias U="urpmi"
 alias Commit="git commit -am"
@@ -121,18 +121,19 @@ px-netstats () {
 
 
 px-test () {
-    if [ ! $1 ] ; then
+    if [ ! $(hostname) == "N900" ] ; then
+
+        grep () { command grep --color $* }
+
 echo -e "
 ################# TEST
 yo"
-else
-        sed -i '/^################# NOTES/a '$1'' ~/.kituu/.kituu-commands.sh && k && Commit "New note : $1" && Push master && cd -
 fi
 }
 
 
 px-notes () {
-    if [ $(hostname) == "N900" ] ; then
+    if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
 gnome-terminal --command byobu --maximize --hide-menubar
@@ -148,7 +149,5 @@ sshfs name@server:/path/to/folder /path/to/mount/point
 
 ## Use px-notes \"this is a new note\" to add a note
 "
-else
-        grep () { command grep --color $* }
 fi
 }
