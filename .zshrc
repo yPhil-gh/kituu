@@ -8,7 +8,7 @@ function title() {
   a=${(V)1//\%/\%\%}
 
   # Truncate command, and join lines.
-  a=$(print -Pn "%40>...>$a" | tr -d "\n")
+  a=$(print -Pn "%10>...>$a" | tr -d "\n")
 
   case $TERM in
   screen)
