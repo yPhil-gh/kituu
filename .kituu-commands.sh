@@ -25,10 +25,8 @@ alias Push="git push origin"
 alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
 alias I="sudo apt-get install"
 alias S="sudo apt-cache search"
-# Commands
 
-# alias ssh="tmux rename-window `echo $1 | sed 's/.*@//g'` ; command ssh $*"
-# alias ssh='tmux rename-window $1 ; echo "plop"'
+# Commands
 
 function ssh () {
     if [ $# -eq 1 ] ; then

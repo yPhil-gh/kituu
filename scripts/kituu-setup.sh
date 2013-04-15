@@ -83,6 +83,10 @@ gsettings set com.canonical.Unity.Panel systray-whitelist "['all']" && echo -e "
 
 if [[ ! $(grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | cut -d: -f2,3 | sed '/^\#/d' | sed '/^$/d' | grep cassou) ]] ; then sudo add-apt-repository ppa:cassou/emacs && sudo apt-get update ; else echo -e "Emacs 24 repo \t\tOK" ; fi
 
+if [[ ! $(grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | cut -d: -f2,3 | sed '/^\#/d' | sed '/^$/d' | grep upubuntu-com) ]] ; then sudo add-apt-repository ppa:upubuntu-com/network && sudo apt-get update ; else echo -e "Angry IP Scanner repo \t\tOK" ; fi
+
+# sudo add-apt-repository ppa:upubuntu-com/network
+
 if test ~/.misc/status -nt ~/.byobu/status ; then echo -e "New ~/.byobu/status \tOK" && cp ~/.misc/status ~/.byobu/ ; fi
 
 if $debian; then
