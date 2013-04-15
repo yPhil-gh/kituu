@@ -3,18 +3,7 @@
 alias rm="rm -i"
 alias cp="cp -i"
 
-# if ! test "$HOSTNAME" = "N900" ; then
-#     grep () { command grep --color $* }
-# fi
-
-# grep () { grep --color=always $* }
-
-
-if [[ ! $HOSTNAME == "N900" ]] ; then
-    # echo "kk"
-    # alias grep="grep --color"
-    alias grep="grep -nIs --color"
-fi
+if [[ ! $HOSTNAME == "N900" ]] ; then alias grep="grep -nIs --color" ; fi
 
 alias ll="ls -lha"
 alias la="ls -A"
