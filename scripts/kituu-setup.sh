@@ -99,6 +99,7 @@ fi
 
 # echo -e $sep"leecher.pl (a script to auto-get .ext links from a given web page URL)"
 if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
+    echo -e $sep"Leecher!"
     read -e -p "## Install leeecher (https://github.com/xaccrocheur/leecher)?  ($scriptdir/leecher.pl) [Y/n] " yn
 if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     cd $scriptdir && git clone ${vc_prefix}xaccrocheur/leecher.git
