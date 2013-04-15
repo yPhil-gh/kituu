@@ -85,7 +85,7 @@ sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate op
 
 # sudo add-apt-repository ppa:upubuntu-com/network
 
-if test ~/.misc/status -nt ~/.byobu/status ; then echo -e "New ~/.byobu/status \tOK" && cp ~/.misc/status ~/.byobu/ ; fi
+if test ~/.misc/status -nt ~/.byobu/status ; then echo -e "New ~/.byobu/status \tOK" && \cp ~/.misc/status ~/.byobu/ ; fi
 
 if $debian; then
     echo -e $sep"Binary packages"
