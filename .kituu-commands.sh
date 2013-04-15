@@ -107,8 +107,12 @@ px-bkp () {
 }
 
 px-ip () {
-    ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}'
-    dig +short myip.opendns.com @resolver1.opendns.com
+    if [ $# -eq 1 ] ; then
+        nmap "192.168.0.*" | \grep $* | cut --delimiter=' ' -f 6 | sed s/\(//g | sed s/\)//g
+    else
+        ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}'
+        dig +short myip.opendns.com @resolver1.opendns.com
+    fi
 }
 
 px-remind-me-this-in () {
