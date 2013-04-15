@@ -30,6 +30,7 @@ alias S="sudo apt-cache search"
 
 function ssh () {
     if [ $# -eq 1 ] ; then
+        MYHOST="plopz"
         tmux rename-window `echo $1 | sed 's/.*@//g'`
     fi
     command ssh $*

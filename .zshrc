@@ -1,5 +1,45 @@
 # My .zshrc - created 01 Jul 2012
 
+#================================================
+# format titles for screen and rxvt
+#================================================
+function title() {
+  # escape '%' chars in $1, make nonprintables visible
+  a=${(V)1//\%/\%\%}
+
+  # Truncate command, and join lines.
+  a=$(print -Pn "%40>...>$a" | tr -d "\n")
+
+  case $TERM in
+  screen)
+    print -Pn "\ek$a:$3\e\\"      # screen title (in ^A")
+    ;;
+  xterm*|*rxvt*)
+    print -Pn "\e]2;$2 | $a:$3\a" # plain xterm title
+    ;;
+  esac
+}
+
+# precmd is called just before the prompt is printed
+function precmd() {
+  title "zsh" "$USER@%m" "%55<...<%~"
+}
+
+# preexec is called just before any command line is executed
+function preexec() {
+  title "$MYHOST : $1" "$USER@%m" "%35<...<%~"
+}
+# http://www.offensivethinking.org/data/dotfiles/zsh/zshrc
+
+
+# #================================================
+# # Tmux for every shell that is spawned
+# #================================================
+# if [ -z $TMUX ];
+# then
+#   tmux new || tmux attach;
+# fi
+
 # A TESTER
 # set -g default-terminal "screen-256color"
 # OR
