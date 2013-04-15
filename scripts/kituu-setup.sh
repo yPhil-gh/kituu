@@ -83,6 +83,8 @@ gsettings set com.canonical.Unity.Panel systray-whitelist "['all']" && echo -e "
 
 if [[ ! $(grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | cut -d: -f2,3 | sed '/^\#/d' | sed '/^$/d' | grep cassou) ]] ; then sudo add-apt-repository ppa:cassou/emacs && sudo apt-get update ; else echo -e "Emacs 24 repo \t\tOK" ; fi
 
+if test ~/.misc/status -nt ~/.byobu/status ; then echo "New ~/.byobu/status" && cp ~/.misc/status -nt ~/.byobu/status ; fi
+
 if $debian; then
     echo -e $sep"Binary packages"
     read -e -p "#### Install packages? [Y/n] " yn
