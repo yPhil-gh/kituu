@@ -137,6 +137,7 @@ px-notes () {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
+tar -tf <file.tar.gz> | xargs rm -r
 gnome-terminal --command byobu --maximize --hide-menubar
 ESC DOT pops the last argument of the last command
 DNS1 212.217.1.1 DNS2 .12 p.nom PPPoE / LLC
