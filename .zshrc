@@ -80,7 +80,7 @@ setopt BANG_HIST
 export HISTSIZE=10500
 export SAVEHIST=10000
 export HISTFILE="$HOME/.zsh_history"
-export UNISONLOCALHOSTNAME=$HOST
+export UNISONLOCALHOSTNAME=$(hostname)
 
 setopt -o sharehistory
 setopt list_ambiguous
