@@ -13,7 +13,7 @@ alias cp="cp -i"
 if [[ ! $HOSTNAME == "N900" ]] ; then
     # echo "kk"
     # alias grep="grep --color"
-    alias grep="grep -RnIs --color"
+    alias grep="grep -nIs --color"
 fi
 
 alias ll="ls -lha"
@@ -46,6 +46,10 @@ function ssh () {
         tmux rename-window `echo $1 | sed 's/.*@//g'`
     fi
     command ssh $*
+}
+
+px-what-is-this-program-doing-now () {
+    diff <(lsof -p `pidof $1`) <(sleep 10; lsof -p `pidof $1`)
 }
 
 md () {
@@ -146,6 +150,8 @@ sshfs name@server:/path/to/folder /path/to/mount/point
 
 ## Use px-notes \"this is a new note\" to add a note
 "
+else
+        sed -i '/^################# NOTES/a '$1'' ~/.kituu/.kituu-commands.sh && k && Commit "New note" && Push master && cd -
 fi
 }
 
