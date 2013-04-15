@@ -81,7 +81,7 @@ gsettings set com.canonical.Unity.Panel systray-whitelist "['all']" && echo -e "
 if [[ ! $(grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | cut -d: -f2,3 | sed '/^\#/d' | sed '/^$/d' | grep cassou) ]] ; then sudo add-apt-repository ppa:cassou/emacs && sudo apt-get update ; else echo -e "Emacs 24 repo \t\tOK" ; fi
 
 echo -e $sep"Mandatory packages (no questions asked)"
-sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git cvs subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap ipscan
+sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git cvs subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap
 
 # sudo add-apt-repository ppa:upubuntu-com/network
 
@@ -102,8 +102,8 @@ if $debian; then
 fi
 
 # echo -e $sep"leecher.pl (a script to auto-get .ext links from a given web page URL)"
+echo -e $sep"Leecher!"
 if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
-    echo -e $sep"Leecher!"
     read -e -p "## Install leeecher (https://github.com/xaccrocheur/leecher)?  ($scriptdir/leecher.pl) [Y/n] " yn
 if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     cd $scriptdir && git clone ${vc_prefix}xaccrocheur/leecher.git
