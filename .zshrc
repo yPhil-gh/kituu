@@ -158,6 +158,7 @@ bindkey "^[l" insert-localip
 . ~/.kituu-commands.sh
 
 # Init
+zdump Africa/Morocco Europe/Paris
 if (type "cowsay" > /dev/null && type "fortune" > /dev/null ); then cowsay `fortune -a` ; fi
 
 # Prompt
