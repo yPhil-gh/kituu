@@ -137,6 +137,7 @@ px-notes () {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
+zdump Africa/Morocco Europe/Paris
 test (plop) bzr yo'quoted'
 tar -tf <file.tar.gz> | xargs rm -r
 gnome-terminal --command byobu --maximize --hide-menubar
