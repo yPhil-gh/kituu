@@ -1,10 +1,10 @@
 # Aliases
-alias ls="ls --color"
 alias rm="rm -i"
 alias cp="cp -i"
 
 if [[ ! $HOSTNAME == "N900" ]] ; then
     alias grep="grep -nIs --color"
+    alias ls="ls --color"
 fi
 
 alias ll="ls -lha"
