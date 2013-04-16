@@ -71,7 +71,6 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     done
 fi
 
-
 echo -e $sep"Various menial janitor tasks"
 if [[ ! -d ~/tmp ]] ; then mkdir -v ~/tmp ; else echo -e "~/tmp \t\t\tOK" ; fi
 if [[ ! -d /mnt/tmp ]] ; then sudo mkdir -v /mnt/tmp ; else echo -e "/mnt/tmp \t\tOK" ; fi
@@ -81,15 +80,16 @@ gsettings set com.canonical.Unity.Panel systray-whitelist "['all']" && echo -e "
 if [[ ! $(grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | cut -d: -f2,3 | sed '/^\#/d' | sed '/^$/d' | grep cassou) ]] ; then sudo add-apt-repository ppa:cassou/emacs && sudo apt-get update ; else echo -e "Emacs 24 repo \t\tOK" ; fi
 
 # Packages
-echo -e $sep"Mandatory packages (no questions asked)"
-sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap
-
 if $debian; then
     echo -e $sep"Binary packages"
     read -e -p "#### Install packages? [Y/n] " yn
+    echo -e $sep"Mandatory packages (no questions asked)"
+    sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap
+
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 	for group in "${!pack[@]}" ; do
-	    read -e -p "## Install $group? (${pack[$group]})
+	    read -e -p "
+## Install $group? (${pack[$group]})
 [Y/n] " yn
 	    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 		sudo aptitude install ${pack[$group]}
