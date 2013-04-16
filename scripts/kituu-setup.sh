@@ -95,10 +95,10 @@ fi
 if $debian; then
     echo -e $sep"Binary packages"
     read -e -p "#### Install packages? [Y/n] " yn
-    echo -e $sep"Mandatory packages (no questions asked)"
-    sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap
 
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+    echo -e $sep"Mandatory packages (no questions asked)"
+    sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap
 	for group in "${!pack[@]}" ; do
 	    read -e -p "
 ## Install $group? (${pack[$group]})
