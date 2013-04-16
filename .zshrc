@@ -87,10 +87,10 @@ setopt list_ambiguous
 setopt completealiases
 setopt HIST_VERIFY
 
+bindkey '^[[1;5D' backward-word
+bindkey '^[[1;5C' forward-word
 
-bindkey ';5D' backward-word
-bindkey ';5C' forward-word
-bindkey "\e[Z" reverse-menu-complete # Shift+Tab in completion menu
+# bindkey "\e[Z" reverse-menu-complete # Shift+Tab in completion menu
 bindkey '^[[3;3~' kill-word # alt-del kills word forward
 
 # Path
