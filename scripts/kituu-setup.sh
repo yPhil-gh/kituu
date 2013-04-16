@@ -80,11 +80,11 @@ fi
 
 echo -e $sep"Various menial janitor tasks"
 if [[ ! -d ~/tmp ]] ; then mkdir -v ~/tmp ; else echo -e "~/tmp \t\t\tOK" ; fi
-if [[ ! -d /mnt/tmp ]] ; then sudo mkdir -v /mnt/tmp ; else echo -e "/mnt/tmp \t\tOK" ; fi
 
 if [[ -z $N900 ]] ; then
     echo "yo, maemo!"
 else
+    if [[ ! -d /mnt/tmp ]] ; then sudo mkdir -v /mnt/tmp ; else echo -e "/mnt/tmp \t\tOK" ; fi
     if [[ ! $SHELL == "/bin/zsh" ]] ; then echo "Setting SHELL to zsh" && chsh -s /bin/zsh ; else echo -e "zsh shell \t\tOK" ; fi
     gsettings set com.canonical.Unity.Panel systray-whitelist "['all']" && echo -e "Unity tray icons \tOK"
 
