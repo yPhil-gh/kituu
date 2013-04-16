@@ -30,12 +30,12 @@ alias S="sudo apt-cache search"
 
 # if [[ -z $SSH_USER ]] ; then title xzob ; fi
 
-# function ssh () {
-#     if [ $# -eq 1 ] ; then
-#         tmux rename-window `echo $1 | sed 's/.*@//g'`
-#     fi
-#     command ssh $*
-# }
+function ssh () {
+    if [ $# -eq 1 ] ; then
+        tmux rename-window `echo $1 | sed 's/.*@//g' | sed 's/.local//g'`
+    fi
+    command ssh $*
+}
 
 px-what-is-this-program-doing-now () {
     diff <(lsof -p `pidof $1`) <(sleep 10; lsof -p `pidof $1`)

@@ -79,14 +79,12 @@ if [[ ! $SHELL == "/bin/zsh" ]] ; then echo "Setting SHELL to zsh" && chsh -s /b
 gsettings set com.canonical.Unity.Panel systray-whitelist "['all']" && echo -e "Unity tray icons \tOK"
 
 if [[ ! $(grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | cut -d: -f2,3 | sed '/^\#/d' | sed '/^$/d' | grep cassou) ]] ; then sudo add-apt-repository ppa:cassou/emacs && sudo apt-get update ; else echo -e "Emacs 24 repo \t\tOK" ; fi
+if test ~/.misc/status -nt ~/.byobu/status ; then echo -e "New ~/.byobu/status \tOK" && \cp ~/.misc/status ~/.byobu/ ; else echo -e "~/.byobu/status \tOK" ; fi
 
+
+# Packages
 echo -e $sep"Mandatory packages (no questions asked)"
 sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git cvs subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap
-
-
-# sudo add-apt-repository ppa:upubuntu-com/network
-
-if test ~/.misc/status -nt ~/.byobu/status ; then echo -e "New ~/.byobu/status \tOK" && \cp ~/.misc/status ~/.byobu/ ; fi
 
 if $debian; then
     echo -e $sep"Binary packages"
