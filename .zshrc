@@ -8,7 +8,7 @@ function title() {
   a=${(V)1//\%/\%\%}
 
   # Truncate command, and join lines.
-  a=$(print -Pn "%5>...>$a" | tr -d "\n")
+  a=$(print -Pn "%8>...>$a" | tr -d "\n")
 
   case $TERM in
   screen)
@@ -29,7 +29,7 @@ function precmd() {
 function preexec() {
   title "$(hostname):$1" "$USER@%m" "%35<...<%~"
 }
-# http://www.offensivethinking.org/data/dotfiles/zsh/zshrc
+# (http://www.offensivethinking.org/data/dotfiles/zsh/zshrc)
 
 # #================================================
 # # Tmux for every shell that is spawned
