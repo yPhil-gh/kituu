@@ -84,7 +84,7 @@ if test ~/.misc/status -nt ~/.byobu/status ; then echo -e "New ~/.byobu/status \
 
 # Packages
 echo -e $sep"Mandatory packages (no questions asked)"
-sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git cvs subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap
+sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap
 
 if $debian; then
     echo -e $sep"Binary packages"
