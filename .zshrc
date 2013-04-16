@@ -150,9 +150,13 @@ insert_help () { zle end-of-line; zle -U " --help" }
 zle -N insert-help insert_help
 bindkey "^[h" insert-help
 
-insert_localip () { zle end-of-line; zle -U " 192.168." }
-zle -N insert-localip insert_localip
-bindkey "^[l" insert-localip
+insert_ip () { zle end-of-line; zle -U " 192.168." }
+zle -N insert-ip insert_ip
+bindkey "^[i" insert-ip
+
+insert_local () { zle end-of-line; zle -U ".local" }
+zle -N insert-local insert_local
+bindkey "^[l" insert-local
 
 # Generic funcs
 . ~/.kituu-commands.sh
