@@ -71,8 +71,8 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 
     for i in * ; do
 	if [[  ! -h ~/$i && $i != *#* && $i != *~* && $i != *git* && $i != "README.org" && $i != "." && "${i}" != ".." ]] ; then
-	    if [[ -e ~/$i ]] ; then echo "(move)" && mv -v ~/$i ~/$i.orig ; fi
-	    echo "(symlink)" && ln -sv $repodir/$i ~/
+	    if [[ -e ~/$i ]] ; then echo "(move)" && mv $fancy_args ~/$i ~/$i.orig ; fi
+	    echo "(symlink)" && ln -s $fancy_args $repodir/$i ~/
 	fi
     done
 fi
