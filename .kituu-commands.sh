@@ -34,7 +34,6 @@ alias S="sudo apt-cache search"
 
 function ssh () {
     if [ $# -eq 1 ] ; then
-        echo "cool"
         tmux rename-window `echo $1 | sed 's/.*@//g' | sed 's/.local//g'`
     fi
     command ssh $*
