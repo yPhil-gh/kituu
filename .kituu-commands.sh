@@ -1,9 +1,11 @@
 # Aliases
-alias ls="ls --color=auto"
+alias ls="ls --color"
 alias rm="rm -i"
 alias cp="cp -i"
 
-if [[ ! $HOSTNAME == "N900" ]] ; then alias grep="grep -nIs --color" ; fi
+if [[ ! $HOSTNAME == "N900" ]] ; then
+    alias grep="grep -nIs --color"
+fi
 
 alias ll="ls -lha"
 alias la="ls -A"
@@ -32,6 +34,7 @@ alias S="sudo apt-cache search"
 
 function ssh () {
     if [ $# -eq 1 ] ; then
+        echo "cool"
         tmux rename-window `echo $1 | sed 's/.*@//g' | sed 's/.local//g'`
     fi
     command ssh $*
