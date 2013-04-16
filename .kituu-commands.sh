@@ -154,6 +154,7 @@ px-notes () {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
+last arg of last command : .byobu/
 zdump Africa/Morocco Europe/Paris
 tar -tf <file.tar.gz> | xargs rm -r
 gnome-terminal --command byobu --maximize --hide-menubar
