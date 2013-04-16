@@ -92,6 +92,7 @@ bindkey '^[[1;5C' forward-word
 
 # bindkey "\e[Z" reverse-menu-complete # Shift+Tab in completion menu
 bindkey '^[[3;3~' kill-word # alt-del kills word forward
+bindkey "^B" backward-kill-line
 
 # Path
 PATH=$PATH:~/scripts:~/bin
