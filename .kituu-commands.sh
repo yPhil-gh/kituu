@@ -68,17 +68,6 @@ px-sync-pr0n () {
     unison -batch ~/tmp/.pr0n/ ~/tmp/$1/.pr0n/ && echo "Sync OK" && px-sshmount /home/px/tmp/$1/.pr0n
 }
 
-# px-lan-check () {
-#     if [ $1 ] ; then num=$1 ; else num="10" ; fi
-#     for ip in $(seq 1 ${num}); do ping -c 1 192.168.0.$ip>/dev/null; if [ $? -eq 0 ] ; then echo -e "192.168.0.$ip ($(avahi-resolve-address 192.168.0.$ip | sed -e :a -e "s/192.168.0.$ip//g;s/\.[^>]*$//g;s/^[ \t]*//")) \tUP" ; else echo -e "192.168.0.$ip \t\tDOWN" ; fi ; done }
-
-
-# px-lan-check () {
-#     gateway=$(route -n | \grep '^0.0.0.0' | awk '{print $2}')
-#     if [ $1 ] ; then num=$1 ; else num="10" ; fi
-#     for ip in $(seq 1 ${num}); do ping -c 1 192.168.0.$ip>/dev/null; if [ $? -eq 0 ] ; then echo -e "192.168.0.$ip ($(avahi-resolve-address 192.168.0.$ip | sed -e :a -e "s/192.168.0.$ip//g;s/\.[^>]*$//g;s/^[ \t]*//")) \tUP" ; else echo -e "192.168.0.$ip \t\tDOWN" ; fi ; done }
-
-
 px-lan-check () {
     mask="192.168.0."
     gateway=$(route -n | \grep '^0.0.0.0' | awk '{print $2}')

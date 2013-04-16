@@ -80,11 +80,6 @@ gsettings set com.canonical.Unity.Panel systray-whitelist "['all']" && echo -e "
 
 if [[ ! $(grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | cut -d: -f2,3 | sed '/^\#/d' | sed '/^$/d' | grep cassou) ]] ; then sudo add-apt-repository ppa:cassou/emacs && sudo apt-get update ; else echo -e "Emacs 24 repo \t\tOK" ; fi
 
-# if test ~/.misc/status -nt ~/.byobu/status ; then echo -e "New ~/.byobu/status \tOK" && \cp ~/.misc/status ~/.byobu/ ; else echo -e "~/.byobu/status \tOK" ; fi
-
-# if test ~/.misc/.tmux.conf -nt ~/.byobu/.tmux.conf ; then echo -e "New ~/.byobu/.tmux.conf \tOK" && \cp ~/.misc/status ~/.byobu/ ; else echo -e "~/.byobu/.tmux.conf \tOK" ; fi
-
-
 # Packages
 echo -e $sep"Mandatory packages (no questions asked)"
 sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap
