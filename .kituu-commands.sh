@@ -39,6 +39,16 @@ function ssh () {
     command ssh $*
 }
 
+
+px-ram-dump () {
+    sudo cat /proc/kcore | strings | awk 'length > 20' | less
+}
+
+px-bandwidth-monitor () {
+    if [[ $# -eq 3 ]];then NIC="eth0"; else NIC=$1; fi
+    while [ /bin/true ]; do OLD=$NEW; NEW=`cat /proc/net/dev | grep $NIC | tr -s ' ' | cut -d' ' -f "3 11"`; echo $NEW $OLD | awk '{printf("\rin: % 9.2g\t\tout: % 9.2g", ($1-$3)/1024, ($2-$4)/1024)}'; sleep 1; done
+}
+
 px-flight_status() { if [[ $# -eq 3 ]];then offset=$3; else offset=0; fi; curl "http://mobile.flightview.com/TrackByRoute.aspx?view=detail&al="$1"&fn="$2"&dpdat=$(date +%Y%m%d -d ${offset}day)" 2>/dev/null |html2text | \grep ":"; }
 
 px-guitar-tuner () {
