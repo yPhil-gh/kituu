@@ -39,6 +39,12 @@ function ssh () {
     command ssh $*
 }
 
+px-flight_status() { if [[ $# -eq 3 ]];then offset=$3; else offset=0; fi; curl "http://mobile.flightview.com/TrackByRoute.aspx?view=detail&al="$1"&fn="$2"&dpdat=$(date +%Y%m%d -d ${offset}day)" 2>/dev/null |html2text | \grep ":"; }
+
+px-guitar-tuner () {
+    for n in E2 A2 D3 G3 B3 E4;do play -n synth 4 pluck $n repeat 2;done
+}
+
 px-what-is-this-program-doing-now () {
     diff <(lsof -p `pidof $1`) <(sleep 10; lsof -p `pidof $1`)
 }
