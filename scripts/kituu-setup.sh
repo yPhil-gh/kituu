@@ -13,15 +13,9 @@ if ($rw); then vc_prefix="git@github.com:" && message="RW mode ON" && git config
 
 if [[ ! $HOSTNAME == "N900" ]] ; then
     fancy_args="-v"
-    echo "yo, maemoz!"
 else
     N900="true"
     fancy_args=""
-fi
-
-
-if [ -n "${N900+x}" ]; then
-    echo "yo, maemozz!"
 fi
 
 # Packages
