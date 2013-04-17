@@ -81,7 +81,7 @@ fi
 echo -e $sep"Various menial janitor tasks"
 if [[ ! -d ~/tmp ]] ; then mkdir -v ~/tmp ; else echo -e "~/tmp \t\t\tOK" ; fi
 
-if [[ -z $N900 ]] ; then
+if [ -n "${N900+x}" ]; then
     echo "yo, maemo!"
 else
     if [[ ! -d /mnt/tmp ]] ; then sudo mkdir -v /mnt/tmp ; else echo -e "/mnt/tmp \t\tOK" ; fi
