@@ -18,6 +18,11 @@ else
     fancy_args=""
 fi
 
+
+if [ -n "${N900+x}" ]; then
+    echo "yo, maemoz!"
+fi
+
 # Packages
 declare -A pack
 pack[dev_tools]="build-essential texinfo libtool"
