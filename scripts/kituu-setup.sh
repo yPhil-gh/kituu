@@ -14,7 +14,7 @@ if ($rw); then vc_prefix="git@github.com:" && message="RW mode ON" && git config
 if [[ ! $HOSTNAME == "N900" ]] ; then
     fancy_args="-v"
 else
-    N900="true"
+    N900=true
     fancy_args=""
 fi
 
@@ -82,7 +82,7 @@ echo -e $sep"Various menial janitor tasks"
 if [[ ! -d ~/tmp ]] ; then mkdir -v ~/tmp ; else echo -e "~/tmp \t\t\tOK" ; fi
 
 if [ -n "${N900+x}" ]; then
-    echo "yo, maemo!"
+    echo "yo, maemo!" ; exit 0
 else
     if [[ ! -d /mnt/tmp ]] ; then sudo mkdir -v /mnt/tmp ; else echo -e "/mnt/tmp \t\tOK" ; fi
     if [[ ! $SHELL == "/bin/zsh" ]] ; then echo "Setting SHELL to zsh" && chsh -s /bin/zsh ; else echo -e "zsh shell \t\tOK" ; fi
