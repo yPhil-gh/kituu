@@ -161,6 +161,8 @@ px-notes () {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
+find . -type f -printf '%TY-%Tm-%Td %TT %p
+' | sort
 last arg of last command : !$
 zdump Africa/Morocco Europe/Paris
 tar -tf <file.tar.gz> | xargs rm -r
