@@ -15,7 +15,7 @@ if [[ ! $HOSTNAME == "N900" ]] ; then
     fancy_args="-v"
     echo "yo, maemoz!"
 else
-    $N900="true"
+    N900="true"
     fancy_args=""
 fi
 
