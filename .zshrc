@@ -9,7 +9,7 @@ export LESS_TERMCAP_so=$'\E[38;5;246m'    # begin standout-mode - info box
 export LESS_TERMCAP_ue=$'\E[0m'           # end underline
 export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
 
-export TERM=screen-256color
+# export TERM=screen-256color
 
 # format titles for screen and rxvt
 function title() {
@@ -20,7 +20,7 @@ function title() {
   a=$(print -Pn "%8>...>$a" | tr -d "\n")
 
   case $TERM in
-  screen)
+  screen*)
     print -Pn "\ek$a $3\e\\"      # screen title (in ^A")
     ;;
   xterm*|*rxvt*)
