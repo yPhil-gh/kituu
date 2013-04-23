@@ -4,6 +4,9 @@
 # Time-stamp: <.bashrc - Tue 27-Mar-2012 16:01:07>
 # ===================================================================
 
+bind '^[[1;5D' backward-word
+bind '^[[1;5C' forward-word
+
 
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return

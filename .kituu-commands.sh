@@ -39,6 +39,9 @@ function ssh () {
     command ssh $*
 }
 
+px-broadcast-mic () {
+    arecord -f dat | ssh -C user@host aplay -f dat
+}
 
 px-ram-dump () {
     sudo cat /proc/kcore | strings | awk 'length > 20' | less

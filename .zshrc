@@ -34,7 +34,7 @@ function precmd() {
 
 # preexec is called just before any command line is executed
 function preexec() {
-  title "$(hostname):$1" "$USER@%m" "%35<...<%~"
+  title "$(hostname):$1" "$USER@%m" "%15<...<%~"
 }
 # (http://www.offensivethinking.org/data/dotfiles/zsh/zshrc)
 
