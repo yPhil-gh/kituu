@@ -10,6 +10,8 @@ export LESS_TERMCAP_ue=$'\E[0m'           # end underline
 export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
 
 # export TERM=screen-256color
+[ -n "$TMUX" ] && export TERM=screen-256color
+
 
 # format titles for screen and rxvt
 function title() {
@@ -52,7 +54,6 @@ function preexec() {
 # set -g default-terminal "screen-256color"
 # OR
 # for tmux: export 256color
-# [ -n "$TMUX" ] && export TERM=screen-256color
 
 # See EOF for notes
 # Enable compsys completion.
