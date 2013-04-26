@@ -9,21 +9,25 @@ export LESS_TERMCAP_so=$'\E[38;5;246m'    # begin standout-mode - info box
 export LESS_TERMCAP_ue=$'\E[0m'           # end underline
 export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
 
-# export TERM=screen-256color
 [ -n "$TMUX" ] && export TERM=screen-256color
-
 
 # format titles for screen and rxvt
 function title() {
   # escape '%' chars in $1, make nonprintables visible
+    b=$1
+    x="zib"
+
   a=${(V)1//\%/\%\%}
 
   # Truncate command, and join lines.
   a=$(print -Pn "%8>...>$a" | tr -d "\n")
 
+  b=$(print -Pn "%8>...>$b" | tr -d "\n")
+
   case $TERM in
   screen*)
-    print -Pn "\ek$a $3\e\\"      # screen title (in ^A")
+    # print -Pn "\ek$b $3\e\\"      # screen title (in ^A")
+    print -Pn "\ek$b \e\\"      # screen title (in ^A")
     ;;
   xterm*|*rxvt*)
     print -Pn "\e]2;$2 | $a $3\a" # plain xterm title
@@ -33,7 +37,11 @@ function title() {
 
 # precmd is called just before the prompt is printed
 function precmd() {
-  title "zsh" "$USER@%m" "%55<...<%~"
+  # title "zsh" "$USER@%m" "%55<...<%~"
+  # title "$(hostname):$1" "$USER@%m" "%15<...<%~"
+  # title "$(hostname):$1" "$2" "%15<...<%~"
+  title "$(hostname):$1" "$2" "%15<...<%~"
+
 }
 
 # preexec is called just before any command line is executed
