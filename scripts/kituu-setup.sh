@@ -90,12 +90,17 @@ else
 
     if [[ ! $(grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | cut -d: -f2,3 | sed '/^\#/d' | sed '/^$/d' | grep cassou) ]] ; then sudo add-apt-repository ppa:cassou/emacs && sudo apt-get update ; else echo -e "Emacs 24 repo \t\tOK" ; fi
 fi
-
-echo -e $sep"Mandatory packages (no questions asked)"
-sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap xclip sox
-
 # Packages
 if $debian; then
+    echo -e $sep"Basic binary packages"
+    read -e -p "#### Install basic packages? [Y/n] " yn
+
+    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+        echo -e $sep"Mandatory packages (no questions asked)"
+        sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap xclip sox
+    fi
+
+
     echo -e $sep"Binary packages"
     read -e -p "#### Install packages? [Y/n] " yn
 
