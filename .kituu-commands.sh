@@ -40,7 +40,7 @@ function ssh () {
 }
 
 px-broadcast-mic () {
-    arecord -f dat | ssh -C user@host aplay -f dat
+    arecord -f dat | ssh -C $1 aplay -f dat
 }
 
 px-ram-dump () {

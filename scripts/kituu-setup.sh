@@ -22,7 +22,7 @@ fi
 declare -A pack
 pack[dev_tools]="build-essential texinfo libtool"
 pack[base_utils]="unison baobab gparted"
-pack[view&players]="sox smplayer"
+pack[view&players]="smplayer"
 pack[image_tools]="gimp inkscape blender ffmpeg"
 pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk qmidinet calf-plugins nekobee"
 pack[games]="extremetuxracer supertuxkart stuntrally xonotic"
@@ -98,7 +98,7 @@ if $debian; then
 
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     echo -e $sep"Mandatory packages (no questions asked)"
-    sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap xclip
+    sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap xclip sox
 	for group in "${!pack[@]}" ; do
 	    read -e -p "
 ## Install $group? (${pack[$group]})
