@@ -84,7 +84,6 @@ if $debian; then
     read -e -p "#### Install basic packages? [Y/n] " yn
 
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-        echo -e $sep"Mandatory packages (no questions asked)"
         sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap xclip sox
     fi
 fi
