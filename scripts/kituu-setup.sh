@@ -78,6 +78,16 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     done
 fi
 
+# Basic packages
+if $debian; then
+    echo -e $sep"Basic binary packages"
+    read -e -p "#### Install basic packages? [Y/n] " yn
+
+    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+        sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap xclip sox
+    fi
+fi
+
 echo -e $sep"Various menial janitor tasks"
 if [[ ! -d ~/tmp ]] ; then mkdir -v ~/tmp ; else echo -e "~/tmp \t\t\tOK" ; fi
 
@@ -86,21 +96,13 @@ if [ -n "${N900+x}" ]; then
 else
     if [[ ! -d /mnt/tmp ]] ; then sudo mkdir -v /mnt/tmp ; else echo -e "/mnt/tmp \t\tOK" ; fi
     if [[ ! $SHELL == "/bin/zsh" ]] ; then echo "Setting SHELL to zsh" && chsh -s /bin/zsh ; else echo -e "zsh shell \t\tOK" ; fi
-    gsettings set com.canonical.Unity.Panel systray-whitelist "['all']" && echo -e "Unity tray icons \tOK"
+    # gsettings set com.canonical.Unity.Panel systray-whitelist "['all']" && echo -e "Unity tray icons \tOK"
 
     if [[ ! $(grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | cut -d: -f2,3 | sed '/^\#/d' | sed '/^$/d' | grep cassou) ]] ; then sudo add-apt-repository ppa:cassou/emacs && sudo apt-get update ; else echo -e "Emacs 24 repo \t\tOK" ; fi
 fi
+
 # Packages
 if $debian; then
-    echo -e $sep"Basic binary packages"
-    read -e -p "#### Install basic packages? [Y/n] " yn
-
-    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-        echo -e $sep"Mandatory packages (no questions asked)"
-        sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap xclip sox
-    fi
-
-
     echo -e $sep"Binary packages"
     read -e -p "#### Install packages? [Y/n] " yn
 
