@@ -30,8 +30,6 @@ alias S="sudo apt-cache search"
 
 # Commands
 
-# if [[ -z $SSH_USER ]] ; then title xzob ; fi
-
 function ssh () {
     if [ $# -eq 1 ] ; then
         tmux rename-window `echo $1 | sed 's/.*@//g' | sed 's/.local//g'`
