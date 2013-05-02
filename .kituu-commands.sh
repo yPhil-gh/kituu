@@ -69,7 +69,16 @@ md () {
 
 px-sshmount () {
     if [ ! $(grep "fuse.*$USER" /etc/group) ] ; then sudo gpasswd -a $USER fuse && echo "added $USER to group fuse" ; fi
-    if [ ! -n "$2" ] ; then fusermount -u $1 && echo "Unmounted $1" ; else sshfs -o idmap=user $1 $2 ; fi
+    if [ "$#" -eq "1" ] ; then
+        fusermount -u $1 && echo "Unmounted $1"
+    else
+        if  [ -w $2 ] ; then
+            sshfs -o idmap=user $1 $2
+        else
+            echo "$0 : $2 is not writable"
+            exit 1
+        fi
+    fi
 }
 
 px-vnc () {
