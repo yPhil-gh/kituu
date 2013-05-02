@@ -66,9 +66,9 @@ md () {
 }
 
 px-sshmount () {
-    if [ ! $(grep "fuse.*$USER" /etc/group) ] ; then sudo gpasswd -a $USER fuse && echo "added $USER to group fuse" ; fi
+    if [ ! $(grep "fuse.*$USER" /etc/group) ] ; then sudo gpasswd -a $USER fuse && echo "$0 : added $USER to group fuse" ; fi
     if [ "$#" -eq "1" ] ; then
-        fusermount -u $1 && echo "Unmounted $1"
+        fusermount -u $1 && echo "$0 : Unmounted $1"
     else
         if  [ -w $2 ] ; then
             sshfs -o idmap=user $1 $2
