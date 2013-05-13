@@ -259,7 +259,6 @@
   (interactive)
   (bookmark-jump (second bookmark-alist)))
 
-
 (defun px-push-mark-once-and-back ()
   "Mark current point (`push-mark') and `set-mark-command' (C-u C-SPC) away."
   (interactive)
@@ -440,7 +439,6 @@ This dates from old times, before VC, I'm keeping it out of pure nostalgy."
     (progn
       (insert leftSign rightSign)
       (backward-char 1))))
-
 
 ;; (test string)
 
@@ -674,9 +672,9 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 ;; (semantic-mode t)
 ;; (which-function-mode t)
 
-(add-to-list 'auto-mode-alist
-             '("\\.py\\'" . python-mode)
-             '("\\.haml\\'" . haml-mode))
+;; (add-to-list 'auto-mode-alist
+;;              '("\\.py\\'" . python-mode)
+;;              '("\\.haml\\'" . haml-mode))
 
 
 ;; Externals! _________________________________________________________________
