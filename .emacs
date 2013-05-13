@@ -46,9 +46,9 @@
 
 ;; (mail-bug-init)
 
-(setq stack-trace-on-error t)
+;; (setq stack-trace-on-error t)
 
-(autoload 'notmuch "notmuch" "notmuch mail" t)
+;; (autoload 'notmuch "notmuch" "notmuch mail" t)
 
 ;; Auto-BCC
 ;; (defadvice message-mail (after mbug-message-mail-bcc)
@@ -61,6 +61,10 @@
 ;;   ;; (kill-line)
 ;;   )
 
+;; ORG! ______________________________________________________________________
+
+(setq org-export-html-postamble nil)
+
 (setq org-agenda-files (list "~/org/work.org"
                              "~/org/home.org"))
 
@@ -70,6 +74,7 @@
       '((?n "* %U %?\n\n  %i\n  %a" "~/notes.org")))  ;; (3)
 (setq remember-annotation-functions '(org-remember-annotation)) ;; (4)
 (setq remember-handler-functions '(org-remember-handler)) ;; (5)
+
 ;; Server! ____________________________________________________________________
 
 (server-start)
@@ -139,13 +144,13 @@
 ;; (setq gnus-mime-display-multipart-related-as-mixed nil)
 
 
-(defun tf-toggle-tab-width-setting ()
-  "Toggle setting tab widths between 1 and 2"
-  (interactive)
-  (setq tab-width (if (= tab-width 2) 1 2))
-  (redraw-display))
+;; (defun tf-toggle-tab-width-setting ()
+;;   "Toggle setting tab widths between 1 and 2"
+;;   (interactive)
+;;   (setq tab-width (if (= tab-width 2) 1 2))
+;;   (redraw-display))
 
-(global-set-key (kbd "<f8>") 'tf-toggle-tab-width-setting)
+;; (global-set-key (kbd "<f8>") 'tf-toggle-tab-width-setting)
 
 ;; (defun indent-or-expand (arg)
 ;;   "Either indent according to mode, or expand the word preceding
@@ -169,26 +174,6 @@
 ;; (add-hook 'sh-mode-hook         'px-tab-fix)
 ;; (add-hook 'emacs-lisp-mode-hook 'px-tab-fix)
 
-(set-face-underline 'font-lock-warning-face "yellow")
-
-(add-hook 'emacs-lisp-mode-hook
-          (lambda ()
-            (font-lock-add-keywords nil
-                                    '(("\\<\\(FIXME\\|HACK\\|BUG\\|pX\\):" 1 font-lock-warning-face t)))))
-
-(if (and
-     (file-exists-p "~/.emacs.d/lisp/nxhtml/autostart.el")
-     (< emacs-major-version 24))
-    (progn
-      (load "~/.emacs.d/lisp/nxhtml/autostart.el")
-      ;; (tabkey2-mode t)
-      )
-  (progn
-    (require 'php-mode nil t)
-    (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
-    (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))))
-
-
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
 (defvar show-paren-delay)
@@ -203,6 +188,41 @@
 (defvar ediff-split-window-function)
 (defvar tabbar-buffer-groups-function)
 (defvar px-bkp-new-name)
+
+
+;; Keywords! _________________________________________________________________
+
+
+(set-face-underline 'font-lock-warning-face "yellow")
+
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+            (font-lock-add-keywords nil
+                                    '(("\\<\\(FIXME\\|HACK\\|BUG\\|pX\\):" 1 font-lock-warning-face t)))))
+
+;; NxHTML! _________________________________________________________________
+
+(if (and
+     (file-exists-p "~/.emacs.d/lisp/nxhtml/autostart.el")
+     (> emacs-major-version 23))
+    (progn
+      (load "~/.emacs.d/lisp/nxhtml/autostart.el")
+      (eval-after-load "mumamo"
+        '(setq mumamo-per-buffer-local-vars
+               (delq 'buffer-file-name mumamo-per-buffer-local-vars))))
+  (progn
+    (require 'php-mode nil t)
+    (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
+    (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))))
+
+;; ;; Workaround the annoying warnings:
+;; ;; Warning (mumamo-per-buffer-local-vars):
+;; ;; Already 'permanent-local t: buffer-file-name
+;; (when (and (equal emacs-major-version 24)
+;;            (equal emacs-minor-version 2))
+;;   (eval-after-load "mumamo"
+;;     '(setq mumamo-per-buffer-local-vars
+;;            (delq 'buffer-file-name mumamo-per-buffer-local-vars))))
 
 
 ;; Funcs! _________________________________________________________________
@@ -225,11 +245,13 @@
       (add-to-list 'bookmark-alist latest))
     (recenter-top-bottom 5)))
 
-(defadvice view-echo-area-messages (after view-echo-area-messages-in-help-mode)
-  "Toggle `help-mode' to use the keys (mostly 'q' to quit)."
-  (help-mode))
+;; Apparently obsolete (and broken : Stays in help-mode)
 
-(ad-activate 'view-echo-area-messages)
+;; (defadvice view-echo-area-messages (after view-echo-area-messages-in-help-mode)
+;;   "Toggle `help-mode' to use the keys (mostly 'q' to quit)."
+;;   (help-mode))
+
+;; (ad-activate 'view-echo-area-messages)
 
 
 (defun px-bookmarks-toggle-last ()
