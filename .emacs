@@ -61,6 +61,15 @@
 ;;   ;; (kill-line)
 ;;   )
 
+(setq org-agenda-files (list "~/org/work.org"
+                             "~/org/home.org"))
+
+(global-set-key (kbd "C-c r") 'remember)    ;; (1)
+(add-hook 'remember-mode-hook 'org-remember-apply-template) ;; (2)
+(setq org-remember-templates
+      '((?n "* %U %?\n\n  %i\n  %a" "~/notes.org")))  ;; (3)
+(setq remember-annotation-functions '(org-remember-annotation)) ;; (4)
+(setq remember-handler-functions '(org-remember-handler)) ;; (5)
 ;; Server! ____________________________________________________________________
 
 (server-start)
@@ -712,6 +721,9 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 ;; (global-set-key (kbd "C-j") 'join-line)
 
 (setq-default indent-tabs-mode nil)
+
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
 
 (global-set-key (kbd "M-s-b") 'bookmark-set)
 (global-set-key (kbd "s-b") 'bookmark-jump)
