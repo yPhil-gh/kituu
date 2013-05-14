@@ -819,6 +819,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-'") 'insert-pair-squote)       ;''
 (global-set-key (kbd "C-\"") 'insert-pair-dbquote)     ;""
 
+(global-set-key (kbd "M-DEL") 'kill-word)
+
 (global-set-key (kbd "M-s") 'save-buffer) ; Meta+s saves !! (see C-h b for all bindings, and C-h k + keystroke(s) for help)
 ;; (global-set-key (kbd "M-DEL") 'kill-word)
 ;; (global-set-key (kbd "M-DEL") 'kill-word)
