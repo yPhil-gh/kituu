@@ -17,7 +17,7 @@
   (require 'package nil 'noerror)
   ;; (require 'haml-mode nil 'noerror)
   ;; (require 'imap nil 'noerror)
-  ;; (require 'elid)
+  (require 'elid)
 
   ;; (require 'mail-bug nil t)
   ;; (require 'imapua nil 'noerror)
