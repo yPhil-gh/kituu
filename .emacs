@@ -666,7 +666,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (setq c-default-style "bsd"
       c-basic-offset 2)
 ;; (when (functionp 'savehist-mode) (savehist-mode 1))
-(tool-bar-mode -1)
 ;; (semantic-mode t)
 ;; (which-function-mode t)
 
