@@ -17,12 +17,9 @@
   (require 'package nil 'noerror)
   ;; (require 'haml-mode nil 'noerror)
   ;; (require 'imap nil 'noerror)
-  (require 'elid)
 
   ;; (require 'mail-bug nil t)
   ;; (require 'imapua nil 'noerror)
-  (require 'mail-bug nil 'noerror)
-  (require 'cedet)
   ;; (require 'tabkey2 nil 'noerror)
   ;; (require 'emacs-imap)
   ;; (require 'w3m-load)
@@ -31,6 +28,8 @@
 
 (if (>= emacs-major-version 24)
     (progn
+      (require 'mail-bug nil 'noerror)
+      (require 'cedet)
       (add-to-list 'package-archives
                    '("melpa" . "http://melpa.milkbox.net/packages/") t)
       ;; (add-to-list 'package-archives
