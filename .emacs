@@ -663,7 +663,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (auto-fill-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
 (put 'overwrite-mode 'disabled t)
-(tool-bar-mode nil)
 (setq c-default-style "bsd"
       c-basic-offset 2)
 ;; (when (functionp 'savehist-mode) (savehist-mode 1))
