@@ -660,7 +660,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; (string-match "*message*" "*message*-plop")
 
-(set-scroll-bar-mode `right)
 (auto-fill-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
 (put 'overwrite-mode 'disabled t)
@@ -1064,6 +1063,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
  '(epa-popup-info-window nil)
+ '(font-use-system-font t)
  '(global-font-lock-mode t)
  '(global-linum-mode t)
  '(global-undo-tree-mode t)
@@ -1081,7 +1081,6 @@ Revert HEAD to 7                                                  git reset --ha
  '(mbug-modal t)
  '(mbug-short-headers t)
  '(mbug-username "philcm@gmx.com")
- ;; '(menu-bar-mode nil)
  '(message-confirm-send t)
  '(message-default-charset (quote utf-8))
  '(mm-enable-external (quote ask))
@@ -1089,6 +1088,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(mumamo-margin-use (quote (left-margin 13)))
  '(org-support-shift-select (quote always))
  '(recenter-redisplay nil)
+ '(recentf-auto-cleanup (quote never))
  '(recentf-max-menu-items 60)
  '(recentf-max-saved-items 120)
  '(recentf-mode t)
@@ -1103,9 +1103,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(show-paren-mode t)
  '(smtpmail-smtp-server "smtp.gmail.com")
  '(standard-indent 2)
- ;; '(tramp-default-method "ssh")
  '(tramp-default-method "scp")
- '(recentf-auto-cleanup 'never)
  '(undo-limit 4000)
  '(undo-strong-limit 6000)
  '(undo-tree-auto-save-history t)
@@ -1115,9 +1113,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(user-full-name "Philippe Coatmeur")
  '(user-mail-address "philcm@gnu.org")
  '(vc-make-backup-files t)
- '(web-vcs-default-download-directory (quote site-lisp-dir))
- '(font-use-system-font t)
-)
+ '(web-vcs-default-download-directory (quote site-lisp-dir)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
