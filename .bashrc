@@ -170,50 +170,52 @@ done
 }
 
 kituu_bash_prompt() {
-    local knc=$kituu_unset_color            # No regular color
-    local klc=$kituu_line_color
-    local kuc=$kituu_user_color
-    local kpc=$kituu_user_color
+#     local knc=$kituu_unset_color            # No regular color
+#     local klc=$kituu_line_color
+#     local kuc=$kituu_user_color
+#     local kpc=$kituu_user_color
 
-# [ $UID -eq "0" ] && kuc=$kRc # root's color
-    if [ $UID -eq "0" ]
-    then
-	local kuc="\[\e[1;31m\]"
-	local kituu_user_symbol="#"
-    else
-	local kuc="\[\e[1;32m\]"
-	local kituu_user_symbol="$"
-    fi
+# # [ $UID -eq "0" ] && kuc=$kRc # root's color
+#     if [ $UID -eq "0" ]
+#     then
+# 	local kuc="\[\e[1;31m\]"
+# 	local kituu_user_symbol="#"
+#     else
+# 	local kuc="\[\e[1;32m\]"
+# 	local kituu_user_symbol="$"
+#     fi
 
-# color path differently if not on my own machines
-    if grep -q moe /etc/hosts; then kpc=$kuc; else kpc="\[\e[1;34m\]"; fi
+# # color path differently if not on my own machines
+#     if grep -q moe /etc/hosts; then kpc=$kuc; else kpc="\[\e[1;34m\]"; fi
 
-    # curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptsdir/git-completion.bash
+#     # curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptsdir/git-completion.bash
 
-# Return Smiley
-    local kituu_smiley='$(if [[ $? -eq 0 ]]; then echo "\[\e[1;32m\]"":)"; else echo "\[\e[1;31m\]"":("; fi;)'
+# # Return Smiley
+#     local kituu_smiley='$(if [[ $? -eq 0 ]]; then echo "\[\e[1;32m\]"":)"; else echo "\[\e[1;31m\]"":("; fi;)'
 
-    case "$TERM" in
-	"dumb")
-	    PS1="dumb > "
-	    ;;
-	xterm*|rxvt*|eterm*|screen*)
-  	    # PS1="\[\e]1;\u@\h: \W\007\e]2;\u@\h: \W\007\]\${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
-  	    PS1="${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
-	    # PS1="xterm > "
-	    ;;
-	linux*)
-	    PS1="${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
-	    # PS1="linux > "
-	    ;;
-	*)
-	    PS1="* > "
-	    ;;
-    esac
+#     case "$TERM" in
+# 	"dumb")
+# 	    PS1="dumb > "
+# 	    ;;
+# 	xterm*|rxvt*|eterm*|screen*)
+#   	    # PS1="\[\e]1;\u@\h: \W\007\e]2;\u@\h: \W\007\]\${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
+#   	    PS1="${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
+# 	    # PS1="xterm > "
+# 	    ;;
+# 	linux*)
+# 	    PS1="${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
+# 	    # PS1="linux > "
+# 	    ;;
+# 	*)
+# 	    PS1="* > "
+# 	    ;;
+#     esac
+
+echo "plopz"
 }
 
 # http://tldp.org/HOWTO/Bash-Prompt-HOWTO/xterm-title-bar-manipulations.html
 
-# export PROMPT_COMMAND="Kituu_bash_prompt_commands"
-# kituu_bash_prompt
-# unset kituu_bash_prompt
+export PROMPT_COMMAND="Kituu_bash_prompt_commands"
+kituu_bash_prompt
+unset kituu_bash_prompt
