@@ -214,6 +214,6 @@ kituu_bash_prompt() {
 
 # http://tldp.org/HOWTO/Bash-Prompt-HOWTO/xterm-title-bar-manipulations.html
 
-export PROMPT_COMMAND="Kituu_bash_prompt_commands"
-kituu_bash_prompt
-unset kituu_bash_prompt
+# export PROMPT_COMMAND="Kituu_bash_prompt_commands"
+# kituu_bash_prompt
+# unset kituu_bash_prompt
