@@ -193,6 +193,7 @@ kituu_bash_prompt() {
 # Return Smiley
     local kituu_smiley='$(if [[ $? -eq 0 ]]; then echo "\[\e[1;32m\]"":)"; else echo "\[\e[1;31m\]"":("; fi;)'
 
+
     case "$TERM" in
 	"dumb")
 	    PS1="dumb > "
