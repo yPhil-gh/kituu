@@ -4,9 +4,6 @@
 # Time-stamp: <.bashrc - Tue 27-Mar-2012 16:01:07>
 # ===================================================================
 
-# bind '^[[1;5D' backward-word
-# bind '^[[1;5C' forward-word
-
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
@@ -33,39 +30,39 @@ kituu_processes=$(ps ax | wc -l | tr -d " ")
 
 export EDITOR=emacs ALTERNATE_EDITOR=vi
 
-# # Try to escape busybox
-# if [ -n "${BASH+x}" ] ; then
-#     [ $UID -eq 0 ] && PATH=$PATH:/sbin:/usr/sbin:/bin
+# Try to escape busybox
+if [ -n "${BASH+x}" ] ; then
+    [ $UID -eq 0 ] && PATH=$PATH:/sbin:/usr/sbin:/bin
 
-#     PATH=$PATH:/usr/local/include:/usr/bin/gnu
-#     PATH=/usr/local/bin:$PATH
-#     PATH=$PATH:~/scripts:~/bin
-#     shopt -s histappend
-#     shopt -s cdspell      # cd spell check (try cd /usr/bon)
-#     shopt -s cmdhist
-#     shopt -s checkwinsize
-#     shopt -s extglob      # rm !(everything_but_this_file)
-#     if [ "${BASH_VERSINFO}" -gt "3" ] ; then # We are using BASH > 4
-#         shopt -s globstar # (ls /home/*/tmp) !
-#         shopt -s autocd   # Just type dir name
-#     fi
+    PATH=$PATH:/usr/local/include:/usr/bin/gnu
+    PATH=/usr/local/bin:$PATH
+    PATH=$PATH:~/scripts:~/bin
+    shopt -s histappend
+    shopt -s cdspell      # cd spell check (try cd /usr/bon)
+    shopt -s cmdhist
+    shopt -s checkwinsize
+    shopt -s extglob      # rm !(everything_but_this_file)
+    if [ "${BASH_VERSINFO}" -gt "3" ] ; then # We are using BASH > 4
+        shopt -s globstar # (ls /home/*/tmp) !
+        shopt -s autocd   # Just type dir name
+    fi
 
-# # Set nice ls output colors
-#     if [ -x /usr/bin/dircolors ] ; then
+# Set nice ls output colors
+    if [ -x /usr/bin/dircolors ] ; then
 
-#         eval "`dircolors -b`"
-#         [ "$TERM" != "dumb" ] && eval "`dircolors -b`" && alias ls='ls --color=auto'
-# # Same for N900
-#     elif [ -x /usr/bin/gnu/dircolors ] ; then
-#         eval "`dircolors -b`"
-#         [ "$TERM" != "dumb" ] && eval "`dircolors -b`" && alias ls='/usr/bin/gnu/ls --color=auto'
-#     fi
+        eval "`dircolors -b`"
+        [ "$TERM" != "dumb" ] && eval "`dircolors -b`" && alias ls='ls --color=auto'
+# Same for N900
+    elif [ -x /usr/bin/gnu/dircolors ] ; then
+        eval "`dircolors -b`"
+        [ "$TERM" != "dumb" ] && eval "`dircolors -b`" && alias ls='/usr/bin/gnu/ls --color=auto'
+    fi
 
-# else
-#     kituu_bash_version=`bash --version`
-#     echo "Enter BASH (${kituu_bash_version})"
-#     bash
-# fi
+else
+    kituu_bash_version=`bash --version`
+    echo "Enter BASH (${kituu_bash_version})"
+    bash
+fi
 
 export HISTCONTROL=ignoreboth HISTFILESIZE=5000 TERM=xterm-256color
 
@@ -170,48 +167,46 @@ done
 }
 
 kituu_bash_prompt() {
-#     local knc=$kituu_unset_color            # No regular color
-#     local klc=$kituu_line_color
-#     local kuc=$kituu_user_color
-#     local kpc=$kituu_user_color
+    local knc=$kituu_unset_color            # No regular color
+    local klc=$kituu_line_color
+    local kuc=$kituu_user_color
+    local kpc=$kituu_user_color
 
-# # [ $UID -eq "0" ] && kuc=$kRc # root's color
-#     if [ $UID -eq "0" ]
-#     then
-# 	local kuc="\[\e[1;31m\]"
-# 	local kituu_user_symbol="#"
-#     else
-# 	local kuc="\[\e[1;32m\]"
-# 	local kituu_user_symbol="$"
-#     fi
+# [ $UID -eq "0" ] && kuc=$kRc # root's color
+    if [ $UID -eq "0" ]
+    then
+	local kuc="\[\e[1;31m\]"
+	local kituu_user_symbol="#"
+    else
+	local kuc="\[\e[1;32m\]"
+	local kituu_user_symbol="$"
+    fi
 
-# # color path differently if not on my own machines
-#     if grep -q moe /etc/hosts; then kpc=$kuc; else kpc="\[\e[1;34m\]"; fi
+# color path differently if not on my own machines
+    if grep -q moe /etc/hosts; then kpc=$kuc; else kpc="\[\e[1;34m\]"; fi
 
-#     # curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptsdir/git-completion.bash
+    # curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptsdir/git-completion.bash
 
-# # Return Smiley
-#     local kituu_smiley='$(if [[ $? -eq 0 ]]; then echo "\[\e[1;32m\]"":)"; else echo "\[\e[1;31m\]"":("; fi;)'
+# Return Smiley
+    local kituu_smiley='$(if [[ $? -eq 0 ]]; then echo "\[\e[1;32m\]"":)"; else echo "\[\e[1;31m\]"":("; fi;)'
 
-#     case "$TERM" in
-# 	"dumb")
-# 	    PS1="dumb > "
-# 	    ;;
-# 	xterm*|rxvt*|eterm*|screen*)
-#   	    # PS1="\[\e]1;\u@\h: \W\007\e]2;\u@\h: \W\007\]\${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
-#   	    PS1="${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
-# 	    # PS1="xterm > "
-# 	    ;;
-# 	linux*)
-# 	    PS1="${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
-# 	    # PS1="linux > "
-# 	    ;;
-# 	*)
-# 	    PS1="* > "
-# 	    ;;
-#     esac
-
-echo "plopz"
+    case "$TERM" in
+	"dumb")
+	    PS1="dumb > "
+	    ;;
+	xterm*|rxvt*|eterm*|screen*)
+  	    # PS1="\[\e]1;\u@\h: \W\007\e]2;\u@\h: \W\007\]\${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
+  	    PS1="${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
+	    # PS1="xterm > "
+	    ;;
+	linux*)
+	    PS1="${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
+	    # PS1="linux > "
+	    ;;
+	*)
+	    PS1="* > "
+	    ;;
+    esac
 }
 
 # http://tldp.org/HOWTO/Bash-Prompt-HOWTO/xterm-title-bar-manipulations.html
