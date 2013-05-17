@@ -64,6 +64,27 @@
 
 ;; ORG! ______________________________________________________________________
 
+(require 'org-publish)
+(setq org-publish-project-alist
+      '(
+        ("mensup" :components ("org-notes" "org-static"))
+        ("org-notes"
+         :base-directory "~/Documents/svnmen/wiki/"
+         :base-extension "org"
+         :publishing-directory "~/Documents/svnmen/wiki/"
+         :recursive t
+         :publishing-function org-publish-org-to-html
+         :headline-levels 4             ; Just the default for this project.
+         :auto-preamble t)
+        ("org-static"
+         :base-directory "~/Documents/svnmen/wiki/"
+         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+         :publishing-directory "~/Documents/svnmen/wiki/"
+         :recursive t
+         :publishing-function org-publish-attachment
+         ))
+      )
+
 (setq org-export-html-postamble nil)
 
 (setq org-agenda-files (list "~/org/work.org"
