@@ -33,39 +33,39 @@ kituu_processes=$(ps ax | wc -l | tr -d " ")
 
 export EDITOR=emacs ALTERNATE_EDITOR=vi
 
-# Try to escape busybox
-if [ -n "${BASH+x}" ] ; then
-    [ $UID -eq 0 ] && PATH=$PATH:/sbin:/usr/sbin:/bin
+# # Try to escape busybox
+# if [ -n "${BASH+x}" ] ; then
+#     [ $UID -eq 0 ] && PATH=$PATH:/sbin:/usr/sbin:/bin
 
-    PATH=$PATH:/usr/local/include:/usr/bin/gnu
-    PATH=/usr/local/bin:$PATH
-    PATH=$PATH:~/scripts:~/bin
-    shopt -s histappend
-    shopt -s cdspell      # cd spell check (try cd /usr/bon)
-    shopt -s cmdhist
-    shopt -s checkwinsize
-    shopt -s extglob      # rm !(everything_but_this_file)
-    if [ "${BASH_VERSINFO}" -gt "3" ] ; then # We are using BASH > 4
-        shopt -s globstar # (ls /home/*/tmp) !
-        shopt -s autocd   # Just type dir name
-    fi
+#     PATH=$PATH:/usr/local/include:/usr/bin/gnu
+#     PATH=/usr/local/bin:$PATH
+#     PATH=$PATH:~/scripts:~/bin
+#     shopt -s histappend
+#     shopt -s cdspell      # cd spell check (try cd /usr/bon)
+#     shopt -s cmdhist
+#     shopt -s checkwinsize
+#     shopt -s extglob      # rm !(everything_but_this_file)
+#     if [ "${BASH_VERSINFO}" -gt "3" ] ; then # We are using BASH > 4
+#         shopt -s globstar # (ls /home/*/tmp) !
+#         shopt -s autocd   # Just type dir name
+#     fi
 
-# Set nice ls output colors
-    if [ -x /usr/bin/dircolors ] ; then
+# # Set nice ls output colors
+#     if [ -x /usr/bin/dircolors ] ; then
 
-        eval "`dircolors -b`"
-        [ "$TERM" != "dumb" ] && eval "`dircolors -b`" && alias ls='ls --color=auto'
-# Same for N900
-    elif [ -x /usr/bin/gnu/dircolors ] ; then
-        eval "`dircolors -b`"
-        [ "$TERM" != "dumb" ] && eval "`dircolors -b`" && alias ls='/usr/bin/gnu/ls --color=auto'
-    fi
+#         eval "`dircolors -b`"
+#         [ "$TERM" != "dumb" ] && eval "`dircolors -b`" && alias ls='ls --color=auto'
+# # Same for N900
+#     elif [ -x /usr/bin/gnu/dircolors ] ; then
+#         eval "`dircolors -b`"
+#         [ "$TERM" != "dumb" ] && eval "`dircolors -b`" && alias ls='/usr/bin/gnu/ls --color=auto'
+#     fi
 
-else
-    kituu_bash_version=`bash --version`
-    echo "Enter BASH (${kituu_bash_version})"
-    bash
-fi
+# else
+#     kituu_bash_version=`bash --version`
+#     echo "Enter BASH (${kituu_bash_version})"
+#     bash
+# fi
 
 export HISTCONTROL=ignoreboth HISTFILESIZE=5000 TERM=xterm-256color
 
