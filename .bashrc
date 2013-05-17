@@ -7,7 +7,6 @@
 bind '^[[1;5D' backward-word
 bind '^[[1;5C' forward-word
 
-
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
@@ -68,7 +67,7 @@ else
     bash
 fi
 
-export HISTCONTROL=ignoreboth HISTFILESIZE=5000
+export HISTCONTROL=ignoreboth HISTFILESIZE=5000 TERM=xterm-256color
 
 # Generic funcs
 . ~/.kituu-commands.sh
