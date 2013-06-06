@@ -831,6 +831,10 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-<tab>") 'tabbar-forward)
 (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
 
+(define-key org-mode-map (kbd "C-<tab>") 'tabbar-forward)
+(define-key org-mode-map (kbd "C-S-<tab>") 'tabbar-backward)
+
+
 (global-set-key (kbd "C-=") 'insert-pair-brace)        ;{}
 (global-set-key (kbd "C-(") 'insert-pair-paren)        ;()
 (global-set-key (kbd "C-)") 'insert-pair-bracket)      ;[]

@@ -16,7 +16,7 @@
 #     emacsclient.emacs24 --no-wait $@
 # fi
 
-if [ "$(pidof emacs24)" ] ; then
+if [ "$(pidof emacs)" ] ; then
     emacsclient "$@"
 else
     emacs -mm "$@"
