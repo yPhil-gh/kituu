@@ -69,24 +69,30 @@
       '(
         ("mensup" :components ("org-notes" "org-static"))
         ("org-notes"
-         :base-directory "~/Documents/svnmen/wiki/"
+         :base-directory "~/Documents/svnmen/"
          :base-extension "org"
-         :publishing-directory "~/Documents/svnmen/wiki/"
+         :publishing-directory "~/Documents/svnmen/"
          :recursive t
          :publishing-function org-publish-org-to-html
-         :headline-levels 4             ; Just the default for this project.
-         :auto-preamble t)
+         :headline-levels 6             ; Just the default for this project.
+         :auto-preamble t
+
+         :auto-sitemap t                ; Generate sitemap.org automagically...
+         :sitemap-filename "sitemap.org"  ; ... call it sitemap.org (it's the default)...
+         :sitemap-title "Sitemap"         ; ... with title 'Sitemap'.
+
+)
         ("org-static"
-         :base-directory "~/Documents/svnmen/wiki/"
+         :base-directory "~/Documents/svnmen/"
          :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
-         :publishing-directory "~/Documents/svnmen/wiki/"
+         :publishing-directory "~/Documents/svnmen/"
          :recursive t
          :publishing-function org-publish-attachment
          ))
       )
 
 (setq org-export-html-postamble nil)
-
+;; (setq org-export-html-postamble t)
 (setq org-agenda-files (list "~/org/work.org"
                              "~/org/home.org"))
 
@@ -1106,6 +1112,11 @@ Revert HEAD to 7                                                  git reset --ha
  '(mm-enable-external (quote ask))
  '(mm-text-html-renderer (quote links))
  '(mumamo-margin-use (quote (left-margin 13)))
+ '(org-export-html-postamble-format
+   (quote
+    (("fr" "<hr /><p class=\"date\">Date: %d</p>
+<p class=\"xhtml-validation\">%v</p>
+"))))
  '(org-support-shift-select (quote always))
  '(recenter-redisplay nil)
  '(recentf-auto-cleanup (quote never))
@@ -1140,8 +1151,7 @@ Revert HEAD to 7                                                  git reset --ha
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :background "gray20" :foreground
-                        "white" :height 105))))
+ '(default ((t (:family "DejaVu Sans Mono" :background "gray20" :foreground "white" :height 105))))
  '(font-lock-comment-face ((t (:slant italic))))
  '(mode-line ((t (:background "gray10" :foreground "white" :box nil))))
  '(mode-line-buffer-id ((t (:weight bold :foreground "OrangeRed1"))))
