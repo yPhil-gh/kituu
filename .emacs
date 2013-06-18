@@ -1113,7 +1113,11 @@ Revert HEAD to 7                                                  git reset --ha
  '(mm-text-html-renderer (quote links))
  '(mumamo-margin-use (quote (left-margin 13)))
  '(org-export-html-postamble t)
+ '(org-export-html-postamble-format
+   (quote
+    (("en" "<p class=\"author\"><a href=\"/men/wiki\">Home</a> - <a href=\"#\">Up</a> %a (%e) - %d - %v</p>"))))
  '(org-support-shift-select (quote always))
+ '(org-use-sub-superscripts nil)
  '(recenter-redisplay nil)
  '(recentf-auto-cleanup (quote never))
  '(recentf-max-menu-items 60)
