@@ -2,7 +2,6 @@
 ;; Keep it under 1k lines ;p
 ;; Use C-h x to read about what this .emacs can do for you (quite a bit)
 
-
 ;; Init! ______________________________________________________________________
 
 (let ((default-directory "~/.emacs.d/lisp/"))
@@ -75,13 +74,9 @@
          :recursive t
          :table-of-contents nil
          :publishing-function org-html-publish-to-html
-         ;; :headline-levels 6             ; Just the default for this project.
-         ;; :auto-preamble t
-
-         ;; :auto-sitemap t                ; Generate sitemap.org automagically...
+          ;; :auto-sitemap t                ; Generate sitemap.org automagically...
          ;; :sitemap-filename "sitemap.org"  ; ... call it sitemap.org (it's the default)...
          ;; :sitemap-title "Sitemap"         ; ... with title 'Sitemap'.
-
 )
         ("org-static"
          :base-directory "~/Documents/svnmen/"
@@ -838,8 +833,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-<tab>") 'tabbar-forward)
 (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
 
-(define-key org-mode-map (kbd "C-<tab>") 'tabbar-forward)
-(define-key org-mode-map (kbd "C-S-<tab>") 'tabbar-backward)
+;; (define-key org-mode-map (kbd "C-<tab>") 'tabbar-forward)
+;; (define-key org-mode-map (kbd "C-S-<tab>") 'tabbar-backward)
 
 
 (global-set-key (kbd "C-=") 'insert-pair-brace)        ;{}
