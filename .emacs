@@ -91,7 +91,7 @@
          ))
       )
 
-(setq org-export-html-postamble nil)
+;; (setq org-export-html-postamble nil)
 ;; (setq org-export-html-postamble t)
 (setq org-agenda-files (list "~/org/work.org"
                              "~/org/home.org"))
@@ -1112,11 +1112,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(mm-enable-external (quote ask))
  '(mm-text-html-renderer (quote links))
  '(mumamo-margin-use (quote (left-margin 13)))
- '(org-export-html-postamble-format
-   (quote
-    (("fr" "<hr /><p class=\"date\">Date: %d</p>
-<p class=\"xhtml-validation\">%v</p>
-"))))
+ '(org-export-html-postamble t)
  '(org-support-shift-select (quote always))
  '(recenter-redisplay nil)
  '(recentf-auto-cleanup (quote never))

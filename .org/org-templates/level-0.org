@@ -1,0 +1,7 @@
+#+STYLE:    <link rel="stylesheet" type="text/css" href="./wiki/css/stylesheet.css" />
+
+#+ATTR_HTML: width="200px"
+#+ATTR_HTML: id="logo"
+[[./wiki/img/armoiries-du-maroc.png]]
+
+@<hr>
