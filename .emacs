@@ -2,6 +2,7 @@
 ;; Keep it under 1k lines ;p
 ;; Use C-h x to read about what this .emacs can do for you (quite a bit)
 
+
 ;; Init! ______________________________________________________________________
 
 (let ((default-directory "~/.emacs.d/lisp/"))
