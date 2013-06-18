@@ -1,6 +1,12 @@
-#+STYLE:    <link rel="stylesheet" type="text/css" href="wiki/css/stylesheet.css" />
-
-#+OPTIONS: ^:nil num:t p:nil pri:nil stat:t tags:t tasks:t tex:t timestamp:t toc:t
+#+html_head: <link rel="stylesheet" type="text/css" href="wiki/css/stylesheet.css" />
+#+html_head: <link rel="icon" type="image/png" href="wiki/img/armoiries-du-maroc.png" />
+#+OPTIONS: ^:nil num:nil p:nil pri:nil stat:t tags:t tasks:t tex:t timestamp:t toc:nil
+# #+DATE: %d/%m/%Y %T
 #+AUTHOR: SBCMaroc
 #+EMAIL: info@sbcmaroc.com
 #+LANGUAGE: fr
+#+attr_html: :width 200px
+#+attr_html: :id logo
+[[./wiki/img/armoiries-du-maroc.png]]
+
+#+TOC: headlines

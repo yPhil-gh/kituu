@@ -2,12 +2,10 @@
 ;; Keep it under 1k lines ;p
 ;; Use C-h x to read about what this .emacs can do for you (quite a bit)
 
-
 ;; Init! ______________________________________________________________________
 
 (let ((default-directory "~/.emacs.d/lisp/"))
   (normal-top-level-add-subdirs-to-load-path))
-
 
 ;; External libs
 (eval-and-compile
@@ -32,6 +30,7 @@
       (require 'cedet)
       (add-to-list 'package-archives
                    '("melpa" . "http://melpa.milkbox.net/packages/") t)
+      (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
       ;; (add-to-list 'package-archives
       ;;              '("marmalade" . "http://marmalade-repo.org/packages/"))
       (tool-bar-mode -1)
@@ -64,7 +63,7 @@
 
 ;; ORG! ______________________________________________________________________
 
-(require 'org-publish)
+;; (require 'org-publish)
 (setq org-publish-project-alist
       '(
         ("mensup" :components ("org-notes" "org-static"))
@@ -73,13 +72,14 @@
          :base-extension "org"
          :publishing-directory "~/Documents/svnmen/"
          :recursive t
-         :publishing-function org-publish-org-to-html
-         :headline-levels 6             ; Just the default for this project.
-         :auto-preamble t
+         :table-of-contents nil
+         :publishing-function org-html-publish-to-html
+         ;; :headline-levels 6             ; Just the default for this project.
+         ;; :auto-preamble t
 
-         :auto-sitemap t                ; Generate sitemap.org automagically...
-         :sitemap-filename "sitemap.org"  ; ... call it sitemap.org (it's the default)...
-         :sitemap-title "Sitemap"         ; ... with title 'Sitemap'.
+         ;; :auto-sitemap t                ; Generate sitemap.org automagically...
+         ;; :sitemap-filename "sitemap.org"  ; ... call it sitemap.org (it's the default)...
+         ;; :sitemap-title "Sitemap"         ; ... with title 'Sitemap'.
 
 )
         ("org-static"
@@ -1112,10 +1112,14 @@ Revert HEAD to 7                                                  git reset --ha
  '(mm-enable-external (quote ask))
  '(mm-text-html-renderer (quote links))
  '(mumamo-margin-use (quote (left-margin 13)))
- '(org-export-html-postamble t)
- '(org-export-html-postamble-format
+ '(org-export-html-validation-link
+   "<a href=\"http://validator.w3.org/check?uri=referer\">Validation XHTML 1.0</a>")
+ '(org-html-postamble-format
    (quote
-    (("en" "<p class=\"author\"><a href=\"/men/wiki\">Home</a> - <a href=\"#\">Up</a> %a (%e) - %d - %v</p>"))))
+    (("en" "<p class=\"author\"><a href=\"/men/wiki\">← Accueil</a> - <a
+href=\"#\">↑ Page</a> %a (%e) - %v</p>"))))
+ '(org-html-metadata-timestamp-format "%d/%m/%Y %T")
+ '(org-html-postamble t)
  '(org-support-shift-select (quote always))
  '(org-use-sub-superscripts nil)
  '(recenter-redisplay nil)
