@@ -99,6 +99,7 @@
         ("J" "Joke" entry (file+headline "~/.org/orgx.org" "Jokes")
          "* %?\nEntered on %U\n  %i\n  %a\n")))
 
+
 ;; (setq org-export-html-postamble nil)
 ;; (setq org-export-html-postamble t)
 (setq org-agenda-files (list "~/.org/notes.org"
