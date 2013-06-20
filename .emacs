@@ -101,7 +101,7 @@
 
 ;; (setq org-export-html-postamble nil)
 ;; (setq org-export-html-postamble t)
-(setq org-agenda-files (list "~/.org/orgx.org"))
+;; (setq org-agenda-files (list "~/.org/orgx.org"))
 
 (setq org-default-notes-file  "~/.org/orgx.org")
 
@@ -1116,7 +1116,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(mm-enable-external (quote ask))
  '(mm-text-html-renderer (quote links))
  '(mumamo-margin-use (quote (left-margin 13)))
- '(org-agenda-files nil)
+ '(org-agenda-files (quote ("~/.org/")))
  '(org-cycle-separator-lines 1)
  '(org-directory "~/.org")
  '(org-export-html-validation-link
