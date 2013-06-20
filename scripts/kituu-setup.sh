@@ -122,13 +122,27 @@ fi
 echo -e $sep"Leecher!"
 if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
     read -e -p "## Install leeecher (https://github.com/xaccrocheur/leecher)?  ($scriptdir/leecher.pl) [Y/n] " yn
-if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-    cd $scriptdir && git clone ${vc_prefix}xaccrocheur/leecher.git
-    ln -sv $scriptdir/leecher/leecher.pl $scriptdir/
-fi
+    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+        cd $scriptdir && git clone ${vc_prefix}xaccrocheur/leecher.git
+        ln -sv $scriptdir/leecher/leecher.pl $scriptdir/
+    fi
 else
 cd $scriptdir/leecher/ && git pull
 fi
+
+
+# echo -e $sep"leecher.pl (a script to auto-get .ext links from a given web page URL)"
+echo -e $sep"Git-sync!"
+if [ ! -e $scriptdir/git-sync/git-sync ] ; then
+    read -e -p "## Install git-sync (https://github.com/simonthum/git-sync)? (in $scriptdir/git-sync) [Y/n] " yn
+    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+        cd $scriptdir && git clone ${vc_prefix}simonthum/git-sync.git
+        ln -sv $scriptdir/git-sync/git-sync $scriptdir/git-sync.sh
+    fi
+else
+    cd $scriptdir/git-sync/ && git pull
+fi
+
 
 if [ ! -d "$lispdir" ] ; then mkdir -p $lispdir/ ; fi
 

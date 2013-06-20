@@ -101,8 +101,7 @@
 
 ;; (setq org-export-html-postamble nil)
 ;; (setq org-export-html-postamble t)
-(setq org-agenda-files (list "~/.org/notes.org"
-                             ))
+(setq org-agenda-files (list "~/.org/orgx.org"))
 
 (setq org-default-notes-file  "~/.org/orgx.org")
 
@@ -1156,7 +1155,7 @@ href=\"#\">↑ Page</a> %a (%e) - %v</p>"))))
  '(undo-tree-visualizer-diff t)
  '(user-full-name "Philippe Coatmeur")
  '(user-mail-address "philcm@gnu.org")
- '(vc-make-backup-files t)
+ '(vc-make-backup-files nil)
  '(web-vcs-default-download-directory (quote site-lisp-dir)))
 
 (custom-set-faces
