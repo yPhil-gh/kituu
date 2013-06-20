@@ -91,12 +91,14 @@
          ))
       )
 
+(setq px-org-file (concat org-directory "/orgx.org"))
+
 (setq org-capture-templates
-      '(("t" "Task" entry (file+headline "~/.org/orgx.org" "Tasks")
+      '(("t" "Task" entry (file+headline px-org-file "Tasks")
          "** TODO %?\n  %i\n  %a\n")
-        ("j" "Journal" entry (file+headline "~/.org/orgx.org" "Journal")
+        ("j" "Journal" entry (file+headline px-org-file "Journal")
          "* %?\nEntered on %U\n  %i\n  %a\n")
-        ("J" "Joke" entry (file+headline "~/.org/orgx.org" "Jokes")
+        ("J" "Joke" entry (file+headline px-org-file "Jokes")
          "* %?\nEntered on %U\n  %i\n  %a\n")))
 
 ;; (setq org-export-html-postamble nil)
