@@ -2,6 +2,10 @@
 ;; Keep it under 1k lines ;p
 ;; Use C-h x to read about what this .emacs can do for you (quite a bit)
 
+;; JIRA! ______________________________________________________________________
+
+(setq jiralib-url "http://jira.sbcmaroc.com")
+
 ;; Init! ______________________________________________________________________
 
 (let ((default-directory "~/.emacs.d/lisp/"))
@@ -87,17 +91,20 @@
          ))
       )
 
+(setq org-capture-templates
+      '(("t" "Task" entry (file+headline "~/.org/orgx.org" "Tasks")
+         "** TODO %?\n  %i\n  %a\n")
+        ("j" "Journal" entry (file+headline "~/.org/orgx.org" "Journal")
+         "* %?\nEntered on %U\n  %i\n  %a\n")
+        ("J" "Joke" entry (file+headline "~/.org/orgx.org" "Jokes")
+         "* %?\nEntered on %U\n  %i\n  %a\n")))
+
 ;; (setq org-export-html-postamble nil)
 ;; (setq org-export-html-postamble t)
-(setq org-agenda-files (list "~/org/work.org"
-                             "~/org/home.org"))
+(setq org-agenda-files (list "~/.org/notes.org"
+                             ))
 
-(global-set-key (kbd "C-c r") 'remember)    ;; (1)
-(add-hook 'remember-mode-hook 'org-remember-apply-template) ;; (2)
-(setq org-remember-templates
-      '((?n "* %U %?\n\n  %i\n  %a" "~/notes.org")))  ;; (3)
-(setq remember-annotation-functions '(org-remember-annotation)) ;; (4)
-(setq remember-handler-functions '(org-remember-handler)) ;; (5)
+(setq org-default-notes-file  "~/.org/orgx.org")
 
 ;; Server! ____________________________________________________________________
 
@@ -765,6 +772,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cc" 'org-capture)
 
 (global-set-key (kbd "M-s-b") 'bookmark-set)
 (global-set-key (kbd "s-b") 'bookmark-jump)
@@ -1085,6 +1093,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
  '(epa-popup-info-window nil)
+ '(fold-dwim-outline-style-default (quote nested))
  '(font-use-system-font t)
  '(global-font-lock-mode t)
  '(global-linum-mode t)
@@ -1108,14 +1117,18 @@ Revert HEAD to 7                                                  git reset --ha
  '(mm-enable-external (quote ask))
  '(mm-text-html-renderer (quote links))
  '(mumamo-margin-use (quote (left-margin 13)))
+ '(org-agenda-files nil)
+ '(org-cycle-separator-lines 1)
+ '(org-directory "~/.org")
  '(org-export-html-validation-link
    "<a href=\"http://validator.w3.org/check?uri=referer\">Validation XHTML 1.0</a>")
+ '(org-html-metadata-timestamp-format "%d/%m/%Y %T")
+ '(org-html-postamble t)
  '(org-html-postamble-format
    (quote
     (("en" "<p class=\"author\"><a href=\"/men/wiki\">← Accueil</a> - <a
 href=\"#\">↑ Page</a> %a (%e) - %v</p>"))))
- '(org-html-metadata-timestamp-format "%d/%m/%Y %T")
- '(org-html-postamble t)
+ '(org-log-done (quote time))
  '(org-support-shift-select (quote always))
  '(org-use-sub-superscripts nil)
  '(recenter-redisplay nil)
@@ -1135,8 +1148,8 @@ href=\"#\">↑ Page</a> %a (%e) - %v</p>"))))
  '(smtpmail-smtp-server "smtp.gmail.com")
  '(standard-indent 2)
  '(tramp-default-method "scp")
- '(undo-limit 4000)
- '(undo-strong-limit 6000)
+ '(undo-limit 40000)
+ '(undo-strong-limit 60000)
  '(undo-tree-auto-save-history t)
  '(undo-tree-enable-undo-in-region nil)
  '(undo-tree-history-directory-alist (quote (("." . "~/tmp"))))
