@@ -11,15 +11,15 @@ else
     qjackctl &
     sleep 2
     qmidinet &
-    sleep 1
+    # sleep 1
     # ams -N Guitar -l ~/Documents/Music/00-PRESETS/MyGrt00.ams &
-    sleep 1
+    # sleep 1
     # ams -N BassSynth -l ~/Documents/Music/00-PRESETS/MySynth000.ams &
-    
+
     if [ "$1" == "-d" ] ; then
         /usr/local/bin/qtractor $2 &
     else
         qtractor $1 &
     fi
-#    vmpk &
+   vmpk &
 fi
