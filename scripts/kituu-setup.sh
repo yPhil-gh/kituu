@@ -41,7 +41,7 @@ moz[GreaseMonkey_px_fix]="https://raw.github.com/xaccrocheur/kituu/master/script
 moz[French_dictionary_(save-as_for_thunderbird)]="$mozurl/354872/addon-354872-latest.xpi"
 moz[tabmix+]="$mozurl/1122/addon-1122-latest.xpi"
 moz[youtubeDLoader]="https://addons.mozilla.org/firefox/downloads/file/180678/youtube_video_mp3_downloader-2.1-fx.xpi?src=userprofile"
-moz[adblock_edge]="$mozurl/394968/addon-394968-latest.xpi"
+moz[adblock_edge]="$mozurl/394968/platform:2/addon-394968-latest.xpi?src=dp-btn-primary"
 moz[color_picker]="$mozurl/271/addon-271-latest.xpi"
 moz[TabCloser]="$mozurl/9669/addon-9669-latest.xpi"
 moz[GreaseMonkey_jira]="https://raw.github.com/xaccrocheur/kituu/master/scripts/gm-jira.user.js"
