@@ -17,9 +17,9 @@ else
     # ams -N BassSynth -l ~/Documents/Music/00-PRESETS/MySynth000.ams &
 
     if [ "$1" == "-d" ] ; then
-        /usr/local/bin/qtractor $2 &
+        /usr/local/bin/qtractor -style -plastique $2 &
     else
-        qtractor $1 &
+        qtractor -style -plastique $1 &
     fi
    vmpk &
 fi
