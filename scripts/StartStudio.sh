@@ -6,9 +6,9 @@
 apps="killall qjackctl vmpk qmidinet jackd"
 
 if [ "$1" == "-k" ] ; then
-    killall $apps ardour-3.2
+    killall $apps ardour-3.2 qjackctl.real
 else
-    killall -w $apps
+    killall -w $apps ardour-3.2 qjackctl.real
     sleep 1
     qjackctl &
     sleep 2

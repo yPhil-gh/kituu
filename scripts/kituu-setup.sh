@@ -26,8 +26,8 @@ pack[view&players]="smplayer"
 pack[image_tools]="gimp inkscape blender ffmpeg"
 pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk qmidinet calf-plugins nekobee fluidsynth-dssi hexter swami qarecord"
 pack[games]="extremetuxracer supertuxkart stuntrally xonotic"
-pack[emacs24_stable]="emacs24 emacs24-el emacs24-common-non-dfsg"
-pack[emacs24_snapshot]="snapshot-el emacs-snapshot-gtk emacs-snapshot"
+pack[emacs24_stable]="emacs24 emacs24-el emacs24-common-non-dfsg aspell-fr"
+pack[emacs24_snapshot]="snapshot-el emacs-snapshot-gtk emacs-snapshot aspell-fr"
 pack[calf_plugins_git_tools]="libtool autoconf libexpat1-dev libfftw3-dev libglib2.0-dev libfluidsynth-dev jackd1 lv2core libglade2-dev gtk2-engines-pixbuf"
 
 # Mozilla addons
