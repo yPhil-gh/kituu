@@ -93,7 +93,7 @@ if $debian; then
 fi
 
 echo -e $sep"Various menial janitor tasks"
-read -e -p "#### Install basic packages? [Y/n] " yn
+read -e -p "#### Clean around? [Y/n] " yn
 
 if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     if [[ ! -d ~/tmp ]] ; then mkdir -v ~/tmp ; else echo -e "~/tmp \t\t\tOK" ; fi
