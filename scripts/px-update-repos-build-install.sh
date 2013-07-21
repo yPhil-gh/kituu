@@ -37,7 +37,7 @@ function build_waf {
             build_flags=""
         fi
     fi
-
+    ./waf clean
     ./waf configure $build_flags && ./waf && sudo ./waf install
 }
 
