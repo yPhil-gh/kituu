@@ -13,7 +13,17 @@ pack[01-drobilla-lad]="svn co http://svn.drobilla.net/lad/trunk"
 pack[00-lv2]="svn checkout http://lv2plug.in/repo/trunk"
 
 pack_indexes=( ${!pack[@]} )
-IFS=$'\n' pack_sorted=( $(echo -e "${pack_indexes[@]/%/\n}" | sed -r -e 's/^ *//' -e '/^$/d' | sort) )
+# IFS=$'\n'
+pack_sorted=( $(echo -e "${pack_indexes[@]/%/\n}" | sed -r -e 's/^ *//' -e '/^$/d' | sort) )
+
+
+# packageclonecommand="ls /tmp/"
+
+# $packageclonecommand
+
+# exit 0
+
+
 
 # for z in "${pack[@]}"; do
 #   echo $z ' - ' ${pack["$z"]}
@@ -31,7 +41,7 @@ init=true
 
 read -e -p "## Install deps? [Y/n] " yn
 if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-    sudo apt-get install autoconf libboost-dev libglibmm-2.4-dev libsndfile-dev liblo-dev libxml2-dev uuid-dev libcppunit-dev libfftw3-dev libaubio-dev liblrdf-dev libsamplerate-dev libsratom-dev libsuil-dev libgnomecanvas2-dev libgnomecanvasmm-2.6-dev libcwiid-dev libgtkmm-2.4-dev lv2-dev doxygen
+    sudo apt-get install autoconf libboost-dev libglibmm-2.4-dev libsndfile-dev liblo-dev libxml2-dev uuid-dev libcppunit-dev libfftw3-dev libaubio-dev liblrdf-dev libsamplerate-dev libsratom-dev libsuil-dev libgnomecanvas2-dev libgnomecanvasmm-2.6-dev libcwiid-dev libgtkmm-2.4-dev
 fi
 
 function build_waf {
@@ -83,39 +93,44 @@ function update_package {
 }
 
 
-for k in "${pack_sorted[@]}"; do
-  echo $k ' - ' ${pack["$k"]}
-done
+# for k in "${pack_sorted[@]}"; do
+#   echo $k ' - ' ${pack["$k"]}
+# done
 
 for package in "${pack_sorted[@]}" ; do
     vcsystem=${pack[$package]:0:3}
     [[ $vcsystem = "svn" ]] && vcupdatecommand="update" || vcupdatecommand="pull"
     [[ $vcsystem = "svn" ]] && vcinitcommand="checkout" || vcinitcommand="clone"
-    # echo "URL of $package ($vcsystem $vcupdatecommand) is ${pack[$package]}"
 
-    # echo "ze pack iz $package"
+    package_clone_command="${pack[$package]}"
 
-    # plop=$(echo $package|wc -c)
-    # # echo $(( $plop - 4 ))
+    packageclonecommand="ls /tmp/"
 
     name_length=$(( ${#package} -3 ))
 
     package=${package:3:$name_length}
-    echo $package
+    # echo $package
 
-    # # echo -e $sep"$package ($srcdir/$package/)"
-    # if [[ ! -d $srcdir/$package ]] ; then
-    #     init=true
-    #     echo
-    #     read -e -p "## $vcinitcommand $package in ($srcdir/$package/)? [Y/n] " yn
-    #     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-    #         # cd $srcdir && ${pack[$package]}
-    #         cd $srcdir && ${pack[$package]} $package && cd $package
-    #         update_package $package
-    #     fi
-    # else
-    #     init=false
-    #     cd $srcdir/$package
-    #     update_package $package
-    # fi
+    echo "ze pack iz $pname : $package_clone_command ($vcsystem)"
+
+    # echo -e $sep"$package ($srcdir/$package/)"
+    if [[ ! -d $srcdir/$package ]] ; then
+        init=true
+        echo
+        read -e -p "## $vcinitcommand $package in ($srcdir/$package/)? [Y/n] " yn
+        if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+            # cd $srcdir && ${pack[$package]}
+            # echo $package_clone_command
+            # exit 0
+            cd $srcdir
+            # ${pack[$package]}
+            pwd
+            $package_clone_command $package && cd $package
+            update_package $package
+        fi
+    else
+        init=false
+        cd $srcdir/$package
+        update_package $package
+    fi
 done
