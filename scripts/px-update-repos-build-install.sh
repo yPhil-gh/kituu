@@ -35,7 +35,7 @@ function build_waf {
 	read -e -p "## Build ardour with Windows VST support? [Y/n] " yn
 	if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
             sudo apt-get install wine-dev
-            build_flags="--windows-vst"
+            build_flags="--windows-vst --program-name=ardour3-vst"
         else
             build_flags=""
         fi
