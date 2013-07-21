@@ -46,12 +46,9 @@ function build_waf {
 
 function build_make {
     if [[ $init ]] ; then
-        if [[ -f autogen.sh ]] ; then
-            ./autogen.sh
-        else
-            make -f Makefile.svn
-        fi
+        [[ -f autogen.sh ]] && ./autogen.sh ||  make -f Makefile.svn
     fi
+    make clean
     ./configure && make && sudo make install
 }
 
