@@ -2,8 +2,6 @@
 
 srcdir=~/src
 
-[[ $1 == "-f" ]] && force=true || force=false
-
 declare -A pack
 pack[00-lv2]="svn checkout http://lv2plug.in/repo/trunk"
 pack[01-drobilla-lad]="svn co http://svn.drobilla.net/lad/trunk"
@@ -12,12 +10,16 @@ pack[02-amsynth]="git clone https://code.google.com/p/amsynth"
 pack[02-drumkv1]="svn co http://svn.code.sf.net/p/drumkv1/code/trunk"
 pack[02-samplv1]="svn co http://svn.code.sf.net/p/samplv1/code/trunk"
 pack[02-synthv1]="svn co http://svn.code.sf.net/p/synthv1/code/trunk"
-pack[03-ardour]="git clone git://git.ardour.org/ardour/ardour.git"
+pack[03-qtractor]="svn co http://svn.code.sf.net/p/qtractor/code/trunk"
+pack[04-ardour]="git clone git://git.ardour.org/ardour/ardour.git"
+
+# END CONFIG
 
 pack_indexes=( ${!pack[@]} )
 # IFS=$'\n'
 pack_sorted=( $(echo -e "${pack_indexes[@]/%/\n}" | sed -r -e 's/^ *//' -e '/^$/d' | sort) )
 
+[[ $1 == "-f" ]] && force=true || force=false
 init=true
 
 [[ -d $srcdir ]] && cd $srcdir || mkdir -v $srcdir && cd $srcdir
