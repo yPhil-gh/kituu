@@ -5,37 +5,16 @@ srcdir=~/src
 [[ $1 == "-f" ]] && force=true || force=false
 
 declare -A pack
-# pack[02-triceratops]="git clone git://git.code.sf.net/p/triceratops/code"
-# pack[02-amsynth]="git clone https://code.google.com/p/amsynth"
-# pack[sord]="svn co http://svn.drobilla.net/sord/trunk"
-# pack[lilv]="svn co http://svn.drobilla.net/lad/trunk/lilv"
+pack[00-lv2]="svn checkout http://lv2plug.in/repo/trunk"
+pack[01-drobilla-lad]="svn co http://svn.drobilla.net/lad/trunk"
+pack[02-triceratops]="git clone git://git.code.sf.net/p/triceratops/code"
+pack[02-amsynth]="git clone https://code.google.com/p/amsynth"
 pack[02-drumkv1]="svn co http://svn.code.sf.net/p/drumkv1/code/trunk"
 pack[03-ardour]="git clone git://git.ardour.org/ardour/ardour.git"
-# pack[01-drobilla-lad]="svn co http://svn.drobilla.net/lad/trunk"
-# pack[00-lv2]="svn checkout http://lv2plug.in/repo/trunk"
 
 pack_indexes=( ${!pack[@]} )
 # IFS=$'\n'
 pack_sorted=( $(echo -e "${pack_indexes[@]/%/\n}" | sed -r -e 's/^ *//' -e '/^$/d' | sort) )
-
-
-# packageclonecommand="ls /tmp/"
-
-# $packageclonecommand
-
-# exit 0
-
-
-
-# for z in "${pack[@]}"; do
-#   echo $z ' - ' ${pack["$z"]}
-# done
-
-# echo "#"
-
-# for k in "${pack_sorted[@]}"; do
-#   echo $k ' - ' ${pack["$k"]}
-# done
 
 init=true
 
@@ -44,9 +23,8 @@ init=true
 read -e -p "## Install deps? [Y/n] " yn
 if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
     sudo apt-get install autoconf libboost-dev libglibmm-2.4-dev libsndfile-dev liblo-dev libxml2-dev uuid-dev libcppunit-dev libfftw3-dev libaubio-dev liblrdf-dev libsamplerate-dev libgnomecanvas2-dev libgnomecanvasmm-2.6-dev libcwiid-dev libgtkmm-2.4-dev
+    # libsratom-dev libsuil-dev liblilv-0-0
 fi
-
-# libsratom-dev libsuil-dev liblilv-0-0
 
 function build_waf {
 
@@ -95,11 +73,6 @@ function update_package {
     fi
 }
 
-
-# for k in "${pack_sorted[@]}"; do
-#   echo $k ' - ' ${pack["$k"]}
-# done
-
 for package in "${pack_sorted[@]}" ; do
     vcsystem=${pack[$package]:0:3}
     [[ $vcsystem = "svn" ]] && vcupdatecommand="update" || vcupdatecommand="pull"
@@ -107,16 +80,10 @@ for package in "${pack_sorted[@]}" ; do
 
     package_clone_command="${pack[$package]}"
 
-    packageclonecommand="ls /tmp/"
-
     name_length=$(( ${#package} -3 ))
 
     package=${package:3:$name_length}
-    # echo $package
 
-    # echo "ze pack iz $pname : $package_clone_command ($vcsystem)"
-
-    # echo -e $sep"$package ($srcdir/$package/)"
     if [[ ! -d $srcdir/$package ]] ; then
         init=true
         echo
