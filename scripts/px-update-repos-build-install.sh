@@ -10,6 +10,8 @@ pack[01-drobilla-lad]="svn co http://svn.drobilla.net/lad/trunk"
 pack[02-triceratops]="git clone git://git.code.sf.net/p/triceratops/code"
 pack[02-amsynth]="git clone https://code.google.com/p/amsynth"
 pack[02-drumkv1]="svn co http://svn.code.sf.net/p/drumkv1/code/trunk"
+pack[02-samplv1]="svn co http://svn.code.sf.net/p/samplv1/code/trunk"
+pack[02-synthv1]="svn co http://svn.code.sf.net/p/synthv1/code/trunk"
 pack[03-ardour]="git clone git://git.ardour.org/ardour/ardour.git"
 
 pack_indexes=( ${!pack[@]} )
@@ -27,7 +29,6 @@ if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
 fi
 
 function build_waf {
-
     if [[ $1 = "ardour" ]] ; then
 	read -e -p "## Build ardour with Windows VST support? [Y/n] " yn
 	if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
@@ -53,7 +54,6 @@ function build_make {
 }
 
 function update_package {
-
     echo -e "\n## $1"
     if [[ $init = true || $force = true ]] ; then
         [[ -f ./waf ]] && build_waf $1 || build_make
@@ -79,9 +79,7 @@ for package in "${pack_sorted[@]}" ; do
     [[ $vcsystem = "svn" ]] && vcinitcommand="checkout" || vcinitcommand="clone"
 
     package_clone_command="${pack[$package]}"
-
     name_length=$(( ${#package} -3 ))
-
     package=${package:3:$name_length}
 
     if [[ ! -d $srcdir/$package ]] ; then
