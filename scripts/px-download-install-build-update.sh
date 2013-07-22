@@ -15,18 +15,19 @@ PACK[04-ardour]="git clone git://git.ardour.org/ardour/ardour.git"
 
 # END CONFIG
 
+INIT=true
+DEBIAN=$(type -P apt-get)
+
 PACK_INDEXES=( ${!PACK[@]} )
-# IFS=$'\n'
 PACK_SORTED=( $(echo -e "${PACK_INDEXES[@]/%/\n}" | sed -r -e 's/^ *//' -e '/^$/d' | sort) )
 
 [[ $1 == "-f" ]] && FORCE_BUILD=true || FORCE_BUILD=false
-INIT=true
 
 [[ -d $SRC_DIR ]] && cd $SRC_DIR || mkdir -v $SRC_DIR && cd $SRC_DIR
 
-read -e -p "## Install deps? [Y/n] " YN
+[[ $DEBIAN ]] && read -e -p "## Install deps? [Y/n] " YN || YN="no"
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-    sudo apt-get install autoconf libqt4-dev libboost-dev libglibmm-2.4-dev libsndfile-dev liblo-dev libxml2-dev uuid-dev libcppunit-dev libfftw3-dev libaubio-dev liblrdf-dev libsamplerate-dev libgnomecanvas2-dev libgnomecanvasmm-2.6-dev libcwiid-dev libgtkmm-2.4-dev
+    sudo aptitude install autoconf libqt4-dev libboost-dev libglibmm-2.4-dev libsndfile-dev liblo-dev libxml2-dev uuid-dev libcppunit-dev libfftw3-dev libaubio-dev liblrdf-dev libsamplerate-dev libgnomecanvas2-dev libgnomecanvasmm-2.6-dev libcwiid-dev libgtkmm-2.4-dev
     # libsratom-dev libsuil-dev liblilv-0-0
 fi
 
@@ -54,7 +55,7 @@ function build_make {
 
 
 function vc_check {
-    echo "checking"
+
     GIT_BRANCH=master
 
     if [[ $VC_SYSTEM == "git" ]] ; then
@@ -73,6 +74,7 @@ function vc_check {
 }
 
 function update_package {
+
     echo -e "\n## $PACKAGE"
 
     if [[ $INIT = true || $FORCE_BUILD = true ]] ; then
