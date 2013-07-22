@@ -17,7 +17,7 @@ BINARIES="autoconf libqt4-dev libboost-dev libglibmm-2.4-dev libsndfile-dev libl
 
 # END CONFIG
 
-echo "### $0 : ${#PACK[@]} top-level repositories
+echo "### $(basename $0) : ${#PACK[@]} top-level repositories
 ## Use -f to force build
 "
 
@@ -31,7 +31,7 @@ PACK_SORTED=( $(echo -e "${PACK_INDEXES[@]/%/\n}" | sed -r -e 's/^ *//' -e '/^$/
 
 [[ -d $SRC_DIR ]] && cd $SRC_DIR || mkdir -v $SRC_DIR && cd $SRC_DIR
 
-[[ $DEBIAN ]] && read -e -p "## Install / Update build deps? [Y/n] " YN || YN="no"
+[[ $DEBIAN ]] && read -e -p "## Install / Update build deps? ($BINARIES) [Y/n] " YN || YN="no"
 
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     sudo aptitude install $BINARIES
@@ -69,7 +69,6 @@ function vc_check {
     [[ "$VC_PRE" != "$VC_POST" ]] && return 0 || return 1
 
 }
-
 
 function update_package {
 
