@@ -101,6 +101,7 @@ function update_package {
 
     # [[ vc_check == "0" ]] && echo "yowza" || echo "nope"
 
+
     if [[ $INIT = true || $FORCE_BUILD = true ]] ; then
         [[ -f ./waf ]] && build_waf $1 || build_make
     else
