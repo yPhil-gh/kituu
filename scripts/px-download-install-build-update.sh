@@ -15,7 +15,7 @@ PACK[04-ardour]="git clone git://git.ardour.org/ardour/ardour.git"
 
 # END CONFIG
 
-echo "px-download-install-build-update.sh :
+echo "px-download-install-build-update.sh : "
 
 INIT=true
 DEBIAN=$(type -P apt-get)
@@ -74,7 +74,6 @@ function vc_check {
     [[ "$VC_PRE" != "$VC_POST" ]] && return 0 || return 1
 
 }
-
 
 function update_package {
 
