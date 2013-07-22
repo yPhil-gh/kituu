@@ -31,7 +31,7 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 fi
 
 function build_waf {
-    if [[ $1 = "ardour" ]] ; then
+    if [[ $PACKAGE = "ardour" ]] ; then
 	read -e -p "## Build ardour with Windows VST support? [Y/n] " YN
 	if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
             sudo apt-get install wine-dev
@@ -76,7 +76,7 @@ function update_package {
     echo -e "\n## $PACKAGE"
 
     if [[ $INIT = true || $FORCE_BUILD = true ]] ; then
-        [[ -f ./waf ]] && build_waf $1 || build_make
+        [[ -f ./waf ]] && build_waf || build_make
     else
         vc_check
         if [ $? -eq 0 ]; then
@@ -87,30 +87,6 @@ function update_package {
         fi
     fi
 }
-
-
-# function update_package {
-#     echo -e "\n## $PACKAGE"
-
-#     [[ vc_check == "0" ]] && echo "yowza" || echo "nope"
-
-#     if [[ $INIT = true || $FORCE_BUILD = true ]] ; then
-#         [[ -f ./waf ]] && build_waf $1 || build_make
-#     else
-#         if [[ $VC_SYSTEM == "git" ]] ; then
-#             git pull 1>&1 | grep "Already up-to-date."
-#         else
-#             svn up 1>&1 | grep "At revision"
-#         fi
-
-#         if [ ! $? -eq 0 ]; then
-#             read -e -p "## Branch moved, build and install $PACKAGE? [Y/n] " YN
-#             if [[ $YN == "y" || $YN == "Y" || $YN == "" || $INIT ]] ; then
-#                 [[ -f ./waf ]] && build_waf || build_make
-#             fi
-#         fi
-#     fi
-# }
 
 for PACKAGE in "${PACK_SORTED[@]}" ; do
     VC_SYSTEM=${PACK[$PACKAGE]:0:3}
@@ -126,12 +102,10 @@ for PACKAGE in "${PACK_SORTED[@]}" ; do
         echo
         read -e -p "## $VCINITCOMMAND $PACKAGE in ($SRC_DIR/$PACKAGE/)? [Y/n] " YN
         if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-            cd $SRC_DIR && $PACKAGE_CLONE_COMMAND $PACKAGE && cd $PACKAGE
-            update_package
+            cd $SRC_DIR && $PACKAGE_CLONE_COMMAND $PACKAGE && cd $PACKAGE && update_package
         fi
     else
         INIT=false
-        cd $SRC_DIR/$PACKAGE
-        update_package
+        cd $SRC_DIR/$PACKAGE && update_package
     fi
 done
