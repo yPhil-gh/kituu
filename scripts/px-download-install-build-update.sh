@@ -2,40 +2,35 @@
 
 SRC_DIR=~/src
 
-declare -A PACK
-PACK[00-lv2]="svn checkout http://lv2plug.in/repo/trunk"
-PACK[01-drobilla-lad]="svn co http://svn.drobilla.net/lad/trunk"
-PACK[02-triceratops]="git clone git://git.code.sf.net/p/triceratops/code"
-PACK[02-amsynth]="git clone https://code.google.com/p/amsynth"
-PACK[02-drumkv1]="svn co http://svn.code.sf.net/p/drumkv1/code/trunk"
-PACK[02-samplv1]="svn co http://svn.code.sf.net/p/samplv1/code/trunk"
-PACK[02-synthv1]="svn co http://svn.code.sf.net/p/synthv1/code/trunk"
-PACK[03-qtractor]="svn co http://svn.code.sf.net/p/qtractor/code/trunk"
-PACK[04-ardour]="git clone git://git.ardour.org/ardour/ardour.git"
+declare -A PACKS
+PACKS[00-lv2]="svn checkout http://lv2plug.in/repo/trunk"
+PACKS[01-drobilla-lad]="svn co http://svn.drobilla.net/lad/trunk"
+PACKS[02-triceratops]="git clone git://git.code.sf.net/p/triceratops/code"
+PACKS[02-amsynth]="git clone https://code.google.com/p/amsynth"
+PACKS[02-drumkv1]="svn co http://svn.code.sf.net/p/drumkv1/code/trunk"
+PACKS[02-samplv1]="svn co http://svn.code.sf.net/p/samplv1/code/trunk"
+PACKS[02-synthv1]="svn co http://svn.code.sf.net/p/synthv1/code/trunk"
+PACKS[03-qtractor]="svn co http://svn.code.sf.net/p/qtractor/code/trunk"
+PACKS[04-ardour]="git clone git://git.ardour.org/ardour/ardour.git"
 
 BINARIES="autoconf libqt4-dev libboost-dev libglibmm-2.4-dev libsndfile-dev liblo-dev libxml2-dev uuid-dev libcppunit-dev libfftw3-dev libaubio-dev liblrdf-dev libsamplerate-dev libgnomecanvas2-dev libgnomecanvasmm-2.6-dev libcwiid-dev libgtkmm-2.4-dev"
 
 # END CONFIG
 
-echo "### $(basename $0) : ${#PACK[@]} top-level repositories
+echo "### $(basename $0) : ${#PACKS[@]} top-level repositories
 ## Use -f to force build
 "
 
 INIT=true
 DEBIAN=$(type -P apt-get)
 
-PACK_INDEXES=( ${!PACK[@]} )
-PACK_SORTED=( $(echo -e "${PACK_INDEXES[@]/%/\n}" | sed -r -e 's/^ *//' -e '/^$/d' | sort) )
-
 [[ $1 == "-f" ]] && FORCE_BUILD=true || FORCE_BUILD=false
-
+PACKS_INDEXES=( ${!PACKS[@]} )
+PACKS_SORTED=( $(echo -e "${PACKS_INDEXES[@]/%/\n}" | sed -r -e 's/^ *//' -e '/^$/d' | sort) )
 [[ -d $SRC_DIR ]] && cd $SRC_DIR || mkdir -v $SRC_DIR && cd $SRC_DIR
 
 [[ $DEBIAN ]] && read -e -p "## Install / Update build deps? ($BINARIES) [Y/n] " YN || YN="no"
-
-if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-    sudo aptitude install $BINARIES
-fi
+[[ $YN == "y" || $YN == "Y" || $YN == "" ]] && sudo apt-get install $BINARIES
 
 function build_waf {
     if [[ $PACKAGE = "ardour" ]] ; then
@@ -71,7 +66,6 @@ function vc_check {
 }
 
 function update_package {
-
     if [[ $INIT = true || $FORCE_BUILD = true ]] ; then
         [[ -f ./waf ]] && build_waf || build_make
     else
@@ -85,13 +79,12 @@ function update_package {
     fi
 }
 
-for PACKAGE in "${PACK_SORTED[@]}" ; do
-    VC_SYSTEM=${PACK[$PACKAGE]:0:3}
+for PACKAGE in "${PACKS_SORTED[@]}" ; do
+    VC_SYSTEM=${PACKS[$PACKAGE]:0:3}
     [[ $VC_SYSTEM = "svn" ]] && VC_UPDATE_CMD="update" || VC_UPDATE_CMD="pull"
-
-    PACKAGE_CLONE_COMMAND="${PACK[$PACKAGE]}"
+    PACKAGE_CLONE_COMMAND="${PACKS[$PACKAGE]}"
     NAME_LENGTH=$(( ${#PACKAGE} -3 ))
-    PACKAGE=${PACKAGE:3:$NAME_LENGTH}
+    PACKAGE=${PACKAGE:3:$(( ${#PACKAGE} -3 ))}
 
     echo -e "\n## $PACKAGE"
 
