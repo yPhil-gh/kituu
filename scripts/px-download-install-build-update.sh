@@ -15,7 +15,9 @@ PACK[04-ardour]="git clone git://git.ardour.org/ardour/ardour.git"
 
 # END CONFIG
 
-echo "px-download-install-build-update.sh : "
+echo "### $0 : ${#PACK[@]} packages
+## Use -f to force build
+"
 
 INIT=true
 DEBIAN=$(type -P apt-get)
@@ -28,6 +30,7 @@ PACK_SORTED=( $(echo -e "${PACK_INDEXES[@]/%/\n}" | sed -r -e 's/^ *//' -e '/^$/
 [[ -d $SRC_DIR ]] && cd $SRC_DIR || mkdir -v $SRC_DIR && cd $SRC_DIR
 
 [[ $DEBIAN ]] && read -e -p "## Install deps? [Y/n] " YN || YN="no"
+
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     sudo aptitude install autoconf libqt4-dev libboost-dev libglibmm-2.4-dev libsndfile-dev liblo-dev libxml2-dev uuid-dev libcppunit-dev libfftw3-dev libaubio-dev liblrdf-dev libsamplerate-dev libgnomecanvas2-dev libgnomecanvasmm-2.6-dev libcwiid-dev libgtkmm-2.4-dev
     # libsratom-dev libsuil-dev liblilv-0-0
@@ -61,14 +64,18 @@ function vc_check {
     GIT_BRANCH=master
 
     if [[ $VC_SYSTEM == "git" ]] ; then
-        git checkout $GIT_BRANCH
         VC_PRE=`cat .git/refs/heads/$GIT_BRANCH`
-        git pull origin $GIT_BRANCH
+        git pull
         VC_POST=`cat .git/refs/heads/$GIT_BRANCH`
+
+        # git checkout $GIT_BRANCH
+        # VC_PRE=`cat .git/refs/heads/$GIT_BRANCH`
+        # git pull origin $GIT_BRANCH
+        # VC_POST=`cat .git/refs/heads/$GIT_BRANCH`
     else
-        VC_PRE=$(svn log)
+        VC_PRE=$(svn log -l 1)
         svn up
-        VC_POST=$(svn log)
+        VC_POST=$(svn log -l 1)
     fi
 
     [[ "$VC_PRE" != "$VC_POST" ]] && return 0 || return 1
