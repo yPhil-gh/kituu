@@ -54,64 +54,32 @@ function build_make {
 
 
 function vc_check {
-    BRANCH=master
+    echo "checking"
+    GIT_BRANCH=master
 
     if [[ $VC_SYSTEM == "git" ]] ; then
-        echo "#### git!!"
-
-        git checkout $BRANCH
-        OLDREV=`cat .git/refs/heads/$BRANCH`
-        git pull origin $BRANCH
-        NEWREV=`cat .git/refs/heads/$BRANCH`
-
-        if [ "$OLDREV" != "$NEWREV" ]; then
-            # echo "##### moved!"
-            return 0
-        else
-            # echo "##### didn't move!"
-            return 1
-        fi
+        git checkout $GIT_BRANCH
+        VC_PRE=`cat .git/refs/heads/$GIT_BRANCH`
+        git pull origin $GIT_BRANCH
+        VC_POST=`cat .git/refs/heads/$GIT_BRANCH`
     else
-        echo "#### svn!"
-
-        SVN_PRE=$(svn log)
+        VC_PRE=$(svn log)
         svn up
-        SVN_POST=$(svn log)
-
-        if [ "$SVN_PRE" != "$SVN_POST" ]; then
-            # echo "##### moved!"
-            return 0
-        else
-            # echo "##### didn't move!"
-            return 1
-        fi
+        VC_POST=$(svn log)
     fi
 
+    [[ "$VC_PRE" != "$VC_POST" ]] && return 0 || return 1
+
 }
-
-function test_f {
-    # return 0
-    exit 1
-}
-
-
 
 function update_package {
     echo -e "\n## $PACKAGE"
 
-    # [[ vc_check == "0" ]] && echo "yowza" || echo "nope"
-
-
     if [[ $INIT = true || $FORCE_BUILD = true ]] ; then
         [[ -f ./waf ]] && build_waf $1 || build_make
     else
-        # if [[ $VC_SYSTEM == "git" ]] ; then
-        #     git pull 1>&1 | grep "Already up-to-date."
-        # else
-        #     svn up 1>&1 | grep "At revision"
-        # fi
-
-        if [[ vc_check == "0" ]]; then
+        vc_check
+        if [ $? -eq 0 ]; then
             read -e -p "## Branch moved, build and install $PACKAGE? [Y/n] " YN
             if [[ $YN == "y" || $YN == "Y" || $YN == "" || $INIT ]] ; then
                 [[ -f ./waf ]] && build_waf || build_make
@@ -121,44 +89,44 @@ function update_package {
 }
 
 
-function update_package {
-    echo -e "\n## $PACKAGE"
+# function update_package {
+#     echo -e "\n## $PACKAGE"
 
-    [[ vc_check == "0" ]] && echo "yowza" || echo "nope"
+#     [[ vc_check == "0" ]] && echo "yowza" || echo "nope"
 
-    if [[ $INIT = true || $FORCE_BUILD = true ]] ; then
-        [[ -f ./waf ]] && build_waf $1 || build_make
-    else
-        if [[ $VC_SYSTEM == "git" ]] ; then
-            git pull 1>&1 | grep "Already up-to-date."
-        else
-            svn up 1>&1 | grep "At revision"
-        fi
+#     if [[ $INIT = true || $FORCE_BUILD = true ]] ; then
+#         [[ -f ./waf ]] && build_waf $1 || build_make
+#     else
+#         if [[ $VC_SYSTEM == "git" ]] ; then
+#             git pull 1>&1 | grep "Already up-to-date."
+#         else
+#             svn up 1>&1 | grep "At revision"
+#         fi
 
-        if [ ! $? -eq 0 ]; then
-            read -e -p "## Branch moved, build and install $PACKAGE? [Y/n] " YN
-            if [[ $YN == "y" || $YN == "Y" || $YN == "" || $INIT ]] ; then
-                [[ -f ./waf ]] && build_waf || build_make
-            fi
-        fi
-    fi
-}
+#         if [ ! $? -eq 0 ]; then
+#             read -e -p "## Branch moved, build and install $PACKAGE? [Y/n] " YN
+#             if [[ $YN == "y" || $YN == "Y" || $YN == "" || $INIT ]] ; then
+#                 [[ -f ./waf ]] && build_waf || build_make
+#             fi
+#         fi
+#     fi
+# }
 
 for PACKAGE in "${PACK_SORTED[@]}" ; do
     VC_SYSTEM=${PACK[$PACKAGE]:0:3}
     [[ $VC_SYSTEM = "svn" ]] && VCUPDATECOMMAND="update" || VCUPDATECOMMAND="pull"
     [[ $VC_SYSTEM = "svn" ]] && VCINITCOMMAND="checkout" || VCINITCOMMAND="clone"
 
-    package_clone_command="${PACK[$PACKAGE]}"
-    name_length=$(( ${#PACKAGE} -3 ))
-    PACKAGE=${PACKAGE:3:$name_length}
+    PACKAGE_CLONE_COMMAND="${PACK[$PACKAGE]}"
+    NAME_LENGTH=$(( ${#PACKAGE} -3 ))
+    PACKAGE=${PACKAGE:3:$NAME_LENGTH}
 
     if [[ ! -d $SRC_DIR/$PACKAGE ]] ; then
         INIT=true
         echo
         read -e -p "## $VCINITCOMMAND $PACKAGE in ($SRC_DIR/$PACKAGE/)? [Y/n] " YN
         if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-            cd $SRC_DIR && $PACKAGE_clone_command $PACKAGE && cd $PACKAGE
+            cd $SRC_DIR && $PACKAGE_CLONE_COMMAND $PACKAGE && cd $PACKAGE
             update_package
         fi
     else
