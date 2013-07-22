@@ -62,7 +62,6 @@ function vc_check {
     VC_POST=$(${VC_LOG_COMMAND})
 
     [[ "$VC_PRE" != "$VC_POST" ]] && return 0 || return 1
-
 }
 
 function update_package {
