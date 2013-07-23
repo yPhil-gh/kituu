@@ -15,19 +15,17 @@ PACKS[04-ardour]="git clone git://git.ardour.org/ardour/ardour.git"
 
 BINARIES="autoconf libqt4-dev libboost-dev libglibmm-2.4-dev libsndfile-dev liblo-dev libxml2-dev uuid-dev libcppunit-dev libfftw3-dev libaubio-dev liblrdf-dev libsamplerate-dev libgnomecanvas2-dev libgnomecanvasmm-2.6-dev libcwiid-dev libgtkmm-2.4-dev"
 
-# END CONFIG
-
 echo "### $(basename $0) : ${#PACKS[@]} top-level repositories
-## Use -f to force build
+## Use -f to ignore VC state & force build
 "
 
-INIT=true
 DEBIAN=$(type -P apt-get)
-
 [[ $1 == "-f" ]] && FORCE_BUILD=true || FORCE_BUILD=false
-PACKS_INDEXES=( ${!PACKS[@]} )
-PACKS_SORTED=( $(echo -e "${PACKS_INDEXES[@]/%/\n}" | sed -r -e 's/^ *//' -e '/^$/d' | sort) )
+[[ $1 == "-y" ]] && ALWAYS_YES=true || ALWAYS_YES=false
+
 [[ -d $SRC_DIR ]] && cd $SRC_DIR || mkdir -v $SRC_DIR && cd $SRC_DIR
+
+readarray -t PACKS_SORTED < <(printf '%s\n' "${!PACKS[@]}" | sort)
 
 [[ $DEBIAN ]] && read -e -p "## Install / Update build deps? ($BINARIES) [Y/n] " YN || YN="no"
 [[ $YN == "y" || $YN == "Y" || $YN == "" ]] && sudo apt-get install $BINARIES
@@ -71,7 +69,7 @@ function update_package {
         vc_check
         if [ $? -eq 0 ]; then
             read -e -p "## Branch moved, build and install $PACKAGE? [Y/n] " YN
-            if [[ $YN == "y" || $YN == "Y" || $YN == "" || $INIT ]] ; then
+            if [[ $YN == "y" || $YN == "Y" || $YN == "" || $ALWAYS_YES ]] ; then
                 [[ -f ./waf ]] && build_waf || build_make
             fi
         fi

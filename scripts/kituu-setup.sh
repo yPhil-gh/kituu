@@ -46,9 +46,7 @@ moz[color_picker]="$mozurl/271/addon-271-latest.xpi"
 moz[TabCloser]="$mozurl/9669/addon-9669-latest.xpi"
 moz[Ctrl-Tab]="$mozurl/5244/addon-5244-latest.xpi"
 moz[GreaseMonkey_jira]="https://raw.github.com/xaccrocheur/kituu/master/scripts/gm-jira.user.js"
-moz[RequestPolicy]="$mozurl/9727/addon-9727-latest.xpi"
-
-https://addons.mozilla.org/firefox/downloads/latest/5244/addon-5244-latest.xpi
+moz[Smart Referer]="$mozurl/327417/addon-327417-latest.xpi"
 
 # Lisp packages
 declare -A lisp
