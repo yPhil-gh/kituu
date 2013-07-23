@@ -82,7 +82,6 @@ for PACKAGE in "${PACKS_SORTED[@]}" ; do
     VC_SYSTEM=${PACKS[$PACKAGE]:0:3}
     [[ $VC_SYSTEM = "svn" ]] && VC_UPDATE_CMD="update" || VC_UPDATE_CMD="pull"
     PACKAGE_CLONE_COMMAND="${PACKS[$PACKAGE]}"
-    NAME_LENGTH=$(( ${#PACKAGE} -3 ))
     PACKAGE=${PACKAGE:3:$(( ${#PACKAGE} -3 ))}
 
     echo -e "\n## $PACKAGE"
