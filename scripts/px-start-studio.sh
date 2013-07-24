@@ -7,11 +7,13 @@ APPS="
 /usr/lib/qjackctl/qjackctl.real
 vmpk
 qmidinet
-qtractor
 "
+DAW="qtractor"
+
+ALL_APPS="$APPS $DAW"
 
 kill_all() {
-    for APP in $APPS ; do
+    for APP in $ALL_APPS ; do
         if [[ $(pidof $APP) ]] ; then
             echo  "## Killing $APP ($(pidof $APP))"
             killall $APP
@@ -29,4 +31,6 @@ else
         echo "## Starting $APP ($(pidof $APP))"
         sleep 1
     done
+    $DAW -style -plastique $1&
+    echo "## Starting $DAW ($(pidof $APP))"
 fi
