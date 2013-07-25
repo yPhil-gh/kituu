@@ -52,12 +52,12 @@ MOZ[Smart_Referer]="$MOZURL/327417/addon-327417-latest.xpi"
 MOZ[https_everywhere]="https://www.eff.org/https-everywhere"
 
 # Lisp packages
-declare -A lisp
-lisp[tabbar]="git clone https://github.com/dholm/tabbar.git"
-lisp[haml-mode]="git clone https://github.com/nex3/haml-mode.git"
-lisp[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
-lisp[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
-lisp[nxhtml]="bzr branch lp:nxhtml"
+declare -A LISP
+LISP[tabbar]="git clone https://github.com/dholm/tabbar.git"
+LISP[haml-mode]="git clone https://github.com/nex3/haml-mode.git"
+LISP[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
+LISP[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
+LISP[nxhtml]="bzr branch lp:nxhtml"
 
 echo -e $SEP"Kituu! #################
 
@@ -153,25 +153,25 @@ if [ ! -d "$LISPDIR" ] ; then mkdir -p $LISPDIR/ ; fi
 echo -e $SEP"Various repositories"
 read -e -p "#### (e)Lisp stuff? [Y/n] " YN
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-    for project in "${!lisp[@]}" ; do
-        vcsystem=${lisp[$project]:0:3}
-        echo -e $SEP"$project ($LISPDIR/$project/)"
-        if [ ! -e $LISPDIR/$project/ ] ; then
-	          read -e -p "## Install $project in ($LISPDIR/$project/)? [Y/n] " YN
+    for PROJECT in "${!LISP[@]}" ; do
+        VCSYSTEM=${LISP[$PROJECT]:0:3}
+        echo -e $SEP"$PROJECT ($LISPDIR/$PROJECT/)"
+        if [ ! -e $LISPDIR/$PROJECT/ ] ; then
+	          read -e -p "## Install $PROJECT in ($LISPDIR/$PROJECT/)? [Y/n] " YN
 	          if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-	              cd $LISPDIR && ${lisp[$project]}
+	              cd $LISPDIR && ${LISP[$PROJECT]}
 	          fi
         else
-	          cd $LISPDIR/$project/ && $vcsystem pull
+	          cd $LISPDIR/$PROJECT/ && $VCSYSTEM pull
         fi
     done
 fi
 
 if (type -P firefox &>/dev/null); then
-    page=~/tmp/kituu-addons.html
+    PAGE=~/tmp/kituu-addons.html
     echo -e $SEP"Mozilla add-ons"
     for ADDON in "${!MOZ[@]}" ; do
-	ADDONS=$ADDONS"    <li><a href='"${moz[$ADDON]}"'>$ADDON</a></li>\n"
+	ADDONS=$ADDONS"    <li><a href='"${MOZ[$ADDON]}"'>$ADDON</a></li>\n"
 	ADDON_NAMES=$ADDON", "$ADDON_NAMES
     done
     read -e -p "Install add-ons ($ADDON_NAMES)?
@@ -192,13 +192,13 @@ if (type -P firefox &>/dev/null); then
 <a href='http://opensimo.org/play/?a=Azer0,Counternatures' title='Music!'>
 <img id='logo' src='http://people.mozilla.com/~faaborg/files/shiretoko/firefoxIcon/firefox-128-noshadow.png' /></a>
   <h1>Hi $(whoami), click to install/update extension</h1>
-  <ul>" > $page
-echo -e $ADDONS >> $page
+  <ul>" > $PAGE
+echo -e $ADDONS >> $PAGE
 echo -e "</ul>
   <hr />
   <div style='margin-left: auto;margin-right: auto;width:75%;text-align:center;'><a href='https://github.com/xaccrocheur/kituu'><img id='id' src='http://a0.twimg.com/profile_images/998643823/xix_normal.jpg' /></a>&nbsp;&nbsp;Don't forget that you're a genius, $(whoami) ;)</div>
 </body>
-</html>" >> $page && firefox $page &
+</html>" >> $PAGE && firefox $PAGE &
 	# echo $ADDONS
     fi
 fi
