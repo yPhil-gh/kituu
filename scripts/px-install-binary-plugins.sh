@@ -8,11 +8,22 @@ http://downloads.sourceforge.net/project/distrho/Ports/HighLife/highlife_linux32
 http://downloads.sourceforge.net/project/distrho/Ports/HybridReverb2/hybridreverb2_linux32_20120518.7z
 http://downloads.sourceforge.net/project/distrho/Ports/Wolpertinger/wolpertinger_linux32_20120518-2.7z"
 
-SOURCE_DIR=~/tmp/zz
-# DEST_DIR=/usr/local/lib/lv2/
-DEST_DIR=~/tmp/zzz
+# http://www.mucoder.net/en/hypercyclic/v0101/download/latest/hypercyclic.1.1.367.linux.zip
+# https://dl.dropbox.com/u/4063301/ThrillseekerXTC_1.0.1.zip
 
-cd $SOURCE_DIR
+SRC_DIR=~/tmp/DISTRHO
+DEST_DIR=/usr/local/lib/lv2/
+# DEST_DIR=~/tmp/zzz
+
+[[ -d $SRC_DIR ]] && cd $SRC_DIR || mkdir -v $SRC_DIR
+
+[[ ! -w $DEST_DIR ]] && sudo adduser $USER audio && sudo chown -R .audio $DEST_DIR && sudo chmod -R g+w $DEST_DIR
+
+# Now just
+# sudo su - $USER && $0
+
+# pwd && echo "plop"
+# exit 0
 
 strpos() {
     str=${1/$2*/}
@@ -20,7 +31,7 @@ strpos() {
 }
 
 for D_URL in $DISTRHO ; do
-
+    cd $SRC_DIR
     D_FILE=$(basename $D_URL)
     D_DIR=${D_FILE:0:$(( ${#D_FILE} -3 ))}
 
@@ -38,5 +49,5 @@ for D_URL in $DISTRHO ; do
 
     echo -e "## Copied $(pwd) to $DEST_DIR"
     cd ../..
-    rm -rf $(ls)
+    rm -rfi $(ls)
 done
