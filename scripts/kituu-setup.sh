@@ -32,24 +32,24 @@ pack[calf_plugins_git_tools]="libtool autoconf libexpat1-dev libfftw3-dev libgli
 
 BASICS="aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap xclip sox network-manager-openvpn"
 
-# Mozilla addons
-mozurl="https://addons.mozilla.org/firefox/downloads/latest"
-declare -A moz
-moz[Uppity]="$mozurl/869/addon-869-latest.xpi"
-moz[back_is_close]="$mozurl/939/addon-939-latest.xpi"
-moz[Firebug]="$mozurl/1843/addon-1843-latest.xpi"
-moz[GreaseMonkey]="$mozurl/748/addon-748-latest.xpi"
-moz[GreaseMonkey_px_fix]="https://raw.github.com/xaccrocheur/kituu/master/scripts/gm-sane_inputs.user.js"
-moz[French_dictionary_(save-as_for_thunderbird)]="$mozurl/354872/addon-354872-latest.xpi"
-moz[tabmix+]="$mozurl/1122/addon-1122-latest.xpi"
-moz[youtubeDLoader]="https://addons.mozilla.org/firefox/downloads/file/180678/youtube_video_mp3_downloader-2.1-fx.xpi?src=userprofile"
-moz[adblock_edge]="$mozurl/394968/platform:2/addon-394968-latest.xpi?src=dp-btn-primary"
-moz[color_picker]="$mozurl/271/addon-271-latest.xpi"
-moz[TabCloser]="$mozurl/9669/addon-9669-latest.xpi"
-moz[Ctrl-Tab]="$mozurl/5244/addon-5244-latest.xpi"
-moz[GreaseMonkey_jira]="https://raw.github.com/xaccrocheur/kituu/master/scripts/gm-jira.user.js"
-moz[Smart_Referer]="$mozurl/327417/addon-327417-latest.xpi"
-moz[https_everywhere]="https://www.eff.org/https-everywhere"
+# MOZilla addons
+MOZURL="https://addons.mozilla.org/firefox/downloads/latest"
+declare -A MOZ
+MOZ[Uppity]="$MOZURL/869/addon-869-latest.xpi"
+MOZ[back_is_close]="$MOZURL/939/addon-939-latest.xpi"
+MOZ[Firebug]="$MOZURL/1843/addon-1843-latest.xpi"
+MOZ[GreaseMonkey]="$MOZURL/748/addon-748-latest.xpi"
+MOZ[GreaseMonkey_px_fix]="https://raw.github.com/xaccrocheur/kituu/master/scripts/gm-sane_inputs.user.js"
+MOZ[French_dictionary_(save-as_for_thunderbird)]="$MOZURL/354872/addon-354872-latest.xpi"
+MOZ[tabmix+]="$MOZURL/1122/addon-1122-latest.xpi"
+MOZ[youtubeDLoader]="https://addons.MOZilla.org/firefox/downloads/file/180678/youtube_video_mp3_downloader-2.1-fx.xpi?src=userprofile"
+MOZ[adblock_edge]="$MOZURL/394968/platform:2/addon-394968-latest.xpi?src=dp-btn-primary"
+MOZ[color_picker]="$MOZURL/271/addon-271-latest.xpi"
+MOZ[TabCloser]="$MOZURL/9669/addon-9669-latest.xpi"
+MOZ[Ctrl-Tab]="$MOZURL/5244/addon-5244-latest.xpi"
+MOZ[GreaseMonkey_jira]="https://raw.github.com/xaccrocheur/kituu/master/scripts/gm-jira.user.js"
+MOZ[Smart_Referer]="$MOZURL/327417/addon-327417-latest.xpi"
+MOZ[https_everywhere]="https://www.eff.org/https-everywhere"
 
 # Lisp packages
 declare -A lisp
@@ -170,11 +170,11 @@ fi
 if (type -P firefox &>/dev/null); then
     page=~/tmp/kituu-addons.html
     echo -e $SEP"Mozilla add-ons"
-    for addon in "${!moz[@]}" ; do
-	addons=$addons"    <li><a href='"${moz[$addon]}"'>$addon</a></li>\n"
-	addon_names=$addon", "$addon_names
+    for ADDON in "${!MOZ[@]}" ; do
+	ADDONS=$ADDONS"    <li><a href='"${moz[$ADDON]}"'>$ADDON</a></li>\n"
+	ADDON_NAMES=$ADDON", "$ADDON_NAMES
     done
-    read -e -p "Install add-ons ($addon_names)?
+    read -e -p "Install add-ons ($ADDON_NAMES)?
 [Y/n] " YN
     if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 	echo -e "
@@ -193,13 +193,13 @@ if (type -P firefox &>/dev/null); then
 <img id='logo' src='http://people.mozilla.com/~faaborg/files/shiretoko/firefoxIcon/firefox-128-noshadow.png' /></a>
   <h1>Hi $(whoami), click to install/update extension</h1>
   <ul>" > $page
-echo -e $addons >> $page
+echo -e $ADDONS >> $page
 echo -e "</ul>
   <hr />
   <div style='margin-left: auto;margin-right: auto;width:75%;text-align:center;'><a href='https://github.com/xaccrocheur/kituu'><img id='id' src='http://a0.twimg.com/profile_images/998643823/xix_normal.jpg' /></a>&nbsp;&nbsp;Don't forget that you're a genius, $(whoami) ;)</div>
 </body>
 </html>" >> $page && firefox $page &
-	# echo $addons
+	# echo $ADDONS
     fi
 fi
 
