@@ -5,6 +5,8 @@ shopt -s dotglob
 REPODIR=~/.kituu
 LISPDIR=~/.emacs.d/lisp
 SCRIPTDIR=~/scripts
+AUTOSTART_DIR=~/.config/autostart
+
 SEP="\n################# "
 RW=false
 type -P apt-get &>/dev/null || { debian=true >&2; }
@@ -210,6 +212,33 @@ if [ -e $SCRIPTDIR/build-emacs.sh ]; then
         # sudo apt-get install build-dep emacs23
 	build-emacs.sh
     fi
+fi
+
+read -e -p "
+## Setup autostart apps? [Y/n] " YN
+if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
+[[ ! -d $AUTOSTART_DIR ]] && mkdir -v $AUTOSTART_DIR
+
+    echo "[Desktop Entry]
+Type=Application
+Exec=gnome-terminal --command byobu --maximize --hide-menubar
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name[en_US]=Byobu
+Name=Byobu
+Comment[en_US]=Byobu tmuxed (zsh) shell (gnome-terminal)
+Comment=Byobu tmuxed (zsh) shell" > $AUTOSTART_DIR/byobu.desktop
+
+    echo "[Desktop Entry]
+Name=Skype
+Comment=Skype Internet Telephony
+Exec=skype
+Icon=skype
+NoDisplay=false
+Terminal=false
+Type=Application
+Encoding=UTF-8" > $AUTOSTART_DIR/skype.desktop
 fi
 
 echo -e $SEP"...Done."
