@@ -2,20 +2,20 @@
 
 # Vars
 shopt -s dotglob
-repodir=~/.kituu
-lispdir=~/.emacs.d/lisp
-scriptdir=~/scripts
-sep="\n################# "
-rw=false
+REPODIR=~/.kituu
+LISPDIR=~/.emacs.d/lisp
+SCRIPTDIR=~/scripts
+SEP="\n################# "
+RW=false
 type -P apt-get &>/dev/null || { debian=true >&2; }
-if [[ $1 = "-rw" ]]; then rw=true; fi
-if ($rw); then vc_prefix="git@github.com:" && message="RW mode ON" && git config --global user.name "xaccrocheur" && git config --global user.email xaccrocheur@gmail.com ; else vc_prefix="https://github.com/" && message="RW mode OFF"; fi
+if [[ $1 = "-rw" ]]; then RW=true; fi
+if ($RW); then vc_prefix="git@github.com:" && message="RW mode ON" && git config --global user.name "xaccrocheur" && git config --global user.email xaccrocheur@gmail.com ; else vc_prefix="https://github.com/" && message="RW mode OFF"; fi
 
 if [[ ! $HOSTNAME == "N900" ]] ; then
-    fancy_args="-v"
+    FANCY_ARGS="-v"
 else
     N900=true
-    fancy_args=""
+    FANCY_ARGS=""
 fi
 
 # Packages
@@ -29,6 +29,8 @@ pack[games]="extremetuxracer supertuxkart stuntrally xonotic"
 pack[emacs24_stable]="emacs24 emacs24-el emacs24-common-non-dfsg aspell-fr"
 pack[emacs24_snapshot]="snapshot-el emacs-snapshot-gtk emacs-snapshot aspell-fr"
 pack[calf_plugins_git_tools]="libtool autoconf libexpat1-dev libfftw3-dev libglib2.0-dev libfluidsynth-dev jackd1 lv2core libglade2-dev gtk2-engines-pixbuf"
+
+BASICS="aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap xclip sox network-manager-openvpn"
 
 # Mozilla addons
 mozurl="https://addons.mozilla.org/firefox/downloads/latest"
@@ -57,44 +59,43 @@ lisp[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
 lisp[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
 lisp[nxhtml]="bzr branch lp:nxhtml"
 
-echo -e $sep"Kituu! #################
+echo -e $SEP"Kituu! #################
 
 $message
 
 Welcome to Kituu, $(whoami). This script allows you to install and maintain various packages from misc places. And well, do what you want done on every machine you install, and are tired of doing over and over again (tiny pedestrian things like create a "tmp" dir in your home).
 You will be asked for every package (or group of packages in the case of binaries) if you want to install it ; After that you can run $(basename $0) again (it's in your PATH now if you use the dotfiles, specifically the .*shrc) to update the packages. Sounds good? Let's go."
 
-echo -e $sep"Dotfiles and scripts"
-read -e -p "#### Install / update dotfiles (in $HOME) and scripts (in $scriptdir)? [Y/n] " yn
-if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-    if [ ! -d $repodir ] ; then
+echo -e $SEP"Dotfiles and scripts"
+read -e -p "#### Install / update dotfiles (in $HOME) and scripts (in $SCRIPTDIR)? [Y/n] " YN
+if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
+    if [ ! -d $REPODIR ] ; then
 	cd && git clone ${vc_prefix}xaccrocheur/kituu.git
     else
-	cd $repodir && git pull
+	cd $REPODIR && git pull
     fi
 
     for i in * ; do
 	if [[  ! -h ~/$i && $i != *#* && $i != *~* && $i != *git* && $i != "README.org" && $i != "." && "${i}" != ".." ]] ; then
-	    if [[ -e ~/$i ]] ; then echo "(move)" && mv $fancy_args ~/$i ~/$i.orig ; fi
-	    echo "(symlink)" && ln -s $fancy_args $repodir/$i ~/
+	    if [[ -e ~/$i ]] ; then echo "(move)" && mv $FANCY_ARGS ~/$i ~/$i.orig ; fi
+	    echo "(symlink)" && ln -s $FANCY_ARGS $REPODIR/$i ~/
 	fi
     done
 fi
 
-# Basic packages
 if $debian; then
-    echo -e $sep"Basic binary packages"
-    read -e -p "#### Install basic packages? [Y/n] " yn
+    echo -e $SEP"Basic binary packages"
+    read -e -p "#### Install basic packages? [Y/n] " YN
 
-    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-        sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap xclip sox network-manager-openvpn
+    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
+        sudo apt-get install $BASICS
     fi
 fi
 
-echo -e $sep"Various menial janitor tasks"
-read -e -p "#### Clean around? [Y/n] " yn
+echo -e $SEP"Various menial janitor tasks"
+read -e -p "#### Clean around? [Y/n] " YN
 
-if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     if [[ ! -d ~/tmp ]] ; then mkdir -v ~/tmp ; else echo -e "~/tmp \t\t\tOK" ; fi
 
     if [[ ! -d /mnt/tmp ]] ; then sudo mkdir -v /mnt/tmp ; else echo -e "/mnt/tmp \t\tOK" ; fi
@@ -106,76 +107,76 @@ fi
 
 # Packages
 if $debian; then
-    echo -e $sep"Binary packages"
-    read -e -p "#### Install packages? [Y/n] " yn
+    echo -e $SEP"Binary package groups"
+    read -e -p "#### Install package groups? [Y/n] " YN
 
-    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 	for group in "${!pack[@]}" ; do
 	    read -e -p "
 ## Install $group? (${pack[$group]})
-[Y/n] " yn
-	    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+[Y/n] " YN
+	    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 		sudo aptitude install ${pack[$group]}
 	    fi
 	done
     fi
 fi
 
-# echo -e $sep"leecher.pl (a script to auto-get .ext links from a given web page URL)"
-echo -e $sep"Leecher!"
-if [ ! -e $scriptdir/leecher/leecher.pl ] ; then
-    read -e -p "## Install leeecher (https://github.com/xaccrocheur/leecher)?  ($scriptdir/leecher.pl) [Y/n] " yn
-    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-        cd $scriptdir && git clone ${vc_prefix}xaccrocheur/leecher.git
-        ln -sv $scriptdir/leecher/leecher.pl $scriptdir/
+# echo -e $SEP"leecher.pl (a script to auto-get .ext links from a given web page URL)"
+echo -e $SEP"Leecher!"
+if [ ! -e $SCRIPTDIR/leecher/leecher.pl ] ; then
+    read -e -p "## Install leeecher (https://github.com/xaccrocheur/leecher)?  ($SCRIPTDIR/leecher.pl) [Y/n] " YN
+    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
+        cd $SCRIPTDIR && git clone ${vc_prefix}xaccrocheur/leecher.git
+        ln -sv $SCRIPTDIR/leecher/leecher.pl $SCRIPTDIR/
     fi
 else
-cd $scriptdir/leecher/ && git pull
+cd $SCRIPTDIR/leecher/ && git pull
 fi
 
 
-# echo -e $sep"leecher.pl (a script to auto-get .ext links from a given web page URL)"
-echo -e $sep"Git-sync!"
-if [ ! -e $scriptdir/git-sync/git-sync ] ; then
-    read -e -p "## Install git-sync (https://github.com/simonthum/git-sync)? (in $scriptdir/git-sync) [Y/n] " yn
-    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-        cd $scriptdir && git clone ${vc_prefix}simonthum/git-sync.git
-        ln -sv $scriptdir/git-sync/git-sync $scriptdir/git-sync.sh
+# echo -e $SEP"leecher.pl (a script to auto-get .ext links from a given web page URL)"
+echo -e $SEP"Git-sync!"
+if [ ! -e $SCRIPTDIR/git-sync/git-sync ] ; then
+    read -e -p "## Install git-sync (https://github.com/simonthum/git-sync)? (in $SCRIPTDIR/git-sync) [Y/n] " YN
+    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
+        cd $SCRIPTDIR && git clone ${vc_prefix}simonthum/git-sync.git
+        ln -sv $SCRIPTDIR/git-sync/git-sync $SCRIPTDIR/git-sync.sh
     fi
 else
-    cd $scriptdir/git-sync/ && git pull
+    cd $SCRIPTDIR/git-sync/ && git pull
 fi
 
 
-if [ ! -d "$lispdir" ] ; then mkdir -p $lispdir/ ; fi
+if [ ! -d "$LISPDIR" ] ; then mkdir -p $LISPDIR/ ; fi
 
-echo -e $sep"Various repositories"
-read -e -p "#### (e)Lisp stuff? [Y/n] " yn
-if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+echo -e $SEP"Various repositories"
+read -e -p "#### (e)Lisp stuff? [Y/n] " YN
+if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     for project in "${!lisp[@]}" ; do
         vcsystem=${lisp[$project]:0:3}
-        echo -e $sep"$project ($lispdir/$project/)"
-        if [ ! -e $lispdir/$project/ ] ; then
-	          read -e -p "## Install $project in ($lispdir/$project/)? [Y/n] " yn
-	          if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-	              cd $lispdir && ${lisp[$project]}
+        echo -e $SEP"$project ($LISPDIR/$project/)"
+        if [ ! -e $LISPDIR/$project/ ] ; then
+	          read -e -p "## Install $project in ($LISPDIR/$project/)? [Y/n] " YN
+	          if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
+	              cd $LISPDIR && ${lisp[$project]}
 	          fi
         else
-	          cd $lispdir/$project/ && $vcsystem pull
+	          cd $LISPDIR/$project/ && $vcsystem pull
         fi
     done
 fi
 
 if (type -P firefox &>/dev/null); then
     page=~/tmp/kituu-addons.html
-    echo -e $sep"Mozilla add-ons"
+    echo -e $SEP"Mozilla add-ons"
     for addon in "${!moz[@]}" ; do
 	addons=$addons"    <li><a href='"${moz[$addon]}"'>$addon</a></li>\n"
 	addon_names=$addon", "$addon_names
     done
     read -e -p "Install add-ons ($addon_names)?
-[Y/n] " yn
-    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+[Y/n] " YN
+    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 	echo -e "
 <html>
 <head>
@@ -202,16 +203,16 @@ echo -e "</ul>
     fi
 fi
 
-if [ -e $scriptdir/build-emacs.sh ]; then
-    echo -e $sep"Emacs trunk"
-    read -e -p "## Download, build and install / update (trunk: ~500Mb initial DL) emacs? [Y/n] " yn
-    if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
+if [ -e $SCRIPTDIR/build-emacs.sh ]; then
+    echo -e $SEP"Emacs trunk"
+    read -e -p "## Download, build and install / update (trunk: ~500Mb initial DL) emacs? [Y/n] " YN
+    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
         # sudo apt-get install build-dep emacs23
 	build-emacs.sh
     fi
 fi
 
-echo -e $sep"...Done."
+echo -e $SEP"...Done."
 
 # NOTES
 # packages in probation: apt-file zile gdm xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager libgtk2.0-dev
