@@ -17,7 +17,7 @@
 # fi
 
 if [ "$(pidof emacs)" ] ; then
-    emacsclient "$@"
+    emacsclient "$@" &
 else
-    emacs -mm "$@"
+    emacs -mm "$@" &
 fi

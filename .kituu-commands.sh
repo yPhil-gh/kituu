@@ -57,7 +57,7 @@ px-bandwidth-monitor () {
 px-flight_status() { if [[ $# -eq 3 ]];then offset=$3; else offset=0; fi; curl "http://mobile.flightview.com/TrackByRoute.aspx?view=detail&al="$1"&fn="$2"&dpdat=$(date +%Y%m%d -d ${offset}day)" 2>/dev/null |html2text | \grep ":"; }
 
 px-guitar-tuner () {
-    for n in E2 A2 D3 G3 B3 E4;do play -n synth 4 pluck $n repeat 2;done
+    for N in E2 A2 D3 G3 B3 E4;do play -n synth 4 pluck $N repeat 2;done
 }
 
 px-what-is-this-program-doing-now () {
@@ -93,18 +93,19 @@ px-update-N900 () {
     bash
 }
 
-px-lan-check () {
-    mask="192.168.0."
-    gateway=$(route -n | \grep '^0.0.0.0' | awk '{print $2}')
+px-lan-scan () {
+    LOCAL_IP=$(ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}')
+    MASK="${LOCAL_IP:0:10}"
+    GATEWAY=$(route -n | \grep '^0.0.0.0' | awk '{print $2}')
     if [ $1 ] ; then range=$1 ; else range="10" ; fi
 
     for num in $(seq 1 ${range}) ; do
-        ip=$mask$num
-        if [[ $ip == $gateway ]] ; then machine="gateway" ; else machine=$(avahi-resolve-address $ip 2>/dev/null | sed -e :a -e "s/$ip//g;s/\.[^>]*$//g;s/^[ \t]*//") ; fi
-        ping -c 1 $ip>/dev/null
+        IP=$MASK$num
+        if [[ $IP == $GATEWAY ]] ; then MACHINE="gateway" ; else MACHINE=$(avahi-resolve-address $IP 2>/dev/null | sed -e :a -e "s/$IP//g;s/\.[^>]*$//g;s/^[ \t]*//") ; fi
+        ping -c 1 $IP>/dev/null
         if [ $? -eq 0 ] ; then
-            echo -e "$ip ($machine) \tUP" ; else
-            echo -e "$ip \t\tDOWN"
+            echo -e "$IP ($MACHINE) \tUP" ; else
+            echo -e "$IP \t\tDOWN"
         fi
     done
 }
@@ -119,7 +120,7 @@ px-commit-alten-pjs () {
     svn status | grep '^?' | sed -e 's/^? *//' | xargs --no-run-if-empty -d '\n' svn add
 }
 
-px-dirsizes () { for dir in $1* ; do if [ -d $dir ] ; then du -hsL $dir ; fi ; done }
+px-dirsizes () { for DIR in $1* ; do if [ -d $DIR ] ; then du -hsL $DIR ; fi ; done }
 
 px-websearch () {
     firefox "https://duckduckgo.com/?q=$*"
@@ -134,10 +135,11 @@ px-bkp () {
 }
 
 px-ip () {
+    LOCAL_IP=$(ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}')
     if [ $# -eq 1 ] ; then
-        nmap "192.168.0.*" | \grep $* | cut --delimiter=' ' -f 6 | sed s/\(//g | sed s/\)//g
+        nmap "${LOCAL_IP:0:10}.*" | \grep $* | cut --delimiter=' ' -f 6 | sed s/\(//g | sed s/\)//g
     else
-        ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}'
+        echo "Local: $LOCAL_IP"
         # dig +short myip.opendns.com @resolver1.opendns.com
         curl -s "http://www.geody.com/geoip.php?ip=$(curl -s icanhazip.com)" | sed '/^IP:/!d;s/<[^>][^>]*>//g' | sed s/IP:\ //g
     fi

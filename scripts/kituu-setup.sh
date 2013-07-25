@@ -87,7 +87,7 @@ if $debian; then
     read -e -p "#### Install basic packages? [Y/n] " yn
 
     if [[ $yn == "y" || $yn == "Y" || $yn == "" ]] ; then
-        sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap xclip sox
+        sudo apt-get install aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap xclip sox network-manager-openvpn
     fi
 fi
 
