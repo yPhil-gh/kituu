@@ -174,6 +174,7 @@ px-notes () {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
+ZSH : rm -rf ^survivorfile
 rm -rf ^survivorfile
 rm -f !(survivor_file)
 0608853025
