@@ -23,7 +23,7 @@ fi
 # Packages
 declare -A pack
 pack[dev_tools]="build-essential texinfo libtool"
-pack[base_utils]="unison baobab gparted"
+pack[base_utils]="unison baobab gparted skype"
 pack[view&players]="smplayer"
 pack[image_tools]="gimp inkscape blender ffmpeg"
 pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk qmidinet calf-plugins nekobee fluidsynth-dssi hexter swami qarecord"
@@ -32,7 +32,7 @@ pack[emacs24_stable]="emacs24 emacs24-el emacs24-common-non-dfsg aspell-fr"
 pack[emacs24_snapshot]="snapshot-el emacs-snapshot-gtk emacs-snapshot aspell-fr"
 pack[calf_plugins_git_tools]="libtool autoconf libexpat1-dev libfftw3-dev libglib2.0-dev libfluidsynth-dev jackd1 lv2core libglade2-dev gtk2-engines-pixbuf"
 
-BASICS="aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap xclip sox network-manager-openvpn"
+BASICS="aptitude zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap xclip sox network-manager-openvpn openjdk-7-jre icedtea-7-plugin"
 
 # MOZilla addons
 MOZURL="https://addons.mozilla.org/firefox/downloads/latest"
