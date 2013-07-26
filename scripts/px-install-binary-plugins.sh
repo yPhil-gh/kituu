@@ -1,6 +1,7 @@
 #!/bin/bash
 
 PLUGIN_PACKS="http://downloads.sourceforge.net/project/distrho/Ports/HighLife/highlife_linux32_20120518.7z
+http://www.extentofthejam.com/DigitsVST-Linux-1.3.tar.gz
 https://sites.google.com/site/ccernnaudio/vst-plugins/backup.zip
 http://downloads.sourceforge.net/project/distrho/Ports/Arctican-Plugins/arctican-plugins_linux32_20120518.7z
 http://www.mucoder.net/en/hypercyclic/v0101/download/latest/hypercyclic.1.1.367.linux.zip
@@ -28,14 +29,18 @@ LXVST_DIR=~/tmp/ZVST
 [[ ! -w $LXVST_DIR ]] && sudo chown -R .audio $LXVST_DIR && sudo chmod -R g+w $LXVST_DIR
 
 for D_URL in $PLUGIN_PACKS ; do
-    D_FILE=$(basename $D_URL)
-    D_URI=${D_URL:0:$( expr ${#D_URL} - ${#D_FILE} )}
-    echo -e "
-## Downloading ${D_FILE} (from $D_URI)"
 
     rm -rf *
 
-    wget -q --secure-protocol=auto $D_URL && echo "## Downloaded $D_FILE in $SRC_DIR" && 7z x $D_FILE  > /dev/null
+    D_FILE=$(basename $D_URL)
+    D_URI=${D_URL:0:$( expr ${#D_URL} - ${#D_FILE} )}
+    D_FILE_TGZ=$(echo "$D_FILE" | grep "tar.gz" )
+    [[ $D_FILE_TGZ ]] && EXT_COMMAND="tar -xzf " || EXT_COMMAND="7z x "
+
+    echo -e "
+## Downloading ${D_FILE} (from $D_URI)"
+
+    wget -q --secure-protocol=auto $D_URL && echo "## Downloaded $D_FILE in $SRC_DIR" && $EXT_COMMAND $D_FILE > /dev/null
     PLUGIN_LV2=$(find . -name "*.lv2")
     PLUGIN_VST=$(find . -name "*.so")
 
@@ -54,5 +59,4 @@ for D_URL in $PLUGIN_PACKS ; do
         echo "## Copying $D_PLUGIN to $D_DEST_DIR"
         cp -R $D_PLUGIN $D_DEST_DIR
     done
-
 done
