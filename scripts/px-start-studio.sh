@@ -31,6 +31,6 @@ else
         echo "## Starting $APP ($(pidof $APP))"
         sleep 1
     done
-    $DAW -style -plastique $1&
+    $DAW $1&
     echo "## Starting $DAW ($(pidof $APP))"
 fi

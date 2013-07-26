@@ -174,6 +174,7 @@ px-notes () {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
+rm -f !(survivor_file)
 0608853025
 find . -type f -printf '%TY-%Tm-%Td %TT %p
 ' | sort
