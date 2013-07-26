@@ -5,11 +5,13 @@ SRC_DIR=~/src
 declare -A PACKS
 # PACKS[00-lv2]="svn checkout http://lv2plug.in/repo/trunk"
 # PACKS[01-drobilla-lad]="svn co http://svn.drobilla.net/lad/trunk"
+PACKS[02-ntk]="git clone git://git.tuxfamily.org/gitroot/non/fltk.git"
 PACKS[02-triceratops]="git clone git://git.code.sf.net/p/triceratops/code"
 # PACKS[02-amsynth]="git clone https://code.google.com/p/amsynth"
 PACKS[02-drumkv1]="svn co http://svn.code.sf.net/p/drumkv1/code/trunk"
 PACKS[02-samplv1]="svn co http://svn.code.sf.net/p/samplv1/code/trunk"
 PACKS[02-synthv1]="svn co http://svn.code.sf.net/p/synthv1/code/trunk"
+PACKS[01-sorcer]="git clone https://github.com/harryhaaren/openAV-Sorcer.git"
 PACKS[03-qtractor]="svn co http://svn.code.sf.net/p/qtractor/code/trunk"
 # PACKS[04-ardour]="git clone git://git.ardour.org/ardour/ardour.git"
 

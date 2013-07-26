@@ -16,17 +16,21 @@ http://downloads.sourceforge.net/project/distrho/Ports/Wolpertinger/wolpertinger
 " && sudo su - $USER
 
 SRC_DIR=~/tmp/PLUGIN_PACKS
-# LV2_DIR=/usr/local/lib/lv2/
-LV2_DIR=~/tmp/ZLV2
-LXVST_DIR=~/tmp/ZVST
+LV2_DIR=/usr/local/lib/lv2
+# LV2_DIR=~/tmp/ZLV2
+LXVST_DIR=/usr/local/lib/lxvst
+# LXVST_DIR=~/tmp/ZVST
 
 [[ -d $SRC_DIR ]] && cd $SRC_DIR || mkdir -v $SRC_DIR && cd $SRC_DIR
 
-[[ ! -d $LV2_DIR ]] && mkdir -v $LV2_DIR
-[[ ! -d $LXVST_DIR ]] && mkdir -v $LXVST_DIR
+# [[ ! -d $LV2_DIR ]] && mkdir -v $LV2_DIR
+# [[ ! -d $LXVST_DIR ]] && mkdir -v $LXVST_DIR
 
 [[ ! -w $LV2_DIR ]] && sudo chown -R .audio $LV2_DIR && sudo chmod -R g+w $LV2_DIR
 [[ ! -w $LXVST_DIR ]] && sudo chown -R .audio $LXVST_DIR && sudo chmod -R g+w $LXVST_DIR
+
+[[ ! -w $LV2_DIR ]] && echo "## No writable $LV2_DIR, exiting" && exit 1
+[[ ! -w $LXVST_DIR ]] && echo "## No writable $LXVST_DIR, exiting" && exit 1
 
 for D_URL in $PLUGIN_PACKS ; do
 
@@ -40,7 +44,7 @@ for D_URL in $PLUGIN_PACKS ; do
     echo -e "
 ## Downloading ${D_FILE} (from $D_URI)"
 
-    wget -q --secure-protocol=auto $D_URL && echo "## Downloaded $D_FILE in $SRC_DIR" && $EXT_COMMAND $D_FILE > /dev/null
+    wget -q --secure-protocol=auto $D_URL && echo "### Downloaded $D_FILE in $SRC_DIR" && $EXT_COMMAND $D_FILE > /dev/null
     PLUGIN_LV2=$(find . -name "*.lv2")
     PLUGIN_VST=$(find . -name "*.so")
 
@@ -56,7 +60,7 @@ for D_URL in $PLUGIN_PACKS ; do
     ALL_PLUGINS="$PLUGIN_VST $PLUGIN_LV2"
 
     for D_PLUGIN in $ALL_PLUGINS ; do
-        echo "## Copying $D_PLUGIN to $D_DEST_DIR"
+        echo "### Copying $D_PLUGIN to $D_DEST_DIR"
         cp -R $D_PLUGIN $D_DEST_DIR
     done
 done
