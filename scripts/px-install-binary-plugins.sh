@@ -54,4 +54,5 @@ for D_URL in $PLUGIN_PACKS ; do
         echo "## Copying $D_PLUGIN to $D_DEST_DIR"
         cp -R $D_PLUGIN $D_DEST_DIR
     done
+
 done
