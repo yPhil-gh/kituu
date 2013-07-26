@@ -80,7 +80,7 @@ setopt AUTO_LIST
 # Implied by MENU_COMPLETE
 # setopt AUTO_MENU
 setopt MENU_COMPLETE
-
+setopt extended_glob
 
 # HISTORY
 
