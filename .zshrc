@@ -117,6 +117,8 @@ bindkey "^B" backward-kill-line
 
 # Path
 PATH=$PATH:~/scripts:~/bin
+PATH=$PATH:/usr/local/bin/vdi
+
 # PATH=/usr/local/bin:$PATH
 
 # GNU Colors 否则自动补全时候选菜单中的选项不能彩色显示
@@ -140,8 +142,8 @@ zstyle ':completion:*' menu select=2
 zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
 zstyle ':completion:*:descriptions' format '%U%F{yellow}%d%f%u'
 
-compdef pkill=kill
-compdef pkill=killall
+# compdef pkill=kill
+# compdef pkill=killall
 zstyle ':completion:*:*:kill:*' menu yes select
 zstyle ':completion:*:processes' command 'ps -au$USER'
 
