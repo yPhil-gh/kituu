@@ -5,7 +5,7 @@ SRC_DIR=~/src
 declare -A PACKS
 # PACKS[00-lv2]="svn checkout http://lv2plug.in/repo/trunk"
 # PACKS[01-drobilla-lad]="svn co http://svn.drobilla.net/lad/trunk"
-PACKS[03-ntk]="git clone git://git.tuxfamily.org/gitroot/non/fltk.git"
+# PACKS[03-ntk]="git clone git://git.tuxfamily.org/gitroot/non/fltk.git"
 # PACKS[01-add64]="git clone git://git.code.sf.net/p/add64/code"
 PACKS[02-triceratops]="git clone git://git.code.sf.net/p/triceratops/code"
 # PACKS[02-amsynth]="git clone https://code.google.com/p/amsynth"
@@ -15,6 +15,7 @@ PACKS[02-synthv1]="svn co http://svn.code.sf.net/p/synthv1/code/trunk"
 PACKS[03-sorcer]="git clone https://github.com/harryhaaren/openAV-Sorcer.git"
 PACKS[03-qtractor]="svn co http://svn.code.sf.net/p/qtractor/code/trunk"
 # PACKS[04-ardour]="git clone git://git.ardour.org/ardour/ardour.git"
+PACKS[01-phasex]="git clone https://github.com/williamweston/phasex.git"
 
 BIN_BUILD="autoconf libqt4-dev dssi-dev librubberband-dev libboost-dev libglibmm-2.4-dev libsndfile-dev liblo-dev libxml2-dev uuid-dev libcppunit-dev libfftw3-dev libaubio-dev liblrdf-dev libsamplerate-dev libgnomecanvas2-dev libgnomecanvasmm-2.6-dev libcwiid-dev libgtkmm-2.4-dev libalsa-ocaml-dev libjack-dev lv2-dev liblilv-dev libsuil-dev libsratom-dev liblash-compat-dev lv2-c++-tools libpaq-dev"
 
@@ -63,8 +64,19 @@ function build_waf {
 
 function build_make {
     if [[ $INIT ]] ; then
-        [[ -f autogen.sh ]] && ./autogen.sh ||  make -f Makefile.svn
+        if [[ -f Makefile.svn ]] ; then
+            [[ -f autogen.sh ]] && ./autogen.sh ||  make -f Makefile.svn
+        elif [[ -f Makefile.am ]] ; then
+            aclocal && autoconf && automake && autoheader
+        fi
     fi
+
+    if [[ $PACKAGE = "phasex" ]] ; then
+        BUILD_FLAGS="--enable-arch=native --enable-parts=2"
+    else
+        BUILD_FLAGS=""
+    fi
+
     make clean
     ./configure && make && sudo make install
 }
