@@ -39,9 +39,24 @@ BIN_PLUGINS="invada-studio-plugins-lv2 so-synth-lv2 swh-lv2 mda-lv2 wsynth-dssi 
 
 BIN_PROD="linux-lowlatency qmidinet qjackctl vmpk harmonyseq"
 
-echo "#### $(basename $0) : ${#PACKS[@]} top-level repositories and $(printf "${PLUGIN_ARCHIVES}" | wc -w) binary plugin archives
-## Use -f to ignore VC state & force build
-"
+
+function display_title {
+    echo -e "
+$(tput bold)$(tput setaf 2)### $1$(tput sgr0)"
+}
+
+function display_sub_title {
+    echo -e "
+$(tput setaf 2)## $1$(tput sgr0)"
+}
+
+display_title "$(basename $0) : ${#PACKS[@]} top-level repositories and $(printf "${PLUGIN_ARCHIVES}" | wc -w) binary plugin archives
+## Use -f to ignore VC state & force build"
+
+# echo "#### $(basename $0) : ${#PACKS[@]} top-level repositories and $(printf "${PLUGIN_ARCHIVES}" | wc -w) binary plugin archives
+# ## Use -f to ignore VC state & force build
+# "
+
 BIN_BASICS="p7zip-full git subversion"
 
 DEBIAN=$(type -P apt-get)
@@ -50,13 +65,15 @@ DEBIAN=$(type -P apt-get)
 
 readarray -t PACKS_SORTED < <(printf '%s\n' "${!PACKS[@]}" | sort)
 
-function display_title {
-    printf "
-$(tput bold)$(tput setaf 2)### $1$(tput sgr0)"
-}
-
-function display_sub_title {
-    printf "$(tput setaf 2)## $1$(tput sgr0)"
+function ask_question {
+    echo "$(tput bold)$(tput setaf 2)"
+    read -e -p "#### $1 [Y/n] " YN
+    echo "$(tput sgr0)"
+    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
+        answer=yes
+    else
+        answer=no
+    fi
 }
 
 function build_waf {
@@ -116,28 +133,29 @@ function update_package {
     fi
 }
 
-echo $(display_sub_title "User $USER in group audio") && sudo usermod -a -G audio $USER
+display_sub_title "User $USER in group audio" && sudo usermod -a -G audio $USER
 
+display_title "Binary packages"
 for REPO in $BIN_REPOS ; do
-    sudo apt-add-repository $REPO && echo $(display_sub_title "Setup $REPO repository")
+    display_sub_title "Setup $REPO repository" && sudo apt-add-repository $REPO
 
 done
 
-# sudo apt-get update
+sudo apt-get update
 
-echo $(display_title "Installing basic packages") && sudo apt-get install $BIN_BASICS
-
-[[ $DEBIAN ]] && read -p "#### Install / Update build deps? ($BIN_BUILD) [Y/n] " YN || YN="no"
+display_sub_title "Installing basic packages" && sudo apt-get install $BIN_BASICS
+display_sub_title "Build deps"
+[[ $DEBIAN ]] && read -p "Install / Update build deps? ($BIN_BUILD) [Y/n] " YN || YN="no"
 [[ $YN == "y" || $YN == "Y" || $YN == "" ]] && sudo apt-get install $BIN_BUILD
-[[ $DEBIAN ]] && read -e -p "
-#### Install / Update prod apps? ($BIN_PROD) [Y/n] " YN || YN="no"
+display_sub_title "Prod apps"
+[[ $DEBIAN ]] && read -e -p "Install / Update prod apps? ($BIN_PROD) [Y/n] " YN || YN="no"
 [[ $YN == "y" || $YN == "Y" || $YN == "" ]] && sudo apt-get install $BIN_PROD
-n[[ $DEBIAN ]] && read -e -p "
-#### Install / Update plugins? ($BIN_PLUGINS) [Y/n] " YN || YN="no"
+display_sub_title "Plugins"
+[[ $DEBIAN ]] && read -e -p "Install / Update plugins? ($BIN_PLUGINS) [Y/n] " YN || YN="no"
 [[ $YN == "y" || $YN == "Y" || $YN == "" ]] && sudo apt-get install $BIN_PLUGINS
 
-read -e -p "
-#### Install / update source repos? [Y/n] " YN
+display_title "Source VC repositories"
+read -e -p "Install / update source repos? [Y/n] " YN
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     [[ -d $SRC_DIR ]] && cd $SRC_DIR || mkdir -v $SRC_DIR && cd $SRC_DIR
 
@@ -147,7 +165,7 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
         PACKAGE_CLONE_COMMAND="${PACKS[$PACKAGE]}"
         PACKAGE=${PACKAGE:3:$(( ${#PACKAGE} -3 ))}
 
-        echo $(display_sub_title "$PACKAGE")
+        display_sub_title "$PACKAGE"
 
         if [[ ! -d $SRC_DIR/$PACKAGE ]] ; then
             INIT=true
@@ -163,8 +181,8 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     done
 fi
 
-read -e -p "
-#### Install bin archives? [Y/n] " YN
+display_title "Bin archives"
+read -e -p "Install bin archives? [Y/n] " YN
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     [[ -d $UNPACK_DIR ]] && cd $UNPACK_DIR || mkdir -v $UNPACK_DIR && cd $UNPACK_DIR
 
@@ -177,9 +195,9 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
         D_FILE_TGZ=$(echo "$D_FILE" | grep "tar.gz" )
         [[ $D_FILE_TGZ ]] && EXT_COMMAND="tar -xzf " || EXT_COMMAND="7z x "
 
-        echo $(display_sub_title "Downloading ${D_FILE} (from $D_URI)")
+        display_sub_title "Downloading ${D_FILE} (from $D_URI)"
 
-        wget -q --secure-protocol=auto $D_URL && echo $(display_sub_title "Downloaded $D_FILE in $UNPACK_DIR") && $EXT_COMMAND $D_FILE > /dev/null
+        wget -q --secure-protocol=auto $D_URL && echo "# Downloaded $D_FILE in $UNPACK_DIR" && $EXT_COMMAND $D_FILE > /dev/null
         PLUGIN_LV2=$(find . -name "*.lv2")
         PLUGIN_VST=$(find . -name "*.so")
 
@@ -195,7 +213,7 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
         ALL_PLUGINS="$PLUGIN_VST $PLUGIN_LV2"
 
         for D_PLUGIN in $ALL_PLUGINS ; do
-            sudo cp -R $D_PLUGIN $D_DEST_DIR &&  echo $(display_sub_title "Done copying $D_PLUGIN to $D_DEST_DIR")
+            sudo cp -R $D_PLUGIN $D_DEST_DIR &&  echo "# Done copying $D_PLUGIN to $D_DEST_DIR"
 
         done
     done
@@ -242,4 +260,4 @@ fi
 
 # gsettings set com.canonical.Unity.Panel systray-whitelist "['all']"
 # http://www.webupd8.org/2013/05/how-to-get-systray-whitelist-back-in.html
-echo $(display_title "All done.")
+display_title "All done."
