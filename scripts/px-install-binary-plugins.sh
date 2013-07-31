@@ -11,7 +11,7 @@ http://downloads.sourceforge.net/project/distrho/Ports/TAL-Plugins/tal-plugins_l
 http://downloads.sourceforge.net/project/distrho/Ports/HybridReverb2/hybridreverb2_linux32_20120518.7z
 http://downloads.sourceforge.net/project/distrho/Ports/Wolpertinger/wolpertinger_linux32_20120518-2.7z"
 
-SRC_DIR=~/tmp/PLUGIN_PACKS
+SRC_DIR=~/src/PLUGIN_PACKS
 LV2_DIR=/usr/local/lib/lv2
 LXVST_DIR=/usr/local/lib/lxvst
 
