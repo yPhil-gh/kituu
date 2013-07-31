@@ -21,6 +21,10 @@ BIN_PLUGINS="invada-studio-plugins-lv2 so-synth-lv2 swh-lv2 mda-lv2 wsynth-dssi 
 
 BIN_PROD="linux-lowlatency qmidinet qjackctl vmpk"
 
+BIN_PPA="ppa:rafalcieslak256/harmonyseq"
+
+    if [[ ! $(grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | cut -d: -f2,3 | sed '/^\#/d' | sed '/^$/d' | grep cassou) ]] ; then sudo add-apt-repository ppa:cassou/emacs && sudo apt-get update ; else echo -e "Emacs 24 repo \t\tOK" ; fi
+
 echo "### $(basename $0) : ${#PACKS[@]} top-level repositories
 ## Use -f to ignore VC state & force build"
 

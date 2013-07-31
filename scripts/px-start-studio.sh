@@ -7,8 +7,11 @@ APPS="
 /usr/lib/qjackctl/qjackctl.real
 vmpk
 qmidinet
+hydrogen
+yoshimi
 "
-DAW="qtractor"
+# a2jmidid
+DAW=$1
 
 ALL_APPS="$APPS $DAW"
 
@@ -21,16 +24,22 @@ kill_all() {
     done
 }
 
-if [ "$1" == "-k" ] ; then
+if [ "$2" == "-k" ] ; then
     kill_all
-else
-    kill_all
-
-    for APP in $APPS ; do
-        $APP&
-        echo "## Starting $APP ($(pidof $APP))"
-        sleep 1
-    done
-    $DAW $1&
-    echo "## Starting $DAW ($(pidof $APP))"
+    killall jackd
+    exit 0
 fi
+
+kill_all
+
+# [[ $(ps aux|grep a2jmidi) ]] && echo "## aj2midi is running" || a2jmidi -u
+
+
+for APP in $APPS ; do
+    $APP&
+    echo "## Starting $APP ($(pidof $APP))"
+    sleep 2
+done
+
+$DAW $2&
+echo "## Starting $DAW ($(pidof $APP))"

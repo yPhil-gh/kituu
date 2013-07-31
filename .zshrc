@@ -118,6 +118,7 @@ bindkey "^B" backward-kill-line
 # Path
 PATH=$PATH:~/scripts:~/bin
 PATH=$PATH:/usr/local/bin/vdi
+PATH=$PATH:/usr/lib/i386-linux-gnu
 
 # PATH=/usr/local/bin:$PATH
 
