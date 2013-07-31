@@ -19,7 +19,7 @@ LXVST_DIR=/usr/local/lib/lxvst
 
 for D_URL in $PLUGIN_PACKS ; do
 
-    rm -rf *
+    rm -rf $SRC_DIR/*
 
     D_FILE=$(basename $D_URL)
     D_URI=${D_URL:0:$( expr ${#D_URL} - ${#D_FILE} )}
