@@ -11,6 +11,8 @@
 (let ((default-directory "~/.emacs.d/lisp/"))
   (normal-top-level-add-subdirs-to-load-path))
 
+;; (add-to-list 'recentf-exclude "emacs.d\\/session")
+
 ;; External libs
 (eval-and-compile
   (require 'undo-tree nil 'noerror)   ; Visualize undo (and allow sane redo)
@@ -701,10 +703,10 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 ;; (semantic-mode t)
 ;; (which-function-mode t)
 
-;; (add-to-list 'auto-mode-alist
-;;              '("\\.py\\'" . python-mode)
-;;              '("\\.haml\\'" . haml-mode))
-
+(add-to-list 'auto-mode-alist '("\\.haml\\'" . haml-mode))
+(add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
+(add-to-list 'auto-mode-alist '("\\.list\\'" . conf-mode))
+(add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
 
 ;; Externals! _________________________________________________________________
 
@@ -1083,8 +1085,8 @@ Revert HEAD to 7                                                  git reset --ha
  '(bbdb-use-pop-up nil)
  '(bookmark-sort-flag nil)
  '(buffer-offer-save nil)
- '(c-basic-offset (quote set-from-style))
- '(c-default-style "gnu")
+ '(c-basic-offset (quote set-from-style) t)
+ '(c-default-style "gnu" t)
  '(canlock-password "ebef4a12d0fad1c648b4b829291adb16cdefb9da")
  '(comment-style (quote extra-line))
  '(completion-auto-help (quote lazy))
@@ -1120,19 +1122,17 @@ Revert HEAD to 7                                                  git reset --ha
  '(org-agenda-files (quote ("~/.org/")))
  '(org-cycle-separator-lines 1)
  '(org-directory "~/.org")
- '(org-export-html-validation-link
-   "<a href=\"http://validator.w3.org/check?uri=referer\">Validation XHTML 1.0</a>")
+ '(org-export-html-validation-link "<a href=\"http://validator.w3.org/check?uri=referer\">Validation XHTML 1.0</a>")
  '(org-html-metadata-timestamp-format "%d/%m/%Y %T")
  '(org-html-postamble t)
- '(org-html-postamble-format
-   (quote
-    (("en" "<p class=\"author\"><a href=\"/men/wiki\">← Accueil</a> - <a
+ '(org-html-postamble-format (quote (("en" "<p class=\"author\"><a href=\"/men/wiki\">← Accueil</a> - <a
 href=\"#\">↑ Page</a> %a (%e) - %v</p>"))))
  '(org-log-done (quote time))
  '(org-support-shift-select (quote always))
  '(org-use-sub-superscripts nil)
  '(recenter-redisplay nil)
  '(recentf-auto-cleanup (quote never))
+ '(recentf-exclude (quote ("emacs.d\\/session")))
  '(recentf-max-menu-items 60)
  '(recentf-max-saved-items 120)
  '(recentf-mode t)

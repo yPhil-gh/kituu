@@ -5,25 +5,26 @@ SRC_DIR=~/src
 declare -A PACKS
 # PACKS[00-lv2]="svn checkout http://lv2plug.in/repo/trunk"
 # PACKS[01-drobilla-lad]="svn co http://svn.drobilla.net/lad/trunk"
-PACKS[02-ntk]="git clone git://git.tuxfamily.org/gitroot/non/fltk.git"
+PACKS[03-ntk]="git clone git://git.tuxfamily.org/gitroot/non/fltk.git"
+# PACKS[01-add64]="git clone git://git.code.sf.net/p/add64/code"
 PACKS[02-triceratops]="git clone git://git.code.sf.net/p/triceratops/code"
 # PACKS[02-amsynth]="git clone https://code.google.com/p/amsynth"
 PACKS[02-drumkv1]="svn co http://svn.code.sf.net/p/drumkv1/code/trunk"
 PACKS[02-samplv1]="svn co http://svn.code.sf.net/p/samplv1/code/trunk"
 PACKS[02-synthv1]="svn co http://svn.code.sf.net/p/synthv1/code/trunk"
-PACKS[01-sorcer]="git clone https://github.com/harryhaaren/openAV-Sorcer.git"
+PACKS[03-sorcer]="git clone https://github.com/harryhaaren/openAV-Sorcer.git"
 PACKS[03-qtractor]="svn co http://svn.code.sf.net/p/qtractor/code/trunk"
 # PACKS[04-ardour]="git clone git://git.ardour.org/ardour/ardour.git"
 
-BIN_BUILD="autoconf libqt4-dev dssi-dev librubberband-dev libboost-dev libglibmm-2.4-dev libsndfile-dev liblo-dev libxml2-dev uuid-dev libcppunit-dev libfftw3-dev libaubio-dev liblrdf-dev libsamplerate-dev libgnomecanvas2-dev libgnomecanvasmm-2.6-dev libcwiid-dev libgtkmm-2.4-dev libalsa-ocaml-dev libjack-dev lv2-dev liblilv-dev libsuil-dev libsratom-dev liblash-compat-dev"
+BIN_BUILD="autoconf libqt4-dev dssi-dev librubberband-dev libboost-dev libglibmm-2.4-dev libsndfile-dev liblo-dev libxml2-dev uuid-dev libcppunit-dev libfftw3-dev libaubio-dev liblrdf-dev libsamplerate-dev libgnomecanvas2-dev libgnomecanvasmm-2.6-dev libcwiid-dev libgtkmm-2.4-dev libalsa-ocaml-dev libjack-dev lv2-dev liblilv-dev libsuil-dev libsratom-dev liblash-compat-dev lv2-c++-tools libpaq-dev"
 
-BIN_PLUGINS="invada-studio-plugins-lv2 so-synth-lv2 swh-lv2 mda-lv2 wsynth-dssi xsynth-dssi zynaddsubfx-dssi calf-plugins abgate aeolus amb-plugins autotalent caps cmt eq10q foo-yc20 hexter ir.lv2 lv2fil lv2vocoder mcp-plugins mda-lv2 swh-lv2 tap-plugins vocproc wah-plugins xsynth-dssi zita-at1 fluid-soundfont-gm amsynth"
+BIN_PLUGINS="invada-studio-plugins-lv2 so-synth-lv2 swh-lv2 mda-lv2 wsynth-dssi xsynth-dssi zynaddsubfx-dssi calf-plugins abgate aeolus amb-plugins autotalent caps cmt eq10q foo-yc20 hexter ir.lv2 lv2fil lv2vocoder mcp-plugins mda-lv2 swh-lv2 tap-plugins vocproc wah-plugins xsynth-dssi zita-at1 fluid-soundfont-gm amsynth whysynth"
 
 BIN_PROD="linux-lowlatency qmidinet qjackctl vmpk"
 
 BIN_PPA="ppa:rafalcieslak256/harmonyseq"
 
-    if [[ ! $(grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | cut -d: -f2,3 | sed '/^\#/d' | sed '/^$/d' | grep cassou) ]] ; then sudo add-apt-repository ppa:cassou/emacs && sudo apt-get update ; else echo -e "Emacs 24 repo \t\tOK" ; fi
+# if [[ ! $(grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | cut -d: -f2,3 | sed '/^\#/d' | sed '/^$/d' | grep cassou) ]] ; then sudo add-apt-repository ppa:cassou/emacs && sudo apt-get update ; else echo -e "Emacs 24 repo \t\tOK" ; fi
 
 echo "### $(basename $0) : ${#PACKS[@]} top-level repositories
 ## Use -f to ignore VC state & force build"
