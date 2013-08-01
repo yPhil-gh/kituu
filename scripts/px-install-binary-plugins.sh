@@ -18,20 +18,20 @@ http://downloads.sourceforge.net/project/distrho/Ports/Wolpertinger/wolpertinger
 
 BIN_REPOS="ppa:rafalcieslak256/harmonyseq"
 
-declare -A PACKS
-PACKS[02-triceratops]="git clone git://git.code.sf.net/p/triceratops/code"
-PACKS[02-drumkv1]="svn co http://svn.code.sf.net/p/drumkv1/code/trunk"
-PACKS[02-samplv1]="svn co http://svn.code.sf.net/p/samplv1/code/trunk"
-PACKS[02-synthv1]="svn co http://svn.code.sf.net/p/synthv1/code/trunk"
-PACKS[03-qtractor]="svn co http://svn.code.sf.net/p/qtractor/code/trunk"
-PACKS[01-phasex]="git clone https://github.com/williamweston/phasex.git"
-# PACKS[00-lv2]="svn checkout http://lv2plug.in/repo/trunk"
-# PACKS[01-drobilla-lad]="svn co http://svn.drobilla.net/lad/trunk"
-# PACKS[03-ntk]="git clone git://git.tuxfamily.org/gitroot/non/fltk.git"
-# PACKS[01-add64]="git clone git://git.code.sf.net/p/add64/code"
-# PACKS[02-amsynth]="git clone https://code.google.com/p/amsynth"
-# PACKS[03-sorcer]="git clone https://github.com/harryhaaren/openAV-Sorcer.git"
-# PACKS[04-ardour]="git clone git://git.ardour.org/ardour/ardour.git"
+declare -A SOURCE_PACKS
+SOURCE_PACKS[02-triceratops]="git clone git://git.code.sf.net/p/triceratops/code"
+SOURCE_PACKS[02-drumkv1]="svn co http://svn.code.sf.net/p/drumkv1/code/trunk"
+SOURCE_PACKS[02-samplv1]="svn co http://svn.code.sf.net/p/samplv1/code/trunk"
+SOURCE_PACKS[02-synthv1]="svn co http://svn.code.sf.net/p/synthv1/code/trunk"
+SOURCE_PACKS[03-qtractor]="svn co http://svn.code.sf.net/p/qtractor/code/trunk"
+SOURCE_PACKS[01-phasex]="git clone https://github.com/williamweston/phasex.git"
+# SOURCE_PACKS[00-lv2]="svn checkout http://lv2plug.in/repo/trunk"
+# SOURCE_PACKS[01-drobilla-lad]="svn co http://svn.drobilla.net/lad/trunk"
+# SOURCE_PACKS[03-ntk]="git clone git://git.tuxfamily.org/gitroot/non/fltk.git"
+# SOURCE_PACKS[01-add64]="git clone git://git.code.sf.net/p/add64/code"
+# SOURCE_PACKS[02-amsynth]="git clone https://code.google.com/p/amsynth"
+# SOURCE_PACKS[03-sorcer]="git clone https://github.com/harryhaaren/openAV-Sorcer.git"
+# SOURCE_PACKS[04-ardour]="git clone git://git.ardour.org/ardour/ardour.git"
 
 BIN_BUILD="autoconf libqt4-dev dssi-dev librubberband-dev libboost-dev libglibmm-2.4-dev libsndfile-dev liblo-dev libxml2-dev uuid-dev libcppunit-dev libfftw3-dev libaubio-dev liblrdf-dev libsamplerate-dev libgnomecanvas2-dev libgnomecanvasmm-2.6-dev libcwiid-dev libgtkmm-2.4-dev libalsa-ocaml-dev libjack-dev lv2-dev liblilv-dev libsuil-dev libsratom-dev liblash-compat-dev lv2-c++-tools libpaq-dev"
 
@@ -43,14 +43,14 @@ BIN_BASICS="p7zip-full git subversion"
 
 BIN_NUMBER=$(expr $(printf "${BIN_BUILD}" | wc -w) + $(printf "${BIN_PLUGINS}" | wc -w) + $(printf "${BIN_PROD}" | wc -w) + $(printf "${BIN_BASICS}" | wc -w))
 
-echo -e "$(tput bold)$(tput setaf 3)$(basename $0) : ${#PACKS[@]} top-level repositories, $(printf "${PLUGIN_ARCHIVES}" | wc -w) binary plugin archives and $BIN_NUMBER binary packages in $(printf "${BIN_REPOS}" | wc -w) new ppa repositories.
+echo -e "$(tput bold)$(tput setaf 3)$(basename $0) : ${#SOURCE_PACKS[@]} top-level repositories, $(printf "${PLUGIN_ARCHIVES}" | wc -w) binary plugin archives and $BIN_NUMBER binary packages in $(printf "${BIN_REPOS}" | wc -w) new ppa repositories.
 ## Use -f to ignore VC state & force build$(tput sgr0)"
 
 DEBIAN=$(type -P apt-get)
 [[ $1 == "-f" ]] && FORCE_BUILD=true || FORCE_BUILD=false
 [[ $1 == "-y" ]] && ALWAYS_YES=true || ALWAYS_YES=false
 
-readarray -t PACKS_SORTED < <(printf '%s\n' "${!PACKS[@]}" | sort)
+readarray -t SOURCE_PACKS_SORTED < <(printf '%s\n' "${!SOURCE_PACKS[@]}" | sort)
 
 function display_title {
     echo -e "
@@ -141,7 +141,7 @@ for REPO in $BIN_REPOS ; do
 
 done
 
-# sudo apt-get update
+sudo apt-get update
 
 display_sub_title "Installing basic packages" && sudo apt-get install $BIN_BASICS
 display_sub_title "Build deps"
@@ -159,10 +159,10 @@ read -e -p "Install / update source repos? [Y/n] " YN
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     [[ -d $SRC_DIR ]] && cd $SRC_DIR || mkdir -v $SRC_DIR && cd $SRC_DIR
 
-    for PACKAGE in "${PACKS_SORTED[@]}" ; do
-        VC_SYSTEM=${PACKS[$PACKAGE]:0:3}
+    for PACKAGE in "${SOURCE_PACKS_SORTED[@]}" ; do
+        VC_SYSTEM=${SOURCE_PACKS[$PACKAGE]:0:3}
         [[ $VC_SYSTEM = "svn" ]] && VC_UPDATE_CMD="update" || VC_UPDATE_CMD="pull"
-        PACKAGE_CLONE_COMMAND="${PACKS[$PACKAGE]}"
+        PACKAGE_CLONE_COMMAND="${SOURCE_PACKS[$PACKAGE]}"
         PACKAGE=${PACKAGE:3:$(( ${#PACKAGE} -3 ))}
 
         display_sub_title "$PACKAGE"
@@ -258,7 +258,4 @@ card=default" > ~/.config/volumeicon/volumeicon
     fi
 fi
 
-
-# gsettings set com.canonical.Unity.Panel systray-whitelist "['all']"
-# http://www.webupd8.org/2013/05/how-to-get-systray-whitelist-back-in.html
 display_title "All done."
