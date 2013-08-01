@@ -5,8 +5,8 @@ LV2_DIR=/usr/local/lib/lv2
 LXVST_DIR=/usr/local/lib/lxvst
 SRC_DIR=~/src
 
-PLUGIN_ARCHIVES="http://downloads.sourceforge.net/project/distrho/Ports/HighLife/highlife_linux32_20120518.7z
-http://www.extentofthejam.com/DigitsVST-Linux-1.3.tar.gz
+PLUGIN_ARCHIVES="http://www.extentofthejam.com/DigitsVST-Linux-1.3.tar.gz
+http://downloads.sourceforge.net/project/distrho/Ports/HighLife/highlife_linux32_20120518.7z
 https://sites.google.com/site/ccernnaudio/vst-plugins/backup.zip
 http://downloads.sourceforge.net/project/distrho/Ports/Arctican-Plugins/arctican-plugins_linux32_20120518.7z
 http://www.mucoder.net/en/hypercyclic/v0101/download/latest/hypercyclic.1.1.367.linux.zip
@@ -19,29 +19,42 @@ http://downloads.sourceforge.net/project/distrho/Ports/Wolpertinger/wolpertinger
 BIN_REPOS="ppa:rafalcieslak256/harmonyseq"
 
 declare -A PACKS
+PACKS[02-triceratops]="git clone git://git.code.sf.net/p/triceratops/code"
+PACKS[02-drumkv1]="svn co http://svn.code.sf.net/p/drumkv1/code/trunk"
+PACKS[02-samplv1]="svn co http://svn.code.sf.net/p/samplv1/code/trunk"
+PACKS[02-synthv1]="svn co http://svn.code.sf.net/p/synthv1/code/trunk"
+PACKS[03-qtractor]="svn co http://svn.code.sf.net/p/qtractor/code/trunk"
+PACKS[01-phasex]="git clone https://github.com/williamweston/phasex.git"
 # PACKS[00-lv2]="svn checkout http://lv2plug.in/repo/trunk"
 # PACKS[01-drobilla-lad]="svn co http://svn.drobilla.net/lad/trunk"
 # PACKS[03-ntk]="git clone git://git.tuxfamily.org/gitroot/non/fltk.git"
 # PACKS[01-add64]="git clone git://git.code.sf.net/p/add64/code"
-PACKS[02-triceratops]="git clone git://git.code.sf.net/p/triceratops/code"
 # PACKS[02-amsynth]="git clone https://code.google.com/p/amsynth"
-PACKS[02-drumkv1]="svn co http://svn.code.sf.net/p/drumkv1/code/trunk"
-PACKS[02-samplv1]="svn co http://svn.code.sf.net/p/samplv1/code/trunk"
-PACKS[02-synthv1]="svn co http://svn.code.sf.net/p/synthv1/code/trunk"
 # PACKS[03-sorcer]="git clone https://github.com/harryhaaren/openAV-Sorcer.git"
-PACKS[03-qtractor]="svn co http://svn.code.sf.net/p/qtractor/code/trunk"
 # PACKS[04-ardour]="git clone git://git.ardour.org/ardour/ardour.git"
-PACKS[01-phasex]="git clone https://github.com/williamweston/phasex.git"
 
 BIN_BUILD="autoconf libqt4-dev dssi-dev librubberband-dev libboost-dev libglibmm-2.4-dev libsndfile-dev liblo-dev libxml2-dev uuid-dev libcppunit-dev libfftw3-dev libaubio-dev liblrdf-dev libsamplerate-dev libgnomecanvas2-dev libgnomecanvasmm-2.6-dev libcwiid-dev libgtkmm-2.4-dev libalsa-ocaml-dev libjack-dev lv2-dev liblilv-dev libsuil-dev libsratom-dev liblash-compat-dev lv2-c++-tools libpaq-dev"
 
 BIN_PLUGINS="invada-studio-plugins-lv2 so-synth-lv2 swh-lv2 mda-lv2 wsynth-dssi xsynth-dssi zynaddsubfx-dssi calf-plugins abgate aeolus amb-plugins autotalent caps cmt eq10q foo-yc20 hexter ir.lv2 lv2fil lv2vocoder mcp-plugins mda-lv2 swh-lv2 tap-plugins vocproc wah-plugins xsynth-dssi zita-at1 fluid-soundfont-gm amsynth whysynth"
 
-BIN_PROD="linux-lowlatency qmidinet qjackctl vmpk harmonyseq"
+BIN_PROD="linux-lowlatency qmidinet qjackctl vmpk harmonyseq audacity"
 
+BIN_BASICS="p7zip-full git subversion"
+
+BIN_NUMBER=$(expr $(printf "${BIN_BUILD}" | wc -w) + $(printf "${BIN_PLUGINS}" | wc -w) + $(printf "${BIN_PROD}" | wc -w) + $(printf "${BIN_BASICS}" | wc -w))
+
+echo -e "$(tput bold)$(tput setaf 3)$(basename $0) : ${#PACKS[@]} top-level repositories, $(printf "${PLUGIN_ARCHIVES}" | wc -w) binary plugin archives and $BIN_NUMBER binary packages in $(printf "${BIN_REPOS}" | wc -w) new ppa repositories.
+## Use -f to ignore VC state & force build$(tput sgr0)"
+
+DEBIAN=$(type -P apt-get)
+[[ $1 == "-f" ]] && FORCE_BUILD=true || FORCE_BUILD=false
+[[ $1 == "-y" ]] && ALWAYS_YES=true || ALWAYS_YES=false
+
+readarray -t PACKS_SORTED < <(printf '%s\n' "${!PACKS[@]}" | sort)
 
 function display_title {
     echo -e "
+
 $(tput bold)$(tput setaf 2)### $1$(tput sgr0)"
 }
 
@@ -49,21 +62,6 @@ function display_sub_title {
     echo -e "
 $(tput setaf 2)## $1$(tput sgr0)"
 }
-
-display_title "$(basename $0) : ${#PACKS[@]} top-level repositories and $(printf "${PLUGIN_ARCHIVES}" | wc -w) binary plugin archives
-## Use -f to ignore VC state & force build"
-
-# echo "#### $(basename $0) : ${#PACKS[@]} top-level repositories and $(printf "${PLUGIN_ARCHIVES}" | wc -w) binary plugin archives
-# ## Use -f to ignore VC state & force build
-# "
-
-BIN_BASICS="p7zip-full git subversion"
-
-DEBIAN=$(type -P apt-get)
-[[ $1 == "-f" ]] && FORCE_BUILD=true || FORCE_BUILD=false
-[[ $1 == "-y" ]] && ALWAYS_YES=true || ALWAYS_YES=false
-
-readarray -t PACKS_SORTED < <(printf '%s\n' "${!PACKS[@]}" | sort)
 
 function ask_question {
     echo "$(tput bold)$(tput setaf 2)"
@@ -133,6 +131,8 @@ function update_package {
     fi
 }
 
+display_title "Basic system checks"
+
 display_sub_title "User $USER in group audio" && sudo usermod -a -G audio $USER
 
 display_title "Binary packages"
@@ -141,7 +141,7 @@ for REPO in $BIN_REPOS ; do
 
 done
 
-sudo apt-get update
+# sudo apt-get update
 
 display_sub_title "Installing basic packages" && sudo apt-get install $BIN_BASICS
 display_sub_title "Build deps"
@@ -211,11 +211,12 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
         fi
 
         ALL_PLUGINS="$PLUGIN_VST $PLUGIN_LV2"
-
+        printf "%-65s%-65s\n" "| Source " "| Destination"
+        echo "---------------------------------------------------------------------------------------"
         for D_PLUGIN in $ALL_PLUGINS ; do
-            sudo cp -R $D_PLUGIN $D_DEST_DIR &&  echo "# Done copying $D_PLUGIN to $D_DEST_DIR"
-
+            sudo cp -R $D_PLUGIN $D_DEST_DIR && printf "%-65s%-65s\n" "| $D_PLUGIN" "| $D_DEST_DIR"
         done
+        echo "---------------------------------------------------------------------------------------"
     done
 fi
 
