@@ -112,6 +112,8 @@ function build_make {
     make clean
     [[ -f ./configure ]] && ./configure &&
     make && sudo make install
+    MESSAGE=" $PACKAGE Built":$MESSAGE
+
 }
 
 function vc_check {
@@ -130,6 +132,7 @@ function update_package {
     else
         vc_check
         if [ $? -eq 0 ]; then
+            MESSAGE=" $PACKAGE Updated ":$MESSAGE
             read -e -p "## Branch moved, build and install $PACKAGE? [Y/n] " YN
             if [[ $YN == "y" || $YN == "Y" || $YN == "" || $ALWAYS_YES ]] ; then
                 [[ -f ./waf ]] && build_waf || build_make
@@ -144,11 +147,20 @@ display_sub_title "User $USER in group audio" && sudo usermod -a -G audio $USER
 
 display_title "Binary packages"
 for REPO in $BIN_REPOS ; do
-    display_sub_title "Setup $REPO repository" && sudo apt-add-repository $REPO
-    echo ""
+
+    if [[ ! $(grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | cut -d: -f2,3 | sed '/^\#/d' | sed '/^$/d' | grep $(basename $REPO)) ]] ; then
+
+        display_sub_title "Setup $REPO repository" && sudo apt-add-repository $REPO
+        echo ""
+        MESSAGE=" $(basename $REPO) added":$MESSAGE
+        ADDED="1"
+    else
+        # echo ""
+        display_sub_title "$(basename $REPO) repo OK"
+    fi
 done
 
-sudo apt-get update
+[[ ! $ADDED == "0" ]] && sudo apt-get update
 
 echo "" && display_sub_title "Installing basic packages" && sudo apt-get install $BIN_BASICS
 echo "" && display_sub_title "Build deps"
@@ -269,4 +281,4 @@ card=default" > ~/.config/volumeicon/volumeicon
     fi
 fi
 
-display_title "All done."
+display_title "All done. $MESSAGE"
