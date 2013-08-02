@@ -16,7 +16,11 @@ http://downloads.sourceforge.net/project/distrho/Ports/TAL-Plugins/tal-plugins_l
 http://downloads.sourceforge.net/project/distrho/Ports/HybridReverb2/hybridreverb2_linux32_20120518.7z
 http://downloads.sourceforge.net/project/distrho/Ports/Wolpertinger/wolpertinger_linux32_20120518-2.7z"
 
-BIN_REPOS="ppa:rafalcieslak256/harmonyseq"
+BIN_REPOS="ppa:rafalcieslak256/harmonyseq
+ppa:kxstudio-team/ppa
+ppa:kxstudio-team/plugins
+ppa:kxstudio-team/music
+ppa:kxstudio-team/kernel"
 
 declare -A SOURCE_PACKS
 SOURCE_PACKS[02-triceratops]="git clone git://git.code.sf.net/p/triceratops/code"
@@ -25,8 +29,9 @@ SOURCE_PACKS[02-samplv1]="svn co http://svn.code.sf.net/p/samplv1/code/trunk"
 SOURCE_PACKS[02-synthv1]="svn co http://svn.code.sf.net/p/synthv1/code/trunk"
 SOURCE_PACKS[03-qtractor]="svn co http://svn.code.sf.net/p/qtractor/code/trunk"
 SOURCE_PACKS[01-phasex]="git clone https://github.com/williamweston/phasex.git"
-# SOURCE_PACKS[00-lv2]="svn checkout http://lv2plug.in/repo/trunk"
-# SOURCE_PACKS[01-drobilla-lad]="svn co http://svn.drobilla.net/lad/trunk"
+SOURCE_PACKS[00-lv2]="svn checkout http://lv2plug.in/repo/trunk"
+SOURCE_PACKS[05-fabla]="git clone https://github.com/harryhaaren/openAV-Fabla.git"
+SOURCE_PACKS[01-drobilla-lad]="svn co http://svn.drobilla.net/lad/trunk"
 # SOURCE_PACKS[03-ntk]="git clone git://git.tuxfamily.org/gitroot/non/fltk.git"
 # SOURCE_PACKS[01-add64]="git clone git://git.code.sf.net/p/add64/code"
 # SOURCE_PACKS[02-amsynth]="git clone https://code.google.com/p/amsynth"
@@ -35,9 +40,10 @@ SOURCE_PACKS[01-phasex]="git clone https://github.com/williamweston/phasex.git"
 
 BIN_BUILD="autoconf libqt4-dev dssi-dev librubberband-dev libboost-dev libglibmm-2.4-dev libsndfile-dev liblo-dev libxml2-dev uuid-dev libcppunit-dev libfftw3-dev libaubio-dev liblrdf-dev libsamplerate-dev libgnomecanvas2-dev libgnomecanvasmm-2.6-dev libcwiid-dev libgtkmm-2.4-dev libalsa-ocaml-dev libjack-dev lv2-dev liblilv-dev libsuil-dev libsratom-dev liblash-compat-dev lv2-c++-tools libpaq-dev"
 
-BIN_PLUGINS="invada-studio-plugins-lv2 so-synth-lv2 swh-lv2 mda-lv2 wsynth-dssi xsynth-dssi zynaddsubfx-dssi calf-plugins abgate aeolus amb-plugins autotalent caps cmt eq10q foo-yc20 hexter ir.lv2 lv2fil lv2vocoder mcp-plugins mda-lv2 swh-lv2 tap-plugins vocproc wah-plugins xsynth-dssi zita-at1 fluid-soundfont-gm amsynth whysynth"
+BIN_PROD="qmidinet qjackctl vmpk harmonyseq qmidiarp audacity timidity gladish laditools jamin"
 
-BIN_PROD="linux-lowlatency qmidinet qjackctl vmpk harmonyseq audacity"
+BIN_PLUGINS="invada-studio-plugins-lv2 so-synth-lv2 swh-lv2 mda-lv2 wsynth-dssi xsynth-dssi zynaddsubfx-dssi calf-plugins abgate aeolus amb-plugins autotalent caps cmt eq10q foo-yc20 hexter ir.lv2 lv2fil lv2vocoder mcp-plugins mda-lv2 swh-lv2 tap-plugins vocproc wah-plugins xsynth-dssi zita-at1 fluid-soundfont-gm amsynth whysynth ams zynjacku dssi-host-jack"
+
 
 BIN_BASICS="p7zip-full git subversion"
 
@@ -54,13 +60,11 @@ readarray -t SOURCE_PACKS_SORTED < <(printf '%s\n' "${!SOURCE_PACKS[@]}" | sort)
 
 function display_title {
     echo -e "
-
 $(tput bold)$(tput setaf 2)### $1$(tput sgr0)"
 }
 
 function display_sub_title {
-    echo -e "
-$(tput setaf 2)## $1$(tput sgr0)"
+    echo -e "$(tput setaf 2)## $1$(tput sgr0)"
 }
 
 function ask_question {
@@ -75,6 +79,7 @@ function ask_question {
 }
 
 function build_waf {
+    tput sc;tput cup 0 $(($(tput cols)-4));echo " Building $PACKAGE... ";tput rc
     if [[ $PACKAGE = "ardour" ]] ; then
 	read -e -p "## Build ardour with Windows VST support? [Y/n] " YN
 	if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
@@ -86,6 +91,7 @@ function build_waf {
     fi
     ./waf clean
     ./waf configure $BUILD_FLAGS && ./waf && sudo ./waf install
+    tput -T5620 reset
 }
 
 function build_make {
@@ -104,7 +110,8 @@ function build_make {
     fi
 
     make clean
-    ./configure && make && sudo make install
+    [[ -f ./configure ]] && ./configure &&
+    make && sudo make install
 }
 
 function vc_check {
@@ -138,22 +145,25 @@ display_sub_title "User $USER in group audio" && sudo usermod -a -G audio $USER
 display_title "Binary packages"
 for REPO in $BIN_REPOS ; do
     display_sub_title "Setup $REPO repository" && sudo apt-add-repository $REPO
-
+    echo ""
 done
 
 sudo apt-get update
 
-display_sub_title "Installing basic packages" && sudo apt-get install $BIN_BASICS
-display_sub_title "Build deps"
+echo "" && display_sub_title "Installing basic packages" && sudo apt-get install $BIN_BASICS
+echo "" && display_sub_title "Build deps"
+
 [[ $DEBIAN ]] && read -p "Install / Update build deps? ($BIN_BUILD) [Y/n] " YN || YN="no"
 [[ $YN == "y" || $YN == "Y" || $YN == "" ]] && sudo apt-get install $BIN_BUILD
+echo ""
 display_sub_title "Prod apps"
 [[ $DEBIAN ]] && read -e -p "Install / Update prod apps? ($BIN_PROD) [Y/n] " YN || YN="no"
 [[ $YN == "y" || $YN == "Y" || $YN == "" ]] && sudo apt-get install $BIN_PROD
+echo ""
 display_sub_title "Plugins"
 [[ $DEBIAN ]] && read -e -p "Install / Update plugins? ($BIN_PLUGINS) [Y/n] " YN || YN="no"
 [[ $YN == "y" || $YN == "Y" || $YN == "" ]] && sudo apt-get install $BIN_PLUGINS
-
+echo ""
 display_title "Source VC repositories"
 read -e -p "Install / update source repos? [Y/n] " YN
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
@@ -164,7 +174,7 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
         [[ $VC_SYSTEM = "svn" ]] && VC_UPDATE_CMD="update" || VC_UPDATE_CMD="pull"
         PACKAGE_CLONE_COMMAND="${SOURCE_PACKS[$PACKAGE]}"
         PACKAGE=${PACKAGE:3:$(( ${#PACKAGE} -3 ))}
-
+        echo ""
         display_sub_title "$PACKAGE"
 
         if [[ ! -d $SRC_DIR/$PACKAGE ]] ; then
@@ -195,6 +205,7 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
         D_FILE_TGZ=$(echo "$D_FILE" | grep "tar.gz" )
         [[ $D_FILE_TGZ ]] && EXT_COMMAND="tar -xzf " || EXT_COMMAND="7z x "
 
+        echo ""
         display_sub_title "Downloading ${D_FILE} (from $D_URI)"
 
         wget -q --secure-protocol=auto $D_URL && echo "# Downloaded $D_FILE in $UNPACK_DIR" && $EXT_COMMAND $D_FILE > /dev/null
@@ -225,7 +236,7 @@ if [[ $(pgrep pulseaudio) ]] ; then
 ### Remove PulseAudio? [Y/n] " YN
     if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
         sudo apt-get autoremove pulseaudio
-        sudo apt-get install volumeicon
+        sudo apt-get install volumeicon-alsa
 
         printf "[Desktop Entry]
 Type=Application
