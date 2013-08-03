@@ -4,13 +4,12 @@
 #export VST_PATH
 
 APPS="
-/usr/lib/qjackctl/qjackctl.real
+qjackctl
 vmpk
 qmidinet
 hydrogen
 yoshimi
 "
-# a2jmidid
 DAW=$1
 
 ALL_APPS="$APPS $DAW"
