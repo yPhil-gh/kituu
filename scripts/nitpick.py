@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# import subprocess
+import subprocess
 
 # subprocess.call(["play", "~/Studio/Samples/DRUMS/Vintage_Drum_Samples_24bit/DR55/dr55_rim.wav"])
 
@@ -57,7 +57,27 @@ filexpm = [
     ]
 filepb = gtk.gdk.pixbuf_new_from_xpm_data(filexpm)
 
-class FileListingCellDataExample:
+interface = """
+<ui>
+    <menubar name="MenuBar">
+        <menu action="File">
+            <menuitem action="New"/>
+            <menuitem action="Open"/>
+            <menuitem action="Save"/>
+            <menuitem action="Quit"/>
+        </menu>
+        <menu action="Edit">
+            <menuitem action="Preferences"/>
+        </menu>
+        <menu action="Help">
+            <menuitem action="About"/>
+        </menu>
+    </menubar>
+</ui>
+"""
+
+
+class Nitpick:
     column_names = ['Name', 'Size', 'Mode', 'Last Changed']
 
     def delete_event(self, widget, event, data=None):
@@ -69,12 +89,12 @@ class FileListingCellDataExample:
                            self.file_last_changed)
 
         # Create a new window
+
+        # window = self.window
+
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-
-        self.window.set_size_request(400, 300)
-
+        self.window.set_size_request(400, 600)
         self.window.connect("delete_event", self.delete_event)
-
 
 
         listmodel = self.make_list(dname)
@@ -105,8 +125,45 @@ class FileListingCellDataExample:
         self.window.add(self.scrolledwindow)
         self.treeview.set_model(listmodel)
 
+
+# Menu
+
+        # vbox = gtk.VBox()
+
+        # uimanager = gtk.UIManager()
+        # accelgroup = uimanager.get_accel_group()
+        # self.window.add_accel_group(accelgroup)
+
+        # self.actiongroup = gtk.ActionGroup("uimanager")
+        # self.actiongroup.add_actions([
+        #     ("New", gtk.STOCK_NEW, "_New", None, "Create a New Document"),
+        #     ("Open", gtk.STOCK_OPEN, "_Open", None, "Open an Existing Document"),
+        #     ("Save", gtk.STOCK_SAVE, "_Save", None, "Save the Current Document"),
+        #     ("Quit", gtk.STOCK_QUIT, "_Quit", None, "Quit the Application", lambda w: gtk.main_quit()),
+        #     ("File", None, "_File"),
+        #     ("Preferences", gtk.STOCK_PREFERENCES, "_Preferences", None, "Edit the Preferences"),
+        #     ("Edit", "None", "_Edit"),
+        #     ("About", gtk.STOCK_ABOUT, "_About", None, "Open the About dialog"),
+        #     ("Help", "None", "_Help")
+        # ])
+
+        # uimanager.insert_action_group(self.actiongroup, 0)
+        # uimanager.add_ui_from_string(interface)
+
+        # menubar = uimanager.get_widget("/MenuBar")
+        # vbox.pack_start(menubar, False)
+
+
+
+        # # window.connect("destroy", lambda w: gtk.main_quit())
+        # self.window.add(vbox)
+
+
         self.window.show_all()
         return
+
+
+        # Funcs
 
     def make_list(self, dname=None):
         if not dname:
@@ -132,7 +189,8 @@ class FileListingCellDataExample:
             new_model = self.make_list(filename)
             treeview.set_model(new_model)
         else:
-            print filename + "is a file!!"
+            subprocess.call(["play", filename])
+            # print filename + "is a file!!"
         return
 
         def on_selection_changed(selection, f):
@@ -180,5 +238,5 @@ def main():
     gtk.main()
 
 if __name__ == "__main__":
-    flcdexample = FileListingCellDataExample()
+    flcdexample = Nitpick()
     main()
