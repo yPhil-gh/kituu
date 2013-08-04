@@ -245,6 +245,7 @@ class Nitpick:
         accelgroup = uimanager.get_accel_group()
         self.window.add_accel_group(accelgroup)
 
+
         listmodel = self.make_list(dname)
         treestore = gtk.ListStore(str, str, str, str)
 
