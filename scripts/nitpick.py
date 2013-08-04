@@ -3,7 +3,6 @@
 import os, stat, time
 import pygtk
 import gtk
-import subprocess
 import pygame.mixer
 
 import random
@@ -190,8 +189,8 @@ def get_resource_path(rel_path):
 class Nitpick:
     column_names = ['Name', 'Size', 'Mode', 'Last Changed']
 
-    def yowza(plip, plop):
-        print "yowza"
+    def yowza(self, plop):
+        print "yowza" +  self.tvcolumn.set_sort_order(Gtk.SortType.ASCENDING)
 
     def delete_event(self, widget, event, data=None):
         gtk.main_quit()
@@ -245,23 +244,11 @@ class Nitpick:
         accelgroup = uimanager.get_accel_group()
         self.window.add_accel_group(accelgroup)
 
-
         listmodel = self.make_list(dname)
-        treestore = gtk.ListStore(str, str, str, str)
-
-        filtered_model = treestore.filter_new()
-
-        self.filtered_model = gtk.TreeModelSort(filtered_model)
+        liststore = gtk.ListStore(str, int, int, str)
 
         # create the TreeView
-        self.treeview = gtk.TreeView(treestore)
-
-        # self.treeview.set_reorderable(True)
-
-
-        treemodelsort = gtk.TreeModelSort(listmodel)
-
-        treemodelsort.set_sort_column_id(0, gtk.SORT_ASCENDING)
+        self.treeview = gtk.TreeView(liststore)
 
         # create the TreeViewColumns to display the data
         self.tvcolumn = [None] * len(self.column_names)
@@ -278,16 +265,10 @@ class Nitpick:
         cell = gtk.CellRendererText()
         self.tvcolumn[0].pack_start(cell, False)
         self.tvcolumn[0].set_cell_data_func(cell, self.file_name)
-
-        # self.tvcolumn[0].set_sort_column_id(0)
-
-
         self.treeview.append_column(self.tvcolumn[0])
         for n in range(1, len(self.column_names)):
             cell = gtk.CellRendererText()
             self.tvcolumn[n] = gtk.TreeViewColumn(self.column_names[n], cell)
-            self.tvcolumn[0].set_sort_column_id(0)
-
 
             # win.tv.cell[i] = gtk.CellRendererText()
             # win.tv.append_column(win.tv.column[i])
@@ -295,13 +276,9 @@ class Nitpick:
             # win.tv.column[i].pack_start(win.tv.cell[i], True)
             # win.tv.column[i].set_attributes(win.tv.cell[i], text=i)
 
-
             if n == 1:
                 cell.set_property('xalign', 1.0)
-                self.tvcolumn[n].set_sort_column_id(0)
             self.tvcolumn[n].set_cell_data_func(cell, cell_data_funcs[n])
-
-            self.tvcolumn[n].set_sort_column_id(n) # make column sortable using column 0 data
 
             self.treeview.append_column(self.tvcolumn[n])
 
