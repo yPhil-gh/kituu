@@ -94,7 +94,7 @@ class Nitpick:
 
         self.bouton = gtk.Button('Stop sound')
         self.bouton.connect('clicked', self.stop_audio)
-        vbox.pack_start(self.bouton, False)
+        vbox.pack_end(self.bouton, False)
 
         cellpb = gtk.CellRendererPixbuf()
         self.tvcolumn[0] = gtk.TreeViewColumn(self.column_names[0], cellpb)
@@ -172,7 +172,7 @@ class Nitpick:
             self.dirname = os.path.expanduser('~')
         else:
             self.dirname = os.path.abspath(dname)
-        self.window.set_title("Nitpicker : " + self.dirname)
+        self.window.set_title("BeatNitpicker : " + self.dirname)
         files = [f for f in os.listdir(self.dirname) if f[0] <> '.']
         files.sort()
         files = ['..'] + files
