@@ -52,7 +52,7 @@ class Nitpick:
         about.set_copyright("(c) Philippe \"xaccrocheur\" Coatmeur")
         about.set_comments("Simple sound sample auditor")
         about.set_website("http://www.zetcode.com")
-        about.set_logo(gtk.gdk.pixbuf_new_from_file("icon.svg"))
+        about.set_logo(gtk.gdk.pixbuf_new_from_file("/usr/share/icons/Tango/scalable/status/audio-volume-high.svg"))
         about.run()
         about.destroy()
 
@@ -73,7 +73,7 @@ class Nitpick:
         self.window.set_size_request(400, 600)
         self.window.connect("delete_event", self.delete_event)
 
-        self.window.set_icon_from_file(get_resource_path("icon.svg"))
+        self.window.set_icon_from_file(get_resource_path("/usr/share/icons/Tango/scalable/status/audio-volume-high.svg"))
 
         vbox = gtk.VBox()
 
