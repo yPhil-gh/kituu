@@ -4,42 +4,17 @@ import os, stat, time
 import pygtk
 import gtk
 import pygame.mixer
-
-import random
-
 pygame.init()
 
-folderxpm = [
-    "17 16 7 1",
-    "  c #000000",
-    ". c #808000",
-    "X c yellow",
-    "o c #808080",
-    "O c #c0c0c0",
-    "+ c white",
-    "@ c None",
-    "@@@@@@@@@@@@@@@@@",
-    "@@@@@@@@@@@@@@@@@",
-    "@@+XXXX.@@@@@@@@@",
-    "@+OOOOOO.@@@@@@@@",
-    "@+OXOXOXOXOXOXO. ",
-    "@+XOXOXOXOXOXOX. ",
-    "@+OXOXOXOXOXOXO. ",
-    "@+XOXOXOXOXOXOX. ",
-    "@+OXOXOXOXOXOXO. ",
-    "@+XOXOXOXOXOXOX. ",
-    "@+OXOXOXOXOXOXO. ",
-    "@+XOXOXOXOXOXOX. ",
-    "@+OOOOOOOOOOOOO. ",
-    "@                ",
-    "@@@@@@@@@@@@@@@@@",
-    "@@@@@@@@@@@@@@@@@"
-    ]
-# folderpb = gtk.gdk.pixbuf_new_from_xpm_data(folderxpm)
+import ConfigParser
+
+# config = ConfigParser.ConfigParser()
+# config.readfp(open('defaults.cfg'))
+# config.read(['site.cfg', os.path.expanduser('~/.config/beatnitpicker/beatnitpicker.cfg')])
+# http://docs.python.org/2/library/configparser.html
+
 folderpb = gtk.gdk.pixbuf_new_from_file("../tmp/Beatnitpicker/folder.png")
-
 sndfilepb = gtk.gdk.pixbuf_new_from_file("../tmp/Beatnitpicker/audiofile.png")
-
 filepb = gtk.gdk.pixbuf_new_from_file("../tmp/Beatnitpicker/genericfile.png")
 
 interface = """
