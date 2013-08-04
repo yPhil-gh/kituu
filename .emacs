@@ -234,6 +234,13 @@
             (font-lock-add-keywords nil
                                     '(("\\<\\(FIXME\\|HACK\\|BUG\\|pX\\):" 1 font-lock-warning-face t)))))
 
+
+(add-hook 'python-mode-hook
+          (lambda ()
+            (font-lock-add-keywords nil
+                                    '(("\\<\\(FIXME\\|HACK\\|BUG\\|pX\\):" 1 font-lock-warning-face t)))))
+
+
 ;; NxHTML! _________________________________________________________________
 
 (if (and
