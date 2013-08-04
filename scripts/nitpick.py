@@ -2,7 +2,7 @@
 
 import os, stat, time
 import pygtk
-# import gtk
+import gtk
 import pygame.mixer
 
 import random
@@ -35,128 +35,12 @@ folderxpm = [
     "@@@@@@@@@@@@@@@@@",
     "@@@@@@@@@@@@@@@@@"
     ]
-folderpb = gtk.gdk.pixbuf_new_from_xpm_data(folderxpm)
+# folderpb = gtk.gdk.pixbuf_new_from_xpm_data(folderxpm)
+folderpb = gtk.gdk.pixbuf_new_from_file("../tmp/Beatnitpicker/folder.png")
 
-sndfilexpm = [
-"16 16 6 1",
-" 	c None",
-".	c #242021",
-"+	c #262223",
-"@	c #231F20",
-"#	c #252122",
-"$	c #242121",
-"                ",
-"        .       ",
-"       .+       ",
-"      .+@  .    ",
-"     #+@@  @@+  ",
-".+@@#+@@+    $@ ",
-"+.@#+@@+#     .+",
-"@@#+@@+#@     +@",
-"@##@@+#@.     @@",
-"##@@+.@.+     @.",
-"+@@+.@@+@    @# ",
-"     .+.@  @@#  ",
-"      @@#  @    ",
-"       #+       ",
-"        @       ",
-"        @       "]
+sndfilepb = gtk.gdk.pixbuf_new_from_file("../tmp/Beatnitpicker/audiofile.png")
 
-sndfilepb = gtk.gdk.pixbuf_new_from_xpm_data(sndfilexpm)
-
-filexpm = [
-"16 16 72 1",
-" 	c None",
-".	c #787A75",
-"+	c #797B76",
-"@	c #FFFFFF",
-"#	c #7D7F79",
-"$	c #F8F8F7",
-"%	c #F7F7F6",
-"&	c #7D7F7A",
-"*	c #DDDDDD",
-"=	c #C3C3C2",
-"-	c #C2C2C2",
-";	c #DBDBDA",
-">	c #FBFBFA",
-",	c #FEFEFD",
-"'	c #FCFCFB",
-")	c #FAFAF9",
-"!	c #F5F5F5",
-"~	c #C1C1C1",
-"{	c #C1C1C0",
-"]	c #D9D9D8",
-"^	c #F0F0F0",
-"/	c #FEFEFE",
-"(	c #F2F2F2",
-"_	c #EEEEEE",
-":	c #FDFDFD",
-"<	c #C0C0C0",
-"[	c #BFBFBF",
-"}	c #D7D7D7",
-"|	c #EEEEED",
-"1	c #ECECEC",
-"2	c #FCFCFC",
-"3	c #F9F9F8",
-"4	c #F9F9F9",
-"5	c #F7F7F5",
-"6	c #F3F3F3",
-"7	c #F0F0EF",
-"8	c #EBEBEB",
-"9	c #EAEAEA",
-"0	c #FBFBFB",
-"a	c #BFBFBE",
-"b	c #BEBEBE",
-"c	c #BEBEBD",
-"d	c #BDBDBD",
-"e	c #BCBCBC",
-"f	c #D2D2D2",
-"g	c #FAFAFA",
-"h	c #F5F5F4",
-"i	c #F6F6F5",
-"j	c #F4F4F5",
-"k	c #F2F2F1",
-"l	c #EFEFEF",
-"m	c #E9E9E9",
-"n	c #FAF9F9",
-"o	c #D8D8D7",
-"p	c #E7E7E6",
-"q	c #E6E6E5",
-"r	c #E5E5E4",
-"s	c #F1F1F0",
-"t	c #EDEDED",
-"u	c #E9E9E8",
-"v	c #E6E6E4",
-"w	c #E5E5E3",
-"x	c #E4E4E2",
-"y	c #E7E7E8",
-"z	c #E4E4E1",
-"A	c #E3E3E0",
-"B	c #F8F8F6",
-"C	c #72746F",
-"D	c #FBFAFB",
-"E	c #696A66",
-"F	c #666863",
-"G	c #686A65",
-"  .++++++++++.  ",
-" .@@@@@@@@@@@@# ",
-" +@$$$$$$$$$%@& ",
-" +@*=======-;@& ",
-" +@>,,,,,'>)!@& ",
-" +@*===--~{]^/& ",
-" +@>,,'>)$%(_:& ",
-" +@*--~{<[}|12& ",
-" +@3>4$5!67890& ",
-" +@;{<[abcdefg& ",
-" +@hij6k^l_1mn& ",
-" +@oabcdefpqr3& ",
-" +/sk^lt1uvwx$& ",
-" +:19mypqwxzAB& ",
-" C@20Dg)433$B@C ",
-"  EFFFFFFFFFFG  "]
-
-filepb = gtk.gdk.pixbuf_new_from_xpm_data(filexpm)
-
+filepb = gtk.gdk.pixbuf_new_from_file("../tmp/Beatnitpicker/genericfile.png")
 
 interface = """
 <ui>
@@ -177,20 +61,30 @@ interface = """
 </ui>
 """
 
-
-
 def get_resource_path(rel_path):
     dir_of_py_file = os.path.dirname(__file__)
     rel_path_to_resource = os.path.join(dir_of_py_file, rel_path)
     abs_path_to_resource = os.path.abspath(rel_path_to_resource)
     return abs_path_to_resource
 
-
 class Nitpick:
     column_names = ['Name', 'Size', 'Mode', 'Last Changed']
 
-    def yowza(self, plop):
-        print "yowza" +  self.tvcolumn.set_sort_order(Gtk.SortType.ASCENDING)
+    def about_box(self, widget):
+        about = gtk.AboutDialog()
+        about.set_program_name("BeatNitPicker")
+        about.set_version("0.1")
+        about.set_copyright("(c) Philippe \"xaccrocheur\" Coatmeur")
+        about.set_comments("Simple sound sample auditor")
+        about.set_website("http://www.zetcode.com")
+        about.set_logo(gtk.gdk.pixbuf_new_from_file("../tmp/Beatnitpicker/icon.svg"))
+        about.run()
+        about.destroy()
+
+    def stop_audio(self, plop):
+        pygame.mixer.stop()
+        print "Audio stopped"
+
 
     def delete_event(self, widget, event, data=None):
         gtk.main_quit()
@@ -200,14 +94,9 @@ class Nitpick:
         cell_data_funcs = (None, self.file_size, self.file_mode,
                            self.file_last_changed)
 
-
         self.window = gtk.Window()
         self.window.set_size_request(400, 600)
         self.window.connect("delete_event", self.delete_event)
-
-
-        # treestore = gtk.TreeStore(str)
-        # treestore.connect("rows-reordered", self.rows_reordered)
 
         self.window.set_icon_from_file(get_resource_path("../tmp/Beatnitpicker/icon.svg"))
 
@@ -228,8 +117,8 @@ class Nitpick:
 
         # set_sort_column_id(0)
 
-        self.bouton = gtk.Button('Button')
-        self.bouton.connect('clicked', self.yowza)
+        self.bouton = gtk.Button('Stop sound')
+        self.bouton.connect('clicked', self.stop_audio)
         vbox.pack_start(self.bouton, False)
 
         cellpb = gtk.CellRendererPixbuf()
@@ -238,6 +127,10 @@ class Nitpick:
         cell = gtk.CellRendererText()
         self.tvcolumn[0].pack_start(cell, False)
         self.tvcolumn[0].set_cell_data_func(cell, self.file_name)
+        self.tvcolumn[0].set_sort_column_id(0)
+
+# Gtk.SortType.ASCENDING or Gtk.SortType.DESCENDING.
+
         self.treeview.append_column(self.tvcolumn[0])
         for n in range(1, len(self.column_names)):
             cell = gtk.CellRendererText()
@@ -277,7 +170,7 @@ class Nitpick:
             ("File", None, "_File"),
             ("Preferences", gtk.STOCK_PREFERENCES, "_Preferences", None, "Edit the Preferences"),
             ("Edit", None, "_Edit"),
-            ("About", gtk.STOCK_ABOUT, "_About", None, "Open the About dialog"),
+            ("About", gtk.STOCK_ABOUT, "_About", None, "yow", self.about_box),
             ("Help", None, "_Help")
         ])
 
@@ -287,14 +180,17 @@ class Nitpick:
         menubar = uimanager.get_widget("/MenuBar")
         vbox.pack_start(menubar, False)
 
-
         self.window.add(vbox)
-
-
         self.window.show_all()
         return
 
-        # Funcs
+    def stop_wav(cls, channel):
+        """Stops the playback of sound on the specified channel. -1 can be used to
+          stop all sounds"""
+        if channel==-1:
+            pygame.mixer.stop()
+        else:
+            cls.channels[channel].stop()
 
     def make_list(self, dname=None):
         if not dname:
