@@ -13,9 +13,9 @@ import ConfigParser
 # config.read(['site.cfg', os.path.expanduser('~/.config/beatnitpicker/beatnitpicker.cfg')])
 # http://docs.python.org/2/library/configparser.html
 
-folderpb = gtk.gdk.pixbuf_new_from_file("../tmp/Beatnitpicker/folder.png")
-sndfilepb = gtk.gdk.pixbuf_new_from_file("../tmp/Beatnitpicker/audiofile.png")
-filepb = gtk.gdk.pixbuf_new_from_file("../tmp/Beatnitpicker/genericfile.png")
+folderpb = gtk.gdk.pixbuf_new_from_file("/home/px/tmp/Beatnitpicker/folder.png")
+sndfilepb = gtk.gdk.pixbuf_new_from_file("/home/px/tmp/Beatnitpicker/audiofile.png")
+filepb = gtk.gdk.pixbuf_new_from_file("/home/px/tmp/Beatnitpicker/genericfile.png")
 
 interface = """
 <ui>
