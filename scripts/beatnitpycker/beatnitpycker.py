@@ -51,7 +51,7 @@ class Nitpick:
         about.set_version("0.1")
         about.set_copyright("(c) Philippe \"xaccrocheur\" Coatmeur")
         about.set_comments("Simple sound sample auditor")
-        about.set_website("http://www.zetcode.com")
+        about.set_website("https://github.com/xaccrocheur")
         about.set_logo(gtk.gdk.pixbuf_new_from_file("/usr/share/icons/Tango/scalable/status/audio-volume-high.svg"))
         about.run()
         about.destroy()
