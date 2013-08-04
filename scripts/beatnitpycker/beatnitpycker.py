@@ -172,7 +172,7 @@ class Nitpick:
             self.dirname = os.path.expanduser('~')
         else:
             self.dirname = os.path.abspath(dname)
-        self.window.set_title("BeatNitpicker : " + self.dirname)
+        self.window.set_title("BeatNitpycker : " + self.dirname)
         files = [f for f in os.listdir(self.dirname) if f[0] <> '.']
         files.sort()
         files = ['..'] + files
