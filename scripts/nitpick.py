@@ -2,7 +2,7 @@
 
 import os, stat, time
 import pygtk
-import gtk
+# import gtk
 import pygame.mixer
 
 import random
@@ -196,33 +196,6 @@ class Nitpick:
         gtk.main_quit()
         return False
 
-    # sortOrder   = gtk.SORT_ASCENDING
-    # lastSortCol = None
-
-    # def sortRows(column):
-    #     """ Sort the rows based on the given column """
-    #     global lastSortCol, sortOrder
-
-    #     if lastSortCol is not None:
-    #         lastSortCol.set_sort_indicator(False)
-
-    # # Ascending or descending?
-    #     if lastSortCol == column:
-    #         if sortOrder == gtk.SORT_ASCENDING:
-    #             sortOrder = gtk.SORT_DESCENDING
-    #         else:
-    #             sortOrder = gtk.SORT_ASCENDING
-    #     else:
-    #         sortOrder   = gtk.SORT_ASCENDING
-    #         lastSortCol = column
-
-    #         # Sort rows
-    #         # ...
-
-    #         # Display the sort indicator
-    #     column.set_sort_indicator(True)
-    #     column.set_sort_order(sortOrder)
-
     def __init__(self, dname = None):
         cell_data_funcs = (None, self.file_size, self.file_mode,
                            self.file_last_changed)
@@ -348,18 +321,7 @@ class Nitpick:
             treeview.set_model(new_model)
         else:
             pygame.mixer.Sound(filename).play()
-            # subprocess.call(["play", filename])
-            # print filename + "is a file!!"
         return
-
-        # def on_selection_changed(selection, f):
-        #     model, paths = selection.get_selected_rows()
-        #     if paths:
-        #         # do the thing!
-        #         print selection + f
-        #         self.treeView = gtk.TreeView(mymodel)
-        #         selection = self.treeView.get_selection()
-        #         selection.connect('changed', on_selection_changed)
 
     def file_pixbuf(self, column, cell, model, iter):
         filename = os.path.join(self.dirname, model.get_value(iter, 0))
