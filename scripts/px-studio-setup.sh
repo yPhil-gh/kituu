@@ -69,17 +69,6 @@ function display_sub_title {
     echo -e "$(tput setaf 2)## $1$(tput sgr0)"
 }
 
-function ask_question {
-    echo "$(tput bold)$(tput setaf 2)"
-    read -e -p "#### $1 [Y/n] " YN
-    echo "$(tput sgr0)"
-    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-        answer=yes
-    else
-        answer=no
-    fi
-}
-
 function build_waf {
     tput sc;tput cup 0 $(($(tput cols)-4));echo " Building $PACKAGE... ";tput rc
     if [[ $PACKAGE = "ardour" ]] ; then
