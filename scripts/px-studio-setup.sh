@@ -48,14 +48,12 @@ BIN_BASICS="p7zip-full git subversion"
 
 BIN_NUMBER=$(expr $(printf "${BIN_BUILD}" | wc -w) + $(printf "${BIN_PLUGINS}" | wc -w) + $(printf "${BIN_PROD}" | wc -w) + $(printf "${BIN_BASICS}" | wc -w))
 
-echo -e "$(tput bold)$(tput setaf 3)$(basename $0) : ${#SOURCE_PACKS[@]} top-level repositories, $(printf "${PLUGIN_ARCHIVES}" | wc -w) binary plugin archives and $BIN_NUMBER binary packages in $(printf "${BIN_REPOS}" | wc -w) new ppa repositories.
-## Use -f to ignore VC state & force build$(tput sgr0)"
+echo -e "$(tput bold)$(tput setaf 3)$(basename $0) : ${#SOURCE_PACKS[@]} top-level VC repositories, $(printf "${PLUGIN_ARCHIVES}" | wc -w) binary plugin archives and $BIN_NUMBER binary packages in $(printf "${BIN_REPOS}" | wc -w) new ppa repositories.
+## Use -f to ignore VC state & force build
+## Use -y to auto-install VC repos$(tput sgr0)"
 
 DEBIAN=$(type -P apt-get)
 FEDORA=$(type -P yum)
-
-[[ $FEDORA ]] && PACKAGE_MANAGER_COMMAND="yum" && echo "# RedHat-based System : you will have to hunt for repositories manually."
-[[ $DEBIAN ]] && PACKAGE_MANAGER_COMMAND="apt-get" && echo "# Debian-based System : $(printf "${BIN_REPOS}" | wc -w) repos available."
 
 [[ $1 == "-f" ]] && FORCE_BUILD=true || FORCE_BUILD=false
 [[ $1 == "-y" ]] && ALWAYS_YES=true || ALWAYS_YES=false
@@ -146,11 +144,12 @@ function update_package {
 }
 
 display_title "Basic system checks"
-
 display_sub_title "User $USER in group audio" && sudo usermod -a -G audio $USER
+[[ $DEBIAN ]] && PACKAGE_MANAGER_COMMAND="apt-get" && display_sub_title "Debian-based System : $(printf "${BIN_REPOS}" | wc -w) repos available."
+[[ $FEDORA ]] && PACKAGE_MANAGER_COMMAND="yum" && display_sub_title "RedHat-based System : you will have to hunt for repositories manually."
 
+display_title "Binary packages"
 if [[ $DEBIAN ]] ; then
-    display_title "Binary packages"
     for REPO in $BIN_REPOS ; do
 
         if [[ ! $(grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | cut -d: -f2,3 | sed '/^\#/d' | sed '/^$/d' | grep $(basename $REPO)) ]] ; then
