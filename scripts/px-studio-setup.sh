@@ -143,7 +143,6 @@ function update_package {
     fi
 }
 
-
 display_title "Basic system checks"
 display_sub_title "User $USER in group audio" && sudo usermod -a -G audio $USER
 [[ $DEBIAN ]] && PACKAGE_MANAGER_COMMAND="apt-get" && display_sub_title "Debian-based System : $(printf "${BIN_REPOS}" | wc -w) repos available."
