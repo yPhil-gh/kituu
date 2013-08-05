@@ -6,12 +6,6 @@ import gtk
 import pygame.mixer
 pygame.init()
 
-# import ConfigParser
-# config = ConfigParser.ConfigParser()
-# config.readfp(open('defaults.cfg'))
-# config.read(['site.cfg', os.path.expanduser('~/.config/beatnitpicker/beatnitpicker.cfg')])
-# http://docs.python.org/2/library/configparser.html
-
 interface = """
 <ui>
     <menubar name="MenuBar">
@@ -30,12 +24,6 @@ interface = """
     </menubar>
 </ui>
 """
-
-def get_resource_path(rel_path):
-    dir_of_py_file = os.path.dirname(__file__)
-    rel_path_to_resource = os.path.join(dir_of_py_file, rel_path)
-    abs_path_to_resource = os.path.abspath(rel_path_to_resource)
-    return abs_path_to_resource
 
 class Nitpick:
     column_names = ['Name', 'Size', 'Mode', 'Last Changed']
@@ -83,8 +71,6 @@ class Nitpick:
         # create the TreeViewColumns to display the data
         self.tvcolumn = [None] * len(self.column_names)
 
-        # set_sort_column_id(0)
-
         self.bouton = gtk.ToolButton(gtk.STOCK_MEDIA_STOP)
         self.bouton.connect('clicked', self.stop_audio)
         vbox.pack_end(self.bouton, False)
@@ -97,18 +83,10 @@ class Nitpick:
         self.tvcolumn[0].set_cell_data_func(cell, self.file_name)
         self.tvcolumn[0].set_sort_column_id(0)
 
-# Gtk.SortType.ASCENDING or Gtk.SortType.DESCENDING.
-
         self.treeview.append_column(self.tvcolumn[0])
         for n in range(1, len(self.column_names)):
             cell = gtk.CellRendererText()
             self.tvcolumn[n] = gtk.TreeViewColumn(self.column_names[n], cell)
-
-            # win.tv.cell[i] = gtk.CellRendererText()
-            # win.tv.append_column(win.tv.column[i])
-            # win.tv.column[i].set_sort_column_id(i)
-            # win.tv.column[i].pack_start(win.tv.cell[i], True)
-            # win.tv.column[i].set_attributes(win.tv.cell[i], text=i)
 
             if n == 1:
                 cell.set_property('xalign', 1.0)
@@ -116,18 +94,12 @@ class Nitpick:
 
             self.treeview.append_column(self.tvcolumn[n])
 
-            # treestore = gtk.TreeStore(str, object)
-            # treestore.connect("rows-reordered", self.rows_r)
-
         self.treeview.connect('row-activated', self.open_file)
         self.scrolledwindow = gtk.ScrolledWindow()
         self.scrolledwindow.add(self.treeview)
         self.treeview.set_model(listmodel)
 
         vbox.pack_start(self.scrolledwindow)
-
-
-# Menu
 
         self.actiongroup = gtk.ActionGroup("uimanager")
         self.actiongroup.add_actions([
@@ -151,14 +123,6 @@ class Nitpick:
         self.window.add(vbox)
         self.window.show_all()
         return
-
-    def stop_wav(cls, channel):
-        """Stops the playback of sound on the specified channel. -1 can be used to
-          stop all sounds"""
-        if channel==-1:
-            pygame.mixer.stop()
-        else:
-            cls.channels[channel].stop()
 
     def make_list(self, dname=None):
         if not dname:
