@@ -4,6 +4,17 @@ import os, stat, time
 import pygtk
 import gtk
 import pygame.mixer
+import pprint
+
+import matplotlib.pyplot as pl
+from matplotlib.backends.backend_gtk import FigureCanvasGTK as FigureCanvas
+import numpy as np
+import scipy.io.wavfile as wavfile
+
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
+from matplotlib.backends.backend_gtkagg import NavigationToolbar2GTKAgg as NavigationToolbar
+
 pygame.init()
 
 interface = """
@@ -47,9 +58,42 @@ class Nitpick:
         gtk.main_quit()
         return False
 
+    def drawplot (self, audiofile):
+        # rate, data = wavfile.read('/home/px/gare_du_nord-catchlak.wav')
+        rate, data = wavfile.read(audiofile)
+        t = np.arange(len(data[:,0]))*1.0/rate
+        pl.plot(t, data[:,0])
+        fig = Figure(figsize=(5,2),facecolor='w')
+        ax = fig.add_axes([0.0, -0.2, 1.2, 1.2])
+        ax.set_axis_off()
+        ax.plot(t, data[:,0])
+        canvas = FigureCanvas(fig)  # a gtk.DrawingArea
+        # print audiofile
+        return canvas
+
+    def getmyfilename (self, name):
+        return "plop" + name
+
     def __init__(self, dname = None):
         cell_data_funcs = (None, self.file_size, self.file_mode,
                            self.file_last_changed)
+
+
+
+        # rate, data = wavfile.read('/home/px/gare_du_nord-catchlak.wav')
+        # t = np.arange(len(data[:,0]))*1.0/rate
+        # pl.plot(t, data[:,0])
+
+        # fig = Figure(figsize=(5,2),facecolor='w')
+
+        # ax = fig.add_axes([0.0, -0.2, 1.2, 1.2])
+        # ax.set_axis_off()
+
+        # ax.plot(t, data[:,0])
+
+        # canvas = FigureCanvas(fig)  # a gtk.DrawingArea
+
+
 
         self.window = gtk.Window()
         self.window.set_size_request(400, 600)
@@ -75,6 +119,7 @@ class Nitpick:
         self.bouton.connect('clicked', self.stop_audio)
         vbox.pack_end(self.bouton, False)
 
+
         cellpb = gtk.CellRendererPixbuf()
         self.tvcolumn[0] = gtk.TreeViewColumn(self.column_names[0], cellpb)
         self.tvcolumn[0].set_cell_data_func(cellpb, self.file_pixbuf)
@@ -99,9 +144,9 @@ class Nitpick:
         self.scrolledwindow.add(self.treeview)
         self.treeview.set_model(listmodel)
 
-        vbox.pack_start(self.scrolledwindow)
 
         self.actiongroup = gtk.ActionGroup("uimanager")
+
         self.actiongroup.add_actions([
             ("New", gtk.STOCK_NEW, "_New", None, "Create a New Document"),
             ("Open", gtk.STOCK_OPEN, "_Open", None, "Open an Existing Document"),
@@ -117,8 +162,12 @@ class Nitpick:
         uimanager.insert_action_group(self.actiongroup, 0)
         uimanager.add_ui_from_string(interface)
 
+        filename="/home/px/gare_du_nord-catchlak.wav"
+        mycanvas = self.drawplot(filename)
+
         menubar = uimanager.get_widget("/MenuBar")
         vbox.pack_start(menubar, False)
+        vbox.pack_start(self.scrolledwindow)
 
         self.window.add(vbox)
         self.window.show_all()
@@ -138,6 +187,10 @@ class Nitpick:
             listmodel.append([f])
         return listmodel
 
+    def on_button_clicked ():
+        print "plop"
+        # vbox.pack_start(canvas)
+
     def open_file(self, treeview, path, column):
         model = treeview.get_model()
         iter = model.get_iter(path)
@@ -149,6 +202,27 @@ class Nitpick:
             treeview.set_model(new_model)
         else:
             pygame.mixer.Sound(filename).play()
+            # self.window.vbox.pack_start(mycanvas)
+            # print self.getmyfilename(filename)
+
+            rate, data = wavfile.read('/home/px/gare_du_nord-catchlak.wav')
+            t = np.arange(len(data[:,0]))*1.0/rate
+            pl.plot(t, data[:,0])
+            fig = Figure(figsize=(5,2),facecolor='w')
+            ax = fig.add_axes([0.0, -0.2, 1.2, 1.2])
+            ax.set_axis_off()
+            ax.plot(t, data[:,0])
+            canvas = FigureCanvas(fig)  # a gtk.DrawingArea
+
+            # plotbutton = gtk.Button ("Switch Image")
+            # plotbutton.connect("clicked", on_button_clicked, image)
+
+            self.bouton = gtk.ToolButton(gtk.STOCK_MEDIA_PLAY)
+            # self.bouton.connect('clicked', self.stop_audio)
+            # self.window.vbox.pack_end(self.bouton, False)
+
+            pprint.pprint(self.get_parent())
+
         return
 
     def file_pixbuf(self, column, cell, model, iter):
