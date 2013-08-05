@@ -6,16 +6,11 @@ import gtk
 import pygame.mixer
 pygame.init()
 
-import ConfigParser
-
+# import ConfigParser
 # config = ConfigParser.ConfigParser()
 # config.readfp(open('defaults.cfg'))
 # config.read(['site.cfg', os.path.expanduser('~/.config/beatnitpicker/beatnitpicker.cfg')])
 # http://docs.python.org/2/library/configparser.html
-
-folderpb = gtk.gdk.pixbuf_new_from_file("/usr/share/icons/Tango/24x24/places/folder.png")
-sndfilepb = gtk.gdk.pixbuf_new_from_file("/usr/share/icons/Tango/24x24/status/audio-volume-medium.png")
-filepb = gtk.gdk.pixbuf_new_from_file("/usr/share/icons/Tango/24x24/actions/stock_text_left.png")
 
 interface = """
 <ui>
@@ -52,14 +47,13 @@ class Nitpick:
         about.set_copyright("(c) Philippe \"xaccrocheur\" Coatmeur")
         about.set_comments("Simple sound sample auditor")
         about.set_website("https://github.com/xaccrocheur")
-        about.set_logo(gtk.gdk.pixbuf_new_from_file("/usr/share/icons/Tango/scalable/status/audio-volume-high.svg"))
+        about.set_logo(gtk.icon_theme_get_default().load_icon("gstreamer-properties", 128, 0))
         about.run()
         about.destroy()
 
     def stop_audio(self, plop):
         pygame.mixer.stop()
         print "Audio stopped"
-
 
     def delete_event(self, widget, event, data=None):
         gtk.main_quit()
@@ -72,8 +66,7 @@ class Nitpick:
         self.window = gtk.Window()
         self.window.set_size_request(400, 600)
         self.window.connect("delete_event", self.delete_event)
-
-        self.window.set_icon_from_file(get_resource_path("/usr/share/icons/Tango/scalable/status/audio-volume-high.svg"))
+        self.window.set_icon(gtk.icon_theme_get_default().load_icon("gstreamer-properties", 128, 0))
 
         vbox = gtk.VBox()
 
@@ -92,7 +85,7 @@ class Nitpick:
 
         # set_sort_column_id(0)
 
-        self.bouton = gtk.Button('Stop sound')
+        self.bouton = gtk.ToolButton(gtk.STOCK_MEDIA_STOP)
         self.bouton.connect('clicked', self.stop_audio)
         vbox.pack_end(self.bouton, False)
 
@@ -198,11 +191,11 @@ class Nitpick:
         filename = os.path.join(self.dirname, model.get_value(iter, 0))
         filestat = os.stat(filename)
         if stat.S_ISDIR(filestat.st_mode):
-            pb = folderpb
+            pb = gtk.icon_theme_get_default().load_icon("folder", 24, 0)
         elif filename.endswith('.wav'):
-            pb = sndfilepb
+            pb = gtk.icon_theme_get_default().load_icon("audio-volume-medium", 24, 0)
         else:
-            pb = filepb
+            pb = gtk.icon_theme_get_default().load_icon("edit-copy", 24, 0)
         cell.set_property('pixbuf', pb)
         return
 

@@ -82,7 +82,7 @@ function build_waf {
     fi
     ./waf clean
     ./waf configure $BUILD_FLAGS && ./waf && sudo ./waf install
-    tput -T5620 reset
+    MESSAGE="\nNew package built and installed : $PACKAGE":$MESSAGE
 }
 
 function build_make {
@@ -103,8 +103,7 @@ function build_make {
     make clean
     [[ -f ./configure ]] && ./configure &&
     make && sudo make install
-    MESSAGE=" $PACKAGE Built":$MESSAGE
-
+    MESSAGE="\nNew package built and installed : $PACKAGE":$MESSAGE
 }
 
 function vc_check {
@@ -123,7 +122,7 @@ function update_package {
     else
         vc_check
         if [ $? -eq 0 ]; then
-            MESSAGE=" $PACKAGE Updated ":$MESSAGE
+            MESSAGE="\n$PACKAGE Updated ":$MESSAGE
             read -e -p "## Branch moved, build and install $PACKAGE? [Y/n] " YN
             if [[ $YN == "y" || $YN == "Y" || $YN == "" || $ALWAYS_YES ]] ; then
                 [[ -f ./waf ]] && build_waf || build_make
@@ -145,14 +144,14 @@ if [[ $DEBIAN ]] ; then
 
             display_sub_title "Setup $REPO repository" && sudo apt-add-repository $REPO
             echo ""
-            MESSAGE=" $(basename $REPO) added":$MESSAGE
+            MESSAGE="New PPA repo added : $(basename $REPO) ":$MESSAGE
             ADDED="1"
         else
             # echo ""
             display_sub_title "$(basename $REPO) repo OK"
         fi
     done
-    [[ $ADDED == "0" ]] && sudo apt-get update && echo ""
+    [[ ! $ADDED == "0" ]] && sudo apt-get update && echo ""
 fi
 
 echo "" && display_sub_title "Installing basic packages" && sudo $PACKAGE_MANAGER_COMMAND install $BIN_BASICS
@@ -231,6 +230,7 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
         echo "---------------------------------------------------------------------------------------"
         for D_PLUGIN in $ALL_PLUGINS ; do
             sudo cp -R $D_PLUGIN $D_DEST_DIR && printf "%-65s%-65s\n" "| $D_PLUGIN" "| $D_DEST_DIR"
+            MESSAGE="\nNew binary archive installed : $D_PLUGIN":$MESSAGE
         done
         echo "---------------------------------------------------------------------------------------"
     done
@@ -274,4 +274,4 @@ card=default" > ~/.config/volumeicon/volumeicon
     fi
 fi
 
-display_title "All done. $MESSAGE"
+display_title "All done.$MESSAGE"
