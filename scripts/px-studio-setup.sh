@@ -44,7 +44,6 @@ BIN_PROD="qmidinet qjackctl vmpk harmonyseq qmidiarp audacity timidity gladish l
 
 BIN_PLUGINS="invada-studio-plugins-lv2 so-synth-lv2 swh-lv2 mda-lv2 wsynth-dssi xsynth-dssi zynaddsubfx-dssi calf-plugins abgate aeolus amb-plugins autotalent caps cmt eq10q foo-yc20 hexter ir.lv2 lv2fil lv2vocoder mcp-plugins mda-lv2 swh-lv2 tap-plugins vocproc wah-plugins xsynth-dssi zita-at1 fluid-soundfont-gm amsynth whysynth ams zynjacku dssi-host-jack"
 
-
 BIN_BASICS="p7zip-full git subversion"
 
 BIN_NUMBER=$(expr $(printf "${BIN_BUILD}" | wc -w) + $(printf "${BIN_PLUGINS}" | wc -w) + $(printf "${BIN_PROD}" | wc -w) + $(printf "${BIN_BASICS}" | wc -w))
@@ -53,6 +52,11 @@ echo -e "$(tput bold)$(tput setaf 3)$(basename $0) : ${#SOURCE_PACKS[@]} top-lev
 ## Use -f to ignore VC state & force build$(tput sgr0)"
 
 DEBIAN=$(type -P apt-get)
+FEDORA=$(type -P yum)
+
+[[ $FEDORA ]] && PACKAGE_MANAGER_COMMAND="yum" && echo "# RedHat-based System : you will have to hunt for repositories manually."
+[[ $DEBIAN ]] && PACKAGE_MANAGER_COMMAND="apt-get" && echo "# Debian-based System : $(printf "${BIN_REPOS}" | wc -w) repos available."
+
 [[ $1 == "-f" ]] && FORCE_BUILD=true || FORCE_BUILD=false
 [[ $1 == "-y" ]] && ALWAYS_YES=true || ALWAYS_YES=false
 
@@ -145,36 +149,37 @@ display_title "Basic system checks"
 
 display_sub_title "User $USER in group audio" && sudo usermod -a -G audio $USER
 
-display_title "Binary packages"
-for REPO in $BIN_REPOS ; do
+if [[ $DEBIAN ]] ; then
+    display_title "Binary packages"
+    for REPO in $BIN_REPOS ; do
 
-    if [[ ! $(grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | cut -d: -f2,3 | sed '/^\#/d' | sed '/^$/d' | grep $(basename $REPO)) ]] ; then
+        if [[ ! $(grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | cut -d: -f2,3 | sed '/^\#/d' | sed '/^$/d' | grep $(basename $REPO)) ]] ; then
 
-        display_sub_title "Setup $REPO repository" && sudo apt-add-repository $REPO
-        echo ""
-        MESSAGE=" $(basename $REPO) added":$MESSAGE
-        ADDED="1"
-    else
-        # echo ""
-        display_sub_title "$(basename $REPO) repo OK"
-    fi
-done
+            display_sub_title "Setup $REPO repository" && sudo apt-add-repository $REPO
+            echo ""
+            MESSAGE=" $(basename $REPO) added":$MESSAGE
+            ADDED="1"
+        else
+            # echo ""
+            display_sub_title "$(basename $REPO) repo OK"
+        fi
+    done
+    [[ $ADDED == "0" ]] && sudo apt-get update && echo ""
+fi
 
-[[ ! $ADDED == "0" ]] && sudo apt-get update
-
-echo "" && display_sub_title "Installing basic packages" && sudo apt-get install $BIN_BASICS
+echo "" && display_sub_title "Installing basic packages" && sudo $PACKAGE_MANAGER_COMMAND install $BIN_BASICS
 echo "" && display_sub_title "Build deps"
-
-[[ $DEBIAN ]] && read -p "Install / Update build deps? ($BIN_BUILD) [Y/n] " YN || YN="no"
-[[ $YN == "y" || $YN == "Y" || $YN == "" ]] && sudo apt-get install $BIN_BUILD
+read -p "Install / Update build deps? ($BIN_BUILD) [Y/n] " YN || YN="no"
+[[ $YN == "y" || $YN == "Y" || $YN == "" ]] && sudo $PACKAGE_MANAGER_COMMAND install $BIN_BUILD
 echo ""
 display_sub_title "Prod apps"
-[[ $DEBIAN ]] && read -e -p "Install / Update prod apps? ($BIN_PROD) [Y/n] " YN || YN="no"
-[[ $YN == "y" || $YN == "Y" || $YN == "" ]] && sudo apt-get install $BIN_PROD
+read -e -p "Install / Update prod apps? ($BIN_PROD) [Y/n] " YN || YN="no"
+[[ $YN == "y" || $YN == "Y" || $YN == "" ]] && sudo $PACKAGE_MANAGER_COMMAND install $BIN_PROD
 echo ""
 display_sub_title "Plugins"
-[[ $DEBIAN ]] && read -e -p "Install / Update plugins? ($BIN_PLUGINS) [Y/n] " YN || YN="no"
-[[ $YN == "y" || $YN == "Y" || $YN == "" ]] && sudo apt-get install $BIN_PLUGINS
+read -e -p "Install / Update plugins? ($BIN_PLUGINS) [Y/n] " YN || YN="no"
+[[ $YN == "y" || $YN == "Y" || $YN == "" ]] && sudo $PACKAGE_MANAGER_COMMAND install $BIN_PLUGINS
+
 echo ""
 display_title "Source VC repositories"
 read -e -p "Install / update source repos? [Y/n] " YN

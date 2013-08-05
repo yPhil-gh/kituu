@@ -47,7 +47,7 @@ class Nitpick:
 
     def about_box(self, widget):
         about = gtk.AboutDialog()
-        about.set_program_name("BeatNitPicker")
+        about.set_program_name("BeatNitPycker")
         about.set_version("0.1")
         about.set_copyright("(c) Philippe \"xaccrocheur\" Coatmeur")
         about.set_comments("Simple sound sample auditor")
