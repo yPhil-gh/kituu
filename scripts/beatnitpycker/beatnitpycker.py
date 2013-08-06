@@ -102,11 +102,31 @@ class Nitpick:
 
         self.image = gtk.Image()
 
+
+
+        f = Figure(figsize=(5,4), dpi=100)
+        a = f.add_subplot(111)
+
+        rate, data = wavfile.read('/home/px/scripts/beatnitpycker/gare_du_nord-catchlak.wav')
+        t = np.arange(len(data[:,0]))*1.0/rate
+        a.plot(t, data[:,0])
+
+        # canvas = FigureCanvas(f)  # a gtk.DrawingArea
+
+
+        self.drawing_area = FigureCanvas(f)
+        self.drawing_area.set_size_request(300, 150)
+        drawable = self.drawing_area.window
+
         vbox = gtk.VBox()
         hbox = gtk.VBox(True)
 
+        vbox.pack_start (self.drawing_area, False, False, 1)
         vbox.pack_start (hbox, False, False, 1)
         hbox.pack_start (self.image, True, True, 0)
+
+
+
 
         obutton = gtk.Button ("Open a picture...")
         vbox.pack_start (obutton, False, False, 0)
