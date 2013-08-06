@@ -61,39 +61,14 @@ class Nitpick:
         return False
 
     def drawplot (self, audiofile):
-        # rate, data = wavfile.read('/home/px/gare_du_nord-catchlak.wav')
         rate, data = wavfile.read(audiofile)
-        t = np.arange(len(data[:,0]))*1.0/rate
-        pl.plot(t, data[:,0])
-        fig = Figure(figsize=(5,2),facecolor='w')
-        ax = fig.add_axes([0.0, -0.2, 1.2, 1.2])
-        ax.set_axis_off()
-        ax.plot(t, data[:,0])
-        canvas = FigureCanvas(fig)  # a gtk.DrawingArea
-        # print audiofile
-        return canvas
-
-    def getmyfilename (self, name):
-        return "plop" + name
+        # t = np.arange(len(data[:,0]))*1.0/rate
+        # a.plot(t, data[:,0])
+        return rate, data
 
     def __init__(self, dname = None):
         cell_data_funcs = (None, self.file_size, self.file_mode,
                            self.file_last_changed)
-
-
-
-        # rate, data = wavfile.read('/home/px/gare_du_nord-catchlak.wav')
-        # t = np.arange(len(data[:,0]))*1.0/rate
-        # pl.plot(t, data[:,0])
-
-        # fig = Figure(figsize=(5,2),facecolor='w')
-
-        # ax = fig.add_axes([0.0, -0.2, 1.2, 1.2])
-        # ax.set_axis_off()
-
-        # ax.plot(t, data[:,0])
-
-        # canvas = FigureCanvas()  # a gtk.DrawingArea
 
         self.window = gtk.Window()
         self.window.set_size_request(300, 600)
@@ -102,21 +77,26 @@ class Nitpick:
 
         self.image = gtk.Image()
 
+        def mytest(self, arg):
+            print arg
 
+        mytest(self, "plop")
 
+        # plot
         f = Figure(figsize=(5,4), dpi=100)
         a = f.add_subplot(111)
 
-        rate, data = wavfile.read('/home/px/scripts/beatnitpycker/gare_du_nord-catchlak.wav')
+        myfilename = "/home/px/scripts/beatnitpycker/gare_du_nord-catchlak.wav"
+
+        # rate, data = wavfile.read('/home/px/scripts/beatnitpycker/gare_du_nord-catchlak.wav')
+        rate, data = self.drawplot(myfilename)
+
         t = np.arange(len(data[:,0]))*1.0/rate
         a.plot(t, data[:,0])
-
-        # canvas = FigureCanvas(f)  # a gtk.DrawingArea
 
 
         self.drawing_area = FigureCanvas(f)
         self.drawing_area.set_size_request(300, 150)
-        drawable = self.drawing_area.window
 
         vbox = gtk.VBox()
         hbox = gtk.VBox(True)
@@ -125,13 +105,10 @@ class Nitpick:
         vbox.pack_start (hbox, False, False, 1)
         hbox.pack_start (self.image, True, True, 0)
 
-
-
-
         obutton = gtk.Button ("Open a picture...")
         vbox.pack_start (obutton, False, False, 0)
 
-        # vbox.pack_start (button, False, False, 0)
+        # open image
         obutton.connect_after('clicked', self.on_open_clicked)
 
         uimanager = gtk.UIManager()
@@ -194,9 +171,6 @@ class Nitpick:
         uimanager.insert_action_group(self.actiongroup, 0)
         uimanager.add_ui_from_string(interface)
 
-        filename="/home/px/scripts/beatnitpycker/gare_du_nord-catchlak.wav"
-        mycanvas = self.drawplot(filename)
-
         menubar = uimanager.get_widget("/MenuBar")
         vbox.pack_start(menubar, False)
         vbox.pack_start(self.scrolledwindow)
@@ -225,10 +199,6 @@ class Nitpick:
             listmodel.append([f])
         return listmodel
 
-    def on_button_clicked ():
-        print "plop"
-        # vbox.pack_start(canvas)
-
     def open_file(self, treeview, path, column):
         model = treeview.get_model()
         iter = model.get_iter(path)
@@ -240,70 +210,8 @@ class Nitpick:
             treeview.set_model(new_model)
         else:
             pygame.mixer.Sound(filename).play()
-            # self.window.vbox.pack_start(mycanvas)
-            # print self.getmyfilename(filename)
-
-            # rate, data = wavfile.read('/home/px/scripts/beatnitpycker/gare_du_nord-catchlak.wav')
-            # t = np.arange(len(data[:,0]))*1.0/rate
-            # myplot = pl.plot(t, data[:,0])
-
-            # pl.show()
-
-            self.image.set_from_file("/usr/lib/lv2/paramEQ-Rafols.lv2/combopix/peak.png")
-            # self.image.set_from_pixbuf(f)
-
-            # canvas = FigureCanvas(f)  # a gtk.DrawingArea
-            # self.window.vbox.add(canvas)
-
-
-            win = gtk.Window()
-            win.connect("destroy", lambda x: gtk.main_quit())
-            win.set_default_size(400,300)
-            win.set_title("Embedding in GTK")
-
-            f = Figure(figsize=(5,4), dpi=100)
-            a = f.add_subplot(111)
-
-            rate, data = wavfile.read('/home/px/scripts/beatnitpycker/gare_du_nord-catchlak.wav')
-            t = np.arange(len(data[:,0]))*1.0/rate
-            a.plot(t, data[:,0])
-
-            canvas = FigureCanvas(f)  # a gtk.DrawingArea
-            win.add(canvas)
-
-            win.show_all()
-            gtk.main()
-
-
-
-            # fig = pl.Figure()
-            # fig.gca().imshow(img)
-            # self.image_canvas = FigureCanvas(fig)
-            # # self.image_canvas.connect('button_press_event', self.do_clip)
-            # # self.do_clip
-            # snap = self.image_canvas.get_snapshot()
-            # self.image.set_from_pixbuf(self.get_pixbuf(myplot))
-
-            # pbuf = FigureCanvasPixbuf()
-            # pbuffer = self.get_pixbuf(canvas, None)
-            # self.image.set_from_pixbuf(pbuffer)
-
-            # pprint(ax)
-
-            # self.add(self.image_canvas)
-            # self.show_all()
+            print self.drawplot(filename)
         return
-
-    def do_clip(self, widget=None, event=None):
-        snap = self.image_canvas.get_snapshot()
-        pixbuf = gtk.gdk.pixbuf_get_from_drawable(None, snap,
-                                                  snap.get_colormap(),0,0,0,0,
-        snap.get_size()[0], snap.get_size()[1])
-        # clip = gtk.Clipboard()
-        # clip.set_image(pixbuf)
-        self.image.set_from_file("/usr/lib/lv2/paramEQ-Rafols.lv2/combopix/peak.png")
-        # self.image.set_from_pixbuf(pixbuf)
-        return pixbuf
 
     def file_pixbuf(self, column, cell, model, iter):
         filename = os.path.join(self.dirname, model.get_value(iter, 0))
