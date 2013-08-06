@@ -1,114 +1,213 @@
-#!/usr/bin/python
-
 #!/usr/bin/env python
-# -*- Mode: Python -*-
-# vi:si:et:sw=4:sts=4:ts=4
-
-# gst-python
-# Copyright (C) 2005 Andy Wingo <wingo@pobox.com>
-#
-# This library is free software; you can redistribute it and/or
-# modify it under the terms of the GNU Library General Public
-# License as published by the Free Software Foundation; either
-# version 2 of the License, or (at your option) any later version.
-#
-# This library is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# Library General Public License for more details.
-#
-# You should have received a copy of the GNU Library General Public
-# License along with this library; if not, write to the
-# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# Boston, MA 02111-1307, USA.
-
-
-# A test more of gst-plugins than of gst-python.
 
 import pygtk
 pygtk.require('2.0')
 import gtk
-import gobject
 
-import pygst
-pygst.require('0.10')
-import gst
+class UIMergeExample:
+    ui0 = '''<ui>
+    <menubar name="MenuBar">
+      <menu action="File">
+        <menuitem action="Quit"/>
+      </menu>
+      <menu action="Sound">
+        <menuitem action="Mute"/>
+      </menu>
+      <menu action="RadioBand">
+        <menuitem action="AM"/>
+        <menuitem action="FM"/>
+        <menuitem action="SSB"/>
+      </menu>
+    </menubar>
+    <toolbar name="Toolbar">
+      <toolitem action="Quit"/>
+      <separator/>
+      <toolitem action="Mute"/>
+      <separator name="sep1"/>
+      <placeholder name="RadioBandItems">
+        <toolitem action="AM"/>
+        <toolitem action="FM"/>
+        <toolitem action="SSB"/>
+      </placeholder>
+    </toolbar>
+    </ui>'''
 
-import fvumeter
+    ui1 = '''<ui>
+    <menubar name="MenuBar">
+      <menu action="File">
+        <menuitem action="Save" position="top"/>
+        <menuitem action="New" position="top"/>
+      </menu>
+      <menu action="Sound">
+        <menuitem action="Loudness"/>
+      </menu>
+      <menu action="RadioBand">
+        <menuitem action="CB"/>
+        <menuitem action="Shortwave"/>
+      </menu>
+    </menubar>
+    <toolbar name="Toolbar">
+      <toolitem action="Save" position="top"/>
+      <toolitem action="New" position="top"/>
+      <separator/>
+      <toolitem action="Loudness"/>
+      <separator/>
+      <placeholder name="RadioBandItems">
+        <toolitem action="CB"/>
+        <toolitem action="Shortwave"/>
+      </placeholder>
+    </toolbar>
+    </ui>'''
 
-def clamp(x, min, max):
-    if x < min:
-        return min
-    elif x > max:
-        return max
-    return x
-
-class Window(gtk.Dialog):
     def __init__(self):
-        gtk.Dialog.__init__(self, 'Volume Level')
-        self.prepare_ui()
+        # Create the toplevel window
+        window = gtk.Window()
+        window.connect('destroy', lambda w: gtk.main_quit())
+        window.set_size_request(800, -1)
+        vbox = gtk.VBox()
+        window.add(vbox)
 
-    def prepare_ui(self):
-        self.set_default_size(200,60)
-        self.set_title('Volume Level')
-        self.connect('delete-event', lambda *x: gtk.main_quit())
-        self.vus = []
-        self.vus.append(fvumeter.FVUMeter())
-        self.vus.append(fvumeter.FVUMeter())
-        self.vbox.add(self.vus[0])
-        self.vbox.add(self.vus[1])
-        self.vus[0].show()
-        self.vus[1].show()
+        self.merge_id = 0
 
-    def error(self, message, secondary=None):
-        m = gtk.MessageDialog(self,
-                              gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                              gtk.MESSAGE_ERROR,
-                              gtk.BUTTONS_OK,
-                              message)
-        if secondary:
-            m.format_secondary_text(secondary)
-        m.run()
+        # Create a UIManager instance
+        uimanager = gtk.UIManager()
+        self.uimanager = uimanager
 
-    def on_message(self, bus, message):
-        if  message.structure.get_name() == 'level':
-            s = message.structure
-            for i in range(0, len(s['peak'])):
-                self.vus[i].freeze_notify()
-                decay = clamp(s['decay'][i], -90.0, 0.0)
-                peak = clamp(s['peak'][i], -90.0, 0.0)
-                if peak > decay:
-                    print "ERROR: peak bigger than decay!"
+        # Add the accelerator group to the toplevel window
+        accelgroup = uimanager.get_accel_group()
+        window.add_accel_group(accelgroup)
 
-                print "peak"
-                print peak
-                print "decay"
-                print decay
+        # Create the base ActionGroup
+        actiongroup0 = gtk.ActionGroup('UIMergeExampleBase')
 
+        actiongroup0.add_actions([('File', gtk.STOCK_PREFERENCES, '_File'),
+                                  ('Sound', gtk.STOCK_PREFERENCES, '_Sound'),
+                                  ('RadioBand', gtk.STOCK_PREFERENCES, '_Radio Band')])
+        uimanager.insert_action_group(actiongroup0, 0)
 
+        # Create an ActionGroup
+        actiongroup = gtk.ActionGroup('UIMergeExampleBase')
+        self.actiongroup = actiongroup
 
-                self.vus[i].set_property('decay', decay)
-                self.vus[i].set_property('peak', peak)
-        return True
+        # Create a ToggleAction, etc.
+        actiongroup.add_toggle_actions([('Mute', gtk.STOCK_PREFERENCES, '_Mute', '<Control>m',
+                                         'Mute the volume', self.mute_cb)])
 
-    def run(self):
-        try:
-            self.set_sensitive(False)
-            s = 'alsasrc ! level message=true ! fakesink'
-            pipeline = gst.parse_launch(s)
-            self.set_sensitive(True)
-            pipeline.get_bus().add_signal_watch()
-            i = pipeline.get_bus().connect('message::element', self.on_message)
-            pipeline.set_state(gst.STATE_PLAYING)
-            gtk.Dialog.run(self)
-            pipeline.get_bus().disconnect(i)
-            pipeline.get_bus().remove_signal_watch()
-            pipeline.set_state(gst.STATE_NULL)
-        except gobject.GError, e:
-            self.set_sensitive(True)
-            self.error('Could not create pipeline', e.__str__)
+        # Create actions
+        actiongroup.add_actions([('Quit', gtk.STOCK_QUIT, '_Quit me!', None,
+                                  'Quit the Program', self.quit_cb)])
+        actiongroup.get_action('Quit').set_property('short-label', '_Quit')
+
+        # Create some RadioActions
+        actiongroup.add_radio_actions([('AM', gtk.STOCK_PREFERENCES, '_AM', '<Control>a',
+                                        'AM Radio', 0),
+                                       ('FM', gtk.STOCK_PREFERENCES, '_FM', '<Control>f',
+                                        'FM Radio', 1),
+                                       ('SSB', gtk.STOCK_PREFERENCES, '_SSB', '<Control>b',
+                                        'SSB Radio', 2),
+                                       ], 0, self.radioband_cb)
+
+        # Add the actiongroup to the uimanager
+        uimanager.insert_action_group(actiongroup, 1)
+
+        # Add a UI description
+        merge_id = uimanager.add_ui_from_string(self.ui0)
+
+        # # Create another actiongroup and add actions
+        # actiongroup1 = gtk.ActionGroup('UIMergeExampleExtras')
+        # actiongroup1.add_toggle_actions([('Loudness', gtk.STOCK_PREFERENCES, '_Loudness',
+        #                                   '<Control>l', 'Loudness Control',
+        #                                   self.loudness_cb)])
+        # actiongroup1.add_actions([('New', gtk.STOCK_NEW, None, None,
+        #                            'New Settings', self.new_cb),
+        #                           ('Save', gtk.STOCK_SAVE, None, None,
+        #                            'Save Settings', self.save_cb)])
+
+        # Adding radioactions to existing radioactions requires setting the
+        # group and making sure the values are unique and the actions are
+        # not active
+        # actiongroup1.add_radio_actions([('CB', gtk.STOCK_PREFERENCES, '_CB', '<Control>c',
+                                         # 'CB Radio', 3),
+                                        # ('Shortwave', gtk.STOCK_PREFERENCES, 'Short_wave',
+                                        # '<Control>w', 'Shortwave Radio', 4),
+                                       # ], 3, self.radioband_cb)
+        # group = actiongroup.get_action('AM').get_group()[0]
+        # action = actiongroup1.get_action('CB')
+        # action.set_group(group)
+        # action.set_active(False)
+        # action = actiongroup1.get_action('Shortwave')
+        # action.set_group(group)
+        # action.set_active(False)
+
+        # Add the extra actiongroup to the uimanager
+        # uimanager.insert_action_group(actiongroup1, 2)
+
+        # Create a MenuBar
+        menubar = uimanager.get_widget('/MenuBar')
+        vbox.pack_start(menubar, False)
+
+        # Create a Toolbar
+        toolbar = uimanager.get_widget('/Toolbar')
+        vbox.pack_start(toolbar, False)
+
+        # Create buttons to control visibility and sensitivity of actions
+        buttonbox = gtk.HButtonBox()
+        visiblebutton = gtk.CheckButton('Visible')
+        visiblebutton.set_active(True)
+        visiblebutton.connect('toggled', self.toggle_visibility)
+        # mergebutton = gtk.CheckButton('Merged')
+        # mergebutton.set_active(False)
+        # mergebutton.connect('toggled', self.toggle_merged)
+        # add them to buttonbox
+        buttonbox.pack_start(visiblebutton, False)
+        # buttonbox.pack_start(mergebutton, False)
+        vbox.pack_start(buttonbox)
+        print uimanager.get_ui()
+        window.show_all()
+        return
+
+    def mute_cb(self, action):
+        # action has not toggled yet
+        text = ('muted', 'not muted')[action.get_active()==False]
+        self.mutelabel.set_text('Sound is %s' % text)
+        return
+
+    def loudness_cb(self, action):
+        # action has not toggled yet
+        print 'Loudness toggled'
+        return
+
+    def radioband_cb(self, action, current):
+        text = current.get_name()
+        self.bandlabel.set_text('Radio band is %s' % text)
+        return
+
+    def new_cb(self, b):
+        print 'New settings'
+        return
+
+    def save_cb(self, b):
+        print 'Save settings'
+        return
+
+    def quit_cb(self, b):
+        print 'Quitting program'
+        gtk.main_quit()
+
+    def toggle_visibility(self, b):
+        self.actiongroup.set_visible(b.get_active())
+        return
+
+    # def toggle_merged(self, b):
+    #     if self.merge_id:
+    #         self.uimanager.remove_ui(self.merge_id)
+    #         self.merge_id = 0
+    #     else:
+    #         self.merge_id = self.uimanager.add_ui_from_string(self.ui1)
+    #         print 'merge id:', self.merge_id
+    #     print self.uimanager.get_ui()
+    #     return
 
 if __name__ == '__main__':
-    w = Window()
-    w.show_all()
-    w.run()
+    ba = UIMergeExample()
+    gtk.main()
