@@ -268,17 +268,13 @@ class Nitpick:
 
             rate, data = wavfile.read('/home/px/scripts/beatnitpycker/gare_du_nord-catchlak.wav')
             t = np.arange(len(data[:,0]))*1.0/rate
-            # myplot = pl.plot(t, data[:,0])
-
-            # t = arange(0.0,3.0,0.01)
-            # s = sin(2*pi*t)
             a.plot(t, data[:,0])
 
             canvas = FigureCanvas(f)  # a gtk.DrawingArea
-            win.add(canvas)
+            self.add(canvas)
 
-            win.show_all()
-            gtk.main()
+            # win.show_all()
+            # gtk.main()
 
 
 
