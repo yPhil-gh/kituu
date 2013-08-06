@@ -1,5 +1,15 @@
 #!/usr/bin/env python
 
+
+import cairo
+# from gi.repository import Gdk
+
+from matplotlib.figure import Figure
+from numpy import arange, sin, pi
+
+from matplotlib.backends.backend_cairo import FigureCanvasCairo
+from matplotlib.backends.backend_cairo import RendererCairo
+
 import os, stat, time
 import pygtk
 import gtk
@@ -35,6 +45,20 @@ interface = """
     </menubar>
 </ui>
 """
+
+
+class FigureCanvasPixbuf(FigureCanvasCairo):
+    def get_pixbuf(self, *args, **kwargs):
+        width, height = self.get_width_height()
+
+        renderer = RendererCairo(self.figure.dpi)
+        renderer.set_width_height(width, height)
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
+        renderer.set_ctx_from_surface (surface)
+        self.figure.draw (renderer)
+
+        pixbuf = Gdk.pixbuf_get_from_surface(surface, 0, 0, width, height)
+        return pixbuf
 
 class Nitpick:
     column_names = ['Name', 'Size', 'Mode', 'Last Changed']
@@ -91,16 +115,26 @@ class Nitpick:
 
         # ax.plot(t, data[:,0])
 
-        # canvas = FigureCanvas(fig)  # a gtk.DrawingArea
-
-
+        # canvas = FigureCanvas()  # a gtk.DrawingArea
 
         self.window = gtk.Window()
-        self.window.set_size_request(400, 600)
+        self.window.set_size_request(300, 600)
         self.window.connect("delete_event", self.delete_event)
         self.window.set_icon(gtk.icon_theme_get_default().load_icon("gstreamer-properties", 128, 0))
 
+        self.image = gtk.Image()
+
         vbox = gtk.VBox()
+        hbox = gtk.VBox(True)
+
+        vbox.pack_start (hbox, False, False, 1)
+        hbox.pack_start (self.image, True, True, 0)
+
+        obutton = gtk.Button ("Open a picture...")
+        vbox.pack_start (obutton, False, False, 0)
+
+        # vbox.pack_start (button, False, False, 0)
+        obutton.connect_after('clicked', self.on_open_clicked)
 
         uimanager = gtk.UIManager()
         accelgroup = uimanager.get_accel_group()
@@ -162,7 +196,7 @@ class Nitpick:
         uimanager.insert_action_group(self.actiongroup, 0)
         uimanager.add_ui_from_string(interface)
 
-        filename="/home/px/gare_du_nord-catchlak.wav"
+        filename="/home/px/scripts/beatnitpycker/gare_du_nord-catchlak.wav"
         mycanvas = self.drawplot(filename)
 
         menubar = uimanager.get_widget("/MenuBar")
@@ -173,9 +207,15 @@ class Nitpick:
         self.window.show_all()
         return
 
+    def on_open_clicked (self, button):
+        self.image.set_from_file("/usr/lib/lv2/paramEQ-Rafols.lv2/combopix/peak.png")
+        self.scrolledwindow.show_all()
+        # pp = pprint.PrettyPrinter(indent=4)
+        # pp.pprint(plop)
+
     def make_list(self, dname=None):
         if not dname:
-            self.dirname = os.path.expanduser('~')
+            self.dirname = os.path.expanduser('/home/px/scripts/beatnitpycker/')
         else:
             self.dirname = os.path.abspath(dname)
         self.window.set_title("BeatNitpycker : " + self.dirname)
@@ -205,25 +245,63 @@ class Nitpick:
             # self.window.vbox.pack_start(mycanvas)
             # print self.getmyfilename(filename)
 
-            rate, data = wavfile.read('/home/px/gare_du_nord-catchlak.wav')
+            rate, data = wavfile.read('/home/px/scripts/beatnitpycker/gare_du_nord-catchlak.wav')
             t = np.arange(len(data[:,0]))*1.0/rate
-            pl.plot(t, data[:,0])
-            fig = Figure(figsize=(5,2),facecolor='w')
-            ax = fig.add_axes([0.0, -0.2, 1.2, 1.2])
-            ax.set_axis_off()
-            ax.plot(t, data[:,0])
-            canvas = FigureCanvas(fig)  # a gtk.DrawingArea
+            myplot = pl.plot(t, data[:,0])
 
-            # plotbutton = gtk.Button ("Switch Image")
-            # plotbutton.connect("clicked", on_button_clicked, image)
+            # snap = self.image_canvas.get_snapshot()
+            # pixbuf = gtk.gdk.pixbuf_get_from_drawable(None, snap,
+            # snap.get_colormap(),0,0,0,0,
+            # snap.get_size()[0], snap.get_size()[1])
 
-            self.bouton = gtk.ToolButton(gtk.STOCK_MEDIA_PLAY)
-            # self.bouton.connect('clicked', self.stop_audio)
-            # self.window.vbox.pack_end(self.bouton, False)
+            from StringIO import StringIO
+            f = StringIO()
+            pl.savefig(f, format="svg")
 
-            pprint.pprint(self.get_parent())
 
+            pl.show()
+
+            self.image.set_from_file("/usr/lib/lv2/paramEQ-Rafols.lv2/combopix/peak.png")
+            # self.image.set_from_pixbuf(f)
+
+
+            f = Figure(figsize=(5,4), dpi=100)
+            a = f.add_subplot(111)
+            t = arange(0.0,3.0,0.01)
+            s = sin(2*pi*t)
+            a.plot(t,s)
+
+            canvas = FigureCanvas(f)  # a gtk.DrawingArea
+            # self.window.vbox.add(canvas)
+
+            # fig = pl.Figure()
+            # fig.gca().imshow(img)
+            # self.image_canvas = FigureCanvas(fig)
+            # # self.image_canvas.connect('button_press_event', self.do_clip)
+            # # self.do_clip
+            # snap = self.image_canvas.get_snapshot()
+            # self.image.set_from_pixbuf(self.get_pixbuf(myplot))
+
+            # pbuf = FigureCanvasPixbuf()
+            # pbuffer = self.get_pixbuf(canvas, None)
+            # self.image.set_from_pixbuf(pbuffer)
+
+            # pprint(ax)
+
+            # self.add(self.image_canvas)
+            # self.show_all()
         return
+
+    def do_clip(self, widget=None, event=None):
+        snap = self.image_canvas.get_snapshot()
+        pixbuf = gtk.gdk.pixbuf_get_from_drawable(None, snap,
+                                                  snap.get_colormap(),0,0,0,0,
+        snap.get_size()[0], snap.get_size()[1])
+        # clip = gtk.Clipboard()
+        # clip.set_image(pixbuf)
+        self.image.set_from_file("/usr/lib/lv2/paramEQ-Rafols.lv2/combopix/peak.png")
+        # self.image.set_from_pixbuf(pixbuf)
+        return pixbuf
 
     def file_pixbuf(self, column, cell, model, iter):
         filename = os.path.join(self.dirname, model.get_value(iter, 0))
