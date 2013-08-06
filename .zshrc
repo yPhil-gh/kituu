@@ -2,6 +2,7 @@
 
 # My vars
 LXVST_PATH=~/Studio/LXVST
+PYTHONPATH=$PYTHONPATH:/usr/share/gst-python/0.10/examples/
 
 #colourful man pages
 export LESS_TERMCAP_mb=$'\E[01;31m'       # begin blinking
