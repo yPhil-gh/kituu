@@ -271,10 +271,10 @@ class Nitpick:
             a.plot(t, data[:,0])
 
             canvas = FigureCanvas(f)  # a gtk.DrawingArea
-            self.add(canvas)
+            win.add(canvas)
 
-            # win.show_all()
-            # gtk.main()
+            win.show_all()
+            gtk.main()
 
 
 
