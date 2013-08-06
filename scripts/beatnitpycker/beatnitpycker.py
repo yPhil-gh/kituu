@@ -245,34 +245,42 @@ class Nitpick:
             # self.window.vbox.pack_start(mycanvas)
             # print self.getmyfilename(filename)
 
-            rate, data = wavfile.read('/home/px/scripts/beatnitpycker/gare_du_nord-catchlak.wav')
-            t = np.arange(len(data[:,0]))*1.0/rate
-            myplot = pl.plot(t, data[:,0])
+            # rate, data = wavfile.read('/home/px/scripts/beatnitpycker/gare_du_nord-catchlak.wav')
+            # t = np.arange(len(data[:,0]))*1.0/rate
+            # myplot = pl.plot(t, data[:,0])
 
-            # snap = self.image_canvas.get_snapshot()
-            # pixbuf = gtk.gdk.pixbuf_get_from_drawable(None, snap,
-            # snap.get_colormap(),0,0,0,0,
-            # snap.get_size()[0], snap.get_size()[1])
-
-            from StringIO import StringIO
-            f = StringIO()
-            pl.savefig(f, format="svg")
-
-
-            pl.show()
+            # pl.show()
 
             self.image.set_from_file("/usr/lib/lv2/paramEQ-Rafols.lv2/combopix/peak.png")
             # self.image.set_from_pixbuf(f)
 
+            # canvas = FigureCanvas(f)  # a gtk.DrawingArea
+            # self.window.vbox.add(canvas)
+
+
+            win = gtk.Window()
+            win.connect("destroy", lambda x: gtk.main_quit())
+            win.set_default_size(400,300)
+            win.set_title("Embedding in GTK")
 
             f = Figure(figsize=(5,4), dpi=100)
             a = f.add_subplot(111)
-            t = arange(0.0,3.0,0.01)
-            s = sin(2*pi*t)
-            a.plot(t,s)
+
+            rate, data = wavfile.read('/home/px/scripts/beatnitpycker/gare_du_nord-catchlak.wav')
+            t = np.arange(len(data[:,0]))*1.0/rate
+            # myplot = pl.plot(t, data[:,0])
+
+            # t = arange(0.0,3.0,0.01)
+            # s = sin(2*pi*t)
+            a.plot(t, data[:,0])
 
             canvas = FigureCanvas(f)  # a gtk.DrawingArea
-            # self.window.vbox.add(canvas)
+            win.add(canvas)
+
+            win.show_all()
+            gtk.main()
+
+
 
             # fig = pl.Figure()
             # fig.gca().imshow(img)
