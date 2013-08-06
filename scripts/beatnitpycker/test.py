@@ -32,33 +32,6 @@ class UIMergeExample:
     </toolbar>
     </ui>'''
 
-    ui1 = '''<ui>
-    <menubar name="MenuBar">
-      <menu action="File">
-        <menuitem action="Save" position="top"/>
-        <menuitem action="New" position="top"/>
-      </menu>
-      <menu action="Sound">
-        <menuitem action="Loudness"/>
-      </menu>
-      <menu action="RadioBand">
-        <menuitem action="CB"/>
-        <menuitem action="Shortwave"/>
-      </menu>
-    </menubar>
-    <toolbar name="Toolbar">
-      <toolitem action="Save" position="top"/>
-      <toolitem action="New" position="top"/>
-      <separator/>
-      <toolitem action="Loudness"/>
-      <separator/>
-      <placeholder name="RadioBandItems">
-        <toolitem action="CB"/>
-        <toolitem action="Shortwave"/>
-      </placeholder>
-    </toolbar>
-    </ui>'''
-
     def __init__(self):
         # Create the toplevel window
         window = gtk.Window()
@@ -113,35 +86,6 @@ class UIMergeExample:
         # Add a UI description
         merge_id = uimanager.add_ui_from_string(self.ui0)
 
-        # # Create another actiongroup and add actions
-        # actiongroup1 = gtk.ActionGroup('UIMergeExampleExtras')
-        # actiongroup1.add_toggle_actions([('Loudness', gtk.STOCK_PREFERENCES, '_Loudness',
-        #                                   '<Control>l', 'Loudness Control',
-        #                                   self.loudness_cb)])
-        # actiongroup1.add_actions([('New', gtk.STOCK_NEW, None, None,
-        #                            'New Settings', self.new_cb),
-        #                           ('Save', gtk.STOCK_SAVE, None, None,
-        #                            'Save Settings', self.save_cb)])
-
-        # Adding radioactions to existing radioactions requires setting the
-        # group and making sure the values are unique and the actions are
-        # not active
-        # actiongroup1.add_radio_actions([('CB', gtk.STOCK_PREFERENCES, '_CB', '<Control>c',
-                                         # 'CB Radio', 3),
-                                        # ('Shortwave', gtk.STOCK_PREFERENCES, 'Short_wave',
-                                        # '<Control>w', 'Shortwave Radio', 4),
-                                       # ], 3, self.radioband_cb)
-        # group = actiongroup.get_action('AM').get_group()[0]
-        # action = actiongroup1.get_action('CB')
-        # action.set_group(group)
-        # action.set_active(False)
-        # action = actiongroup1.get_action('Shortwave')
-        # action.set_group(group)
-        # action.set_active(False)
-
-        # Add the extra actiongroup to the uimanager
-        # uimanager.insert_action_group(actiongroup1, 2)
-
         # Create a MenuBar
         menubar = uimanager.get_widget('/MenuBar')
         vbox.pack_start(menubar, False)
@@ -155,12 +99,7 @@ class UIMergeExample:
         visiblebutton = gtk.CheckButton('Visible')
         visiblebutton.set_active(True)
         visiblebutton.connect('toggled', self.toggle_visibility)
-        # mergebutton = gtk.CheckButton('Merged')
-        # mergebutton.set_active(False)
-        # mergebutton.connect('toggled', self.toggle_merged)
-        # add them to buttonbox
         buttonbox.pack_start(visiblebutton, False)
-        # buttonbox.pack_start(mergebutton, False)
         vbox.pack_start(buttonbox)
         print uimanager.get_ui()
         window.show_all()
@@ -197,17 +136,6 @@ class UIMergeExample:
     def toggle_visibility(self, b):
         self.actiongroup.set_visible(b.get_active())
         return
-
-    # def toggle_merged(self, b):
-    #     if self.merge_id:
-    #         self.uimanager.remove_ui(self.merge_id)
-    #         self.merge_id = 0
-    #     else:
-    #         self.merge_id = self.uimanager.add_ui_from_string(self.ui1)
-    #         print 'merge id:', self.merge_id
-    #     print self.uimanager.get_ui()
-    #     return
-
 if __name__ == '__main__':
     ba = UIMergeExample()
     gtk.main()
