@@ -1,29 +1,21 @@
 #!/usr/bin/env python
 
-
-import cairo
-# from gi.repository import Gdk
-
-from matplotlib.figure import Figure
-from numpy import arange, sin, pi
-
-from matplotlib.backends.backend_cairo import FigureCanvasCairo
-from matplotlib.backends.backend_cairo import RendererCairo
-
 import os, stat, time
-import pygtk
-import gtk
-import pygame.mixer
 import pprint
 
-import matplotlib.pyplot as pl
-from matplotlib.backends.backend_gtk import FigureCanvasGTK as FigureCanvas
-import numpy as np
-import scipy.io.wavfile as wavfile
+import pygtk, gtk
+
+import pygame.mixer
 
 from matplotlib.figure import Figure
+import matplotlib.pyplot as pl
+
+from numpy import arange, sin, pi
+import numpy as np
+
+import scipy.io.wavfile as wavfile
+
 from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
-from matplotlib.backends.backend_gtkagg import NavigationToolbar2GTKAgg as NavigationToolbar
 
 pygame.init()
 
@@ -45,20 +37,6 @@ interface = """
     </menubar>
 </ui>
 """
-
-
-class FigureCanvasPixbuf(FigureCanvasCairo):
-    def get_pixbuf(self, *args, **kwargs):
-        width, height = self.get_width_height()
-
-        renderer = RendererCairo(self.figure.dpi)
-        renderer.set_width_height(width, height)
-        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
-        renderer.set_ctx_from_surface (surface)
-        self.figure.draw (renderer)
-
-        pixbuf = Gdk.pixbuf_get_from_surface(surface, 0, 0, width, height)
-        return pixbuf
 
 class Nitpick:
     column_names = ['Name', 'Size', 'Mode', 'Last Changed']

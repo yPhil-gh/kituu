@@ -22,11 +22,9 @@
 #
 # Author: Zaheer Merali <zaheermerali at gmail dot com>
 
-
 import gtk
 from gtk import gdk
 import gobject
-
 
 # this VUMeter respects IEC standard
 # BS 6840-18:1996/IEC-268-18

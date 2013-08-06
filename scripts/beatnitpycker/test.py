@@ -1,5 +1,30 @@
 #!/usr/bin/python
 
+#!/usr/bin/env python
+# -*- Mode: Python -*-
+# vi:si:et:sw=4:sts=4:ts=4
+
+# gst-python
+# Copyright (C) 2005 Andy Wingo <wingo@pobox.com>
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+
+
+# A test more of gst-plugins than of gst-python.
+
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -10,8 +35,6 @@ pygst.require('0.10')
 import gst
 
 import fvumeter
-
-import pprint
 
 def clamp(x, min, max):
     if x < min:
@@ -56,14 +79,14 @@ class Window(gtk.Dialog):
                 peak = clamp(s['peak'][i], -90.0, 0.0)
                 if peak > decay:
                     print "ERROR: peak bigger than decay!"
-                print "peak:"
+
+                print "peak"
                 print peak
-                print "decay:"
+                print "decay"
                 print decay
-                # print clamp
-                # print vars(s)
-                # self.vus[i].set_property('decay', decay)
-                # self.vus[i].set_property('peak', peak)
+
+
+
                 self.vus[i].set_property('decay', decay)
                 self.vus[i].set_property('peak', peak)
         return True
