@@ -18,7 +18,6 @@ class PlaybackInterface:
 
     def __init__(self):
         self.main_window = gtk.Window()
-
         self.play_button = gtk.Button()
         self.slider = gtk.HScale()
 
@@ -29,7 +28,7 @@ class PlaybackInterface:
         self.main_window.add(self.hbox)
         self.main_window.connect('destroy', self.on_destroy)
 
-        # self.play_button.set_image(self.PLAY_IMAGE)
+        self.play_button.set_image(self.PLAY_IMAGE)
         self.play_button.connect('clicked', self.on_play)
 
         self.slider.set_range(0, 100)
@@ -53,7 +52,7 @@ class PlaybackInterface:
 
     def on_finish(self, bus, message):
         self.playbin.set_state(gst.STATE_PAUSED)
-        # self.play_button.set_image(self.PLAY_IMAGE)
+        self.play_button.set_image(self.PLAY_IMAGE)
         self.is_playing = False
         self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, 0)
         self.slider.set_value(0)
@@ -66,14 +65,14 @@ class PlaybackInterface:
 
     def on_play(self, button):
         if not self.is_playing:
-            # self.play_button.set_image(self.PAUSE_IMAGE)
+            self.play_button.set_image(self.PAUSE_IMAGE)
             self.is_playing = True
-            print "plaaaying"
+
             self.playbin.set_state(gst.STATE_PLAYING)
             gobject.timeout_add(100, self.update_slider)
 
         else:
-            # self.play_button.set_image(self.PLAY_IMAGE)
+            self.play_button.set_image(self.PLAY_IMAGE)
             self.is_playing = False
 
             self.playbin.set_state(gst.STATE_PAUSED)
