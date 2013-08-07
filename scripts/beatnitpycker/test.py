@@ -1,138 +1,109 @@
 #!/usr/bin/env python
 
-import pygtk
-pygtk.require('2.0')
-import gtk
+# [SNIPPET_NAME: Seeking with gstreamer]
+# [SNIPPET_CATEGORIES: GStreamer, PyGTK]
+# [SNIPPET_DESCRIPTION: Shows a slider that you can use to seek into the current song  ]
+# [SNIPPET_AUTHOR: Simon Vermeersch <simonvermeersch@gmail.com>]
+# [SNIPPET_LICENSE: GPL]
+#
+# Adapted from Laszlo Pandy's code
+#
+import os
+import gst, gtk, gobject
 
-class UIManagerExample:
-    ui = '''<ui>
-    <menubar name="MenuBar">
-      <menu action="File">
-        <menuitem action="Quit"/>
-      </menu>
-      <menu action="Sound">
-        <menuitem action="Mute"/>
-      </menu>
-      <menu action="RadioBand">
-        <menuitem action="AM"/>
-        <menuitem action="FM"/>
-        <menuitem action="SSB"/>
-      </menu>
-    </menubar>
-    <toolbar name="Toolbar">
-      <toolitem action="Quit"/>
-      <separator/>
-      <toolitem action="Mute"/>
-      <separator/>
-      <placeholder name="RadioBandItems">
-        <toolitem action="AM"/>
-        <toolitem action="FM"/>
-        <toolitem action="SSB"/>
-      </placeholder>
-    </toolbar>
-    </ui>'''
+class PlaybackInterface:
+
+    PLAY_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
+    PAUSE_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
 
     def __init__(self):
-        # Create the toplevel window
-        window = gtk.Window()
-        window.connect('destroy', lambda w: gtk.main_quit())
-        window.set_size_request(300, -1)
-        vbox = gtk.VBox()
-        window.add(vbox)
+        self.main_window = gtk.Window()
+        self.play_button = gtk.Button()
+        self.slider = gtk.HScale()
 
-        # Create a UIManager instance
-        uimanager = gtk.UIManager()
+        self.hbox = gtk.HBox()
+        self.hbox.pack_start(self.play_button, False)
+        self.hbox.pack_start(self.slider, True, True)
 
-        # Add the accelerator group to the toplevel window
-        accelgroup = uimanager.get_accel_group()
-        window.add_accel_group(accelgroup)
+        self.main_window.add(self.hbox)
+        self.main_window.connect('destroy', self.on_destroy)
 
-        # Create an ActionGroup
-        actiongroup = gtk.ActionGroup('UIManagerExample')
-        self.actiongroup = actiongroup
+        self.play_button.set_image(self.PLAY_IMAGE)
+        self.play_button.connect('clicked', self.on_play)
 
-        # Create a ToggleAction, etc.
-        actiongroup.add_toggle_actions([('Mute', None, '_Mute', '<Control>m',
-                                         'Mute the volume', self.mute_cb)])
+        self.slider.set_range(0, 100)
+        self.slider.set_increments(1, 10)
+        self.slider.connect('value-changed', self.on_slider_change)
 
-        # Create actions
-        actiongroup.add_actions([('Quit', gtk.STOCK_QUIT, '_Quit me!', None,
-                                  'Quit the Program', self.quit_cb),
-                                 ('File', None, '_File'),
-                                 ('Sound', None, '_Sound'),
-                                 ('RadioBand', None, '_Radio Band')])
-        actiongroup.get_action('Quit').set_property('short-label', '_Quit')
+        self.main_window.set_border_width(6)
+        self.main_window.set_size_request(600, 50)
 
-        # Create some RadioActions
-        actiongroup.add_radio_actions([('AM', None, '_AM', '<Control>a',
-                                        'AM Radio', 0),
-                                       ('FM', None, '_FM', '<Control>f',
-                                        'FM Radio', 1),
-                                       ('SSB', None, '_SSB', '<Control>s',
-                                        'SSB Radio', 2),
-                                       ], 0, self.radioband_cb)
+        self.playbin = gst.element_factory_make('playbin2')
+        self.playbin.set_property('uri', 'file:////home/px/scripts/beatnitpycker/preview.mp3')
 
-        # Add the actiongroup to the uimanager
-        uimanager.insert_action_group(actiongroup, 0)
+        self.bus = self.playbin.get_bus()
+        self.bus.add_signal_watch()
 
-        # Add a UI description
-        uimanager.add_ui_from_string(self.ui)
+        self.bus.connect("message::eos", self.on_finish)
 
-        # Create a MenuBar
-        menubar = uimanager.get_widget('/MenuBar')
-        vbox.pack_start(menubar, False)
+        self.is_playing = False
 
-        # Create a Toolbar
-        toolbar = uimanager.get_widget('/Toolbar')
-        vbox.pack_start(toolbar, False)
+        self.main_window.show_all()
 
-        # Create and pack two Labels
-        label = gtk.Label('Sound is not muted')
-        vbox.pack_start(label)
-        self.mutelabel = label
-        label = gtk.Label('Radio band is AM')
-        vbox.pack_start(label)
-        self.bandlabel = label
+    def on_finish(self, bus, message):
+        self.playbin.set_state(gst.STATE_PAUSED)
+        self.play_button.set_image(self.PLAY_IMAGE)
+        self.is_playing = False
+        self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, 0)
+        self.slider.set_value(0)
 
-        # Create buttons to control visibility and sensitivity of actions
-        buttonbox = gtk.HButtonBox()
-        sensitivebutton = gtk.CheckButton('Sensitive')
-        sensitivebutton.set_active(True)
-        sensitivebutton.connect('toggled', self.toggle_sensitivity)
-        visiblebutton = gtk.CheckButton('Visible')
-        visiblebutton.set_active(True)
-        visiblebutton.connect('toggled', self.toggle_visibility)
-        # add them to buttonbox
-        buttonbox.pack_start(sensitivebutton, False)
-        buttonbox.pack_start(visiblebutton, False)
-        vbox.pack_start(buttonbox)
-
-        window.show_all()
-        return
-
-    def mute_cb(self, action):
-        # action has not toggled yet
-        text = ('muted', 'not muted')[action.get_active()==False]
-        self.mutelabel.set_text('Sound is %s' % text)
-        return
-
-    def radioband_cb(self, action, current):
-        text = ('AM', 'FM', 'SSB')[action.get_current_value()]
-        self.bandlabel.set_text('Radio band is %s' % text)
-        return
-
-    def quit_cb(self, b):
-        print 'Quitting program'
+    def on_destroy(self, window):
+        # NULL state allows the pipeline to release resources
+        self.playbin.set_state(gst.STATE_NULL)
+        self.is_playing = False
         gtk.main_quit()
 
-    def toggle_sensitivity(self, b):
-        self.actiongroup.set_sensitive(b.get_active())
-        return
+    def on_play(self, button):
+        if not self.is_playing:
+            self.play_button.set_image(self.PAUSE_IMAGE)
+            self.is_playing = True
 
-    def toggle_visibility(self, b):
-        self.actiongroup.set_visible(b.get_active())
-        return
+            self.playbin.set_state(gst.STATE_PLAYING)
+            gobject.timeout_add(100, self.update_slider)
 
-if __name__ == '__main__':
-    ba = UIManagerExample()
+        else:
+            self.play_button.set_image(self.PLAY_IMAGE)
+            self.is_playing = False
+
+            self.playbin.set_state(gst.STATE_PAUSED)
+
+    def on_slider_change(self, slider):
+        seek_time_secs = slider.get_value()
+        self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH | gst.SEEK_FLAG_KEY_UNIT, seek_time_secs * gst.SECOND)
+
+    def update_slider(self):
+        if not self.is_playing:
+            return False # cancel timeout
+
+        try:
+            nanosecs, format = self.playbin.query_position(gst.FORMAT_TIME)
+            duration_nanosecs, format = self.playbin.query_duration(gst.FORMAT_TIME)
+
+            # block seek handler so we don't seek when we set_value()
+            self.slider.handler_block_by_func(self.on_slider_change)
+
+            self.slider.set_range(0, float(duration_nanosecs) / gst.SECOND)
+            self.slider.set_value(float(nanosecs) / gst.SECOND)
+
+            self.slider.handler_unblock_by_func(self.on_slider_change)
+
+        except gst.QueryError:
+            # pipeline must not be ready and does not know position
+         pass
+
+        return True # continue calling every 30 milliseconds
+
+
+if __name__ == "__main__":
+    PlaybackInterface()
     gtk.main()

@@ -17,6 +17,7 @@ import scipy.io.wavfile as wavfile
 
 pygame.init()
 
+
 interface = """
 <ui>
     <menubar name="MenuBar">
@@ -52,15 +53,10 @@ class Nitpick:
 
     def stop_audio(self, plop):
         pygame.mixer.stop()
-        print "Audio stopped"
 
     def delete_event(self, widget, event, data=None):
         gtk.main_quit()
         return False
-
-    def mytest(self, audiofile):
-        print "yow " + audiofile
-        self.__init__.myothertest()
 
     def __init__(self, dname = None):
         cell_data_funcs = (None, self.file_size, self.file_mode,
@@ -174,6 +170,7 @@ class Nitpick:
         return listmodel
 
     def open_file(self, treeview, path, column):
+        audioFormats = [ ".wav", ".mp3", ".ogg", ".flac" ]
         model = treeview.get_model()
         iter = model.get_iter(path)
         filename = os.path.join(self.dirname, model.get_value(iter, 0))
@@ -183,28 +180,33 @@ class Nitpick:
             new_model = self.make_list(filename)
             treeview.set_model(new_model)
         else:
-            print "playing " + filename
-            pygame.mixer.Sound(filename).play()
-            rate, data = wavfile.read(open(filename, 'r'))
-            # plot
-            f = Figure(figsize=(4.5,1), linewidth=0.0, edgecolor='b', facecolor='r', dpi=100)
-            self.drawing_area = FigureCanvas(f)
-            # self.drawing_area.set_size_request(150, 50)
-            a = f.add_subplot(111)
-            a.plot(range(len(data)),data)
-            a.axis('off')
-            f.savefig("/home/px/tmp/f.png",
-                      edgecolor='r',
-                      facecolor='w',
-                      orientation='portrait',
-                      papertype=None,
-                      format=None,
-                      transparent=False,
-                      bbox_inches='tight',
-                      pad_inches=0.1,
-                      frameon=True
-            )
-            self.image.set_from_file("/home/px/tmp/f.png")
+            if filename.endswith(tuple(audioFormats)):
+                pygame.mixer.stop()
+                pygame.mixer.Sound(filename).play()
+                while pygame.mixer.music.get_busy():
+                    pygame.event.wait()
+                    # pygame.time.Clock().tick(10)
+                if filename.endswith(".wav"):
+                    rate, data = wavfile.read(open(filename, 'r'))
+                    f = Figure(figsize=(4.5,1), linewidth=0.0, edgecolor='b', facecolor='r', dpi=100)
+                    self.drawing_area = FigureCanvas(f)
+                    a = f.add_subplot(111)
+                    a.plot(range(len(data)),data)
+                    a.axis('off')
+                    f.savefig("/home/px/tmp/f.png",
+                              edgecolor='r',
+                              facecolor='w',
+                              orientation='portrait',
+                              papertype=None,
+                              format=None,
+                              transparent=False,
+                              bbox_inches='tight',
+                              pad_inches=0.1,
+                              frameon=True
+                    )
+                    self.image.set_from_file("/home/px/tmp/f.png")
+                else:
+                    self.image.set_from_pixbuf(None)
         return
 
     def file_pixbuf(self, column, cell, model, iter):
