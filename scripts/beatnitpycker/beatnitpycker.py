@@ -42,9 +42,6 @@ class Player(object):
     PLAY_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
     PAUSE_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
 
-    def test(*args):
-        return "plop"
-
     def __init__(self, filename):
         self.play_button = gtk.Button()
         self.slider = gtk.HScale()
@@ -139,6 +136,16 @@ class Nitpick:
         about.set_comments("Simple sound sample auditor")
         about.set_website("https://github.com/xaccrocheur")
         about.set_logo(gtk.icon_theme_get_default().load_icon("gstreamer-properties", 128, 0))
+
+        about.set_license("BeatNitPycker is free software; you can redistribute it and/or modify "
+                                  "it under the terms of the GNU General Public License as published by "
+                                  "the Free Software Foundation, version 2.\n\n"
+                                  "This program is distributed in the hope that it will be useful, "
+                                  "GNU General Public License for more details.\n\n"
+                                  "You should have received a copy of the GNU General Public License "
+                                  "along with this program; if not, write to the Free Software "
+                                  "Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA")
+        about.set_wrap_license(True);
         about.run()
         about.destroy()
 
@@ -280,11 +287,16 @@ class Nitpick:
             treeview.set_model(new_model)
         else:
             if filename.endswith(tuple(audioFormats)):
+                # player = Player(filename)
+
                 pygame.mixer.stop()
                 pygame.mixer.Sound(filename).play()
                 while pygame.mixer.music.get_busy():
                     pygame.event.wait()
                     # pygame.time.Clock().tick(10)
+
+                # player.playbin.set_property('uri', 'file:///' + filename)
+
                 if filename.endswith(".wav"):
                     rate, data = wavfile.read(open(filename, 'r'))
                     f = Figure(figsize=(4.5,1), linewidth=0.0, edgecolor='b', facecolor='r', dpi=100)
@@ -292,6 +304,7 @@ class Nitpick:
                     a = f.add_subplot(111)
                     a.plot(range(len(data)),data)
                     a.axis('off')
+
                     f.savefig("/home/px/tmp/f.png",
                               edgecolor='r',
                               facecolor='w',
@@ -304,8 +317,10 @@ class Nitpick:
                               frameon=True
                     )
                     self.image.set_from_file("/home/px/tmp/f.png")
+
                 else:
                     self.image.set_from_pixbuf(None)
+
         return
 
     def file_pixbuf(self, column, cell, model, iter):
