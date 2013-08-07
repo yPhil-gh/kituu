@@ -220,19 +220,16 @@ class Nitpick:
             pygame.mixer.Sound(filename).play()
             rate, data = wavfile.read(open(filename, 'r'))
             # plot
-            f = Figure(figsize=(3,2), dpi=100)
+            f = Figure(figsize=(4,1), dpi=100)
             self.drawing_area = FigureCanvas(f)
-            self.drawing_area.set_size_request(300, 150)
+            # self.drawing_area.set_size_request(150, 50)
             a = f.add_subplot(111)
-            # t = np.arange(len(data[:,0]))*1.0/rate
-            # a.plot(t, data[:,0])
             a.plot(range(len(data)),data)
-
-            # subplot(411)
-            # plot(range(len(data)),data)
-
-
-            f.savefig("/home/px/tmp/f.png")
+            a.axis('off')
+            f.savefig("/home/px/tmp/f.png", facecolor='w', edgecolor='y',
+                      orientation='portrait', papertype=None, format=None,
+                      transparent=False, bbox_inches='tight', pad_inches=0,
+                      frameon=True)
             self.image.set_from_file("/home/px/tmp/f.png")
         return
 
