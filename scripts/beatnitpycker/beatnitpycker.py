@@ -2,21 +2,22 @@
 
 import os, stat, time
 import pprint
-
 import pygtk, gtk
 
-import pygame.mixer
+# import pygame.mixer
 
 from matplotlib.figure import Figure
-# import matplotlib.pyplot as pl
-
-from numpy import arange, sin, pi
-import numpy as np
-
+from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
 import scipy.io.wavfile as wavfile
 
-from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
-pygame.init()
+# pygame.init()
+
+
+import pygst
+pygst.require('0.10')
+import gst
+import gobject
+
 
 interface = """
 <ui>
@@ -52,7 +53,7 @@ class Nitpick:
         about.destroy()
 
     def stop_audio(self, plop):
-        pygame.mixer.stop()
+        # pygame.mixer.stop()
         print "Audio stopped"
 
     def delete_event(self, widget, event, data=None):
@@ -76,38 +77,6 @@ class Nitpick:
 
         vbox = gtk.VBox()
         hbox = gtk.VBox(True)
-
-        def myothertest():
-            print "wow ! in !"
-
-        def drawplot (audiofile):
-            rate, data = wavfile.read(audiofile)
-            # plot
-            f = Figure(figsize=(5,4), dpi=100)
-            self.drawing_area = FigureCanvas(f)
-            self.drawing_area.set_size_request(300, 150)
-            a = f.add_subplot(111)
-            t = np.arange(len(data[:,0]))*1.0/rate
-            a.plot(t, data[:,0])
-            f.savefig("/home/px/tmp/f.png")
-            # plotimage = pl.savefig("/home/px/tmp/f.png", dpi=None, facecolor='w', edgecolor='w',
-                    # orientation='portrait', papertype=None, format=None,
-                    # transparent=False, bbox_inches=None, pad_inches=0.1,
-                    # frameon=None)
-
-            return self.drawing_area
-
-
-        # myfilename = "/home/px/scripts/beatnitpycker/gare_du_nord-catchlak.wav"
-
-        # self.myplot = drawplot(myfilename)
-
-        # self.myplot.draw()
-
-        # vbox.pack_start (self.myplot, False, False, 1)
-        # vbox.pack_start (self.drawing_area, False, False, 1)
-        # self.drawing_area = FigureCanvas(f)
-        # self.drawing_area.set_size_request(300, 150)
 
         vbox.pack_start (hbox, False, False, 1)
         hbox.pack_start (self.image, True, True, 0)
@@ -207,6 +176,7 @@ class Nitpick:
         return listmodel
 
     def open_file(self, treeview, path, column):
+        AudioFormats = [".wav", ".mp3", ".flac", ".ogg"]
         model = treeview.get_model()
         iter = model.get_iter(path)
         filename = os.path.join(self.dirname, model.get_value(iter, 0))
@@ -216,34 +186,55 @@ class Nitpick:
             new_model = self.make_list(filename)
             treeview.set_model(new_model)
         else:
-            print "playing " + filename
-            pygame.mixer.Sound(filename).play()
-            rate, data = wavfile.read(open(filename, 'r'))
-            # plot
-            f = Figure(figsize=(4,1), dpi=100)
-            self.drawing_area = FigureCanvas(f)
-            # self.drawing_area.set_size_request(150, 50)
-            a = f.add_subplot(111)
-            a.plot(range(len(data)),data)
-            a.axis('off')
-            f.savefig("/home/px/tmp/f.png", facecolor='w', edgecolor='y',
-                      orientation='portrait', papertype=None, format=None,
-                      transparent=False, bbox_inches='tight', pad_inches=0,
-                      frameon=True)
-            self.image.set_from_file("/home/px/tmp/f.png")
+            if filename.endswith(tuple(AudioFormats)):
+                print "playing " + filename
+
+
+                mainloop = gobject.MainLoop()
+                pl = gst.element_factory_make("playbin", "player")
+                pl.set_property('uri','file://'+os.path.abspath(filename))
+                pl.set_state(gst.STATE_PLAYING)
+                mainloop.run()
+
+
+                # pygame.mixer.Sound(filename).play()
+
+                rate, data = wavfile.read(open(filename, 'r'))
+                # plot
+                f = Figure(figsize=(4.5,1), linewidth=0.0, edgecolor='b', facecolor='r', dpi=100)
+                self.drawing_area = FigureCanvas(f)
+                # self.drawing_area.set_size_request(150, 50)
+                a = f.add_subplot(111)
+                a.plot(range(len(data)),data)
+                a.axis('off')
+                f.savefig("/home/px/tmp/f.png",
+                          edgecolor='r',
+                          facecolor='w',
+                          orientation='portrait',
+                          papertype=None,
+                          format=None,
+                          transparent=False,
+                          bbox_inches='tight',
+                          pad_inches=0.1,
+                          frameon=True
+                )
+        # self.image.set_from_file("/home/px/tmp/f.png")
         return
 
     def file_pixbuf(self, column, cell, model, iter):
+        AudioFormats = [".wav", ".mp3", ".flac", ".ogg"]
         filename = os.path.join(self.dirname, model.get_value(iter, 0))
         filestat = os.stat(filename)
         if stat.S_ISDIR(filestat.st_mode):
             pb = gtk.icon_theme_get_default().load_icon("folder", 24, 0)
-        elif filename.endswith('.wav'):
+        elif filename.endswith(tuple(AudioFormats)):
             pb = gtk.icon_theme_get_default().load_icon("audio-volume-medium", 24, 0)
         else:
             pb = gtk.icon_theme_get_default().load_icon("edit-copy", 24, 0)
         cell.set_property('pixbuf', pb)
         return
+
+
 
     def file_name(self, column, cell, model, iter):
         cell.set_property('text', model.get_value(iter, 0))
