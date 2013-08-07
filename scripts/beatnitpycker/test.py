@@ -11,44 +11,20 @@
 import os
 import gst, gtk, gobject
 
-class PlaybackInterface:
-
-    PLAY_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
-    PAUSE_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
-
+class PlaybackPlayer:
+    print "plop"
     def __init__(self):
-        self.main_window = gtk.Window()
-        self.play_button = gtk.Button()
-        self.slider = gtk.HScale()
 
-        self.hbox = gtk.HBox()
-        self.hbox.pack_start(self.play_button, False)
-        self.hbox.pack_start(self.slider, True, True)
+        playbin = gst.element_factory_make('playbin2')
+        playbin.set_property('uri', 'file:////home/px/scripts/beatnitpycker/preview.mp3')
 
-        self.main_window.add(self.hbox)
-        self.main_window.connect('destroy', self.on_destroy)
+        bus = playbin.get_bus()
+        bus.add_signal_watch()
 
-        self.play_button.set_image(self.PLAY_IMAGE)
-        self.play_button.connect('clicked', self.on_play)
+        bus.connect("message::eos", self.on_finish)
 
-        self.slider.set_range(0, 100)
-        self.slider.set_increments(1, 10)
-        self.slider.connect('value-changed', self.on_slider_change)
-
-        self.main_window.set_border_width(6)
-        self.main_window.set_size_request(600, 50)
-
-        self.playbin = gst.element_factory_make('playbin2')
-        self.playbin.set_property('uri', 'file:////home/px/scripts/beatnitpycker/preview.mp3')
-
-        self.bus = self.playbin.get_bus()
-        self.bus.add_signal_watch()
-
-        self.bus.connect("message::eos", self.on_finish)
-
-        self.is_playing = False
-
-        self.main_window.show_all()
+        is_playing = False
+        global is_playing
 
     def on_finish(self, bus, message):
         self.playbin.set_state(gst.STATE_PAUSED)
@@ -60,20 +36,52 @@ class PlaybackInterface:
     def on_destroy(self, window):
         # NULL state allows the pipeline to release resources
         self.playbin.set_state(gst.STATE_NULL)
-        self.is_playing = False
+        is_playing = False
         gtk.main_quit()
 
+class PlaybackInterface:
+    print "plip"
+    PLAY_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
+    PAUSE_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
+
+    player = PlaybackPlayer()
+
+    def __init__(self):
+        self.main_window = gtk.Window()
+        self.play_button = gtk.Button()
+        self.slider = gtk.HScale()
+
+        self.hbox = gtk.HBox()
+        self.hbox.pack_start(self.play_button, False)
+        self.hbox.pack_start(self.slider, True, True)
+
+        self.main_window.add(self.hbox)
+        # self.main_window.connect('destroy', player.on_destroy)
+
+        self.play_button.set_image(self.PLAY_IMAGE)
+        self.play_button.connect('clicked', self.on_play)
+
+        self.slider.set_range(0, 100)
+        self.slider.set_increments(1, 10)
+        self.slider.connect('value-changed', self.on_slider_change)
+
+        self.main_window.set_border_width(6)
+        self.main_window.set_size_request(600, 50)
+        self.main_window.show_all()
+
     def on_play(self, button):
-        if not self.is_playing:
-            self.play_button.set_image(self.PAUSE_IMAGE)
-            self.is_playing = True
+        # player = PlaybackPlayer()
+        is_playing = True
+        global is_playing
+        if not is_playing:
+            # self.play_button.set_image(self.PAUSE_IMAGE)
 
             self.playbin.set_state(gst.STATE_PLAYING)
             gobject.timeout_add(100, self.update_slider)
 
         else:
             self.play_button.set_image(self.PLAY_IMAGE)
-            self.is_playing = False
+            is_playing = False
 
             self.playbin.set_state(gst.STATE_PAUSED)
 
