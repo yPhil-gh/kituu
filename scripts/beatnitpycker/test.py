@@ -11,40 +11,10 @@
 import os
 import gst, gtk, gobject
 
-class PlaybackPlayer:
-    print "plop"
-    def __init__(self):
-
-        playbin = gst.element_factory_make('playbin2')
-        playbin.set_property('uri', 'file:////home/px/scripts/beatnitpycker/preview.mp3')
-
-        bus = playbin.get_bus()
-        bus.add_signal_watch()
-
-        bus.connect("message::eos", self.on_finish)
-
-        is_playing = False
-        global is_playing
-
-    def on_finish(self, bus, message):
-        self.playbin.set_state(gst.STATE_PAUSED)
-        self.play_button.set_image(self.PLAY_IMAGE)
-        self.is_playing = False
-        self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, 0)
-        self.slider.set_value(0)
-
-    def on_destroy(self, window):
-        # NULL state allows the pipeline to release resources
-        self.playbin.set_state(gst.STATE_NULL)
-        is_playing = False
-        gtk.main_quit()
-
 class PlaybackInterface:
-    print "plip"
+
     PLAY_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
     PAUSE_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
-
-    player = PlaybackPlayer()
 
     def __init__(self):
         self.main_window = gtk.Window()
@@ -56,7 +26,7 @@ class PlaybackInterface:
         self.hbox.pack_start(self.slider, True, True)
 
         self.main_window.add(self.hbox)
-        # self.main_window.connect('destroy', player.on_destroy)
+        self.main_window.connect('destroy', self.on_destroy)
 
         self.play_button.set_image(self.PLAY_IMAGE)
         self.play_button.connect('clicked', self.on_play)
@@ -67,21 +37,43 @@ class PlaybackInterface:
 
         self.main_window.set_border_width(6)
         self.main_window.set_size_request(600, 50)
+
+        self.playbin = gst.element_factory_make('playbin2')
+        self.playbin.set_property('uri', 'file:////home/px/scripts/beatnitpycker/preview.mp3')
+
+        self.bus = self.playbin.get_bus()
+        self.bus.add_signal_watch()
+
+        self.bus.connect("message::eos", self.on_finish)
+
+        self.is_playing = False
+
         self.main_window.show_all()
 
+    def on_finish(self, bus, message):
+        self.playbin.set_state(gst.STATE_PAUSED)
+        self.play_button.set_image(self.PLAY_IMAGE)
+        self.is_playing = False
+        self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, 0)
+        self.slider.set_value(0)
+
+    def on_destroy(self, window):
+        # NULL state allows the pipeline to release resources
+        self.playbin.set_state(gst.STATE_NULL)
+        self.is_playing = False
+        gtk.main_quit()
+
     def on_play(self, button):
-        # player = PlaybackPlayer()
-        is_playing = True
-        global is_playing
-        if not is_playing:
-            # self.play_button.set_image(self.PAUSE_IMAGE)
+        if not self.is_playing:
+            self.play_button.set_image(self.PAUSE_IMAGE)
+            self.is_playing = True
 
             self.playbin.set_state(gst.STATE_PLAYING)
             gobject.timeout_add(100, self.update_slider)
 
         else:
             self.play_button.set_image(self.PLAY_IMAGE)
-            is_playing = False
+            self.is_playing = False
 
             self.playbin.set_state(gst.STATE_PAUSED)
 
