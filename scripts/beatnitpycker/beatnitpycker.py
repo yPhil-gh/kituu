@@ -127,7 +127,7 @@ class Nitpick:
 
         return True # continue calling every 30 milliseconds
 
-    is_playing = False
+    # is_playing = False
 
 
     def get_sel_file(self, tree_selection) :
