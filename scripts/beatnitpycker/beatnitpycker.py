@@ -58,6 +58,100 @@ class Nitpick:
         gtk.main_quit()
         return False
 
+# Seek!
+
+    def on_finish(self, bus, message):
+        self.playbin.set_state(gst.STATE_PAUSED)
+        # self.play_button.set_image(self.PLAY_IMAGE)
+        self.is_playing = False
+        self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, 0)
+        self.slider.set_value(0)
+
+    def on_destroy(self, window):
+        # NULL state allows the pipeline to release resources
+        self.playbin.set_state(gst.STATE_NULL)
+        self.is_playing = False
+        gtk.main_quit()
+
+    def onSelectionChanged(self, tree_selection) :
+        (model, pathlist) = tree_selection.get_selected_rows()
+        for path in pathlist :
+            tree_iter = model.get_iter(path)
+            filename = os.path.join(self.dirname, model.get_value(tree_iter,0))
+            value = model.get_value(tree_iter,0)
+            return filename
+            # print value + filename
+
+    def on_play(self, button):
+        if not self.is_playing:
+            # self.play_button.set_image(self.PAUSE_IMAGE)
+            self.is_playing = True
+            tree_sel = self.treeview.get_selection()
+            print "yuuu"
+            tm, ti = tree_sel.get_selected()
+
+            # print(tm.get_value(ti, 0)
+            # print vars(ti)
+            self.playbin.set_state(gst.STATE_PLAYING)
+            gobject.timeout_add(100, self.update_slider)
+
+        else:
+            # self.play_button.set_image(self.PLAY_IMAGE)
+            self.is_playing = False
+
+            self.playbin.set_state(gst.STATE_PAUSED)
+
+    def on_slider_change(self, slider):
+        seek_time_secs = slider.get_value()
+        self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH | gst.SEEK_FLAG_KEY_UNIT, seek_time_secs * gst.SECOND)
+
+    def update_slider(self):
+        if not self.is_playing:
+            return False # cancel timeout
+
+        try:
+            nanosecs, format = self.playbin.query_position(gst.FORMAT_TIME)
+            duration_nanosecs, format = self.playbin.query_duration(gst.FORMAT_TIME)
+
+            # block seek handler so we don't seek when we set_value()
+            self.slider.handler_block_by_func(self.on_slider_change)
+
+            self.slider.set_range(0, float(duration_nanosecs) / gst.SECOND)
+            self.slider.set_value(float(nanosecs) / gst.SECOND)
+
+            self.slider.handler_unblock_by_func(self.on_slider_change)
+
+        except gst.QueryError:
+            # pipeline must not be ready and does not know position
+         pass
+
+        return True # continue calling every 30 milliseconds
+
+    # is_playing = False
+
+
+    def get_sel_file(self, tree_selection) :
+
+        (model, pathlist) = tree_selection.get_selected_rows()
+        for path in pathlist :
+            tree_iter = model.get_iter(path)
+            filename = os.path.join(self.dirname, model.get_value(tree_iter,0))
+            value = model.get_value(tree_iter,0)
+            # self.on_play()
+            # self.bus.connect("message::eos", self.on_play)
+            self.playbin = gst.element_factory_make('playbin2')
+            self.playbin.set_state(gst.STATE_NULL)
+            self.playbin.set_property('uri', filename)
+
+            self.bus = self.playbin.get_bus()
+            self.bus.add_signal_watch()
+
+            self.bus.connect("message::eos", self.on_finish)
+
+            self.is_playing = True
+
+            print "playing " + filename
+
     def __init__(self, dname = None):
         cell_data_funcs = (None, self.file_size, self.file_mode,
                            self.file_last_changed)
@@ -67,6 +161,29 @@ class Nitpick:
         self.window.connect("delete_event", self.delete_event)
         self.window.set_icon(gtk.icon_theme_get_default().load_icon("gstreamer-properties", 128, 0))
 
+
+# Seek!
+        self.play_button = gtk.ToolButton(gtk.STOCK_MEDIA_PLAY)
+        self.slider = gtk.HScale()
+
+        self.shbox = gtk.HBox()
+        self.shbox.pack_start(self.play_button, False)
+        self.shbox.pack_start(self.slider, True, True)
+
+        # self.main_window.add(self.shbox)
+        # self.main_window.connect('destroy', self.on_destroy)
+
+
+        self.play_button.connect('clicked', self.on_play)
+
+        self.slider.set_range(0, 100)
+        self.slider.set_increments(1, 10)
+        self.slider.connect('value-changed', self.on_slider_change)
+
+        # self.main_window.set_border_width(6)
+        # self.main_window.set_size_request(600, 50)
+
+
         self.image = gtk.Image()
 
         vbox = gtk.VBox()
@@ -74,6 +191,7 @@ class Nitpick:
 
         vbox.pack_start (hbox, False, False, 1)
         hbox.pack_start (self.image, True, True, 0)
+        vbox.pack_start (self.shbox, False, False, 1)
 
         obutton = gtk.Button ("Open a picture...")
         vbox.pack_start (obutton, False, False, 0)
@@ -90,6 +208,18 @@ class Nitpick:
 
         # create the TreeView
         self.treeview = gtk.TreeView(liststore)
+
+
+
+        tree_selection = self.treeview.get_selection()
+        tree_selection.set_mode(gtk.SELECTION_MULTIPLE)
+        tree_selection.connect("changed", self.get_sel_file)
+
+
+        # selected_file = self.get_selected_file
+        # print selected_file
+
+
 
         # create the TreeViewColumns to display the data
         self.tvcolumn = [None] * len(self.column_names)
@@ -150,7 +280,6 @@ class Nitpick:
     def on_open_clicked (self, button):
         self.image.set_from_file("/usr/lib/lv2/paramEQ-Rafols.lv2/combopix/peak.png")
         self.scrolledwindow.show_all()
-        self.myplot.draw()
 
         # pp = pprint.PrettyPrinter(indent=4)
         # pp.pprint(plop)
