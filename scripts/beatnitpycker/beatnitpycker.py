@@ -8,7 +8,7 @@ import pygtk, gtk
 import pygame.mixer
 
 from matplotlib.figure import Figure
-import matplotlib.pyplot as pl
+# import matplotlib.pyplot as pl
 
 from numpy import arange, sin, pi
 import numpy as np
@@ -16,7 +16,6 @@ import numpy as np
 import scipy.io.wavfile as wavfile
 
 from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
-
 pygame.init()
 
 interface = """
@@ -60,11 +59,9 @@ class Nitpick:
         gtk.main_quit()
         return False
 
-    def drawplot (self, audiofile):
-        rate, data = wavfile.read(audiofile)
-        # t = np.arange(len(data[:,0]))*1.0/rate
-        # a.plot(t, data[:,0])
-        return rate, data
+    def mytest(self, audiofile):
+        print "yow " + audiofile
+        self.__init__.myothertest()
 
     def __init__(self, dname = None):
         cell_data_funcs = (None, self.file_size, self.file_mode,
@@ -77,31 +74,41 @@ class Nitpick:
 
         self.image = gtk.Image()
 
-        def mytest(self, arg):
-            print arg
-
-        mytest(self, "plop")
-
-        # plot
-        f = Figure(figsize=(5,4), dpi=100)
-        a = f.add_subplot(111)
-
-        myfilename = "/home/px/scripts/beatnitpycker/gare_du_nord-catchlak.wav"
-
-        # rate, data = wavfile.read('/home/px/scripts/beatnitpycker/gare_du_nord-catchlak.wav')
-        rate, data = self.drawplot(myfilename)
-
-        t = np.arange(len(data[:,0]))*1.0/rate
-        a.plot(t, data[:,0])
-
-
-        self.drawing_area = FigureCanvas(f)
-        self.drawing_area.set_size_request(300, 150)
-
         vbox = gtk.VBox()
         hbox = gtk.VBox(True)
 
-        vbox.pack_start (self.drawing_area, False, False, 1)
+        def myothertest():
+            print "wow ! in !"
+
+        def drawplot (audiofile):
+            rate, data = wavfile.read(audiofile)
+            # plot
+            f = Figure(figsize=(5,4), dpi=100)
+            self.drawing_area = FigureCanvas(f)
+            self.drawing_area.set_size_request(300, 150)
+            a = f.add_subplot(111)
+            t = np.arange(len(data[:,0]))*1.0/rate
+            a.plot(t, data[:,0])
+            f.savefig("/home/px/tmp/f.png")
+            # plotimage = pl.savefig("/home/px/tmp/f.png", dpi=None, facecolor='w', edgecolor='w',
+                    # orientation='portrait', papertype=None, format=None,
+                    # transparent=False, bbox_inches=None, pad_inches=0.1,
+                    # frameon=None)
+
+            return self.drawing_area
+
+
+        # myfilename = "/home/px/scripts/beatnitpycker/gare_du_nord-catchlak.wav"
+
+        # self.myplot = drawplot(myfilename)
+
+        # self.myplot.draw()
+
+        # vbox.pack_start (self.myplot, False, False, 1)
+        # vbox.pack_start (self.drawing_area, False, False, 1)
+        # self.drawing_area = FigureCanvas(f)
+        # self.drawing_area.set_size_request(300, 150)
+
         vbox.pack_start (hbox, False, False, 1)
         hbox.pack_start (self.image, True, True, 0)
 
@@ -128,7 +135,6 @@ class Nitpick:
         self.bouton.connect('clicked', self.stop_audio)
         vbox.pack_end(self.bouton, False)
 
-
         cellpb = gtk.CellRendererPixbuf()
         self.tvcolumn[0] = gtk.TreeViewColumn(self.column_names[0], cellpb)
         self.tvcolumn[0].set_cell_data_func(cellpb, self.file_pixbuf)
@@ -152,7 +158,6 @@ class Nitpick:
         self.scrolledwindow = gtk.ScrolledWindow()
         self.scrolledwindow.add(self.treeview)
         self.treeview.set_model(listmodel)
-
 
         self.actiongroup = gtk.ActionGroup("uimanager")
 
@@ -182,6 +187,8 @@ class Nitpick:
     def on_open_clicked (self, button):
         self.image.set_from_file("/usr/lib/lv2/paramEQ-Rafols.lv2/combopix/peak.png")
         self.scrolledwindow.show_all()
+        self.myplot.draw()
+
         # pp = pprint.PrettyPrinter(indent=4)
         # pp.pprint(plop)
 
@@ -209,8 +216,18 @@ class Nitpick:
             new_model = self.make_list(filename)
             treeview.set_model(new_model)
         else:
+            print "playing " + filename
             pygame.mixer.Sound(filename).play()
-            print self.drawplot(filename)
+            rate, data = wavfile.read(open(filename, 'r'))
+            # plot
+            f = Figure(figsize=(3,2), dpi=100)
+            self.drawing_area = FigureCanvas(f)
+            self.drawing_area.set_size_request(300, 150)
+            a = f.add_subplot(111)
+            t = np.arange(len(data[:,0]))*1.0/rate
+            a.plot(t, data[:,0])
+            f.savefig("/home/px/tmp/f.png")
+            self.image.set_from_file("/home/px/tmp/f.png")
         return
 
     def file_pixbuf(self, column, cell, model, iter):
