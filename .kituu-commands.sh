@@ -79,7 +79,7 @@ px-sshmount () {
             sshfs -o idmap=user $1 $2
         else
             echo "$0 : $2 is not writable"
-            exit 1
+            # exit 1
         fi
     fi
 }

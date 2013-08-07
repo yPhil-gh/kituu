@@ -58,6 +58,15 @@ class Nitpick:
         gtk.main_quit()
         return False
 
+    def get_sel_file(self, tree_selection) :
+        (model, pathlist) = tree_selection.get_selected_rows()
+        for path in pathlist :
+            tree_iter = model.get_iter(path)
+            filename = os.path.join(self.dirname, model.get_value(tree_iter,0))
+            value = model.get_value(tree_iter,0)
+            # print "playing " + filename
+            return filename
+
     def __init__(self, dname = None):
         cell_data_funcs = (None, self.file_size, self.file_mode,
                            self.file_last_changed)
@@ -71,7 +80,31 @@ class Nitpick:
 
         vbox = gtk.VBox()
         hbox = gtk.VBox(True)
+        bbox = gtk.HBox()
 
+
+        self.play_button = gtk.Button()
+        self.slider = gtk.HScale()
+
+        bbox.pack_start(self.play_button, False)
+        bbox.pack_start(self.slider, True, True)
+
+        # self.main_window.add(self.hbox)
+        # self.main_window.connect('destroy', self.on_destroy)
+
+        fileName = self.get_sel_file
+
+        myPlayer = PlaybackInterface(fileName)
+
+        # self.play_button.set_image(self.PLAY_IMAGE)
+        self.play_button.connect('clicked', myPlayer.on_play)
+
+
+        self.slider.set_range(0, 100)
+        self.slider.set_increments(1, 10)
+        self.slider.connect('value-changed', myPlayer.on_slider_change)
+
+        vbox.pack_start (bbox, False, False, 1)
         vbox.pack_start (hbox, False, False, 1)
         hbox.pack_start (self.image, True, True, 0)
 
@@ -90,6 +123,12 @@ class Nitpick:
 
         # create the TreeView
         self.treeview = gtk.TreeView(liststore)
+
+
+        tree_selection = self.treeview.get_selection()
+        tree_selection.set_mode(gtk.SELECTION_MULTIPLE)
+        tree_selection.connect("changed", myPlayer.on_play)
+
 
         # create the TreeViewColumns to display the data
         self.tvcolumn = [None] * len(self.column_names)
@@ -181,6 +220,8 @@ class Nitpick:
             treeview.set_model(new_model)
         else:
             if filename.endswith(tuple(audioFormats)):
+                myPlayer = PlaybackInterface(filename)
+                # self.myPlayer(self, "plop")
                 pygame.mixer.stop()
                 pygame.mixer.Sound(filename).play()
                 while pygame.mixer.music.get_busy():
@@ -245,6 +286,86 @@ class Nitpick:
         filestat = os.stat(filename)
         cell.set_property('text', time.ctime(filestat.st_mtime))
         return
+
+
+class PlaybackInterface:
+
+    PLAY_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
+    PAUSE_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
+
+    def __init__(self, filename):
+        print "yown"
+        print filename
+        # self.main_window = gtk.Window()
+
+        # self.main_window.set_border_width(6)
+        # self.main_window.set_size_request(600, 50)
+
+        self.playbin = gst.element_factory_make('playbin2')
+        self.playbin.set_property('uri', filename)
+
+        self.bus = self.playbin.get_bus()
+        self.bus.add_signal_watch()
+
+        self.bus.connect("message::eos", self.on_finish)
+
+        self.is_playing = False
+
+        # self.main_window.show_all()
+
+    def on_finish(self, bus, message):
+        self.playbin.set_state(gst.STATE_PAUSED)
+        self.play_button.set_image(self.PLAY_IMAGE)
+        self.is_playing = False
+        self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, 0)
+        self.slider.set_value(0)
+
+    def on_destroy(self, window):
+        # NULL state allows the pipeline to release resources
+        self.playbin.set_state(gst.STATE_NULL)
+        self.is_playing = False
+        gtk.main_quit()
+
+    def on_play(self, button):
+        if not self.is_playing:
+            # self.play_button.set_image(self.PAUSE_IMAGE)
+            self.is_playing = True
+
+            # self.playbin.set_state(gst.STATE_PLAYING)
+            gobject.timeout_add(100, self.update_slider)
+
+        else:
+            # self.play_button.set_image(self.PLAY_IMAGE)
+            self.is_playing = False
+
+            # self.playbin.set_state(gst.STATE_PAUSED)
+
+    def on_slider_change(self, slider):
+        seek_time_secs = slider.get_value()
+        self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH | gst.SEEK_FLAG_KEY_UNIT, seek_time_secs * gst.SECOND)
+
+    def update_slider(self):
+        if not self.is_playing:
+            return False # cancel timeout
+
+        try:
+            nanosecs, format = self.playbin.query_position(gst.FORMAT_TIME)
+            duration_nanosecs, format = self.playbin.query_duration(gst.FORMAT_TIME)
+
+            # block seek handler so we don't seek when we set_value()
+            self.slider.handler_block_by_func(self.on_slider_change)
+
+            self.slider.set_range(0, float(duration_nanosecs) / gst.SECOND)
+            self.slider.set_value(float(nanosecs) / gst.SECOND)
+
+            self.slider.handler_unblock_by_func(self.on_slider_change)
+
+        except gst.QueryError:
+            # pipeline must not be ready and does not know position
+         pass
+
+        return True # continue calling every 30 milliseconds
+
 
 def main():
     gtk.main()
