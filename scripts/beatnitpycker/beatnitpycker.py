@@ -224,8 +224,14 @@ class Nitpick:
             self.drawing_area = FigureCanvas(f)
             self.drawing_area.set_size_request(300, 150)
             a = f.add_subplot(111)
-            t = np.arange(len(data[:,0]))*1.0/rate
-            a.plot(t, data[:,0])
+            # t = np.arange(len(data[:,0]))*1.0/rate
+            # a.plot(t, data[:,0])
+            a.plot(range(len(data)),data)
+
+            # subplot(411)
+            # plot(range(len(data)),data)
+
+
             f.savefig("/home/px/tmp/f.png")
             self.image.set_from_file("/home/px/tmp/f.png")
         return
