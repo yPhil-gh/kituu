@@ -208,16 +208,19 @@ class Nitpick:
         return
 
     def file_pixbuf(self, column, cell, model, iter):
+        audioFormats = [ ".wav", ".mp3", ".ogg", ".flac" ]
         filename = os.path.join(self.dirname, model.get_value(iter, 0))
         filestat = os.stat(filename)
         if stat.S_ISDIR(filestat.st_mode):
             pb = gtk.icon_theme_get_default().load_icon("folder", 24, 0)
-        elif filename.endswith('.wav'):
+        elif filename.endswith(tuple(audioFormats)):
             pb = gtk.icon_theme_get_default().load_icon("audio-volume-medium", 24, 0)
         else:
             pb = gtk.icon_theme_get_default().load_icon("edit-copy", 24, 0)
         cell.set_property('pixbuf', pb)
         return
+
+
 
     def file_name(self, column, cell, model, iter):
         cell.set_property('text', model.get_value(iter, 0))
