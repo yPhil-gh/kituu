@@ -90,9 +90,6 @@ class Lister(object):
             new_model = self.make_list(filename)
             treeview.set_model(new_model)
         else:
-            # player.load_file(filename)
-            test = self.player.test()
-            print "plopz", test
             self.player.load_file(filename)
         return
 
@@ -136,96 +133,6 @@ class Lister(object):
     def getView():
         return self.treeview
 
-# class Player(object):
-
-#     PLAY_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
-#     PAUSE_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
-
-#     def __init__(self):
-#         self.play_button = gtk.Button()
-#         self.slider = gtk.HScale()
-
-#         self.hbox = gtk.HBox()
-#         self.hbox.pack_start(self.play_button, False)
-#         self.hbox.pack_start(self.slider, True, True)
-
-
-#         self.play_button.set_image(self.PLAY_IMAGE)
-#         self.play_button.connect('clicked', self.on_play)
-
-#         self.slider.set_range(0, 100)
-#         self.slider.set_increments(1, 10)
-#         self.slider.connect('value-changed', self.on_slider_change)
-
-#         filename = "/home/px/scripts/beatnitpycker/preview.mp3"
-
-#         self.playbin = gst.element_factory_make('playbin2')
-#         self.playbin.set_property('uri', 'file:///' + filename)
-
-#         self.bus = self.playbin.get_bus()
-#         self.bus.add_signal_watch()
-
-#         self.bus.connect("message::eos", self.on_finish)
-
-#         self.is_playing = False
-
-#     def on_finish(self, bus, message):
-#         self.playbin.set_state(gst.STATE_PAUSED)
-#         self.play_button.set_image(self.PLAY_IMAGE)
-#         self.is_playing = False
-#         self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, 0)
-#         self.slider.set_value(0)
-
-#     def on_destroy(self, window):
-#         # NULL state allows the pipeline to release resources
-#         self.playbin.set_state(gst.STATE_NULL)
-#         self.is_playing = False
-#         gtk.main_quit()
-
-#     def on_play(self, button):
-#         if not self.is_playing:
-#             self.play_button.set_image(self.PAUSE_IMAGE)
-#             self.is_playing = True
-
-#             self.playbin.set_state(gst.STATE_PLAYING)
-#             gobject.timeout_add(100, self.update_slider)
-
-#         else:
-#             self.play_button.set_image(self.PLAY_IMAGE)
-#             self.is_playing = False
-
-#             self.playbin.set_state(gst.STATE_PAUSED)
-
-#     def on_slider_change(self, slider):
-#         seek_time_secs = slider.get_value()
-#         self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH | gst.SEEK_FLAG_KEY_UNIT, seek_time_secs * gst.SECOND)
-
-#     def update_slider(self):
-#         if not self.is_playing:
-#             return False # cancel timeout
-
-#         try:
-#             nanosecs, format = self.playbin.query_position(gst.FORMAT_TIME)
-#             duration_nanosecs, format = self.playbin.query_duration(gst.FORMAT_TIME)
-
-#             # block seek handler so we don't seek when we set_value()
-#             self.slider.handler_block_by_func(self.on_slider_change)
-
-#             self.slider.set_range(0, float(duration_nanosecs) / gst.SECOND)
-#             self.slider.set_value(float(nanosecs) / gst.SECOND)
-
-#             self.slider.handler_unblock_by_func(self.on_slider_change)
-
-#         except gst.QueryError:
-#             # pipeline must not be ready and does not know position
-#          pass
-
-#         return True
-
-class Callable:
-
-    def __init__(self, anycallable):
-        self.__call__ = anycallable
 
 class Engine(object):
 
@@ -234,8 +141,15 @@ class Engine(object):
 
     def __init__(self):
 
+        self.hbox = gtk.HBox()
+
         self.play_button = gtk.Button()
         self.slider = gtk.HScale()
+
+        self.hbox.pack_start(self.play_button, False)
+        self.hbox.pack_start(self.slider, True, True)
+        self.play_button.connect('clicked', self.on_play)
+
         self.play_button.set_image(self.PLAY_IMAGE)
 
         self.playbin = gst.element_factory_make('playbin2')
@@ -247,8 +161,15 @@ class Engine(object):
         self.slider.set_range(0, 100)
         self.slider.set_increments(1, 10)
         self.slider.connect('value-changed', self.on_slider_change)
+        self.is_playing = False
 
     def load_file(self, filename):
+        # if self.is_playing:
+        #     print "yyep"
+        # else:
+        #     print "nope"
+
+        # self.play_button.set_image(self.PAUSE_IMAGE)
         self.playbin.set_state(gst.STATE_NULL)
 
         self.bus = self.playbin.get_bus()
@@ -259,31 +180,13 @@ class Engine(object):
         self.playbin.set_property('uri', 'file:///' + filename)
         self.playbin.set_state(gst.STATE_PLAYING)
         gobject.timeout_add(100, self.update_slider)
-        self.play_button.set_image(self.PAUSE_IMAGE)
         print filename
-        # self.on_play
-        self.is_playing = False
-        # return
-    is_playing = False
-
-    def test(self):
-        return "yo"
-
-    def on_finish(self, bus, message):
-        self.playbin.set_state(gst.STATE_PAUSED)
-        self.play_button.set_image(self.PLAY_IMAGE)
-        self.is_playing = False
-        self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, 0)
-        self.slider.set_value(0)
-
-    def on_destroy(self, window):
-        # NULL state allows the pipeline to release resources
-        self.playbin.set_state(gst.STATE_NULL)
-        self.is_playing = False
-        gtk.main_quit()
+        self.is_playing = True
 
     def on_play(self, button):
+        print "on_play"
         if not self.is_playing:
+            print "nope"
             self.play_button.set_image(self.PAUSE_IMAGE)
             self.is_playing = True
 
@@ -291,7 +194,7 @@ class Engine(object):
             gobject.timeout_add(100, self.update_slider)
 
         else:
-            print "stop"
+            print "yyep"
             self.play_button.set_image(self.PLAY_IMAGE)
             self.is_playing = False
 
@@ -301,12 +204,13 @@ class Engine(object):
         seek_time_secs = slider.get_value()
         self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH | gst.SEEK_FLAG_KEY_UNIT, seek_time_secs * gst.SECOND)
 
-
     def update_slider(self):
+        print "called"
         if not self.is_playing:
+            print "but nope"
             return False # cancel timeout
-
         try:
+            print "called turns"
             nanosecs, format = self.playbin.query_position(gst.FORMAT_TIME)
             duration_nanosecs, format = self.playbin.query_duration(gst.FORMAT_TIME)
 
@@ -319,10 +223,19 @@ class Engine(object):
             self.slider.handler_unblock_by_func(self.on_slider_change)
 
         except gst.QueryError:
+            print "oops"
             # pipeline must not be ready and does not know position
             pass
 
         return True # continue calling every 30 milliseconds
+
+    def on_finish(self, bus, message):
+        print "finished"
+        self.playbin.set_state(gst.STATE_PAUSED)
+        self.play_button.set_image(self.PLAY_IMAGE)
+        self.is_playing = False
+        self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, 0)
+        self.slider.set_value(0)
 
 class Player(object):
 
@@ -335,82 +248,8 @@ class Player(object):
         engine = Engine()
 
         self.hbox = gtk.HBox()
-        self.hbox.pack_start(engine.play_button, False)
-        self.hbox.pack_start(engine.slider, True, True)
-        engine.play_button.connect('clicked', engine.on_play)
+        self.hbox.pack_start(engine.hbox, True, True)
 
-# class GUI(object):
-
-#     def delete_event(self, widget, event, data=None):
-#         gtk.main_quit()
-#         return False
-
-#     def about_box(self, widget):
-#         about = gtk.AboutDialog()
-#         about.set_program_name("BeatNitPycker")
-#         about.set_version("0.1")
-#         about.set_copyright("(c) Philippe \"xaccrocheur\" Coatmeur")
-#         about.set_comments("Simple sound sample auditor")
-#         about.set_website("https://github.com/xaccrocheur")
-#         about.set_logo(gtk.icon_theme_get_default().load_icon("gstreamer-properties", 128, 0))
-
-#         about.set_license("BeatNitPycker is free software; you can redistribute it and/or modify "
-#                                   "it under the terms of the GNU General Public License as published by "
-#                                   "the Free Software Foundation, version 2.\n\n"
-#                                   "This program is distributed in the hope that it will be useful, "
-#                                   "GNU General Public License for more details.\n\n"
-#                                   "You should have received a copy of the GNU General Public License "
-#                                   "along with this program; if not, write to the Free Software "
-#                                   "Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA")
-#         about.set_wrap_license(True);
-#         about.run()
-#         about.destroy()
-
-#     def __init__(self):
-#         lister = Lister()
-#         player = Player()
-#         self.window = gtk.Window()
-#         self.window.set_size_request(300, 600)
-#         self.window.connect("delete_event", self.delete_event)
-#         self.window.set_icon(gtk.icon_theme_get_default().load_icon("gstreamer-properties", 128, 0))
-
-#         uimanager = gtk.UIManager()
-#         accelgroup = uimanager.get_accel_group()
-#         self.window.add_accel_group(accelgroup)
-
-#         self.actiongroup = gtk.ActionGroup("uimanager")
-
-#         self.actiongroup.add_actions([
-#             ("New", gtk.STOCK_NEW, "_New", None, "Create a New Document"),
-#             ("Open", gtk.STOCK_OPEN, "_Open", None, "Open an Existing Document"),
-#             ("Save", gtk.STOCK_SAVE, "_Save", None, "Save the Current Document"),
-#             ("Quit", gtk.STOCK_QUIT, "_Quit", None, "Quit the Application", lambda w: gtk.main_quit()),
-#             ("File", None, "_File"),
-#             ("Preferences", gtk.STOCK_PREFERENCES, "_Preferences", None, "Edit the Preferences"),
-#             ("Edit", None, "_Edit"),
-#             ("About", gtk.STOCK_ABOUT, "_About", None, "yow", self.about_box),
-#             ("Help", None, "_Help")
-#         ])
-
-#         uimanager.insert_action_group(self.actiongroup, 0)
-#         uimanager.add_ui_from_string(interface)
-
-#         menubar = uimanager.get_widget("/MenuBar")
-
-#         vbox = gtk.VBox()
-
-#         self.scrolledwindow = gtk.ScrolledWindow()
-#         self.scrolledwindow.add(lister.treeview)
-#         vbox.pack_start(menubar, False)
-#         vbox.pack_start (player.hbox, False, False, 1)
-#         vbox.pack_start(self.scrolledwindow)
-
-#         self.window.add(vbox)
-#         self.window.show_all()
-#         return
-
-# def main():
-#     gtk.main()
 
 class GUI(object):
 
@@ -444,7 +283,7 @@ class GUI(object):
 
     def __init__(self):
         lister = Lister()
-        player = Player()
+        player = Engine()
         self.window = gtk.Window()
         self.window.set_size_request(300, 600)
         self.window.connect("delete_event", self.delete_event)

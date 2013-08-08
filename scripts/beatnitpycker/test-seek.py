@@ -18,6 +18,7 @@ class PlaybackInterface:
 
     def __init__(self):
         self.main_window = gtk.Window()
+
         self.play_button = gtk.Button()
         self.slider = gtk.HScale()
 
