@@ -249,7 +249,7 @@ class Engine(object):
             self.is_playing = True
 
             self.playbin.set_state(gst.STATE_PLAYING)
-            # gobject.timeout_add(100, player.update_slider)
+            gobject.timeout_add(100, Player().update_slider)
 
         else:
             # self.play_button.set_image(self.PLAY_IMAGE)
