@@ -319,7 +319,7 @@ class Engine(object):
 
         except gst.QueryError:
             # pipeline must not be ready and does not know position
-         pass
+            pass
 
         return True # continue calling every 30 milliseconds
 
