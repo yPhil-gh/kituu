@@ -258,6 +258,7 @@ class Engine(object):
 
         self.playbin.set_property('uri', 'file:///' + filename)
         self.playbin.set_state(gst.STATE_PLAYING)
+        gobject.timeout_add(100, self.update_slider)
         self.play_button.set_image(self.PAUSE_IMAGE)
         print filename
         # self.on_play
