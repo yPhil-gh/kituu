@@ -244,31 +244,33 @@ class Engine(object):
 
         # self.load_file("/home/px/scripts/beatnitpycker/preview.mp3")
 
-
         self.slider.set_range(0, 100)
         self.slider.set_increments(1, 10)
         self.slider.connect('value-changed', self.on_slider_change)
 
     def load_file(self, filename):
+        self.playbin.set_state(gst.STATE_NULL)
 
         self.bus = self.playbin.get_bus()
         self.bus.add_signal_watch()
 
         self.bus.connect("message::eos", self.on_finish)
 
-        self.is_playing = False
         self.playbin.set_property('uri', 'file:///' + filename)
         self.playbin.set_state(gst.STATE_PLAYING)
+        self.play_button.set_image(self.PAUSE_IMAGE)
         print filename
         # self.on_play
+        self.is_playing = False
         # return
+    is_playing = False
 
     def test(self):
         return "yo"
 
     def on_finish(self, bus, message):
         self.playbin.set_state(gst.STATE_PAUSED)
-        Player().play_button.set_image(self.PLAY_IMAGE)
+        self.play_button.set_image(self.PLAY_IMAGE)
         self.is_playing = False
         self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, 0)
         self.slider.set_value(0)
@@ -327,7 +329,7 @@ class Player(object):
     PAUSE_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
 
     def __init__(self):
-        self.is_playing = False
+        # self.is_playing = False
         filename = "/home/px/scripts/beatnitpycker/preview.mp3"
         engine = Engine()
 
