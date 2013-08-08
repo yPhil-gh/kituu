@@ -50,7 +50,6 @@ class Player(object):
         self.hbox.pack_start(self.play_button, False)
         self.hbox.pack_start(self.slider, True, True)
 
-
         self.play_button.set_image(self.PLAY_IMAGE)
         self.play_button.connect('clicked', self.on_play)
 

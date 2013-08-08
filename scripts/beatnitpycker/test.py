@@ -1,36 +1,15 @@
 #!/usr/bin/env python
 
-import os
-import gst, gtk, gobject
-import random
-
-class One(object):
-    print "I'm One"
-    # plopOne = "plop"
+class Base(object):
     def __init__(self):
-        self.plopOne = "plop"
-        self.plop = random.randrange(0, 1001, 2)
-        print "One self.plop is", self.plop, "hmm"
-    def OneRandom(*args):
-        plopOne = "plop"
-        return random.randrange(0, 101, 2)
-        fooNested = "plop"
-    print ""
+        print "Base created"
 
-class Two(object):
-    print "I'm Two"
-    plopTwo = "plip"
-    one = One()
-    two = one.plop
-    print "Two is", two
-    OneRandom = one.OneRandom()
-    print ""
-    def test(self, *args):
-        print vars(self)
+class ChildA(Base):
+    def __init__(self):
+        Base.__init__(self)
 
-print "Now."
-one = One()
-two = Two()
-print "And now it's", two.two, "but OneRandom is", two.OneRandom, "hum"
-print one.plopOne, "aaah I self.see !"
-print two.test
+class ChildB(Base):
+    def __init__(self):
+        super(ChildB, self).__init__()
+
+print ChildA(),ChildB()
