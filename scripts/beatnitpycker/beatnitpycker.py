@@ -122,11 +122,22 @@ class Player(object):
 
         return True # continue calling every 30 milliseconds
 
-    def myhbox():
-        return self.hbox
+    def test():
+        nitpick = Nitpick()
 
 class Nitpick:
     column_names = ['Name', 'Size', 'Mode', 'Last Changed']
+
+    def test():
+        return "plop"
+
+    def get_sel_file(self, tree_selection) :
+        (model, pathlist) = tree_selection.get_selected_rows()
+        for path in pathlist :
+            tree_iter = model.get_iter(path)
+            filename = os.path.join(self.dirname, model.get_value(tree_iter,0))
+            value = model.get_value(tree_iter,0)
+        return value
 
     def about_box(self, widget):
         about = gtk.AboutDialog()
@@ -359,6 +370,12 @@ class Nitpick:
         filestat = os.stat(filename)
         cell.set_property('text', time.ctime(filestat.st_mtime))
         return
+
+# class GetValue(object):
+#     nitpick = Nitpick()
+#     def getvalue():
+#         print nitpick.test
+
 
 def main():
     gtk.main()
