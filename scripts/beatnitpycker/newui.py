@@ -15,7 +15,6 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
 import scipy.io.wavfile as wavfile
 
-
 interface = """
 <ui>
     <menubar name="MenuBar">
@@ -246,12 +245,11 @@ class GUI(object):
 
     def __init__(self):
         lister = Lister()
-
+        player = Player()
         self.window = gtk.Window()
         self.window.set_size_request(300, 600)
         self.window.connect("delete_event", self.delete_event)
         self.window.set_icon(gtk.icon_theme_get_default().load_icon("gstreamer-properties", 128, 0))
-
 
         uimanager = gtk.UIManager()
         accelgroup = uimanager.get_accel_group()
@@ -275,13 +273,14 @@ class GUI(object):
         uimanager.add_ui_from_string(interface)
 
         menubar = uimanager.get_widget("/MenuBar")
-        vbox = gtk.VBox()
 
+        vbox = gtk.VBox()
 
         self.scrolledwindow = gtk.ScrolledWindow()
         self.scrolledwindow.add(lister.treeview)
         vbox.pack_start(menubar, False)
         vbox.pack_start(self.scrolledwindow)
+        vbox.pack_start (player.hbox, False, False, 1)
 
         self.window.add(vbox)
         self.window.show_all()
