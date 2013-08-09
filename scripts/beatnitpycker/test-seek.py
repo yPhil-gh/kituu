@@ -85,6 +85,8 @@ class PlaybackInterface:
     def update_slider(self):
         if not self.is_playing:
             return False # cancel timeout
+            print "nope"
+        print "yep"
 
         try:
             nanosecs, format = self.playbin.query_position(gst.FORMAT_TIME)
@@ -97,6 +99,8 @@ class PlaybackInterface:
             self.slider.set_value(float(nanosecs) / gst.SECOND)
 
             self.slider.handler_unblock_by_func(self.on_slider_change)
+
+            print nanosecs
 
         except gst.QueryError:
             # pipeline must not be ready and does not know position

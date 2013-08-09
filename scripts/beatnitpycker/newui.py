@@ -141,52 +141,76 @@ class Engine(object):
 
     def __init__(self):
 
-        self.hbox = gtk.HBox()
-
         self.play_button = gtk.Button()
         self.slider = gtk.HScale()
 
+        self.hbox = gtk.HBox()
         self.hbox.pack_start(self.play_button, False)
         self.hbox.pack_start(self.slider, True, True)
-        self.play_button.connect('clicked', self.on_play)
 
         self.play_button.set_image(self.PLAY_IMAGE)
-
-        self.playbin = gst.element_factory_make('playbin2')
-
-        # self.playbin.set_property('uri', 'file:///' + filename)
-
-        # self.load_file("/home/px/scripts/beatnitpycker/preview.mp3")
+        self.play_button.connect('clicked', self.on_play)
 
         self.slider.set_range(0, 100)
         self.slider.set_increments(1, 10)
         self.slider.connect('value-changed', self.on_slider_change)
-        self.is_playing = False
 
-    def load_file(self, filename):
-        # if self.is_playing:
-        #     print "yyep"
-        # else:
-        #     print "nope"
-
-        # self.play_button.set_image(self.PAUSE_IMAGE)
-        self.playbin.set_state(gst.STATE_NULL)
+        self.playbin = gst.element_factory_make('playbin2')
+        self.playbin.set_property('uri', 'file:////home/px/scripts/beatnitpycker/preview.mp3')
 
         self.bus = self.playbin.get_bus()
         self.bus.add_signal_watch()
 
         self.bus.connect("message::eos", self.on_finish)
 
+        self.is_playing = False
+
+    def load_file(self, filename):
+        self.playbin.set_state(gst.STATE_NULL)
+
+        # self.bus = self.playbin.get_bus()
+        # self.bus.add_signal_watch()
+
+        # self.bus.connect("message::eos", self.on_finish)
+
         self.playbin.set_property('uri', 'file:///' + filename)
-        self.playbin.set_state(gst.STATE_PLAYING)
+        # self.playbin.set_state(gst.STATE_PLAYING)
         gobject.timeout_add(100, self.update_slider)
         print filename
-        self.is_playing = True
+        self.on_playx(self)
+
+        self.slider.set_range(0, 100)
+        self.slider.set_increments(1, 10)
+        self.slider.connect('value-changed', self.on_slider_change)
+
+        self.is_playing = False
+
+    def on_playx(self, *args):
+        print "on_playx"
+        if not self.is_playing:
+            print "playing"
+            self.play_button.set_image(self.PAUSE_IMAGE)
+            self.is_playing = True
+
+            self.playbin.set_state(gst.STATE_PLAYING)
+            # gobject.timeout_add(100, self.update_slider)
+
+        else:
+            print "not playing"
+            self.play_button.set_image(self.PLAY_IMAGE)
+            self.is_playing = False
+
+            self.playbin.set_state(gst.STATE_PAUSED)
+
+    def on_finish(self, bus, message):
+        self.playbin.set_state(gst.STATE_PAUSED)
+        self.play_button.set_image(self.PLAY_IMAGE)
+        self.is_playing = False
+        self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, 0)
+        self.slider.set_value(0)
 
     def on_play(self, button):
-        print "on_play"
         if not self.is_playing:
-            print "nope"
             self.play_button.set_image(self.PAUSE_IMAGE)
             self.is_playing = True
 
@@ -194,7 +218,6 @@ class Engine(object):
             gobject.timeout_add(100, self.update_slider)
 
         else:
-            print "yyep"
             self.play_button.set_image(self.PLAY_IMAGE)
             self.is_playing = False
 
@@ -207,10 +230,11 @@ class Engine(object):
     def update_slider(self):
         print "called"
         if not self.is_playing:
-            print "but nope"
             return False # cancel timeout
+            print "nope"
+        print "yep"
+
         try:
-            print "called turns"
             nanosecs, format = self.playbin.query_position(gst.FORMAT_TIME)
             duration_nanosecs, format = self.playbin.query_duration(gst.FORMAT_TIME)
 
@@ -222,20 +246,13 @@ class Engine(object):
 
             self.slider.handler_unblock_by_func(self.on_slider_change)
 
+            print self.playbin.query_position(gst.FORMAT_TIME)
+
         except gst.QueryError:
-            print "oops"
             # pipeline must not be ready and does not know position
-            pass
+         pass
 
         return True # continue calling every 30 milliseconds
-
-    def on_finish(self, bus, message):
-        print "finished"
-        self.playbin.set_state(gst.STATE_PAUSED)
-        self.play_button.set_image(self.PLAY_IMAGE)
-        self.is_playing = False
-        self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, 0)
-        self.slider.set_value(0)
 
 class Player(object):
 
