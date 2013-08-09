@@ -33,6 +33,16 @@ interface = """
 </ui>
 """
 
+class Sender(gobject.GObject):
+    def __init__(self):
+        self.__gobject_init__()
+
+
+gobject.type_register(Sender)
+gobject.signal_new("z_signal", Sender, gobject.SIGNAL_RUN_FIRST,
+                   gobject.TYPE_NONE, ())
+
+
 class Lister(object):
     column_names = ['Name', 'Size', 'Mode', 'Last Changed']
 
@@ -90,6 +100,7 @@ class Lister(object):
         return listmodel
 
     def open_file(self, treeview, path, column):
+        self.buttonInstance = Engine()
         model = treeview.get_model()
         iter = model.get_iter(path)
         filename = os.path.join(self.dirname, model.get_value(iter, 0))
@@ -98,7 +109,8 @@ class Lister(object):
             new_model = self.make_list(filename)
             treeview.set_model(new_model)
         else:
-            Engine().load_file(filename)
+            self.buttonInstance.load_file(filename)
+            # Engine().load_file(filename)
         # return
 
     def file_pixbuf(self, column, cell, model, iter):
@@ -149,6 +161,8 @@ class Engine(object):
 
     def __init__(self, filename = 'file:////home/px/scripts/beatnitpycker/preview.mp3'):
 
+        super(Engine, self).__init__()
+
         self.hbox = gtk.HBox()
 
         self.play_button = gtk.Button()
@@ -167,7 +181,7 @@ class Engine(object):
 
         self.slider.set_range(0, 100)
         self.slider.set_increments(1, 10)
-        self.slider.connect('value-changed', self.on_slider_change)
+        # self.slider.connect('value-changed', self.on_slider_change)
 
         self.playbin = gst.element_factory_make('playbin')
         self.playbin.set_property('uri', filename)
@@ -192,7 +206,7 @@ class Engine(object):
         button_connect.connect("clicked", self.signal_connected, button_disconnect)
         button_disconnect.connect("clicked", self.signal_disconnected, button_connect)
 
-        self.hbox.pack_start(table, False)
+        self.hbox.pack_end(table, False)
         table.attach(self.label, 0, 3, 0, 1)
         table.attach(button_connect, 0, 1, 1, 2)
         table.attach(button_disconnect, 1, 2, 1, 2)
@@ -219,8 +233,11 @@ class Engine(object):
         print "Status Button connected with id of %s" % str(self.handler_id)
 
     def load_file(self, filename):
-        self.handler_id = self.play_button.connect("clicked", self.signal_status)
-        print "ID :", self.handler_id
+        # print "Caller ID :", self.handler_id
+
+        # self.handler_id = self.play_button.connect("clicked", self.signal_status)
+
+        # print "Button ID :%s" % str(self.play_button.handler_id)
         print type(self)
         # print vars(self)
         print filename
@@ -309,12 +326,12 @@ class Engine(object):
             duration_nanosecs, format = self.playbin.query_duration(gst.FORMAT_TIME)
 
             # block seek handler so we don't seek when we set_value()
-            self.slider.handler_block_by_func(self.on_slider_change)
+            # self.slider.handler_block_by_func(self.on_slider_change)
 
             self.slider.set_range(0, float(duration_nanosecs) / gst.SECOND)
             self.slider.set_value(float(nanosecs) / gst.SECOND)
 
-            self.slider.handler_unblock_by_func(self.on_slider_change)
+            # self.slider.handler_unblock_by_func(self.on_slider_change)
 
             print "plop", nanosecs, duration_nanosecs
 
