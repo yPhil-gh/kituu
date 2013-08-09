@@ -36,6 +36,14 @@ interface = """
 class Lister(object):
     column_names = ['Name', 'Size', 'Mode', 'Last Changed']
 
+    def button_clicked(list, event):
+        # Check for right click
+        if event.button == 3:
+            sel=list.get_selection_info(event.x,event.y)
+            list.select_row(sel[0], sel[1])
+            print "Click."
+            print list.selection
+
     def __init__(self, dname = None):
 
         cell_data_funcs = (None, self.file_size, self.file_mode,
@@ -91,7 +99,7 @@ class Lister(object):
             treeview.set_model(new_model)
         else:
             Engine().load_file(filename)
-        return
+        # return
 
     def file_pixbuf(self, column, cell, model, iter):
         audioFormats = [ ".wav", ".mp3", ".ogg", ".flac" ]
@@ -141,23 +149,28 @@ class Engine(object):
 
     def __init__(self, filename = 'file:////home/px/scripts/beatnitpycker/preview.mp3'):
 
+        self.hbox = gtk.HBox()
+
         self.play_button = gtk.Button()
         self.slider = gtk.HScale()
 
-        self.hbox = gtk.HBox()
+        self.play_button.set_name("yea")
+        # button_name = gtk.Object.get_name(self.play_button)
+        self.mname = self.play_button.get_name()
+        print self.mname
+
         self.hbox.pack_start(self.play_button, False)
         self.hbox.pack_start(self.slider, True, True)
-
-        self.vari = "plip"
         self.play_button.set_image(self.PLAY_IMAGE)
         self.play_button.connect('clicked', self.on_playx)
+        # self.play_button.connect('clicked', self.load_file)
 
         self.slider.set_range(0, 100)
         self.slider.set_increments(1, 10)
         self.slider.connect('value-changed', self.on_slider_change)
 
         self.playbin = gst.element_factory_make('playbin')
-        self.playbin.set_property('uri', 'file:////home/px/scripts/beatnitpycker/preview.mp3')
+        self.playbin.set_property('uri', filename)
 
         self.bus = self.playbin.get_bus()
         self.bus.add_signal_watch()
@@ -169,11 +182,52 @@ class Engine(object):
 
         # gobject.timeout_add(100, self.plop)
 
+        table = gtk.Table(2, 3, True)
+        self.label = gtk.Label()
+        button_connect = gtk.Button("Connect")
+        button_disconnect = gtk.Button("Disconnect")
+        button_disconnect.set_sensitive(False)
+        self.button_status = gtk.Button("Status")
+
+        button_connect.connect("clicked", self.signal_connected, button_disconnect)
+        button_disconnect.connect("clicked", self.signal_disconnected, button_connect)
+
+        self.hbox.pack_start(table, False)
+        table.attach(self.label, 0, 3, 0, 1)
+        table.attach(button_connect, 0, 1, 1, 2)
+        table.attach(button_disconnect, 1, 2, 1, 2)
+        table.attach(self.button_status, 2, 3, 1, 2)
+
+
+    def signal_connected(self, button_connect, button_disconnect):
+        self.handler_id = self.button_status.connect("clicked", self.signal_status)
+        self.label.set_text("Status Button connected with id of %s" % str(self.handler_id))
+        button_connect.set_sensitive(False)
+        button_disconnect.set_sensitive(True)
+
+    def signal_disconnected(self, button_disconnect, button_connect):
+        if self.button_status.handler_is_connected(self.handler_id):
+            self.button_status.disconnect(self.handler_id)
+            self.label.set_text("Status Button disconnected")
+            button_connect.set_sensitive(True)
+            button_disconnect.set_sensitive(False)
+
+    def signal_status(self, button_status):
+        print "Status Button connected with id of %s" % str(self.handler_id)
+
+    def signal_status(self, button_status):
+        print "Status Button connected with id of %s" % str(self.handler_id)
+
     def load_file(self, filename):
-        self.playbin.set_state(gst.STATE_NULL)
-        # self.other_button.set_image(self.PAUSE_IMAGE)
+        self.handler_id = self.play_button.connect("clicked", self.signal_status)
+        print "ID :", self.handler_id
+        print type(self)
+        # print vars(self)
+        print filename
+        # self.mname.set_image(self.PAUSE_IMAGE)
         if not self.is_playing:
-            # self.play_button.set_image(self.PAUSE_IMAGE)
+            self.playbin.set_state(gst.STATE_NULL)
+            self.play_button.set_image(self.PAUSE_IMAGE)
             self.is_playing = True
             self.playbin.set_property('uri', 'file:///' + filename)
 
@@ -187,7 +241,18 @@ class Engine(object):
 
             self.playbin.set_state(gst.STATE_PAUSED)
 
-    def on_playx(self, *args):
+    def signal_status(self, button_status):
+        print "Status Button connected with id of %s" % str(self.handler_id)
+
+    def on_playx(self, widget):
+        # print vars(self)
+        self.handler_id = self.play_button.connect("clicked", self.signal_status)
+        print "ID :", self.handler_id
+        print type(self)
+        # for pspec in widget.props:
+            # print pspec
+            # print widget.get_property(pspec.name)
+        name = gtk.Buildable.get_name(widget)
         print "on_playx"
         if not self.is_playing:
             print "playing"
@@ -198,6 +263,7 @@ class Engine(object):
             gobject.timeout_add(100, self.update_slider)
 
         else:
+            print "ID :", self.handler_id
             print "not playing"
             # self.play_button.set_image(self.PLAY_IMAGE)
             self.is_playing = False
