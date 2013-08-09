@@ -117,7 +117,7 @@ class GUI(object):
             # Engine().load_file(filename)
         # return
 
-    def the_other_wrapper(self, treeview, path, column):
+    def the_other_wrapper(self, treeview, path, button, *args):
         model = treeview.get_model()
         iter = model.get_iter(path)
         filename = os.path.join(self.dirname, model.get_value(iter, 0))
@@ -137,8 +137,12 @@ class GUI(object):
     def the_method(self, button, filename):
         print filename
         # print vars(self)
-
+        print self.playbin.get_property('uri')
+        print self.playbin.get_state()
+        print "------------------------"
         if not self.is_playing:
+            self.playbin.set_state(gst.STATE_READY)
+            print self.playbin.get_state()
             self.playbin.set_property('uri', 'file:///' + filename)
             self.play_button.set_image(self.PAUSE_IMAGE)
             self.is_playing = True
