@@ -97,7 +97,7 @@ class GUI(object):
         vbox.pack_start(self.button, False, False, 1)
         vbox.pack_start(self.treeview, False, False, 1)
 
-        self.treeview.connect('row-activated', self.the_other_wrapper)
+        self.treeview.connect('row-activated', self.the_other_wrapper, "plop")
         self.button.connect('clicked', self.the_method, "plop")
 
         self.window.add(vbox)
