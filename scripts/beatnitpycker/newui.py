@@ -166,12 +166,6 @@ class Engine(object):
         self.is_playing = False
 
     def load_file(self, filename):
-        self.playbin.set_state(gst.STATE_NULL)
-
-        # self.bus = self.playbin.get_bus()
-        # self.bus.add_signal_watch()
-
-        # self.bus.connect("message::eos", self.on_finish)
 
         self.playbin.set_property('uri', 'file:///' + filename)
         # self.playbin.set_state(gst.STATE_PLAYING)
@@ -193,7 +187,7 @@ class Engine(object):
             self.is_playing = True
 
             self.playbin.set_state(gst.STATE_PLAYING)
-            # gobject.timeout_add(100, self.update_slider)
+            gobject.timeout_add(100, self.update_slider)
 
         else:
             print "not playing"
