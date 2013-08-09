@@ -37,7 +37,7 @@ class Lister(object):
     column_names = ['Name', 'Size', 'Mode', 'Last Changed']
 
     def __init__(self, dname = None):
-        self.player = Engine()
+
         cell_data_funcs = (None, self.file_size, self.file_mode,
                            self.file_last_changed)
 
@@ -90,7 +90,7 @@ class Lister(object):
             new_model = self.make_list(filename)
             treeview.set_model(new_model)
         else:
-            self.player.load_file(filename)
+            Engine().load_file(filename)
         return
 
     def file_pixbuf(self, column, cell, model, iter):
@@ -139,7 +139,7 @@ class Engine(object):
     PLAY_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
     PAUSE_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
 
-    def __init__(self):
+    def __init__(self, filename = 'file:////home/px/scripts/beatnitpycker/preview.mp3'):
 
         self.play_button = gtk.Button()
         self.slider = gtk.HScale()
@@ -148,14 +148,15 @@ class Engine(object):
         self.hbox.pack_start(self.play_button, False)
         self.hbox.pack_start(self.slider, True, True)
 
+        self.vari = "plip"
         self.play_button.set_image(self.PLAY_IMAGE)
-        self.play_button.connect('clicked', self.on_play)
+        self.play_button.connect('clicked', self.on_playx)
 
         self.slider.set_range(0, 100)
         self.slider.set_increments(1, 10)
         self.slider.connect('value-changed', self.on_slider_change)
 
-        self.playbin = gst.element_factory_make('playbin2')
+        self.playbin = gst.element_factory_make('playbin')
         self.playbin.set_property('uri', 'file:////home/px/scripts/beatnitpycker/preview.mp3')
 
         self.bus = self.playbin.get_bus()
@@ -165,25 +166,32 @@ class Engine(object):
 
         self.is_playing = False
 
+
+        # gobject.timeout_add(100, self.plop)
+
     def load_file(self, filename):
+        self.playbin.set_state(gst.STATE_NULL)
+        # self.other_button.set_image(self.PAUSE_IMAGE)
+        if not self.is_playing:
+            # self.play_button.set_image(self.PAUSE_IMAGE)
+            self.is_playing = True
+            self.playbin.set_property('uri', 'file:///' + filename)
 
-        self.playbin.set_property('uri', 'file:///' + filename)
-        # self.playbin.set_state(gst.STATE_PLAYING)
-        gobject.timeout_add(100, self.update_slider)
-        print filename
-        self.on_playx(self)
+            self.playbin.set_state(gst.STATE_PLAYING)
+            gobject.timeout_add(100, self.update_slider)
 
-        self.slider.set_range(0, 100)
-        self.slider.set_increments(1, 10)
-        self.slider.connect('value-changed', self.on_slider_change)
+        else:
+            print "not playing"
+            # self.play_button.set_image(self.PLAY_IMAGE)
+            self.is_playing = False
 
-        self.is_playing = False
+            self.playbin.set_state(gst.STATE_PAUSED)
 
     def on_playx(self, *args):
         print "on_playx"
         if not self.is_playing:
             print "playing"
-            self.play_button.set_image(self.PAUSE_IMAGE)
+            # self.play_button.set_image(self.PAUSE_IMAGE)
             self.is_playing = True
 
             self.playbin.set_state(gst.STATE_PLAYING)
@@ -191,13 +199,14 @@ class Engine(object):
 
         else:
             print "not playing"
-            self.play_button.set_image(self.PLAY_IMAGE)
+            # self.play_button.set_image(self.PLAY_IMAGE)
             self.is_playing = False
 
-            self.playbin.set_state(gst.STATE_PAUSED)
+            self.playbin.set_state(gst.STATE_NULL)
 
     def on_finish(self, bus, message):
-        self.playbin.set_state(gst.STATE_PAUSED)
+        print "finished"
+        self.playbin.set_state(gst.STATE_NULL)
         self.play_button.set_image(self.PLAY_IMAGE)
         self.is_playing = False
         self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, 0)
@@ -218,6 +227,7 @@ class Engine(object):
             self.playbin.set_state(gst.STATE_PAUSED)
 
     def on_slider_change(self, slider):
+        print "zz"
         seek_time_secs = slider.get_value()
         self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH | gst.SEEK_FLAG_KEY_UNIT, seek_time_secs * gst.SECOND)
 
@@ -240,26 +250,13 @@ class Engine(object):
 
             self.slider.handler_unblock_by_func(self.on_slider_change)
 
-            print self.playbin.query_position(gst.FORMAT_TIME)
+            print "plop", nanosecs, duration_nanosecs
 
         except gst.QueryError:
             # pipeline must not be ready and does not know position
          pass
 
         return True # continue calling every 30 milliseconds
-
-class Player(object):
-
-    PLAY_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
-    PAUSE_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
-
-    def __init__(self):
-        # self.is_playing = False
-        filename = "/home/px/scripts/beatnitpycker/preview.mp3"
-        engine = Engine()
-
-        self.hbox = gtk.HBox()
-        self.hbox.pack_start(engine.hbox, True, True)
 
 
 class GUI(object):
@@ -268,6 +265,8 @@ class GUI(object):
     PAUSE_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PAUSE, gtk.ICON_SIZE_BUTTON)
 
     def delete_event(self, widget, event, data=None):
+        Engine().playbin.set_state(gst.STATE_NULL)
+        Engine().is_playing = False
         gtk.main_quit()
         return False
 
@@ -328,7 +327,7 @@ class GUI(object):
         self.scrolledwindow = gtk.ScrolledWindow()
         self.scrolledwindow.add(lister.treeview)
         vbox.pack_start(menubar, False)
-        vbox.pack_start (player.hbox, False, False, 1)
+        vbox.pack_start(Engine().hbox, False, False, 1)
         vbox.pack_start(self.scrolledwindow)
 
         self.window.add(vbox)

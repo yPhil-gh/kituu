@@ -51,19 +51,6 @@ class PlaybackInterface:
 
         self.main_window.show_all()
 
-    def on_finish(self, bus, message):
-        self.playbin.set_state(gst.STATE_PAUSED)
-        self.play_button.set_image(self.PLAY_IMAGE)
-        self.is_playing = False
-        self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, 0)
-        self.slider.set_value(0)
-
-    def on_destroy(self, window):
-        # NULL state allows the pipeline to release resources
-        self.playbin.set_state(gst.STATE_NULL)
-        self.is_playing = False
-        gtk.main_quit()
-
     def on_play(self, button):
         if not self.is_playing:
             self.play_button.set_image(self.PAUSE_IMAGE)
@@ -77,6 +64,19 @@ class PlaybackInterface:
             self.is_playing = False
 
             self.playbin.set_state(gst.STATE_PAUSED)
+
+    def on_finish(self, bus, message):
+        self.playbin.set_state(gst.STATE_PAUSED)
+        self.play_button.set_image(self.PLAY_IMAGE)
+        self.is_playing = False
+        self.playbin.seek_simple(gst.FORMAT_TIME, gst.SEEK_FLAG_FLUSH, 0)
+        self.slider.set_value(0)
+
+    def on_destroy(self, window):
+        # NULL state allows the pipeline to release resources
+        self.playbin.set_state(gst.STATE_NULL)
+        self.is_playing = False
+        gtk.main_quit()
 
     def on_slider_change(self, slider):
         seek_time_secs = slider.get_value()
