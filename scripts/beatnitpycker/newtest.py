@@ -128,11 +128,12 @@ class GUI(object):
         else:
             self.the_method(self, filename)
             # Engine().load_file(filename)
-        # return
-        self.the_method(self, filename)
 
     def the_method_wrapper(self, button, filename, *args):
         self.the_method(self, filename)
+
+    def loader(self, button, filename, *args):
+        print "filename is", filename
 
     def the_method(self, button, filename):
         print filename
