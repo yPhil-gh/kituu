@@ -63,8 +63,9 @@ LISP[nxhtml]="bzr branch lp:nxhtml"
 
 # Various repos (that go in $SCRIPTDIR)
 declare -A VARIOUS
-LISP[beatnitpicker]="git clone ${vc_prefix}xaccrocheur/beatnitpicker.git"
-LISP[leecher]="git clone ${vc_prefix}xaccrocheur/leecher.git"
+VARIOUS[beatnitpicker]="git clone ${vc_prefix}xaccrocheur/beatnitpicker.git"
+VARIOUS[leecher]="git clone ${vc_prefix}xaccrocheur/leecher.git"
+
 
 
 echo -e $SEP"Kituu! #################
