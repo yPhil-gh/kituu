@@ -61,6 +61,12 @@ LISP[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
 LISP[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
 LISP[nxhtml]="bzr branch lp:nxhtml"
 
+# Various repos (that go in $SCRIPTDIR)
+declare -A VARIOUS
+LISP[beatnitpicker]="git clone ${vc_prefix}xaccrocheur/beatnitpicker.git"
+LISP[leecher]="git clone ${vc_prefix}xaccrocheur/leecher.git"
+
+
 echo -e $SEP"Kituu! #################
 
 $message
@@ -150,8 +156,26 @@ else
 fi
 
 
-if [ ! -d "$LISPDIR" ] ; then mkdir -p $LISPDIR/ ; fi
+[[ ! -d "$SCRIPTDIR" ]] && mkdir -p $SCRIPTDIR
+echo -e $SEP"Various repositories"
+read -e -p "#### Stuff? [Y/n] " YN
+if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
+    for PROJECT in "${!VARIOUS[@]}" ; do
+        VCSYSTEM=${VARIOUS[$PROJECT]:0:3}
+        echo -e $SEP"$PROJECT ($SCRIPTDIR/$PROJECT/)"
+        if [ ! -e $SCRIPTDIR/$PROJECT/ ] ; then
+	          read -e -p "## Install $PROJECT in ($SCRIPTDIR/$PROJECT/)? [Y/n] " YN
+	          if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
+	              cd $SCRIPTDIR && ${VARIOUS[$PROJECT]}
+                      for i in *.py *.pl ; do ln -s $i ../ ; done
+	          fi
+        else
+	          cd $SCRIPTDIR/$PROJECT/ && $VCSYSTEM pull
+        fi
+    done
+fi
 
+if [ ! -d "$LISPDIR" ] ; then mkdir -p $LISPDIR/ ; fi
 echo -e $SEP"Various repositories"
 read -e -p "#### (e)Lisp stuff? [Y/n] " YN
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then

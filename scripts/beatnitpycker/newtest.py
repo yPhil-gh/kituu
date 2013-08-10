@@ -167,6 +167,7 @@ class GUI(object):
         return
 
     def the_other_wrapper(self, treeview, path, button, *args):
+        audioFormats = [ ".wav", ".mp3", ".ogg", ".flac" ]
         model = treeview.get_model()
         iter = model.get_iter(path)
         filename = os.path.join(self.dirname, model.get_value(iter, 0))
@@ -174,8 +175,10 @@ class GUI(object):
         if stat.S_ISDIR(filestat.st_mode):
             new_model = self.make_list(filename)
             treeview.set_model(new_model)
-        else:
+        elif filename.endswith(tuple(audioFormats)):
             self.the_method(self, filename)
+        else:
+            print "# Not an audio file"
 
     def the_method(self, button, filename):
         print filename
@@ -191,30 +194,31 @@ class GUI(object):
             self.is_playing = True
             self.playbin.set_state(gst.STATE_PLAYING)
             gobject.timeout_add(100, self.update_slider)
-            # Plotting
-            # if filename.endswith(".wav"):
-            rate, data = wavfile.read(open(filename, 'r'))
-            f = Figure(figsize=(4.5,0.5), linewidth=0.0, edgecolor='b', facecolor='r', dpi=100)
-            self.drawing_area = FigureCanvas(f)
-            a = f.add_subplot(111)
-            a.plot(range(len(data)),data)
-            a.axis('off')
+            if filename.endswith(".wav"):
+                # Plotting
+                # if filename.endswith(".wav"):
+                rate, data = wavfile.read(open(filename, 'r'))
+                f = Figure(figsize=(4.5,0.5), linewidth=0.0, edgecolor='b', facecolor='r', dpi=100)
+                self.drawing_area = FigureCanvas(f)
+                a = f.add_subplot(111)
+                a.plot(range(len(data)),data)
+                a.axis('off')
 
-            f.savefig("/home/px/tmp/f.png",
-                      edgecolor='r',
-                      facecolor='w',
-                      orientation='portrait',
-                      papertype=None,
-                      format=None,
-                      transparent=False,
-                      bbox_inches='tight',
-                      pad_inches=0.1,
-                      frameon=True
-            )
-            self.pimage.set_from_file("/home/px/tmp/f.png")
+                f.savefig("/home/px/tmp/f.png",
+                          edgecolor='r',
+                          facecolor='w',
+                          orientation='portrait',
+                          papertype=None,
+                          format=None,
+                          transparent=False,
+                          bbox_inches='tight',
+                          pad_inches=0.1,
+                          frameon=True
+                )
+                self.pimage.set_from_file("/home/px/tmp/f.png")
 
-            # self.pbox.pack_start(self.drawing_area)
-            print "plotted!"
+                # self.pbox.pack_start(self.drawing_area)
+                print "plotted!"
         else:
             self.play_button.set_image(self.PLAY_IMAGE)
             self.is_playing = False
