@@ -28,9 +28,9 @@ class GUI(object):
         self.play_button = gtk.Button()
         self.slider = gtk.HScale()
 
-        self.hbox = gtk.HBox()
-        self.hbox.pack_start(self.play_button, False)
-        self.hbox.pack_start(self.slider, True, True)
+        self.player_hbox = gtk.HBox()
+        self.player_hbox.pack_start(self.play_button, False)
+        self.player_hbox.pack_start(self.slider, True, True)
 
         self.play_button.set_image(self.PLAY_IMAGE)
         self.play_button.connect('clicked', self.the_method, "/home/px/scripts/beatnitpycker/preview.mp3")
@@ -77,13 +77,18 @@ class GUI(object):
 
         vbox = gtk.VBox()
 
+
+        # Plot image
+
+        self.plot_hbox = gtk.HBox()
         self.pimage = gtk.Image()
 
         self.button = gtk.Button() # THIS is the button to modify
         self.button.set_image(self.OPEN_IMAGE)
 
-        vbox.pack_start(self.pimage, True, True, 1)
-        vbox.pack_start(self.hbox, False, False, 1)
+        self.plot_hbox.pack_start(self.pimage, True, True, 1)
+        vbox.pack_start(self.plot_hbox, False, False, 1)
+        vbox.pack_start(self.player_hbox, False, False, 1)
         vbox.pack_start(self.button, False, False, 1)
         vbox.pack_start(self.treeview, False, False, 1)
 
