@@ -284,7 +284,7 @@
     (let ((latest (bookmark-get-bookmark bookmark)))
       (setq bookmark-alist (delq latest bookmark-alist))
       (add-to-list 'bookmark-alist latest))
-    (recenter-top-bottom 5)))
+    (recenter-top-bottom 15)))
 
 ;; Apparently obsolete (and broken : Stays in help-mode)
 
@@ -308,7 +308,9 @@
         (progn
           (push-mark)
           (call-interactively 'set-mark-command))
-      (call-interactively 'set-mark-command))))
+      (call-interactively 'set-mark-command)))
+  (recenter-top-bottom)
+)
 
 (global-set-key (kbd "<s-left>") 'px-push-mark-once-and-back)
 
