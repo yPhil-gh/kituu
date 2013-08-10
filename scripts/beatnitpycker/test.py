@@ -1,52 +1,75 @@
 #!/usr/bin/env python
-"""
-show how to add a matplotlib FigureCanvasGTK or FigureCanvasGTKAgg widget and
-a toolbar to a gtk.Window
-"""
+
+# ensure that PyGTK 2.0 is loaded - not an older version
+import pygtk
+pygtk.require('2.0')
+# import the GTK module
 import gtk
 
-from matplotlib.figure import Figure
-from numpy import arange, sin, pi
+class MyGUI:
 
-# uncomment to select /GTK/GTKAgg/GTKCairo
-#from matplotlib.backends.backend_gtk import FigureCanvasGTK as FigureCanvas
-from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
-#from matplotlib.backends.backend_gtkcairo import FigureCanvasGTKCairo as FigureCanvas
+  def __init__( self, title, filename): #@+
+    self.window = gtk.Window()
+    self.title = title
+    self.filename = filename
+    self.window.set_title( title)
+    self.window.set_size_request( -1, -1)
+    self.window.connect( "destroy", self.destroy)
+    self.create_interior()
+    self.window.show_all()
 
-# or NavigationToolbar for classic
-#from matplotlib.backends.backend_gtk import NavigationToolbar2GTK as NavigationToolbar
-from matplotlib.backends.backend_gtkagg import NavigationToolbar2GTKAgg as NavigationToolbar
+  def create_interior( self):
+    self.mainbox = gtk.ScrolledWindow()
+    self.mainbox.set_policy( gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+    self.window.add( self.mainbox)
+    # model creation
+    model = gtk.ListStore( str, str, int, str, float) #@+
+    f = file( self.filename, "r")
+    header = f.readline().strip().split("|") # header in first line
+    for line in f:
+      data = line.strip().split("|")
+      data[2] = int( data[2])
+      data[4] = float( data[4])
+      model.append( data)
+    f.close()
+    # the treeview
+    treeview = gtk.TreeView( model) #@+
+    # cell renderers - for individual data cells rendering
+    cells = [gtk.CellRendererText() for i in range( len( header))] #@+
+    # columns
+    cols = [gtk.TreeViewColumn( title) for title in header] #@+
+    for i,col in enumerate( cols):
+      treeview.append_column( col) #@+
+      col.pack_start( cells[i], expand=False) #@+
+      col.set_attributes( cells[i], text=i) #@+
+      col.set_sort_column_id( i) #@+
+    self.mainbox.add( treeview)
+    treeview.show()
+    treeview.connect( "row-activated", self.row_activated) #@+
+    # show the box
+    self.mainbox.set_size_request( 460, 400)
+    self.mainbox.show()
 
-# implement the default mpl key bindings
-from matplotlib.backend_bases import key_press_handler
+  def row_activated( self, tree, path, column):
+    model = tree.get_model() #@+
+    iter = model.get_iter( path) #@+
+    country = model.get_value( iter, 0) #@+
+    d = gtk.MessageDialog( parent=self.window,
+                           type=gtk.MESSAGE_INFO,
+                           flags=gtk.DIALOG_DESTROY_WITH_PARENT,
+                           buttons=gtk.BUTTONS_CLOSE,
+                           message_format="You selected currency of %s." % country
+                           )
+    result = d.run()
+    d.destroy()
 
-win = gtk.Window()
-win.connect("destroy", lambda x: gtk.main_quit())
-win.set_default_size(400,300)
-win.set_title("Embedding in GTK")
+  def main( self):
+    gtk.main()
 
-vbox = gtk.VBox()
-win.add(vbox)
-
-fig = Figure(figsize=(5,4), dpi=100)
-ax = fig.add_subplot(111)
-t = arange(0.0,3.0,0.01)
-s = sin(2*pi*t)
-
-ax.plot(t,s)
-
-
-canvas = FigureCanvas(fig)  # a gtk.DrawingArea
-vbox.pack_start(canvas)
-toolbar = NavigationToolbar(canvas, win)
-vbox.pack_start(toolbar, False, False)
+  def destroy( self, w):
+    gtk.main_quit()
 
 
-def on_key_event(event):
-    print('you pressed %s'%event.key)
-    key_press_handler(event, canvas, toolbar)
-
-canvas.mpl_connect('key_press_event', on_key_event)
-
-win.show_all()
-gtk.main()
+if __name__ == "__main__":
+  m = MyGUI( "TreeView example", "exchange.txt") #@+
+  m.main()
