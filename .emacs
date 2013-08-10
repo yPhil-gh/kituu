@@ -30,6 +30,7 @@
   (require 'ecb nil 'noerror)
   )
 
+
 (if (>= emacs-major-version 24)
     (progn
       (require 'mail-bug nil 'noerror)
@@ -47,6 +48,8 @@
 
 (when (require 'tabbar nil 'noerror)
   (tabbar-mode t))
+
+(autoload 'magit-status "magit" nil t)
 
 ;; (autoload 'notify "notify" "Notify TITLE, BODY.")
 

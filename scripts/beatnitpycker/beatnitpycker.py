@@ -311,14 +311,16 @@ class Nitpick:
                     rate, data = wavfile.read(open(filename, 'r'))
                     f = Figure(figsize=(4.5,1), linewidth=0.0, edgecolor='b', facecolor='r', dpi=100)
                     self.drawing_area = FigureCanvas(f)
-                    a = f.add_subplot(111)
+                    a = f.add_subplot(111, axisbg=(0.1843, 0.3098, 0.3098))
+                    # subplot(111, axisbg=(0.1843, 0.3098, 0.3098))
                     a.plot(range(len(data)),data)
                     a.axis('off')
 
-                    f.savefig("/home/px/tmp/f.png",
+                    f.savefig("/home/px/tmp/.f.png",
+                              dpi=None,
                               edgecolor='r',
                               facecolor='w',
-                              orientation='portrait',
+                              orientation='landscape',
                               papertype=None,
                               format=None,
                               transparent=False,
@@ -326,7 +328,15 @@ class Nitpick:
                               pad_inches=0.1,
                               frameon=True
                     )
-                    self.image.set_from_file("/home/px/tmp/f.png")
+
+                    # savefig('nicefig', 'pdf', 'jpeg', '-cmyk', '-c0.1', '-r250')
+
+# savefig(fname, dpi=None, facecolor='w', edgecolor='w',
+        # orientation='portrait', papertype=None, format=None,
+        # transparent=False, bbox_inches=None, pad_inches=0.1,
+        # frameon=None)
+
+                    self.image.set_from_file("/home/px/tmp/.f.png")
 
                 else:
                     self.image.set_from_pixbuf(None)
