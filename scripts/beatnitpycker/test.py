@@ -1,61 +1,52 @@
-#!/usr/bin/python
-
+#!/usr/bin/env python
+"""
+show how to add a matplotlib FigureCanvasGTK or FigureCanvasGTKAgg widget and
+a toolbar to a gtk.Window
+"""
 import gtk
 
-class GUI(object):
+from matplotlib.figure import Figure
+from numpy import arange, sin, pi
 
-    OPEN_IMAGE = gtk.image_new_from_stock(gtk.STOCK_ADD, gtk.ICON_SIZE_BUTTON)
-    CLOSED_IMAGE = gtk.image_new_from_stock(gtk.STOCK_REFRESH, gtk.ICON_SIZE_BUTTON)
-    toggled = True
+# uncomment to select /GTK/GTKAgg/GTKCairo
+#from matplotlib.backends.backend_gtk import FigureCanvasGTK as FigureCanvas
+from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
+#from matplotlib.backends.backend_gtkcairo import FigureCanvasGTKCairo as FigureCanvas
 
-    def __init__(self):
-        self.window = gtk.Window()
-        self.window.set_size_request(100, 150)
-        self.window.connect("delete_event", gtk.main_quit)
+# or NavigationToolbar for classic
+#from matplotlib.backends.backend_gtk import NavigationToolbar2GTK as NavigationToolbar
+from matplotlib.backends.backend_gtkagg import NavigationToolbar2GTKAgg as NavigationToolbar
 
-        vbox = gtk.VBox()
+# implement the default mpl key bindings
+from matplotlib.backend_bases import key_press_handler
 
-        self.button = gtk.Button() # THIS is the button to modify
-        self.button.set_image(self.OPEN_IMAGE)
+win = gtk.Window()
+win.connect("destroy", lambda x: gtk.main_quit())
+win.set_default_size(400,300)
+win.set_title("Embedding in GTK")
 
-        liststore = gtk.ListStore(str)
-        liststore.append(["foo"])
-        liststore.append(["bar"])
-        self.treeview = gtk.TreeView(liststore)
-        cell = gtk.CellRendererText()
-        col = gtk.TreeViewColumn("Column 1")
-        col.pack_start(cell, True)
-        col.set_attributes(cell,text=0)
-        self.treeview.append_column(col)
+vbox = gtk.VBox()
+win.add(vbox)
 
-        vbox.pack_start(self.button, False, False, 1)
-        vbox.pack_start(self.treeview, False, False, 1)
+fig = Figure(figsize=(5,4), dpi=100)
+ax = fig.add_subplot(111)
+t = arange(0.0,3.0,0.01)
+s = sin(2*pi*t)
 
-        self.treeview.connect('row-activated', self.the_method_wrapper, "plop")
-        self.button.connect('clicked', self.the_method, "plop")
-
-        self.window.add(vbox)
-        self.window.show_all()
-        return
-
-    def the_method_wrapper(self, button, *args):
-        self.the_method(self, "foo")
-
-    def the_method(self, button, filename):
-        print filename
-        print vars(self)
-
-        if self.toggled:
-            self.button.set_image(self.CLOSED_IMAGE)
-            self.toggled = False
-        else:
-            self.button.set_image(self.OPEN_IMAGE)
-            self.toggled = True
+ax.plot(t,s)
 
 
-def main():
-    gtk.main()
+canvas = FigureCanvas(fig)  # a gtk.DrawingArea
+vbox.pack_start(canvas)
+toolbar = NavigationToolbar(canvas, win)
+vbox.pack_start(toolbar, False, False)
 
-if __name__ == "__main__":
-    GUI()
-    main()
+
+def on_key_event(event):
+    print('you pressed %s'%event.key)
+    key_press_handler(event, canvas, toolbar)
+
+canvas.mpl_connect('key_press_event', on_key_event)
+
+win.show_all()
+gtk.main()
