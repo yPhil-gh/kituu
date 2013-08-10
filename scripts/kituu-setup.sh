@@ -65,8 +65,8 @@ LISP[nxhtml]="bzr branch lp:nxhtml"
 declare -A VARIOUS
 VARIOUS[beatnitpicker]="git clone ${vc_prefix}xaccrocheur/beatnitpicker.git"
 VARIOUS[leecher]="git clone ${vc_prefix}xaccrocheur/leecher.git"
-
-
+VARIOUS[leecher]="git clone ${vc_prefix}xaccrocheur/leecher.git"
+VARIOUS[git-sync]="git clone https://github.com/simonthum/git-sync"
 
 echo -e $SEP"Kituu! #################
 
@@ -131,31 +131,6 @@ if $debian; then
     fi
 fi
 
-# echo -e $SEP"leecher.pl (a script to auto-get .ext links from a given web page URL)"
-echo -e $SEP"Leecher!"
-if [ ! -e $SCRIPTDIR/leecher/leecher.pl ] ; then
-    read -e -p "## Install leeecher (https://github.com/xaccrocheur/leecher)?  ($SCRIPTDIR/leecher.pl) [Y/n] " YN
-    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-        cd $SCRIPTDIR && git clone ${vc_prefix}xaccrocheur/leecher.git
-        ln -sv $SCRIPTDIR/leecher/leecher.pl $SCRIPTDIR/
-    fi
-else
-cd $SCRIPTDIR/leecher/ && git pull
-fi
-
-
-# echo -e $SEP"leecher.pl (a script to auto-get .ext links from a given web page URL)"
-echo -e $SEP"Git-sync!"
-if [ ! -e $SCRIPTDIR/git-sync/git-sync ] ; then
-    read -e -p "## Install git-sync (https://github.com/simonthum/git-sync)? (in $SCRIPTDIR/git-sync) [Y/n] " YN
-    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-        cd $SCRIPTDIR && git clone ${vc_prefix}simonthum/git-sync.git
-        ln -sv $SCRIPTDIR/git-sync/git-sync $SCRIPTDIR/git-sync.sh
-    fi
-else
-    cd $SCRIPTDIR/git-sync/ && git pull
-fi
-
 
 [[ ! -d "$SCRIPTDIR" ]] && mkdir -p $SCRIPTDIR
 echo -e $SEP"Various repositories"
@@ -165,13 +140,17 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
         VCSYSTEM=${VARIOUS[$PROJECT]:0:3}
         echo -e $SEP"$PROJECT ($SCRIPTDIR/$PROJECT/)"
         if [ ! -e $SCRIPTDIR/$PROJECT/ ] ; then
-	          read -e -p "## Install $PROJECT in ($SCRIPTDIR/$PROJECT/)? [Y/n] " YN
-	          if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-	              cd $SCRIPTDIR && ${VARIOUS[$PROJECT]}
-                      for i in *.py *.pl ; do ln -s $i ../ ; done
-	          fi
+	    read -e -p "## Install $PROJECT in ($SCRIPTDIR/$PROJECT/)? [Y/n] " YN
+	    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
+	        cd $SCRIPTDIR && ${VARIOUS[$PROJECT]}
+                # for i in *.py *.pl ; do `ln -vs "$i" ../` ; done
+                cd $PROJECT && pwd
+                for i in *.py *.pl ; do
+                    [[ -e $i ]] && ln -sv $SCRIPTDIR/$PROJECT/$i $SCRIPTDIR/$i
+                done
+	    fi
         else
-	          cd $SCRIPTDIR/$PROJECT/ && $VCSYSTEM pull
+	    cd $SCRIPTDIR/$PROJECT/ && $VCSYSTEM pull
         fi
     done
 fi
