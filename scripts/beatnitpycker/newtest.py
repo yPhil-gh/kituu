@@ -7,6 +7,27 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
 import scipy.io.wavfile as wavfile
 
+
+
+interface = """
+<ui>
+    <menubar name="MenuBar">
+        <menu action="File">
+            <menuitem action="New"/>
+            <menuitem action="Open"/>
+            <menuitem action="Save"/>
+            <menuitem action="Quit"/>
+        </menu>
+        <menu action="Edit">
+            <menuitem action="Preferences"/>
+        </menu>
+        <menu action="Help">
+            <menuitem action="About"/>
+        </menu>
+    </menubar>
+</ui>
+"""
+
 class GUI(object):
 
     PLAY_IMAGE = gtk.image_new_from_stock(gtk.STOCK_MEDIA_PLAY, gtk.ICON_SIZE_BUTTON)
@@ -17,6 +38,27 @@ class GUI(object):
     toggled = True
 
     column_names = ['Name', 'Size', 'Mode', 'Last Changed']
+
+    def about_box(self, widget):
+        about = gtk.AboutDialog()
+        about.set_program_name("BeatNitPycker")
+        about.set_version("0.1")
+        about.set_copyright("(c) Philippe \"xaccrocheur\" Coatmeur")
+        about.set_comments("Simple sound sample auditor")
+        about.set_website("https://github.com/xaccrocheur")
+        about.set_logo(gtk.icon_theme_get_default().load_icon("gstreamer-properties", 128, 0))
+
+        about.set_license("BeatNitPycker is free software; you can redistribute it and/or modify "
+                                  "it under the terms of the GNU General Public License as published by "
+                                  "the Free Software Foundation, version 2.\n\n"
+                                  "This program is distributed in the hope that it will be useful, "
+                                  "GNU General Public License for more details.\n\n"
+                                  "You should have received a copy of the GNU General Public License "
+                                  "along with this program; if not, write to the Free Software "
+                                  "Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA")
+        about.set_wrap_license(True);
+        about.run()
+        about.destroy()
 
     def __init__(self, dname = None):
         self.window = gtk.Window()
@@ -94,6 +136,31 @@ class GUI(object):
 
         self.treeview.connect('row-activated', self.the_other_wrapper, "plop")
         self.button.connect('clicked', self.the_method, "plop")
+
+
+        uimanager = gtk.UIManager()
+        accelgroup = uimanager.get_accel_group()
+        self.window.add_accel_group(accelgroup)
+
+        self.actiongroup = gtk.ActionGroup("uimanager")
+
+        self.actiongroup.add_actions([
+            ("New", gtk.STOCK_NEW, "_New", None, "Create a New Document"),
+            ("Open", gtk.STOCK_OPEN, "_Open", None, "Open an Existing Document"),
+            ("Save", gtk.STOCK_SAVE, "_Save", None, "Save the Current Document"),
+            ("Quit", gtk.STOCK_QUIT, "_Quit", None, "Quit the Application", lambda w: gtk.main_quit()),
+            ("File", None, "_File"),
+            ("Preferences", gtk.STOCK_PREFERENCES, "_Preferences", None, "Edit the Preferences"),
+            ("Edit", None, "_Edit"),
+            ("About", gtk.STOCK_ABOUT, "_About", None, "yow", self.about_box),
+            ("Help", None, "_Help")
+        ])
+
+        uimanager.insert_action_group(self.actiongroup, 0)
+        uimanager.add_ui_from_string(interface)
+
+        menubar = uimanager.get_widget("/MenuBar")
+        vbox.pack_start(menubar, False)
 
         self.window.add(vbox)
         self.window.show_all()
