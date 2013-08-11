@@ -17,7 +17,6 @@ import scipy.io.wavfile as wavfile
 
 pygame.init()
 
-
 interface = """
 <ui>
     <menubar name="MenuBar">

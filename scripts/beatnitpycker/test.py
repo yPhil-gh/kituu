@@ -1,33 +1,23 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
-# ZetCode PyGTK tutorial
-#
-# This program shows various signals
-# of a button widget
-# It emits a button-release-event which
-# triggers a released singal
-#
-# author: jan bodnar
-# website: zetcode.com
-# last edited: February 2009
 
-from scipy.io.wavfile import read,write
-from pylab import plot,show,subplot,specgram
+"""Generate a Spectrogram image for a given audio sample.
 
-# Open the Homer Simpson voice: "Ummm, Crumbled up cookie things."
-# from http://www.thesoundarchive.com/simpsons/homer/mcrumble.wav
-rate,data = read('/home/px/mcrumble.wav') # reading
+Compatible with several audio formats: wav, flac, mp3, etc.
+Requires: https://code.google.com/p/timeside/
 
-subplot(411, axisbg=(0.1843, 0.3098, 0.3098))
-# subplot(411)
-plot(range(len(data)),data)
-subplot(412)
-# NFFT is the number of data points used in each block for the FFT
-# and noverlap is the number of points of overlap between blocks
-specgram(data, NFFT=128, noverlap=0) # small window
-subplot(413)
-specgram(data, NFFT=512, noverlap=0)
-subplot(414)
-specgram(data, NFFT=1024, noverlap=0) # big window
+A spectrogram, or sonogram, is a visual representation of the spectrum
+of frequencies in a sound.  Horizontal axis represents time, Vertical axis
+represents frequency, and color represents amplitude.
+"""
 
-show()
+
+import timeside
+
+
+audio_file = '/home/px/gare_du_nord-catchlak.wav'
+
+decoder = timeside.decoder.FileDecoder(audio_file)
+grapher = timeside.grapher.Spectrogram(width=1920, height=1080)
+(decoder | grapher).run()
+grapher.render('spectrogram.png')
