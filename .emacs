@@ -845,7 +845,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 (global-set-key (kbd "<s-left>") (kbd "C-u C-SPC"))
 
-
 ;; THIS NEXT ONE BROKE HAVOC!!
 ;; (global-set-key (kbd "C-d") nil) ; I kept deleting stuff
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
