@@ -411,11 +411,10 @@ if __name__ == '__main__':
     win.set_default_size(400,300)
     win.set_title("Embedding in GTK")
 
+    data, duration, channels, samplerate = read_as_array("/home/px/Music/a0/Azer0-Counternatures-01-Takaddum.ogg")
+    # print ("duration: "+str(duration)+" seconds\nchannels: "+str(channels)+"\nsamplerate: "+str(samplerate))
 
-    data, duration, channels, samplerate = read_as_array("/home/px/gare_du_nord-catchlak.mp3.wav")
-    print ("duration: "+str(duration)+" seconds\nchannels: "+str(channels)+"\nsamplerate: "+str(samplerate))
-
-    print "data :", data
+    # print "data :", data
 
     if channels == 1:
         print len(data)
