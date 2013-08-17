@@ -412,11 +412,10 @@ if __name__ == '__main__':
     win.set_title("Embedding in GTK")
 
 
-    data, duration, channels, samplerate = read_as_array("/home/px/.kituu/scripts/beatnitpycker/gare_du_nord-catchlak.wav")
+    data, duration, channels, samplerate = read_as_array("/home/px/gare_du_nord-catchlak.mp3.wav")
     print ("duration: "+str(duration)+" seconds\nchannels: "+str(channels)+"\nsamplerate: "+str(samplerate))
 
     print "data :", data
-
 
     if channels == 1:
         print len(data)
