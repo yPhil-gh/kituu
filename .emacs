@@ -303,19 +303,19 @@
   (interactive)
   (bookmark-jump (second bookmark-alist)))
 
-(defun px-push-mark-once-and-back ()
-  "Mark current point (`push-mark') and `set-mark-command' (C-u C-SPC) away."
-  (interactive)
-  (let ((current-prefix-arg '(4))) ; C-u
-    (if (not (eq last-command 'px-push-mark-once-and-back))
-        (progn
-          (push-mark)
-          (call-interactively 'set-mark-command))
-      (call-interactively 'set-mark-command)))
-  (recenter-top-bottom)
-)
+;; (defun px-push-mark-once-and-back ()
+;;   "Mark current point (`push-mark') and `set-mark-command' (C-u C-SPC) away."
+;;   (interactive)
+;;   (let ((current-prefix-arg '(4))) ; C-u
+;;     (if (not (eq last-command 'px-push-mark-once-and-back))
+;;         (progn
+;;           (push-mark)
+;;           (call-interactively 'set-mark-command))
+;;       (call-interactively 'set-mark-command)))
+;;   (recenter-top-bottom)
+;; )
 
-(global-set-key (kbd "<s-left>") 'px-push-mark-once-and-back)
+;; (global-set-key (kbd "<s-left>") 'px-push-mark-once-and-back)
 
 (defun px-match-paren (arg)
   "Go to the matching paren if on a paren; otherwise insert <key>."
@@ -842,6 +842,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-s-m") 'apply-macro-to-region-lines)
 (global-set-key (kbd "<s-up>") (kbd "C-x C-SPC")) ; global mark ring
 ;; (global-set-key (kbd "<s-down>") (kbd "C-- C-SPC"))
+
+(global-set-key (kbd "<s-left>") (kbd "C-u C-SPC"))
 
 
 ;; THIS NEXT ONE BROKE HAVOC!!
