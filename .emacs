@@ -30,6 +30,9 @@
   (require 'ecb nil 'noerror)
   )
 
+(unless (package-installed-p 'clojure-mode)
+  (package-refresh-contents)
+  (package-install 'clojure-mode))
 
 (if (>= emacs-major-version 24)
     (progn

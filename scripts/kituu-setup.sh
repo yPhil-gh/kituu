@@ -65,8 +65,8 @@ LISP[nxhtml]="bzr branch lp:nxhtml"
 declare -A VARIOUS
 VARIOUS[beatnitpicker]="git clone ${vc_prefix}xaccrocheur/beatnitpicker.git"
 VARIOUS[leecher]="git clone ${vc_prefix}xaccrocheur/leecher.git"
-VARIOUS[leecher]="git clone ${vc_prefix}xaccrocheur/leecher.git"
-VARIOUS[git-sync]="git clone https://github.com/simonthum/git-sync"
+VARIOUS[regard]="git clone ${vc_prefix}xaccrocheur/regard.git"
+# VARIOUS[git-sync]="git clone https://github.com/simonthum/git-sync"
 
 echo -e $SEP"Kituu! #################
 
