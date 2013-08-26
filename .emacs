@@ -2,16 +2,11 @@
 ;; Keep it under 1k lines ;p
 ;; Use C-h x to read about what this .emacs can do for you (quite a bit)
 
-;; JIRA! ______________________________________________________________________
-
-(setq jiralib-url "http://jira.sbcmaroc.com")
 
 ;; Init! ______________________________________________________________________
 
 (let ((default-directory "~/.emacs.d/lisp/"))
   (normal-top-level-add-subdirs-to-load-path))
-
-;; (add-to-list 'recentf-exclude "emacs.d\\/session")
 
 ;; External libs
 (eval-and-compile
@@ -19,59 +14,44 @@
   (require 'cl nil 'noerror)          ; Built-in : Common Lisp lib
   (require 'edmacro nil 'noerror)     ; Built-in : Macro bits (Required by iswitchb)
   (require 'package nil 'noerror)
-  ;; (require 'haml-mode nil 'noerror)
-  ;; (require 'imap nil 'noerror)
-
-  ;; (require 'mail-bug nil t)
-  ;; (require 'imapua nil 'noerror)
-  ;; (require 'tabkey2 nil 'noerror)
-  ;; (require 'emacs-imap)
-  ;; (require 'w3m-load)
-  (require 'ecb nil 'noerror)
-  )
-
-(unless (package-installed-p 'clojure-mode)
-  (package-refresh-contents)
-  (package-install 'clojure-mode))
+  (require 'ecb nil 'noerror))
 
 (if (>= emacs-major-version 24)
     (progn
       (require 'mail-bug nil 'noerror)
       (require 'cedet)
-      (add-to-list 'package-archives
-                   '("melpa" . "http://melpa.milkbox.net/packages/") t)
-      (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-      ;; (add-to-list 'package-archives
-      ;;              '("marmalade" . "http://marmalade-repo.org/packages/"))
-      (tool-bar-mode -1)
-      ))
-
-(when (require 'rainbow-delimiters nil 'noerror)
-  (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode))
+      (tool-bar-mode -1)))
 
 (when (require 'tabbar nil 'noerror)
   (tabbar-mode t))
 
+;; (defvar my-packages '(starter-kit
+;;                       starter-kit-lisp
+;;                       starter-kit-bindings
+;;                       starter-kit-eshell
+;;                       clojure-mode
+;;                       clojure-test-mode
+;;                       nrepl))
+
+;; (dolist (p my-packages)
+;;   (when (not (package-installed-p p))
+;;     (package-install p)))
+
+(package-initialize)
+(mapc
+ (lambda (package)
+   (unless (package-installed-p package)
+     (progn (message "installing %s" package)
+            (package-install package))))
+ '(magit clojure-mode))
+
 (autoload 'magit-status "magit" nil t)
 
-;; (autoload 'notify "notify" "Notify TITLE, BODY.")
 
-;; (mail-bug-init)
+;; JIRA! ______________________________________________________________________
 
-;; (setq stack-trace-on-error t)
+(setq jiralib-url "http://jira.sbcmaroc.com")
 
-;; (autoload 'notmuch "notmuch" "notmuch mail" t)
-
-;; Auto-BCC
-;; (defadvice message-mail (after mbug-message-mail-bcc)
-;;   "BCC to sender."
-;;   (message-replace-header "BCC" user-mail-address "AFTER" "FORCE")
-;;   (message-replace-header "Reply-To" "Philippe Coatmeur-Marin <philcm@gnu.org>" "AFTER" "FORCE")
-;;   (message "advised")
-;;   (message-sort-headers)
-;;   (set-buffer-modified-p nil)
-;;   ;; (kill-line)
-;;   )
 
 ;; ORG! ______________________________________________________________________
 
@@ -1146,6 +1126,7 @@ href=\"#\">↑ Page</a> %a (%e) - %v</p>"))))
  '(org-log-done (quote time))
  '(org-support-shift-select (quote always))
  '(org-use-sub-superscripts nil)
+ '(package-archives (quote (("gnu" . "http://elpa.gnu.org/packages/") ("melpa" . "http://melpa.milkbox.net/packages/") ("org" . "http://orgmode.org/elpa/"))))
  '(recenter-positions (quote (middle top bottom)))
  '(recenter-redisplay nil)
  '(recentf-auto-cleanup (quote never))
@@ -1205,7 +1186,3 @@ href=\"#\">↑ Page</a> %a (%e) - %v</p>"))))
   "default font size"
   (interactive)
   (set-face-attribute 'default nil :height 105))
-
-;; (set-face-attribute 'default nil :width 'normal)
-
-;; (setq linum-format "%d")
