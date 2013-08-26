@@ -25,23 +25,17 @@
 (when (require 'tabbar nil 'noerror)
   (tabbar-mode t))
 
-;; (defvar my-packages '(starter-kit
-;;                       starter-kit-lisp
-;;                       starter-kit-bindings
-;;                       starter-kit-eshell
-;;                       clojure-mode
-;;                       clojure-test-mode
-;;                       nrepl))
+;; Packages! ____________________________________________________________________
 
-;; (dolist (p my-packages)
-;;   (when (not (package-installed-p p))
-;;     (package-install p)))
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 (package-initialize)
 (mapc
  (lambda (package)
    (unless (package-installed-p package)
      (progn (message "installing %s" package)
+            (package-refresh-contents)
             (package-install package))))
  '(magit clojure-mode))
 
@@ -1126,7 +1120,6 @@ href=\"#\">↑ Page</a> %a (%e) - %v</p>"))))
  '(org-log-done (quote time))
  '(org-support-shift-select (quote always))
  '(org-use-sub-superscripts nil)
- '(package-archives (quote (("gnu" . "http://elpa.gnu.org/packages/") ("melpa" . "http://melpa.milkbox.net/packages/") ("org" . "http://orgmode.org/elpa/"))))
  '(recenter-positions (quote (middle top bottom)))
  '(recenter-redisplay nil)
  '(recentf-auto-cleanup (quote never))
