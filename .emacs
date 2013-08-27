@@ -26,6 +26,8 @@
   (tabbar-mode t))
 
 ;; Packages! ____________________________________________________________________
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/"))
@@ -37,7 +39,7 @@
      (progn (message "installing %s" package)
             (package-refresh-contents)
             (package-install package))))
- '(magit clojure-mode markdown-mode))
+ '(magit clojure-mode markdown-mode yasnippet paredit paredit-menu))
 
 (autoload 'magit-status "magit" nil t)
 
@@ -691,7 +693,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 ;; (when (functionp 'savehist-mode) (savehist-mode 1))
 ;; (semantic-mode t)
 ;; (which-function-mode t)
-
+(yas-global-mode 1)
 (add-to-list 'auto-mode-alist '("\\.haml\\'" . haml-mode))
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.list\\'" . conf-mode))
@@ -831,8 +833,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-z") 'undo-tree-undo)
 (global-set-key (kbd "C-S-z") 'undo-tree-redo)
 
-(global-set-key (kbd "C-<tab>") 'tabbar-forward)
-(global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
+;; (global-set-key (kbd "C-<tab>") 'tabbar-forward)
+;; (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
 
 ;; (define-key org-mode-map (kbd "C-<tab>") 'tabbar-forward)
 ;; (define-key org-mode-map (kbd "C-S-<tab>") 'tabbar-backward)
