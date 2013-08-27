@@ -18,7 +18,7 @@
 
 (if (>= emacs-major-version 24)
     (progn
-      (require 'mail-bug nil 'noerror)
+      ;; (require 'mail-bug nil 'noerror)
       (require 'cedet)
       (tool-bar-mode -1)))
 
@@ -37,7 +37,7 @@
      (progn (message "installing %s" package)
             (package-refresh-contents)
             (package-install package))))
- '(magit clojure-mode))
+ '(magit clojure-mode markdown-mode))
 
 (autoload 'magit-status "magit" nil t)
 
