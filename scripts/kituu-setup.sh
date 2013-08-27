@@ -61,6 +61,7 @@ LISP[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
 LISP[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
 LISP[nxhtml]="bzr branch lp:nxhtml"
 
+
 # Various repos (that go in $SCRIPTDIR)
 declare -A VARIOUS
 VARIOUS[beatnitpicker]="git clone ${vc_prefix}xaccrocheur/beatnitpicker.git"
