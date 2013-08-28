@@ -126,6 +126,11 @@ px-websearch () {
     firefox "https://duckduckgo.com/?q=$*"
 }
 
+function google () {
+    u=`perl -MURI::Escape -wle 'print "http://google.com/search?q=". uri_escape(join " ",  @ARGV)' $@`
+    links $u
+}
+
 px-find-this-and-do-that () {
     find . -name $1 -exec $2 '{}' \;
 }
