@@ -20,18 +20,18 @@ boot time.
 
 *** Features
 
--Install and maintain the things I (and you too I guess) need on every machine I install :
-  -Binary packages (debian - & friends - only, sorry. I mean of course I can detect your distro - in the dark - but every single one has its own package naming scheme, what are you gonna do?)
-  -Various scripts from Version Controlled repositories
-  -Mozilla (Firefox, Thunderbird, ABrowser, whatever) add-ons
--Manage multiple VC systems
-  -GIT
-  -SVN
-  -BZR
-  -CVS
-  -Anything that's three-letter named :)
--Allow editing of the files as well as deployment : It's a big deal and it's the whole point of the thing
--Setup a home dir the way I'm used to
+- Install and maintain the things I (and you too I guess) need on every machine I install :
+  - Binary packages (debian - & friends - only, sorry. I mean of course I can detect your distro - in the dark - but every single one has its own package naming scheme, what are you gonna do?)
+  - Various scripts from Version Controlled repositories
+  - Mozilla (Firefox, Thunderbird, ABrowser, whatever) add-ons
+- Manage multiple VC systems
+  - GIT
+  - SVN
+  - BZR
+  - CVS
+  - Anything that's three-letter named :)
+- Allow editing of the files as well as deployment : It's a big deal and it's the whole point of the thing
+- Setup a home dir the way I'm used to
 
 *** Installation
     -cd ~/
