@@ -5,11 +5,13 @@
 What do one need on a given computer ? Dotfiles ("hidden"
 configuration files in your $HOME dir, names start with a dot, hence
 the name. It's a big deal. GNU/Linux works like this), a selection of
-packages depending on what I intend to do with that rig, and
+packages depending on what I intend to do with that rig. And
 emacs. AFAIC, that's it. And there's only so many times a guy can type
 "install this", "install that", "mkdir ~/tmp", and many bits that get
-painful to do and re-do over time. So on all my machines, I run this
-script (even my phone) basically at boot time.
+painful to do and re-do over time, before doing something about it.
+
+So on all my machines, I run this script (heck, even my phone) basically at
+boot time.
 
 *NOTA BENE* You can "preview" the script by answering "no" to every
  question, and then get a taste of what would be going on without
