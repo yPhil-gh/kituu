@@ -10,7 +10,7 @@ emacs. AFAIC, that's it. And there's only so many times a guy can type
 "install this", "install that", "mkdir ~/tmp", and many bits that get
 painful to do and re-do over time, before doing something about it.
 
-So on all my machines, I run this script (heck, even my phone) basically at
+So on *all* my machines, I run this script (heck, even my phone) basically at
 boot time.
 
 *NOTA BENE* You can "preview" the script by answering "no" to every
