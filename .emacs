@@ -7,6 +7,8 @@
 (let ((default-directory "~/.emacs.d/lisp/"))
   (normal-top-level-add-subdirs-to-load-path))
 
+(make-directory "~/.emacs.d/lisp/" t)
+
 ;; External libs
 (eval-and-compile
   (require 'undo-tree nil 'noerror)   ; Visualize undo (and allow sane redo)
