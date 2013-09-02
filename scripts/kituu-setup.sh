@@ -23,6 +23,8 @@ fi
 # Packages
 declare -A pack
 pack[dev_tools]="build-essential texinfo libtool"
+pack[dev_clojure]="leiningen openjdk-7-jre"
+pack[dev_python]="python-pip python-scipy"
 pack[base_utils]="unison baobab gparted skype virtualbox"
 pack[view&players]="smplayer"
 pack[image_tools]="gimp inkscape blender ffmpeg"
@@ -32,7 +34,7 @@ pack[emacs24_stable]="emacs24 emacs24-el emacs24-common-non-dfsg aspell-fr"
 pack[emacs24_snapshot]="snapshot-el emacs-snapshot-gtk emacs-snapshot aspell-fr"
 pack[calf_plugins_git_tools]="libtool autoconf libexpat1-dev libfftw3-dev libglib2.0-dev libfluidsynth-dev jackd1 lv2core libglade2-dev gtk2-engines-pixbuf"
 
-BASICS="aptitude python python-pip zsh vim byobu apt-file curl wget htop bc locate openssh-server sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap xclip sox network-manager-openvpn openjdk-7-jre icedtea-7-plugin p7zip-full magit python-scipy leiningen links"
+BASICS="aptitude python zsh vim byobu apt-file curl wget htop bc locate openssh-common sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap xclip sox network-manager-openvpn icedtea-7-plugin p7zip-full magit links"
 
 # MOZilla addons
 MOZURL="https://addons.mozilla.org/firefox/downloads/latest"
