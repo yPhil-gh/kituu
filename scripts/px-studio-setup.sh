@@ -23,6 +23,8 @@ ppa:kxstudio-team/music
 ppa:kxstudio-team/kernel"
 
 declare -A SOURCE_PACKS
+
+SOURCE_PACKS[02-pydaw]="git clone git://git.code.sf.net/p/libmodsynth/code"
 SOURCE_PACKS[02-triceratops]="git clone git://git.code.sf.net/p/triceratops/code"
 SOURCE_PACKS[02-drumkv1]="svn co http://svn.code.sf.net/p/drumkv1/code/trunk"
 SOURCE_PACKS[02-samplv1]="svn co http://svn.code.sf.net/p/samplv1/code/trunk"
