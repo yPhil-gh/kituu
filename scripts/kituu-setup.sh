@@ -98,7 +98,7 @@ fi
 
 if $debian; then
     echo -e $SEP"Basic binary packages"
-    read -e -p "#### Install basic packages? [Y/n] " YN
+    read -e -p "#### Install basic packages ($BASICS) ? [Y/n] " YN
 
     if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
         sudo apt-get install $BASICS
