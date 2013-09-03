@@ -34,7 +34,7 @@ pack[emacs24_stable]="emacs24 emacs24-el emacs24-common-non-dfsg aspell-fr"
 pack[emacs24_snapshot]="snapshot-el emacs-snapshot-gtk emacs-snapshot aspell-fr"
 pack[calf_plugins_git_tools]="libtool autoconf libexpat1-dev libfftw3-dev libglib2.0-dev libfluidsynth-dev jackd1 lv2core libglade2-dev gtk2-engines-pixbuf"
 
-BASICS="python zsh vim byobu apt-file curl wget htop bc locate sshfs bzr git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap sox p7zip-full magit links"
+BASICS="python zsh vim byobu apt-file curl wget htop bc locate sshfs git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap sox p7zip-full magit links"
 
 # icedtea-7-plugin
 
@@ -64,7 +64,6 @@ LISP[haml-mode]="git clone https://github.com/nex3/haml-mode.git"
 LISP[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
 LISP[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
 # LISP[nxhtml]="bzr branch lp:nxhtml"
-
 
 # Various repos (that go in $SCRIPTDIR)
 declare -A VARIOUS
