@@ -102,6 +102,7 @@
     ))
 (add-hook 'server-switch-hook 'ff/raise-frame-and-give-focus)
 
+
 (defun ido-goto-symbol (&optional symbol-list)
   "Refresh imenu and jump to a place in the buffer using Ido."
   (interactive)
