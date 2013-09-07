@@ -55,8 +55,7 @@
 
 ;; (require 'org-publish)
 (setq org-publish-project-alist
-      '(
-        ("mensup" :components ("org-notes" "org-static"))
+      '(("mensup" :components ("org-notes" "org-static"))
         ("org-notes"
          :base-directory "~/Documents/svnmen/"
          :base-extension "org"
@@ -73,9 +72,7 @@
          :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
          :publishing-directory "~/Documents/svnmen/"
          :recursive t
-         :publishing-function org-publish-attachment
-         ))
-      )
+         :publishing-function org-publish-attachment)))
 
 ;; (setq px-org-file (concat org-directory "/orgx.org"))
 
@@ -184,31 +181,6 @@
           (lambda ()
             (font-lock-add-keywords nil
                                     '(("\\<\\(FIXME\\|HACK\\|BUG\\|pX\\):" 1 font-lock-warning-face t)))))
-
-
-;; NxHTML! _________________________________________________________________
-
-;; (if (and
-;;      (file-exists-p "~/.emacs.d/lisp/nxhtml/autostart.el")
-;;      (> emacs-major-version 23))
-;;     (progn
-;;       (load "~/.emacs.d/lisp/nxhtml/autostart.el")
-;;       (eval-after-load "mumamo"
-;;         '(setq mumamo-per-buffer-local-vars
-;;                (delq 'buffer-file-name mumamo-per-buffer-local-vars))))
-;;   (progn
-;;     (require 'php-mode nil t)
-;;     (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
-;;     (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))))
-
-;; ;; Workaround the annoying warnings:
-;; ;; Warning (mumamo-per-buffer-local-vars):
-;; ;; Already 'permanent-local t: buffer-file-name
-;; (when (and (equal emacs-major-version 24)
-;;            (equal emacs-minor-version 2))
-;;   (eval-after-load "mumamo"
-;;     '(setq mumamo-per-buffer-local-vars
-;;            (delq 'buffer-file-name mumamo-per-buffer-local-vars))))
 
 
 ;; Funcs! _________________________________________________________________
