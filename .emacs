@@ -154,44 +154,6 @@
 
 (global-set-key (kbd "M-i") 'ido-goto-symbol)
 
-;; (setq browse-url-browser-function 'w3m-browse-url)
-;; (autoload 'w3m-browse-url "w3m" "Ask a WWW browser to show a URL." t)
-;; ;; optional keyboard short-cut
-;; (global-set-key "\C-xm" 'browse-url-at-point)
-
-;; (setq gnus-mime-display-multipart-related-as-mixed nil)
-
-
-;; (defun tf-toggle-tab-width-setting ()
-;;   "Toggle setting tab widths between 1 and 2"
-;;   (interactive)
-;;   (setq tab-width (if (= tab-width 2) 1 2))
-;;   (redraw-display))
-
-;; (global-set-key (kbd "<f8>") 'tf-toggle-tab-width-setting)
-
-;; (defun indent-or-expand (arg)
-;;   "Either indent according to mode, or expand the word preceding
-;; point."
-;;   (interactive "*P")
-;;   (if (and
-;;        (or (bobp) (= ?w (char-syntax (char-before))))
-;;        (or (eobp) (not (= ?w (char-syntax (char-after))))))
-;;       (dabbrev-expand arg)
-;;     (indent-for-tab-command)))
-
-;; (defun px-tab-fix ()
-;;   (local-set-key [tab] 'indent-or-expand))
-
-;; (defun px-tab-width-fix ()
-;;   (setq tab-width 1))
-
-;; (add-hook 'emacs-lisp-mode-hook 'px-tab-width-fix)
-
-;; (add-hook 'c-mode-hook          'px-tab-fix)
-;; (add-hook 'sh-mode-hook         'px-tab-fix)
-;; (add-hook 'emacs-lisp-mode-hook 'px-tab-fix)
-
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
 (defvar show-paren-delay)
@@ -443,17 +405,14 @@ This dates from old times, before VC, I'm keeping it out of pure nostalgy."
                      (insert leftSign)
                      (goto-char st)
                      (forward-char 1)
-                     (insert rightSign)
-                     )
+                     (insert rightSign))
             (progn (message "end st: %s ed: %s" st ed)
                    (insert rightSign)
                    (goto-char st)
                    (insert leftSign)
-                   (goto-char (+ 1 ed))
-                   ))
-          )
+                   (goto-char (+ 1 ed)))))
         (if (> st ed)
-              (goto-char (+ 2 st))
+            (goto-char (+ 2 st))
           (goto-char (+ 2 ed))))
     (progn
       (insert leftSign rightSign)
