@@ -8,6 +8,7 @@
   (normal-top-level-add-subdirs-to-load-path))
 
 (make-directory "~/.emacs.d/lisp/" t)
+(make-directory "~/.emacs.d/backup/" t)
 
 ;; External libs
 (eval-and-compile
@@ -377,13 +378,6 @@ Do the right thing and delete window."
 
 ;; (add-hook 'emacs-lisp-mode-hook 'px-emacs-lisp-mode-hook)
 
-(defun make-backup-dir-px (dirname)
-  "create backup dir"
-  (interactive)
-  (if (not (file-exists-p dirname))
-      (make-directory dirname t)))
-(make-backup-dir-px "~/.bkp/")
-
 (defun px-bkp ()
   "Write the current buffer to a new file - silently - and append the date+time to the filename, retaining extention
 This dates from old times, before VC, I'm keeping it out of pure nostalgy."
@@ -482,7 +476,7 @@ This dates from old times, before VC, I'm keeping it out of pure nostalgy."
   (unless (use-region-p) (error "No region selected"))
   (let ((bn (file-name-nondirectory (buffer-file-name))))
     (copy-region-as-kill (region-beginning) (region-end))
-    (with-current-buffer (find-file-noselect "~/.bkp/Frigo.txt")
+    (with-current-buffer (find-file-noselect "~/.emacs.d/backup/frigo.txt")
       (goto-char (point-max))
       (insert "\n")
       (insert "######################################################################\n")
@@ -560,11 +554,11 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; px-session (is broken with undo)
 ;; Desktop
-(setq desktop-path '("~/.bkp/"))
-(setq desktop-dirname "~/.bkp/")
+(setq desktop-path '("~/.emacs.d/backup/"))
+(setq desktop-dirname "~/.emacs.d/backup/")
 (setq desktop-base-file-name "emacs-desktop")
 
-;; (the lock file is ~/.bkp/.emacs.desktop.lock)
+;; (the lock file is ~/.emacs.d/backup/.emacs.desktop.lock)
 (defun px-saved-session ()
   (file-exists-p (concat desktop-dirname "/" desktop-base-file-name)))
 
@@ -1081,8 +1075,8 @@ Revert HEAD to 7                                                  git reset --ha
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(auto-save-file-name-transforms (quote ((".*" "~/.bkp/\\1" t))))
- '(backup-directory-alist (quote ((".*" . "~/.bkp/"))))
+ '(auto-save-file-name-transforms (quote ((".*" "~/.emacs.d/backup/\\1" t))))
+ '(backup-directory-alist (quote ((".*" . "~/.emacs.d/backup/"))))
  '(bbdb-use-pop-up nil)
  '(bookmark-sort-flag nil)
  '(buffer-offer-save nil)
@@ -1138,7 +1132,7 @@ href=\"#\">↑ Page</a> %a (%e) - %v</p>"))))
  '(recentf-max-menu-items 60)
  '(recentf-max-saved-items 120)
  '(recentf-mode t)
- '(recentf-save-file "~/.bkp/recentf")
+ '(recentf-save-file "~/.emacs.d/backup/recentf")
  '(require-final-newline t)
  '(savehist-mode t nil (savehist))
  '(scroll-conservatively 200)
