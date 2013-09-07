@@ -227,7 +227,7 @@ read -e -p "
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 [[ ! -d $AUTOSTART_DIR ]] && mkdir -v $AUTOSTART_DIR
 
-    echo "[Desktop Entry]
+    printf "[Desktop Entry]
 Type=Application
 Exec=gnome-terminal --command byobu --maximize --hide-menubar
 Hidden=false
@@ -238,7 +238,7 @@ Name=Byobu
 Comment[en_US]=Byobu tmuxed (zsh) shell (gnome-terminal)
 Comment=Byobu tmuxed (zsh) shell" > $AUTOSTART_DIR/byobu.desktop
 
-    echo "[Desktop Entry]
+    printf "[Desktop Entry]
 Name=Skype
 Comment=Skype Internet Telephony
 Exec=skype
