@@ -1025,48 +1025,6 @@ Revert HEAD to 7                                                  git reset --ha
   (org-show-subtree))
 
 
-
-;; Expermiments!
-
-;; Its value is (gssapi kerberos4 starttls tls ssl network shell)
-
-(setq imap-log nil)
-
-(defun px-imap-logging ()
-  (interactive)
-  (if imap-log
-      (setq imap-log nil)
-    (setq imap-log (get-buffer-create "imap-log"))))
-
-(defun px-test-imap ()
-  "plop"
-  (interactive)
-  (setq imap-debug (get-buffer-create "imap-debug"))
-  ;; (switch-to-buffer (imap-open "imap.gmail.com" 993 'ssl))
-  (switch-to-buffer (imap-open "mail.gandi.net" 993 'ssl))
-  (with-current-buffer (current-buffer)
-    ;; (imap-authenticate "philippe.coatmeur@gmail.com" "Amiga520")
-    (imap-authenticate "contact@adamweb.net" "Amiga261")
-    ;; (setq mailboxes (imap-mailbox-list "*"))
-    ;; (setq mailbox (last mailboxes))
-    ;; (imap-mailbox-lsub "*")
-    (imap-mailbox-select "INBOX")
-    (imap-current-mailbox)
-    (message "exists %s" (imap-mailbox-get 'exists))
-    ;; (imap-mailbox-get 'uidvalidity)                     ;; Returns nothing
-    ;; (setq status (imap-mailbox-status mailbox 'unseen)) ;; Returns even less
-    (message "box %s" (imap-mailbox-examine "INBOX"))                      ;; This does nothing too
-    (imap-search "ALL")                                 ;; Everything else works
-    ;; (setq my-msg (imap-fetch 1 "RFC822"))
-    (setq my-msg (imap-fetch 15 "RFC822.PEEK" 'RFC822))
-    (message "HOY! %s" my-msg)
-    ;; (imap-close)
-    ))
-
-(defun test-imap-cmd ()
-  (interactive)
-  (test-imap))
-
 ;; Custom ! ______________________________________________________________________
 
 (custom-set-variables
