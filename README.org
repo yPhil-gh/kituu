@@ -44,7 +44,7 @@ boot time.
 
 **** This will :
     - Clone a repository at ~/.kituu/
-    - Backup existing ~/dotfiles as ~/dotfile.orig
+    - Backup all existing ~/.dotfile as ~/.dotfile.orig
     - Symlink ~/.kituu/* in ~/*
       - (Now you have a new dir, ~/script/ and it's in your $PATH)
     - Install a selection of packages, sorted by groups: Multimedia, Dev, Music prod, etc. You're asked for each group if you want to install.
