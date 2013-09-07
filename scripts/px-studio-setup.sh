@@ -40,7 +40,7 @@ SOURCE_PACKS[01-drobilla-lad]="svn co http://svn.drobilla.net/lad/trunk"
 # SOURCE_PACKS[03-sorcer]="git clone https://github.com/harryhaaren/openAV-Sorcer.git"
 # SOURCE_PACKS[04-ardour]="git clone git://git.ardour.org/ardour/ardour.git"
 
-BIN_BUILD="autoconf libqt4-dev dssi-dev librubberband-dev libboost-dev libglibmm-2.4-dev libsndfile-dev liblo-dev libxml2-dev uuid-dev libcppunit-dev libfftw3-dev libaubio-dev liblrdf-dev libsamplerate-dev libgnomecanvas2-dev libgnomecanvasmm-2.6-dev libcwiid-dev libgtkmm-2.4-dev libalsa-ocaml-dev libjack-dev lv2-dev liblilv-dev libsuil-dev libsratom-dev liblash-compat-dev lv2-c++-tools libpaq-dev"
+BIN_BUILD="autoconf libqt4-dev dssi-dev librubberband-dev libboost-dev libglibmm-2.4-dev libsndfile-dev liblo-dev libxml2-dev uuid-dev libcppunit-dev libfftw3-dev libaubio-dev liblrdf-dev libsamplerate-dev libgnomecanvas2-dev libgnomecanvasmm-2.6-dev libcwiid-dev libgtkmm-2.4-dev libalsa-ocaml-dev libjack-dev lv2-dev liblilv-dev libsuil-dev libsratom-dev liblash-compat-dev lv2-c++-tools libpaq-dev libsdl1.2-dev libsbsms-dev vamp-plugin-sdk"
 
 BIN_PROD="qmidinet qjackctl vmpk harmonyseq qmidiarp audacity timidity gladish laditools jamin"
 

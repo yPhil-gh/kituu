@@ -17,6 +17,7 @@
   (require 'package nil 'noerror)
   (require 'ecb nil 'noerror))
 
+
 (if (>= emacs-major-version 24)
     (progn
       ;; (require 'mail-bug nil 'noerror)
@@ -30,8 +31,8 @@
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
-(add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/"))
+;; (add-to-list 'package-archives
+;;              '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 (package-initialize)
 (mapc
@@ -40,7 +41,7 @@
      (progn (message "installing %s" package)
             (package-refresh-contents)
             (package-install package))))
- '(magit clojure-mode markdown-mode yasnippet paredit paredit-menu))
+ '(magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode))
 
 (autoload 'magit-status "magit" nil t)
 
@@ -226,18 +227,18 @@
 
 ;; NxHTML! _________________________________________________________________
 
-(if (and
-     (file-exists-p "~/.emacs.d/lisp/nxhtml/autostart.el")
-     (> emacs-major-version 23))
-    (progn
-      (load "~/.emacs.d/lisp/nxhtml/autostart.el")
-      (eval-after-load "mumamo"
-        '(setq mumamo-per-buffer-local-vars
-               (delq 'buffer-file-name mumamo-per-buffer-local-vars))))
-  (progn
-    (require 'php-mode nil t)
-    (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
-    (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))))
+;; (if (and
+;;      (file-exists-p "~/.emacs.d/lisp/nxhtml/autostart.el")
+;;      (> emacs-major-version 23))
+;;     (progn
+;;       (load "~/.emacs.d/lisp/nxhtml/autostart.el")
+;;       (eval-after-load "mumamo"
+;;         '(setq mumamo-per-buffer-local-vars
+;;                (delq 'buffer-file-name mumamo-per-buffer-local-vars))))
+;;   (progn
+;;     (require 'php-mode nil t)
+;;     (autoload 'php-mode "php-mode" "Major mode for editing php code." t)
+;;     (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))))
 
 ;; ;; Workaround the annoying warnings:
 ;; ;; Warning (mumamo-per-buffer-local-vars):
@@ -827,6 +828,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-s-m") 'apply-macro-to-region-lines)
 (global-set-key (kbd "<s-up>") (kbd "C-x C-SPC")) ; global mark ring
 ;; (global-set-key (kbd "<s-down>") (kbd "C-- C-SPC"))
+
+(global-set-key (kbd "C-x g") 'magit-status)
 
 (global-set-key (kbd "<s-left>") (kbd "C-u C-SPC"))
 
