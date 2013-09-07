@@ -187,7 +187,7 @@ if (type -P firefox &>/dev/null); then
     read -e -p "Install add-ons ($ADDON_NAMES)?
 [Y/n] " YN
     if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-	printf "
+	echo -e "
 <html>
 <head>
 <style>
@@ -203,8 +203,8 @@ if (type -P firefox &>/dev/null); then
 <img id='logo' src='http://people.mozilla.com/~faaborg/files/shiretoko/firefoxIcon/firefox-128-noshadow.png' /></a>
   <h1>Hi $(whoami), click to install/update extension</h1>
   <ul>" > $PAGE
-printf $ADDONS >> $PAGE
-printf "</ul>
+echo -e $ADDONS >> $PAGE
+echo -e "</ul>
   <hr />
   <div style='margin-left: auto;margin-right: auto;width:75%;text-align:center;'><a href='https://github.com/xaccrocheur/kituu'><img id='id' src='http://a0.twimg.com/profile_images/998643823/xix_normal.jpg' /></a>&nbsp;&nbsp;Don't forget that you're a genius, $(whoami) ;)</div>
 </body>
