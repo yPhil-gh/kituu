@@ -681,6 +681,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; (string-match "*message*" "*message*-plop")
 
+(menu-bar-mode -1)
 (auto-fill-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
 (put 'overwrite-mode 'disabled t)
