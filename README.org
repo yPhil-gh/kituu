@@ -40,7 +40,7 @@ boot time.
     Or, to install it and be able to modify it and push back your changes to github (if you're me, for instance)
 
     - git clone git@github.com:xaccrocheur/kituu.git .kituu && .kituu/scripts/kituu-setup.sh -rw
-    - Then run *kituu-setup.sh -rw* afterwards to update your packages
+    - Then run *kituu-setup.sh -rw* afterwards to install your own VC repositories in read-write mode (*kituu-setup.sh* to just update)
 
 **** This will :
     - Clone a repository at ~/.kituu/
