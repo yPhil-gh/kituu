@@ -18,7 +18,6 @@
   (require 'package nil 'noerror)
   (require 'ecb nil 'noerror))
 
-
 (if (>= emacs-major-version 24)
     (progn
       ;; (require 'mail-bug nil 'noerror)
@@ -68,7 +67,7 @@
           ;; :auto-sitemap t                ; Generate sitemap.org automagically...
          ;; :sitemap-filename "sitemap.org"  ; ... call it sitemap.org (it's the default)...
          ;; :sitemap-title "Sitemap"         ; ... with title 'Sitemap'.
-)
+         )
         ("org-static"
          :base-directory "~/Documents/svnmen/"
          :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
@@ -210,7 +209,6 @@
 
 
 ;; Keywords! _________________________________________________________________
-
 
 (set-face-underline 'font-lock-warning-face "yellow")
 
