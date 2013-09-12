@@ -74,7 +74,7 @@
          :recursive t
          :publishing-function org-publish-attachment)))
 
-;; (setq px-org-file (concat org-directory "/orgx.org"))
+;; (setq px-org-file (concat org-directory "~/Documents/agenda.org"))
 
 ;; (setq org-capture-templates
 ;;       '(("t" "Task" entry (file+headline px-org-file "Tasks")
@@ -88,7 +88,7 @@
 ;; (setq org-export-html-postamble t)
 ;; (setq org-agenda-files (list "~/.org/orgx.org"))
 
-(setq org-default-notes-file  "~/.org/orgx.org")
+;; (setq org-default-notes-file  "~/.org/orgx.org")
 
 
 ;; Server! ____________________________________________________________________
@@ -681,8 +681,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-z") 'undo-tree-undo)
 (global-set-key (kbd "C-S-z") 'undo-tree-redo)
 
-;; (global-set-key (kbd "C-<tab>") 'tabbar-forward)
-;; (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
+(global-set-key (kbd "C-<tab>") 'tabbar-forward)
+(global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
 
 ;; (define-key org-mode-map (kbd "C-<tab>") 'tabbar-forward)
 ;; (define-key org-mode-map (kbd "C-S-<tab>") 'tabbar-backward)
