@@ -93,6 +93,8 @@ px-update-N900 () {
     bash
 }
 
+
+
 px-lan-scan () {
     LOCAL_IP=$(ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}')
     MASK="${LOCAL_IP:0:10}"
