@@ -51,8 +51,8 @@ px-ram-dump () {
 }
 
 px-bandwidth-monitor () {
-    if [[ $# -eq 3 ]];then NIC="eth0"; else NIC=$1; fi
-    while [ /bin/true ]; do OLD=$NEW; NEW=`cat /proc/net/dev | grep $NIC | tr -s ' ' | cut -d' ' -f "3 11"`; echo $NEW $OLD | awk '{printf("\rin: % 9.2g\t\tout: % 9.2g", ($1-$3)/1024, ($2-$4)/1024)}'; sleep 1; done
+    [[ $# -eq 0 ]] && NIC="eth0" || NIC=$1
+    while [ /bin/true ] ; do OLD=$NEW; NEW=`cat /proc/net/dev | grep $NIC | tr -s ' ' | cut -d' ' -f "3 11"`; echo $NEW $OLD | awk '{printf("\rin: % 9.2g\t\tout: % 9.2g", ($1-$3)/1024, ($2-$4)/1024)}'; sleep 1; done
 }
 
 px-flight_status() { if [[ $# -eq 3 ]];then offset=$3; else offset=0; fi; curl "http://mobile.flightview.com/TrackByRoute.aspx?view=detail&al="$1"&fn="$2"&dpdat=$(date +%Y%m%d -d ${offset}day)" 2>/dev/null |html2text | \grep ":"; }
@@ -62,7 +62,7 @@ px-guitar-tuner () {
 }
 
 px-what-is-this-program-doing-now () {
-    diff <(lsof -p `pidof $1`) <(sleep 10; lsof -p `pidof $1`)
+    diff <(lsof -p `pidof $1`) <(sleep 5; lsof -p `pidof $1`)
 }
 
 md () {
@@ -104,8 +104,8 @@ px-lan-scan () {
         if [[ $IP == $GATEWAY ]] ; then MACHINE="gateway" ; else MACHINE=$(avahi-resolve-address $IP 2>/dev/null | sed -e :a -e "s/$IP//g;s/\.[^>]*$//g;s/^[ \t]*//") ; fi
         ping -c 1 $IP>/dev/null
         if [ $? -eq 0 ] ; then
-            echo -e "$IP ($MACHINE) \tUP" ; else
-            echo -e "$IP \t\tDOWN"
+            echo -e "UP    $IP ($MACHINE)" ; else
+            echo -e "DOWN  $IP"
         fi
     done
 }
@@ -140,14 +140,8 @@ px-bkp () {
 }
 
 px-ip () {
-    LOCAL_IP=$(ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}')
-    if [ $# -eq 1 ] ; then
-        nmap "${LOCAL_IP:0:10}.*" | \grep $* | cut --delimiter=' ' -f 6 | sed s/\(//g | sed s/\)//g
-    else
-        echo "Local: $LOCAL_IP"
-        # dig +short myip.opendns.com @resolver1.opendns.com
-        curl -s "http://www.geody.com/geoip.php?ip=$(curl -s icanhazip.com)" | sed '/^IP:/!d;s/<[^>][^>]*>//g' | sed s/IP:\ //g
-    fi
+    echo -e "Local:   $(ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}')"
+    echo -e "distant: $(dig +short myip.opendns.com @resolver1.opendns.com)"
 }
 
 px-remind-me-this-in () {
@@ -156,19 +150,16 @@ px-remind-me-this-in () {
 }
 
 px-netstats () {
-
     if hash ss 2>/dev/null; then
-        echo -e "      $(ss -p | cut -f2 -sd\" | sort | uniq | wc -l) processes : $(ss -p | cut -f2 -sd\" | sort | uniq | xargs)
-"
+        echo -e "      $(ss -p | cut -f2 -sd\" | sort | uniq | wc -l) processes : $(ss -p | cut -f2 -sd\" | sort | uniq | xargs) \n"
     fi
     lsof -P -i -n | uniq -c -w 10
     echo -e "
-\t Distant connected IPs : \n $(netstat -an | grep ESTABLISHED | awk '{print $5}' | awk -F: '{print $1}' | sort | uniq -c | awk '{ printf("%s\t%s\t",$2,$1) ; for (i = 0; i < $1; i++) {printf("*")}; print "" }')
-"
+Distant connected IPs : \n $(netstat -an | grep ESTABLISHED | awk '{print $5}' | awk -F: '{print $1}' | sort | uniq -c | awk '{ printf("%s\t%s\t",$2,$1) ; for (i = 0; i < $1; i++) {printf("*")}; print "" }') \n"
     if [ $1 ] ; then
         netstat -luntp
         echo -e "
-\t Connected hostnames"
+Connected hostnames"
         for IP in $(netstat -an | grep ESTABLISHED | awk '{print $5}' | awk -F: '{print $1}' | sort | uniq); do host ${IP} | sed 's/\.in-addr.arpa domain name pointer/ \=\> /' ; done | grep -v '^;'
     else
         echo "use -a to see machine names (slow)"
