@@ -187,6 +187,44 @@
 
 ;; Funcs! _________________________________________________________________
 
+(defun move-text-internal (arg)
+  (cond
+   ((and mark-active transient-mark-mode)
+    (if (> (point) (mark))
+        (exchange-point-and-mark))
+    (let ((column (current-column))
+          (text (delete-and-extract-region (point) (mark))))
+      (forward-line arg)
+      (move-to-column column t)
+      (set-mark (point))
+      (insert text)
+      (exchange-point-and-mark)
+      (setq deactivate-mark nil)))
+   (t
+    (beginning-of-line)
+    (when (or (> arg 0) (not (bobp)))
+      (forward-line)
+      (when (or (< arg 0) (not (eobp)))
+        (transpose-lines arg))
+      (forward-line -1)))))
+
+(defun move-text-down (arg)
+  "Move region (transient-mark-mode active) or current line
+  arg lines down."
+  (interactive "*p")
+  (move-text-internal arg))
+
+(defun move-text-up (arg)
+  "Move region (transient-mark-mode active) or current line
+  arg lines up."
+  (interactive "*p")
+  (move-text-internal (- arg)))
+
+;; (global-set-key [\S-up] 'move-text-up)
+;; (global-set-key [\S-down] 'move-text-down)
+(global-set-key (kbd "<s-up>") 'move-text-up)
+(global-set-key (kbd "<s-down>") 'move-text-down)
+
 (defun px-date ()
   "Insert date"
   (interactive)
@@ -665,8 +703,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "s-d") 'px-date)
 (global-set-key (kbd "s-<") 'kmacro-end-and-call-macro)
 (global-set-key (kbd "C-s-m") 'apply-macro-to-region-lines)
-(global-set-key (kbd "<s-up>") (kbd "C-x C-SPC")) ; global mark ring
-;; (global-set-key (kbd "<s-down>") (kbd "C-- C-SPC"))
 
 (global-set-key (kbd "C-x g") 'magit-status)
 
@@ -884,8 +920,8 @@ Revert HEAD to 7                                                  git reset --ha
  '(bbdb-use-pop-up nil)
  '(bookmark-sort-flag nil)
  '(buffer-offer-save nil)
- '(c-basic-offset (quote set-from-style) t)
- '(c-default-style "gnu" t)
+ '(c-basic-offset (quote set-from-style))
+ '(c-default-style "gnu")
  '(canlock-password "ebef4a12d0fad1c648b4b829291adb16cdefb9da")
  '(comment-style (quote extra-line))
  '(completion-auto-help (quote lazy))
@@ -904,6 +940,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(inhibit-startup-screen t)
  '(iswitchb-mode t)
  '(keyboard-coding-system (quote utf-8) nil nil "nil before, now utf-8.")
+ '(magit-restore-window-configuration t)
  '(mail-host-address "philcm@gnu.org")
  '(mail-interactive t)
  '(mark-ring-max 8)
