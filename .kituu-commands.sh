@@ -33,8 +33,8 @@ alias S="sudo apt-cache search"
 alias orgsync="cd ~/.org && git-sync.sh "
 
 alias gitlog="git log --pretty=format:'%Cred%h%Creset | %C(yellow)%ad%Creset | %C(bold blue)%an%Creset - %s - %C(yellow)%d%Creset'"
-# Commands
 
+# Commands
 function ssh () {
     if [ $# -eq 1 ] ; then
         tmux rename-window `echo $1 | sed 's/.*@//g' | sed 's/.local//g'`
