@@ -42,6 +42,11 @@ function ssh () {
     command ssh $*
 }
 
+z () {
+    cd ~/tmp/z
+    rm -rf ~/tmp/z/*
+}
+
 px-broadcast-mic () {
     arecord -f dat | ssh -C $1 aplay -f dat
 }
