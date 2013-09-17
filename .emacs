@@ -172,18 +172,10 @@
 ;; Keywords! _________________________________________________________________
 
 (set-face-underline 'font-lock-warning-face "yellow")
+(set-face-background 'font-lock-warning-face "blue")
 
 (add-hook 'emacs-lisp-mode-hook
-          (lambda ()
-            (font-lock-add-keywords nil
-                                    '(("\\<\\(FIXME\\|HACK\\|BUG\\|pX\\):" 1 font-lock-warning-face t)))))
-
-
-(add-hook 'python-mode-hook
-          (lambda ()
-            (font-lock-add-keywords nil
-                                    '(("\\<\\(FIXME\\|HACK\\|BUG\\|pX\\):" 1 font-lock-warning-face t)))))
-
+          (highlight-lines-matching-regexp "\\<\\(FIXME\\|HACK\\|BUG\\|pX\\):" "hi-green-b"))
 
 ;; Funcs! _________________________________________________________________
 
