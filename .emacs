@@ -687,44 +687,46 @@ context.
 - Kill-ring doesn't work in macros :(. Use registers instead.
 
 ** THIS VERY EMACS CONFIG
-*Open file                                                        C-o*
-*Open recent file                                                 M-o*
-*Open file path at point                                          s-o*
-*Open last session (buffers)                                      C-S-o*
-*Save named session (buffers)                                     s-s*
+Open file                                                        C-o
+Open recent file                                                 M-o
+Open file path at point                                          s-o
+Open last session (buffers)                                      C-S-o
+Save named session (buffers)                                     s-s
 
-*Save buffer                                                      M-s*
-*Kill buffer                                                      s-k*
-*Undo                                                             C-z*
-*Redo                                                             C-S-z*
-*Switch last buffer                                               s-²*
-*Scroll buffer in other window/pane                               M-<arrow>*
+Save buffer                                                      M-s
+Kill buffer                                                      s-k
+Undo                                                             C-z
+Redo                                                             C-S-z
+Switch last buffer                                               s-²
+Scroll buffer in other window/pane                               M-<arrow>
 
-*Go back to previous position (marking current)                   s-<left>*
+Go back to previous position (marking current)                   s-<left>
 
-*Next buffer                                                      C-TAB*
-*Previous buffer                                                  C-S-TAB*
-*Toggle two last buffers                                          s-²*
+Next buffer                                                      C-TAB
+Previous buffer                                                  C-S-TAB
+Toggle two last buffers                                          s-²
 
-*Close other window/pane                                          F1*
-*Switch to other window/pane                                      F2*
-*Split horizontally                                               F3*
-*Split vertically                                                 F4*
-*Switch to buffer (list)                                          F5*
-*Spell-check buffer                                               F7*
-*Word-wrap toggle                                                 F10*
+Move line up / Down                                              s-<arrow>
 
-*Match brace (() and {})                                          ù*
-*Next brace pair                                                  C-ù*
-*Previous brace pair                                              C-S-ù*
-*Enclose region in <tag> (sgml-tag)                               s-t RET tag [ args... ]*
-*Select 'this' or <that> (enclosed)                               s-SPC*
-*Search selection in google                                       s-g*
-*Complete with every possible match                               ²*
+Close other window/pane                                          F1
+Switch to other window/pane                                      F2
+Split horizontally                                               F3
+Split vertically                                                 F4
+Switch to buffer (list)                                          F5
+Spell-check buffer                                               F7
+Word-wrap toggle                                                 F10
 
-*Php-mode                                                         s-p*
-*Html-mode                                                        s-h*
-*Js-mode                                                          s-j*
+Match brace (() and {})                                          ù
+Next brace pair                                                  C-ù
+Previous brace pair                                              C-S-ù
+Enclose region in <tag> (sgml-tag)                               s-t RET tag [ args... ]
+Select 'this' or <that> (enclosed)                               s-SPC
+Search selection in google                                       s-g
+Complete with every possible match                               ²
+
+Php-mode                                                         s-p
+Html-mode                                                        s-h
+Js-mode                                                          s-j
 
 ** EMACSEN
 Go to line                                                        M-g M-g
