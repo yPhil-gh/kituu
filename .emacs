@@ -775,59 +775,25 @@ Insert a query into a keyboard macro.
 exit-recursive-edit                                              M-C-c
 Get the hell out of a recursive edit.
 
-** EDIFF
+** EDIFF (ediff)
 Next / previous diff                                             n / p
 Copy a diff into b / opposite                                    a / b
 Save a / b buffer                                                wa / wb
 
-** GNUS
+** GNUS (gnus)
 Sort summary by author/date                                      C-c C-s C-a/d
 Search selected imap folder                                      G G
 Mark thread read                                                 T k
 
-** PHP-MODE
+** PHP-MODE (php-mode)
 Search PHP manual for <point>.                                   C-c C-f
 Browse PHP manual in a Web browser.                              C-c RET / C-c C-m
 
 ** VERSION CONTROL
-vc-next-action                                                   C-x v v
-Perform the next logical control operation on file
-vc-register                                                      C-x v i
-Add a new file to version control
-
-vc-update                                                        C-x v +
-Get latest changes from version control
-vc-version-other-window                                          C-x v ~
-Look at other revisions
-vc-diff                                                          C-x v =
-Diff with other revisions
-vc-revert-buffer                                                 C-x v u
-Undo checkout
-vc-cancel-version                                                C-x v c
-Delete latest rev (look at an old rev and re-check it)
-
-vc-directory                                                     C-x v d
-Show all files which are not up to date
-vc-annotate                                                      C-x v g
-Show when each line in a tracked file was added and by whom
-vc-create-snapshot                                               C-x v s
-Tag all the files with a symbolic name
-vc-retrieve-snapshot                                             C-x v r
-Undo checkouts and return to a snapshot with a symbolic name
-
-vc-print-log                                                     C-x v l
-Show log (not in ChangeLog format)
-vc-update-change-log                                             C-x v a
-Update changelog
-
-vc-merge                                                         C-x v m
-vc-insert-headers                                                C-x v h
-
 M-x vc-resolve-conflicts
 Ediff-merge session on a file with conflict markers
 
 ** OTHER
-View git log                                                     git reflog
 Revert HEAD to 7                                                 git reset --hard HEAD@{7}
 "
          (generate-new-buffer "px-help-emacs"))
