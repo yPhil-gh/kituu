@@ -175,6 +175,7 @@ px-notes () {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
+git reset --hard HEAD@{7}
 ZSH : rm -rf ^survivorfile
 rm -rf ^survivorfile
 rm -f !(survivor_file)

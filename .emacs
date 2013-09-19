@@ -674,17 +674,14 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
   (princ "* EMACS cheat cheet
 
 ** notes
-- Bits in *Bold* are custom ones (eg specific to this emacs config)
 - A newline is added at the EOF and all trailing spaces are removed at each
-  file save.
-- The last session is availaible by running C-S-o and selecting 'last
-  session'.
+  file save
 - The 'emacs buffers' like '*Scratch*' are hidden from the main - F5, C-x b -
-buffer list. If you really must see them, use the usual C-x C-b.
+buffer list. If you really must see them, use the usual C-x C-b. To
+directly access the scratch buffer, use C-h *
 - Tabs and spaces are mixed. Emacs tries to do the smart thing depending on
-context.
+context
 - 's' (super) on a PC keyboard, is the 'windows logo' key
-- Kill-ring doesn't work in macros :(. Use registers instead.
 
 ** THIS VERY EMACS CONFIG
 Open file                                                        C-o
@@ -694,10 +691,10 @@ Open last session (buffers)                                      C-S-o
 Save named session (buffers)                                     s-s
 
 Save buffer                                                      M-s
-Kill buffer                                                      s-k
+Safely kill buffer                                               s-k
 Undo                                                             C-z
 Redo                                                             C-S-z
-Switch last buffer                                               s-²
+Undo Tree                                                        C-x u
 Scroll buffer in other window/pane                               M-<arrow>
 
 Go back to previous position (marking current)                   s-<left>
@@ -705,8 +702,6 @@ Go back to previous position (marking current)                   s-<left>
 Next buffer                                                      C-TAB
 Previous buffer                                                  C-S-TAB
 Toggle two last buffers                                          s-²
-
-Move line up / Down                                              s-<arrow>
 
 Close other window/pane                                          F1
 Switch to other window/pane                                      F2
@@ -716,52 +711,58 @@ Switch to buffer (list)                                          F5
 Spell-check buffer                                               F7
 Word-wrap toggle                                                 F10
 
+Move line up / Down                                              s-<arrow>
+
 Match brace (() and {})                                          ù
 Next brace pair                                                  C-ù
 Previous brace pair                                              C-S-ù
 Enclose region in <tag> (sgml-tag)                               s-t RET tag [ args... ]
 Select 'this' or <that> (enclosed)                               s-SPC
-Search selection in google                                       s-g
-Complete with every possible match                               ²
+Search selection in google                                       C-c g
+Completion (hippie-expand : any term, dir paths, etc.)           ²
 
 Php-mode                                                         s-p
 Html-mode                                                        s-h
 Js-mode                                                          s-j
 
-** EMACSEN
-Go to line                                                        M-g M-g
-Go back to previous position  (w/o marking current -?!)           C-u C-SPC
-Recenter window around current line                               C-l
-Intelligently recenter window                                     C-S-l
-Copy to register A                                                C-x r s A
-Paste from register A                                             C-x r g A
-Set bookmark at point                                             C-x r m RET
-Close HTML tag                                                    sgml-close-tag
-Switch to *Messages* buffer                                       C-h e
-Transpose current line with previous one                          C-x C-t
+** ALL EMACSEN
+Uppercase                                                        M-u
+Lowercase                                                        M-l
+Capitalize                                                       M-c
+
+Recenter line on screen (cycle up-down-middle)                   C-l
+Go to line                                                       M-g g
+Go back to previous position  (w/o marking current -?!)          C-u C-SPC
+Intelligently recenter window                                    C-S-l
+Copy to register A                                               C-x r s A
+Paste from register A                                            C-x r g A
+Set bookmark at point                                            C-x r m RET
+Close HTML tag                                                   sgml-close-tag
+Switch to *Messages* buffer                                      C-h e
+Transpose current line with previous one                         C-x C-t
 
 ** RECTANGLES
-Kill/clear rectangle                                              C-x r k/c
-yank-rectangle (upper left corner at point)                       C-x r y
-Insert STRING on each rectangle line.                             C-x r t string <RET>
+Kill/clear rectangle                                             C-x r k/c
+yank-rectangle (upper left corner at point)                      C-x r y
+Insert STRING on each rectangle line.                            C-x r t string <RET>
 
 ** MISC EDITING
-capitalize-word                                                   M-c
-upcase-word                                                       M-u
-downcase-word                                                     M-l
-downcase-region                                                   C-x C-l
-uppercase-region                                                  C-x C-u
+capitalize-word                                                  M-c
+upcase-word                                                      M-u
+downcase-word                                                    M-l
+downcase-region                                                  C-x C-l
+uppercase-region                                                 C-x C-u
 
 ** MACROS
-start-kbd-macro                                                   C-x (
+start-kbd-macro                                                  C-x (
 Start a new macro definition.
-end-kbd-macro                                                     C-x )
+end-kbd-macro                                                    C-x )
 End the current macro definition.
-call-last-kbd-macro                                               C-x e
+call-last-kbd-macro                                              C-x e
 Execute the last defined macro.
-call-last-kbd-maco                                                M-(number) C-x e
+call-last-kbd-maco                                               M-(number) C-x e
 Do that last macro (number times).
-stat-kbd-macro                                                    C-u C-x (
+stat-kbd-macro                                                   C-u C-x (
 Execute last macro and add to it.
 name-last-kbd-macro
 Name the last macro before saving it.
@@ -769,65 +770,65 @@ insert-last-keyboard-macro
 Insert the macro you made into a file.
 load-file
 Load a file with macros in it.
-kbd-macro-query                                                   C-x q
+kbd-macro-query                                                  C-x q
 Insert a query into a keyboard macro.
-exit-recursive-edit                                               M-C-c
+exit-recursive-edit                                              M-C-c
 Get the hell out of a recursive edit.
 
 ** EDIFF
-Next / previous diff                                              n / p
-Copy a diff into b / opposite                                     a / b
-Save a / b buffer                                                 wa / wb
+Next / previous diff                                             n / p
+Copy a diff into b / opposite                                    a / b
+Save a / b buffer                                                wa / wb
 
 ** GNUS
-Sort summary by author/date                                       C-c C-s C-a/d
-Search selected imap folder                                       G G
-Mark thread read                                                  T k
+Sort summary by author/date                                      C-c C-s C-a/d
+Search selected imap folder                                      G G
+Mark thread read                                                 T k
 
 ** PHP-MODE
-Search PHP manual for <point>.                                    C-c C-f
-Browse PHP manual in a Web browser.                               C-c RET / C-c C-m
+Search PHP manual for <point>.                                   C-c C-f
+Browse PHP manual in a Web browser.                              C-c RET / C-c C-m
 
 ** VERSION CONTROL
-vc-next-action                                                    C-x v v
+vc-next-action                                                   C-x v v
 Perform the next logical control operation on file
-vc-register                                                       C-x v i
+vc-register                                                      C-x v i
 Add a new file to version control
 
-vc-update                                                         C-x v +
+vc-update                                                        C-x v +
 Get latest changes from version control
-vc-version-other-window                                           C-x v ~
+vc-version-other-window                                          C-x v ~
 Look at other revisions
-vc-diff                                                           C-x v =
+vc-diff                                                          C-x v =
 Diff with other revisions
-vc-revert-buffer                                                  C-x v u
+vc-revert-buffer                                                 C-x v u
 Undo checkout
-vc-cancel-version                                                 C-x v c
+vc-cancel-version                                                C-x v c
 Delete latest rev (look at an old rev and re-check it)
 
-vc-directory                                                      C-x v d
+vc-directory                                                     C-x v d
 Show all files which are not up to date
-vc-annotate                                                       C-x v g
+vc-annotate                                                      C-x v g
 Show when each line in a tracked file was added and by whom
-vc-create-snapshot                                                C-x v s
+vc-create-snapshot                                               C-x v s
 Tag all the files with a symbolic name
-vc-retrieve-snapshot                                              C-x v r
+vc-retrieve-snapshot                                             C-x v r
 Undo checkouts and return to a snapshot with a symbolic name
 
-vc-print-log                                                      C-x v l
+vc-print-log                                                     C-x v l
 Show log (not in ChangeLog format)
-vc-update-change-log                                              C-x v a
+vc-update-change-log                                             C-x v a
 Update changelog
 
-vc-merge                                                          C-x v m
-vc-insert-headers                                                 C-x v h
+vc-merge                                                         C-x v m
+vc-insert-headers                                                C-x v h
 
 M-x vc-resolve-conflicts
 Ediff-merge session on a file with conflict markers
 
 ** OTHER
-View git log                                                      git reflog
-Revert HEAD to 7                                                  git reset --hard HEAD@{7}
+View git log                                                     git reflog
+Revert HEAD to 7                                                 git reset --hard HEAD@{7}
 "
          (generate-new-buffer "px-help-emacs"))
   (switch-to-buffer "px-help-emacs")
