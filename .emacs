@@ -1,6 +1,6 @@
 ;;; See https://github.com/xaccrocheur/kituu/
-;; Keep it under 1k lines ;p
-;; Use C-h x to read about what this .emacs can do for you (quite a bit)
+;; Try & keep it under 1k lines ;p
+;; Use M-x px-help-emacs to read about what this .emacs can do for you (quite a bit)
 
 ;; Init! ______________________________________________________________________
 
@@ -16,7 +16,8 @@
   (require 'cl nil 'noerror)          ; Built-in : Common Lisp lib
   (require 'edmacro nil 'noerror)     ; Built-in : Macro bits (Required by iswitchb)
   (require 'package nil 'noerror)
-  (require 'ecb nil 'noerror))
+  (require 'ecb nil 'noerror)
+  (require 'uniquify nil 'noerror))
 
 (if (>= emacs-major-version 24)
     (progn
@@ -24,15 +25,10 @@
       (require 'cedet)
       (tool-bar-mode -1)))
 
-(when (require 'tabbar nil 'noerror)
-  (tabbar-mode t))
 
 ;; Packages! ____________________________________________________________________
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
-
-;; (add-to-list 'package-archives
-;;              '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 (package-initialize)
 (mapc
@@ -41,7 +37,17 @@
      (progn (message "installing %s" package)
             (package-refresh-contents)
             (package-install package))))
- '(magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode))
+ '(
+   magit
+   clojure-mode
+   markdown-mode
+   yasnippet
+   paredit
+   paredit-menu
+   php-mode
+   tabbar
+   undo-tree
+   ))
 
 (autoload 'magit-status "magit" nil t)
 
@@ -62,33 +68,13 @@
          :publishing-directory "~/Documents/svnmen/"
          :recursive t
          :table-of-contents nil
-         :publishing-function org-html-publish-to-html
-          ;; :auto-sitemap t                ; Generate sitemap.org automagically...
-         ;; :sitemap-filename "sitemap.org"  ; ... call it sitemap.org (it's the default)...
-         ;; :sitemap-title "Sitemap"         ; ... with title 'Sitemap'.
-         )
+         :publishing-function org-html-publish-to-html)
         ("org-static"
          :base-directory "~/Documents/svnmen/"
          :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
          :publishing-directory "~/Documents/svnmen/"
          :recursive t
          :publishing-function org-publish-attachment)))
-
-;; (setq px-org-file (concat org-directory "~/Documents/agenda.org"))
-
-;; (setq org-capture-templates
-;;       '(("t" "Task" entry (file+headline px-org-file "Tasks")
-;;          "** TODO %?\n  %i\n  %a\n")
-;;         ("j" "Journal" entry (file+headline px-org-file "Journal")
-;;          "* %?\nEntered on %U\n  %i\n  %a\n")
-;;         ("J" "Joke" entry (file+headline px-org-file "Jokes")
-;;          "* %?\nEntered on %U\n  %i\n  %a\n")))
-
-;; (setq org-export-html-postamble nil)
-;; (setq org-export-html-postamble t)
-;; (setq org-agenda-files (list "~/.org/orgx.org"))
-
-;; (setq org-default-notes-file  "~/.org/orgx.org")
 
 
 ;; Server! ____________________________________________________________________
@@ -171,11 +157,11 @@
 
 ;; Keywords! _________________________________________________________________
 
-(set-face-underline 'font-lock-warning-face "yellow")
-(set-face-background 'font-lock-warning-face "blue")
+;; (set-face-underline 'font-lock-warning-face "yellow")
+;; (set-face-background 'font-lock-warning-face "blue")
 
-(add-hook 'emacs-lisp-mode-hook
-          (highlight-lines-matching-regexp "\\<\\(FIXME\\|HACK\\|BUG\\|pX\\):" "hi-green-b"))
+;; (add-hook 'emacs-lisp-mode-hook
+          ;; (highlight-lines-matching-regexp "\\<\\(FIXME\\|HACK\\|BUG\\|pX\\):" "hi-green-b"))
 
 ;; Funcs! _________________________________________________________________
 
@@ -211,9 +197,6 @@
   arg lines up."
   (interactive "*p")
   (move-text-internal (- arg)))
-
-;; (global-set-key [\S-up] 'move-text-up)
-;; (global-set-key [\S-down] 'move-text-down)
 (global-set-key (kbd "<s-up>") 'move-text-up)
 (global-set-key (kbd "<s-down>") 'move-text-down)
 
@@ -235,33 +218,10 @@
       (add-to-list 'bookmark-alist latest))
     (recenter-top-bottom 15)))
 
-;; Apparently obsolete (and broken : Stays in help-mode)
-
-;; (defadvice view-echo-area-messages (after view-echo-area-messages-in-help-mode)
-;;   "Toggle `help-mode' to use the keys (mostly 'q' to quit)."
-;;   (help-mode))
-
-;; (ad-activate 'view-echo-area-messages)
-
-
 (defun px-bookmarks-toggle-last ()
   "Jump to last bookmark"
   (interactive)
   (bookmark-jump (second bookmark-alist)))
-
-;; (defun px-push-mark-once-and-back ()
-;;   "Mark current point (`push-mark') and `set-mark-command' (C-u C-SPC) away."
-;;   (interactive)
-;;   (let ((current-prefix-arg '(4))) ; C-u
-;;     (if (not (eq last-command 'px-push-mark-once-and-back))
-;;         (progn
-;;           (push-mark)
-;;           (call-interactively 'set-mark-command))
-;;       (call-interactively 'set-mark-command)))
-;;   (recenter-top-bottom)
-;; )
-
-;; (global-set-key (kbd "<s-left>") 'px-push-mark-once-and-back)
 
 (defun px-match-paren (arg)
   "Go to the matching paren if on a paren; otherwise insert <key>."
@@ -284,7 +244,7 @@
 
 (defun px-kill-buffer ()
   "Prompt when a buffer is about to be killed.
-Do the right thing and delete window."
+Do the right thing and delete the window."
   (interactive)
   (if (and (buffer-modified-p)
            buffer-file-name
@@ -313,34 +273,12 @@ Do the right thing and delete window."
           (progn
             (save-buffer)
             (kill-buffer (current-buffer))
-            (delete-window)
-            ))))
+            (delete-window)))))
     (progn
-      ;; (message "Buffer is %s" (current-buffer))
       (kill-buffer)
-      ;; (switch-to-buffer (current-buffer))
-      ;; (message "Buffer is %s" (current-buffer))
       (if (> (length (window-list)) 1)
           (delete-window))
-      (kbd "C-x b <return>")
-      ;; (switch-to-buffer (other-buffer))
-      )))
-
-;; (defun px-byte-compile-user-init-file ()
-;;      "byte-compile .emacs each time it is edited"
-;;   (let ((byte-compile-warnings '(unresolved)))
-;;     ;; in case compilation fails, don't leave the old .elc around:
-;;     (when (file-exists-p (concat user-init-file ".elc"))
-;;       (delete-file (concat user-init-file ".elc")))
-;;     (byte-compile-file user-init-file)
-;;     (message "%s compiled" user-init-file)
-;;     ))
-
-;; (defun px-emacs-lisp-mode-hook ()
-;;   (when (string-match "\\.emacs" (buffer-name))
-;;     (add-hook 'after-save-hook 'px-byte-compile-user-init-file t t)))
-
-;; (add-hook 'emacs-lisp-mode-hook 'px-emacs-lisp-mode-hook)
+      (kbd "C-x b <return>"))))
 
 (defun px-bkp ()
   "Write the current buffer to a new file - silently - and append the date+time to the filename, retaining extention
@@ -393,8 +331,6 @@ This dates from old times, before VC, I'm keeping it out of pure nostalgy."
     (skip-chars-forward "^<>)]}”」』›»）〉》〕】〗⦄\"")
     (setq b2 (point))
     (set-mark b1)))
-
-(global-set-key (kbd "s-SPC") 'select-text-in-quote-px)
 
 (defun px-insert-or-enclose-with-signs (leftSign rightSign)
   "Insert a matching bracket and place the cursor between them."
@@ -483,7 +419,7 @@ This dates from old times, before VC, I'm keeping it out of pure nostalgy."
     (comment-dwim nil))
   (deactivate-mark))
 
-(defun tabbar-buffer-groups ()
+(defun px-tabbar-buffer-groups ()
   "Return the list of group names the current buffer belongs to.
 This function is a custom function for tabbar-mode's tabbar-buffer-groups."
   (list
@@ -496,8 +432,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
      )
     (t
      "User Buffer"))))
-
-(setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
 
 (defun iswitchb-local-keys ()
   "easily switch buffers (F5 or C-x b)"
@@ -555,8 +489,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; (string-match "*message*" "*message*-plop")
 
+(tabbar-mode t)
 (menu-bar-mode -1)
-(auto-fill-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
 (put 'overwrite-mode 'disabled t)
 (setq c-default-style "bsd"
@@ -569,6 +503,14 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.list\\'" . conf-mode))
 (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
+
+(add-hook 'php-mode-hook (lambda () (setq comment-start "//"
+                                        comment-end   "")))
+
+(add-hook 'markdown-mode-hook (lambda () (turn-off-auto-fill)))
+
+(remove-hook 'text-mode-hook 'turn-on-auto-fill)
+(remove-hook 'markdown-mode-hook 'turn-on-auto-fill)
 
 ;; Externals! _________________________________________________________________
 
@@ -695,13 +637,12 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "s-d") 'px-date)
 (global-set-key (kbd "s-<") 'kmacro-end-and-call-macro)
 (global-set-key (kbd "C-s-m") 'apply-macro-to-region-lines)
+(global-set-key (kbd "s-SPC") 'select-text-in-quote-px)
 
 (global-set-key (kbd "C-x g") 'magit-status)
 
 (global-set-key (kbd "<s-left>") (kbd "C-u C-SPC"))
 
-;; THIS NEXT ONE BROKE HAVOC!!
-;; (global-set-key (kbd "C-d") nil) ; I kept deleting stuff
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
 (global-set-key (kbd "C-o") 'find-file)
 (global-set-key (kbd "C-S-o") 'my-desktop-read)
@@ -713,9 +654,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-<tab>") 'tabbar-forward)
 (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
 
-;; (define-key org-mode-map (kbd "C-<tab>") 'tabbar-forward)
-;; (define-key org-mode-map (kbd "C-S-<tab>") 'tabbar-backward)
-
 (global-set-key (kbd "C-=") 'insert-pair-brace)        ;{}
 (global-set-key (kbd "C-)") 'insert-pair-paren)        ;()
 (global-set-key (kbd "C-(") 'insert-pair-bracket)      ;[]
@@ -723,12 +661,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-'") 'insert-pair-squote)       ;''
 (global-set-key (kbd "C-\"") 'insert-pair-dbquote)     ;""
 
-;; (global-set-key (kbd "M-DEL") 'kill-word)
-
 (global-set-key (kbd "M-s") 'save-buffer) ; Meta+s saves !! (see C-h b for all bindings, and C-h k + keystroke(s) for help)
-;; (global-set-key (kbd "M-DEL") 'kill-word)
-;; (global-set-key (kbd "M-DEL") 'kill-word)
-;; (global-set-key (kbd "M-<backspace>") 'backward-kill-word)
 (global-set-key (kbd "M-o") 'recentf-open-files)
 (global-set-key (kbd "M-d") 'px-toggle-comments)
 
@@ -912,8 +845,8 @@ Revert HEAD to 7                                                  git reset --ha
  '(bbdb-use-pop-up nil)
  '(bookmark-sort-flag nil)
  '(buffer-offer-save nil)
- '(c-basic-offset (quote set-from-style))
- '(c-default-style "gnu")
+ '(c-basic-offset (quote set-from-style) t)
+ '(c-default-style "gnu" t)
  '(canlock-password "ebef4a12d0fad1c648b4b829291adb16cdefb9da")
  '(comment-style (quote indent))
  '(completion-auto-help (quote lazy))
@@ -933,15 +866,15 @@ Revert HEAD to 7                                                  git reset --ha
  '(iswitchb-mode t)
  '(keyboard-coding-system (quote utf-8) nil nil "nil before, now utf-8.")
  '(magit-restore-window-configuration t)
- '(mail-host-address "philcm@gnu.org")
+ '(mail-host-address "")
  '(mail-interactive t)
  '(mark-ring-max 8)
  '(mbug-bcc-to-sender t)
- '(mbug-host-name "imap.gmx.com")
+ '(mbug-host-name "")
  '(mbug-inline-images t)
  '(mbug-modal t)
  '(mbug-short-headers t)
- '(mbug-username "philcm@gmx.com")
+ '(mbug-username "")
  '(message-confirm-send t)
  '(message-default-charset (quote utf-8))
  '(mm-enable-external (quote ask))
@@ -983,8 +916,9 @@ href=\"#\">↑ Page</a> %a (%e) - %v</p>"))))
  '(undo-tree-enable-undo-in-region nil)
  '(undo-tree-history-directory-alist (quote (("." . "~/.emacs.d/backup/"))))
  '(undo-tree-visualizer-diff t)
+ '(uniquify-buffer-name-style (quote forward) nil (uniquify))
  '(user-full-name "Philippe Coatmeur")
- '(user-mail-address "philcm@gnu.org")
+ '(user-mail-address "hidden")
  '(vc-make-backup-files nil)
  '(web-vcs-default-download-directory (quote site-lisp-dir)))
 
@@ -1007,6 +941,9 @@ href=\"#\">↑ Page</a> %a (%e) - %v</p>"))))
  '(tabbar-separator ((t (:height 0.1))))
  '(tabbar-unselected ((t (:inherit tabbar-default :background "gray35"))))
  '(which-func ((t (:foreground "OrangeRed1"))) t))
+
+;; Ever since elpa tabbar, this has to be called late
+(setq tabbar-buffer-groups-function 'px-tabbar-buffer-groups)
 
 (defun px-laptop-mode ()
   "smaller default size"
