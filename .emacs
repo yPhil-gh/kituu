@@ -38,15 +38,16 @@
             (package-refresh-contents)
             (package-install package))))
  '(
+   tabbar
+   undo-tree
    magit
-   clojure-mode
-   markdown-mode
    yasnippet
    paredit
    paredit-menu
+   clojure-mode
+   markdown-mode
    php-mode
-   tabbar
-   undo-tree
+   rainbow-mode
    ))
 
 (autoload 'magit-status "magit" nil t)
