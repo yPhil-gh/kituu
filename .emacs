@@ -4,11 +4,11 @@
 
 ;; Init! ______________________________________________________________________
 
-(let ((default-directory "~/.emacs.d/lisp/"))
-  (normal-top-level-add-subdirs-to-load-path))
-
 (make-directory "~/.emacs.d/lisp/" t)
 (make-directory "~/.emacs.d/backup/" t)
+
+(let ((default-directory "~/.emacs.d/lisp/"))
+  (normal-top-level-add-subdirs-to-load-path))
 
 ;; External libs
 (eval-and-compile
@@ -17,13 +17,23 @@
   (require 'edmacro nil 'noerror)     ; Built-in : Macro bits (Required by iswitchb)
   (require 'package nil 'noerror)
   (require 'ecb nil 'noerror)
+  (require 'cedet nil 'noerror)
   (require 'uniquify nil 'noerror))
 
-(if (>= emacs-major-version 24)
-    (progn
-      ;; (require 'mail-bug nil 'noerror)
-      (require 'cedet)
-      (tool-bar-mode -1)))
+(defvar iswitchb-mode-map)
+(defvar iswitchb-buffer-ignore)
+(defvar show-paren-delay)
+(defvar recentf-max-saved-items)
+(defvar recentf-max-menu-items)
+(defvar ispell-dictionary)
+(defvar desktop-path)
+(defvar desktop-dirname)
+(defvar desktop-base-file-name)
+(defvar display-time-string)
+(defvar ediff-window-setup-function)
+(defvar ediff-split-window-function)
+(defvar tabbar-buffer-groups-function)
+(defvar px-bkp-new-name)
 
 
 ;; Packages! ____________________________________________________________________
@@ -48,6 +58,7 @@
    markdown-mode
    php-mode
    rainbow-mode
+   mmm-mode
    ))
 
 (autoload 'magit-status "magit" nil t)
@@ -88,72 +99,6 @@
     (set-mouse-pixel-position (selected-frame) 4 4)
     ))
 (add-hook 'server-switch-hook 'ff/raise-frame-and-give-focus)
-
-
-(defun ido-goto-symbol (&optional symbol-list)
-  "Refresh imenu and jump to a place in the buffer using Ido."
-  (interactive)
-  (unless (featurep 'imenu)
-    (require 'imenu nil t))
-  (cond
-   ((not symbol-list)
-    (let ((ido-mode ido-mode)
-          (ido-enable-flex-matching
-           (if (boundp 'ido-enable-flex-matching)
-               ido-enable-flex-matching t))
-          name-and-pos symbol-names position)
-      (unless ido-mode
-        (ido-mode 1)
-        (setq ido-enable-flex-matching t))
-      (while (progn
-               (imenu--cleanup)
-               (setq imenu--index-alist nil)
-               (ido-goto-symbol (imenu--make-index-alist))
-               (setq selected-symbol
-                     (ido-completing-read "Symbol? " symbol-names))
-               (string= (car imenu--rescan-item) selected-symbol)))
-      (unless (and (boundp 'mark-active) mark-active)
-        (push-mark nil t nil))
-      (setq position (cdr (assoc selected-symbol name-and-pos)))
-      (cond
-       ((overlayp position)
-        (goto-char (overlay-start position)))
-       (t
-        (goto-char position)))))
-   ((listp symbol-list)
-    (dolist (symbol symbol-list)
-      (let (name position)
-        (cond
-         ((and (listp symbol) (imenu--subalist-p symbol))
-          (ido-goto-symbol symbol))
-         ((listp symbol)
-          (setq name (car symbol))
-          (setq position (cdr symbol)))
-         ((stringp symbol)
-          (setq name symbol)
-          (setq position
-                (get-text-property 1 'org-imenu-marker symbol))))
-        (unless (or (null position) (null name)
-                    (string= (car imenu--rescan-item) name))
-          (add-to-list 'symbol-names name)
-          (add-to-list 'name-and-pos (cons name position))))))))
-
-(global-set-key (kbd "M-i") 'ido-goto-symbol)
-
-(defvar iswitchb-mode-map)
-(defvar iswitchb-buffer-ignore)
-(defvar show-paren-delay)
-(defvar recentf-max-saved-items)
-(defvar recentf-max-menu-items)
-(defvar ispell-dictionary)
-(defvar desktop-path)
-(defvar desktop-dirname)
-(defvar desktop-base-file-name)
-(defvar display-time-string)
-(defvar ediff-window-setup-function)
-(defvar ediff-split-window-function)
-(defvar tabbar-buffer-groups-function)
-(defvar px-bkp-new-name)
 
 
 ;; Keywords! _________________________________________________________________
@@ -359,6 +304,55 @@ This dates from old times, before VC, I'm keeping it out of pure nostalgy."
       (insert leftSign rightSign)
       (backward-char 1))))
 
+
+(defun ido-goto-symbol (&optional symbol-list)
+  "Refresh imenu and jump to a place in the buffer using Ido."
+  (interactive)
+  (unless (featurep 'imenu)
+    (require 'imenu nil t))
+  (cond
+   ((not symbol-list)
+    (let ((ido-mode ido-mode)
+          (ido-enable-flex-matching
+           (if (boundp 'ido-enable-flex-matching)
+               ido-enable-flex-matching t))
+          name-and-pos symbol-names position)
+      (unless ido-mode
+        (ido-mode 1)
+        (setq ido-enable-flex-matching t))
+      (while (progn
+               (imenu--cleanup)
+               (setq imenu--index-alist nil)
+               (ido-goto-symbol (imenu--make-index-alist))
+               (setq selected-symbol
+                     (ido-completing-read "Symbol? " symbol-names))
+               (string= (car imenu--rescan-item) selected-symbol)))
+      (unless (and (boundp 'mark-active) mark-active)
+        (push-mark nil t nil))
+      (setq position (cdr (assoc selected-symbol name-and-pos)))
+      (cond
+       ((overlayp position)
+        (goto-char (overlay-start position)))
+       (t
+        (goto-char position)))))
+   ((listp symbol-list)
+    (dolist (symbol symbol-list)
+      (let (name position)
+        (cond
+         ((and (listp symbol) (imenu--subalist-p symbol))
+          (ido-goto-symbol symbol))
+         ((listp symbol)
+          (setq name (car symbol))
+          (setq position (cdr symbol)))
+         ((stringp symbol)
+          (setq name symbol)
+          (setq position
+                (get-text-property 1 'org-imenu-marker symbol))))
+        (unless (or (null position) (null name)
+                    (string= (car imenu--rescan-item) name))
+          (add-to-list 'symbol-names name)
+          (add-to-list 'name-and-pos (cons name position))))))))
+
 ;; (test string)
 
 (defun insert-pair-paren () (interactive) (px-insert-or-enclose-with-signs "(" ")"))
@@ -458,7 +452,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (defun px-saved-session ()
   (file-exists-p (concat desktop-dirname "/" desktop-base-file-name)))
 
-(defun Session-restore-px ()
+(defun px-session-restore ()
   "Restore a saved emacs session."
   (interactive)
   (if (px-saved-session)
@@ -481,16 +475,13 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
   "Prompt the user for a session name."
   (interactive "MSession name: ")
   (message "So what do I do with this: %s ?" px-session-named-name)
-  (desktop-save (concat desktop-dirname "/" px-session-named-name
-                        ".session") t)
-  )
+  (desktop-save (concat desktop-dirname "/" px-session-named-name ".session") t))
 
 
 ;; Modes! _____________________________________________________________________
 
-;; (string-match "*message*" "*message*-plop")
-
 (tabbar-mode t)
+(tool-bar-mode -1)
 (menu-bar-mode -1)
 (fset 'yes-or-no-p 'y-or-n-p)
 (put 'overwrite-mode 'disabled t)
@@ -569,12 +560,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
                  "%b"))
         " [%*]"))
 
-;; Keys! ______________________________________________________________________
 
-(global-set-key (kbd "M-j")
-                (lambda ()
-                  (interactive)
-                  (join-line -1)))
+;; Keys! ______________________________________________________________________
 
 (defun px-join-line ()
   (join-line 1))
@@ -613,7 +600,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (define-key global-map [f10] 'toggle-truncate-lines)
 (define-key global-map [f12] 'px-fullscreen)
 
-
 (global-set-key (kbd "C-s-g") 'goto-line)
 (global-set-key (kbd "C-s-t") 'sgml-close-tag)
 (global-set-key "\C-f" 'isearch-forward)
@@ -625,32 +611,31 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-ù") 'forward-sexp)
 (global-set-key (kbd "C-%") 'backward-sexp)
 
-(global-set-key (kbd "C-c C-g") 'px-websearch-that-bitch) ;; zob
-(global-set-key (kbd "s-r") 'replace-regexp)
-(global-set-key (kbd "s-²") (kbd "C-x b <return>")) ; Keyboard macro! (toggle last buffer)
-(global-set-key (kbd "s-t") 'sgml-tag) ;; zob
-(global-set-key (kbd "s-k") 'px-kill-buffer) ;; zob
-(global-set-key (kbd "s-p") 'php-mode) ;; zob
+(global-set-key (kbd "s-d") 'px-date)
 (global-set-key (kbd "s-h") 'html-mode) ;; zob
 (global-set-key (kbd "s-j") 'js-mode) ;; zob
+(global-set-key (kbd "s-k") 'px-kill-buffer) ;; zob
 (global-set-key (kbd "s-m") 'message-mail)
 (global-set-key (kbd "s-o") 'find-file-at-point)
-(global-set-key (kbd "s-d") 'px-date)
-(global-set-key (kbd "s-<") 'kmacro-end-and-call-macro)
+(global-set-key (kbd "s-p") 'php-mode) ;; zob
+(global-set-key (kbd "s-r") 'replace-regexp)
+(global-set-key (kbd "s-t") 'sgml-tag) ;; zob
 (global-set-key (kbd "C-s-m") 'apply-macro-to-region-lines)
 (global-set-key (kbd "s-SPC") 'select-text-in-quote-px)
+(global-set-key (kbd "s-<") 'kmacro-end-and-call-macro)
+(global-set-key (kbd "s-²") (kbd "C-x b <return>")) ; Keyboard macro! (toggle last buffer)
 
 (global-set-key (kbd "C-x g") 'magit-status)
 
 (global-set-key (kbd "<s-left>") (kbd "C-u C-SPC"))
 
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
+(global-set-key (kbd "C-c C-g") 'px-websearch-that-bitch) ;; zob
 (global-set-key (kbd "C-o") 'find-file)
 (global-set-key (kbd "C-S-o") 'my-desktop-read)
 (global-set-key (kbd "C-S-<mouse-1>") 'flyspell-correct-word)
 (global-set-key (kbd "C-z") 'undo-tree-undo)
 (global-set-key (kbd "C-S-z") 'undo-tree-redo)
-
 
 (global-set-key (kbd "C-<tab>") 'tabbar-forward)
 (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
@@ -662,9 +647,11 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-'") 'insert-pair-squote)       ;''
 (global-set-key (kbd "C-\"") 'insert-pair-dbquote)     ;""
 
-(global-set-key (kbd "M-s") 'save-buffer) ; Meta+s saves !! (see C-h b for all bindings, and C-h k + keystroke(s) for help)
-(global-set-key (kbd "M-o") 'recentf-open-files)
 (global-set-key (kbd "M-d") 'px-toggle-comments)
+(global-set-key (kbd "M-i") 'ido-goto-symbol)
+(global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
+(global-set-key (kbd "M-o") 'recentf-open-files)
+(global-set-key (kbd "M-s") 'save-buffer) ; Meta+s saves !! (see C-h b for all bindings, and C-h k + keystroke(s) for help)
 
 
 ;; Help! ______________________________________________________________________
