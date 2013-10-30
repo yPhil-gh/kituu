@@ -696,8 +696,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; (global-set-key (kbd "M-DEL") 'kill-word)
 
-plop plip plop
-
 (global-set-key (kbd "M-s") 'save-buffer) ; Meta+s saves !! (see C-h b for all bindings, and C-h k + keystroke(s) for help)
 ;; (global-set-key (kbd "M-<backspace>") 'backward-kill-word)
 (global-set-key (kbd "M-o") 'recentf-open-files)
