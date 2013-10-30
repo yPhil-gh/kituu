@@ -86,9 +86,9 @@
 
 ;; (setq org-export-html-postamble nil)
 ;; (setq org-export-html-postamble t)
-;; (setq org-agenda-files (list "~/.org/orgx.org"))
+(setq org-agenda-files (list "~/.org/orgx.org"))
 
-;; (setq org-default-notes-file  "~/.org/orgx.org")
+(setq org-default-notes-file  "~/.org/orgx.org")
 
 
 ;; Server! ____________________________________________________________________
@@ -348,7 +348,7 @@ This dates from old times, before VC, I'm keeping it out of pure nostalgy."
   (x-send-client-message nil 0 nil "_NET_WM_STATE" 32 '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0)))
 
 (defun px-websearch-that-bitch (start end)
-  "Google selected string"
+  "Websearch selected string"
   (interactive "r")
   (let ((q (buffer-substring-no-properties start end)))
     (browse-url (concat "https://duckduckgo.com/?q="
@@ -640,7 +640,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (define-key global-map [f10] 'toggle-truncate-lines)
 (define-key global-map [f12] 'px-fullscreen)
 
-
 (global-set-key (kbd "C-s-g") 'goto-line)
 (global-set-key (kbd "C-s-t") 'sgml-close-tag)
 (global-set-key "\C-f" 'isearch-forward)
@@ -681,7 +680,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-z") 'undo-tree-undo)
 (global-set-key (kbd "C-S-z") 'undo-tree-redo)
 
-
 (global-set-key (kbd "C-<tab>") 'tabbar-forward)
 (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
 
@@ -697,9 +695,9 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; (global-set-key (kbd "M-DEL") 'kill-word)
 
+plop plip plop
+
 (global-set-key (kbd "M-s") 'save-buffer) ; Meta+s saves !! (see C-h b for all bindings, and C-h k + keystroke(s) for help)
-;; (global-set-key (kbd "M-DEL") 'kill-word)
-;; (global-set-key (kbd "M-DEL") 'kill-word)
 ;; (global-set-key (kbd "M-<backspace>") 'backward-kill-word)
 (global-set-key (kbd "M-o") 'recentf-open-files)
 (global-set-key (kbd "M-d") 'px-toggle-comments)
