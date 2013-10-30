@@ -693,6 +693,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-'") 'insert-pair-squote)       ;''
 (global-set-key (kbd "C-\"") 'insert-pair-dbquote)     ;""
 
+
 ;; (global-set-key (kbd "M-DEL") 'kill-word)
 
 plop plip plop

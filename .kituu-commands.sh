@@ -33,13 +33,18 @@ alias S="sudo apt-cache search"
 alias orgsync="cd ~/.org && git-sync.sh "
 
 alias gitlog="git log --pretty=format:'%Cred%h%Creset | %C(yellow)%ad%Creset | %C(bold blue)%an%Creset - %s - %C(yellow)%d%Creset'"
-# Commands
 
+# Commands
 function ssh () {
     if [ $# -eq 1 ] ; then
         tmux rename-window `echo $1 | sed 's/.*@//g' | sed 's/.local//g'`
     fi
     command ssh $*
+}
+
+z () {
+    cd ~/tmp/z
+    rm -rf ~/tmp/z/*
 }
 
 px-broadcast-mic () {
@@ -92,8 +97,6 @@ px-update-N900 () {
     wget --no-check-certificate -nc https://github.com/xaccrocheur/kituu/raw/master/.kituu-commands.sh https://github.com/xaccrocheur/kituu/raw/master/.bashrc
     bash
 }
-
-
 
 px-lan-scan () {
     LOCAL_IP=$(ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}')
@@ -172,6 +175,7 @@ px-notes () {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
+git reset --hard HEAD@{7}
 ZSH : rm -rf ^survivorfile
 rm -rf ^survivorfile
 rm -f !(survivor_file)
