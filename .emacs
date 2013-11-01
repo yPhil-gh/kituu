@@ -10,13 +10,33 @@
 (make-directory "~/.emacs.d/lisp/" t)
 (make-directory "~/.emacs.d/backup/" t)
 
-;; External libs
+
+;; Packages! ____________________________________________________________________
+(package-initialize)
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
+;; (add-to-list 'package-archives
+;;              '("marmalade" . "http://marmalade-repo.org/packages/"))
+
+(mapc
+ (lambda (package)
+   (unless (package-installed-p package)
+     (progn (message "installing %s" package)
+            (package-refresh-contents)
+            (package-install package))))
+ '(org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode))
+
+;; (autoload 'magit-status "magit" nil t)
+
+;; LIBS! ______________________________________________________________________
+
 (eval-and-compile
-  (require 'undo-tree nil 'noerror)   ; Visualize undo (and allow sane redo)
   (require 'cl nil 'noerror)          ; Built-in : Common Lisp lib
   (require 'edmacro nil 'noerror)     ; Built-in : Macro bits (Required by iswitchb)
   (require 'package nil 'noerror)
-  (require 'ecb nil 'noerror))
+  (require 'ecb nil 'noerror)
+  (require 'auto-complete nil 'noerror))
 
 (if (>= emacs-major-version 24)
     (progn
@@ -24,71 +44,15 @@
       (require 'cedet)
       (tool-bar-mode -1)))
 
-(when (require 'tabbar nil 'noerror)
-  (tabbar-mode t))
-
-;; Packages! ____________________________________________________________________
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
-
-;; (add-to-list 'package-archives
-;;              '("marmalade" . "http://marmalade-repo.org/packages/"))
-
-(package-initialize)
-(mapc
- (lambda (package)
-   (unless (package-installed-p package)
-     (progn (message "installing %s" package)
-            (package-refresh-contents)
-            (package-install package))))
- '(magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode))
-
-(autoload 'magit-status "magit" nil t)
+;; (when (package-installed-p 'tabbar)
+;;   (progn
+;;   (tabbar-mode t)
+;;   (message "tabbar!")))
 
 
 ;; JIRA! ______________________________________________________________________
 
 (setq jiralib-url "http://jira.sbcmaroc.com")
-
-
-;; ORG! ______________________________________________________________________
-
-;; (require 'org-publish)
-(setq org-publish-project-alist
-      '(("mensup" :components ("org-notes" "org-static"))
-        ("org-notes"
-         :base-directory "~/Documents/svnmen/"
-         :base-extension "org"
-         :publishing-directory "~/Documents/svnmen/"
-         :recursive t
-         :table-of-contents nil
-         :publishing-function org-html-publish-to-html
-          ;; :auto-sitemap t                ; Generate sitemap.org automagically...
-         ;; :sitemap-filename "sitemap.org"  ; ... call it sitemap.org (it's the default)...
-         ;; :sitemap-title "Sitemap"         ; ... with title 'Sitemap'.
-         )
-        ("org-static"
-         :base-directory "~/Documents/svnmen/"
-         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
-         :publishing-directory "~/Documents/svnmen/"
-         :recursive t
-         :publishing-function org-publish-attachment)))
-
-;; (setq px-org-file (concat org-directory "~/Documents/agenda.org"))
-
-;; (setq org-capture-templates
-;;       '(("t" "Task" entry (file+headline px-org-file "Tasks")
-;;          "** TODO %?\n  %i\n  %a\n")
-;;         ("j" "Journal" entry (file+headline px-org-file "Journal")
-;;          "* %?\nEntered on %U\n  %i\n  %a\n")
-;;         ("J" "Joke" entry (file+headline px-org-file "Jokes")
-;;          "* %?\nEntered on %U\n  %i\n  %a\n")))
-
-;; (setq org-export-html-postamble nil)
-;; (setq org-export-html-postamble t)
-(setq org-agenda-files (list "~/.org/orgx.org"))
-
-(setq org-default-notes-file  "~/.org/orgx.org")
 
 
 ;; Server! ____________________________________________________________________
@@ -525,6 +489,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; (string-match "*message*" "*message*-plop")
 
+;; (auto-complete-mode t)
 (menu-bar-mode -1)
 (auto-fill-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -534,7 +499,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 ;; (when (functionp 'savehist-mode) (savehist-mode 1))
 ;; (semantic-mode t)
 ;; (which-function-mode t)
-(yas-global-mode 1)
+;; (yas-global-mode 1)
 (add-to-list 'auto-mode-alist '("\\.haml\\'" . haml-mode))
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.list\\'" . conf-mode))
@@ -773,6 +738,9 @@ Close HTML tag                                                    sgml-close-tag
 Switch to *Messages* buffer                                       C-h e
 Transpose current line with previous one                          C-x C-t
 
+** ORG-MODE
+Schedule item                                                     C-c C-s
+
 ** RECTANGLES
 Kill/clear rectangle                                              C-x r k/c
 yank-rectangle (upper left corner at point)                       C-x r y
@@ -876,6 +844,8 @@ Revert HEAD to 7                                                  git reset --ha
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ac-auto-show-menu t)
+ '(ac-auto-start t)
  '(auto-save-file-name-transforms (quote ((".*" "~/.emacs.d/backup/\\1" t))))
  '(backup-directory-alist (quote ((".*" . "~/.emacs.d/backup/"))))
  '(bbdb-use-pop-up nil)
@@ -893,6 +863,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(epa-popup-info-window nil)
  '(fold-dwim-outline-style-default (quote nested))
  '(font-use-system-font t)
+ '(global-auto-complete-mode t)
  '(global-font-lock-mode t)
  '(global-linum-mode t)
  '(global-undo-tree-mode t)
@@ -915,15 +886,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(mm-enable-external (quote ask))
  '(mm-text-html-renderer (quote links))
  '(mumamo-margin-use (quote (left-margin 13)))
- '(org-agenda-files (quote ("~/.org/")))
- '(org-cycle-separator-lines 1)
- '(org-directory "~/.org")
- '(org-export-html-validation-link "<a href=\"http://validator.w3.org/check?uri=referer\">Validation XHTML 1.0</a>")
- '(org-html-metadata-timestamp-format "%d/%m/%Y %T")
- '(org-html-postamble t)
- '(org-html-postamble-format (quote (("en" "<p class=\"author\"><a href=\"/men/wiki\">← Accueil</a> - <a
-href=\"#\">↑ Page</a> %a (%e) - %v</p>"))))
- '(org-log-done (quote time))
+ '(org-agenda-files (quote ("~/Ubuntu One/org/agenda.org")))
  '(org-support-shift-select (quote always))
  '(org-use-sub-superscripts nil)
  '(recenter-positions (quote (middle top bottom)))
@@ -985,3 +948,64 @@ href=\"#\">↑ Page</a> %a (%e) - %v</p>"))))
   "default font size"
   (interactive)
   (set-face-attribute 'default nil :height 105))
+
+
+;; ORG! ______________________________________________________________________
+
+;; (add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp"))
+(add-to-list 'auto-mode-alist '("\\.\\(org\\  |org_archive\\|txt\\)$" . org-mode))
+(require 'org-install)
+(require 'org-habit)
+
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
+
+;; (setq org-directory "~/Ubuntu One/org")
+
+;; (require 'org-publish)
+;; (setq org-publish-project-alist
+;;       '(("mensup" :components ("org-notes" "org-static"))
+;;         ("org-notes"
+;;          :base-directory "~/Documents/svnmen/"
+;;          :base-extension "org"
+;;          :publishing-directory "~/Documents/svnmen/"
+;;          :recursive t
+;;          :table-of-contents nil
+;;          :publishing-function org-html-publish-to-html
+;;           ;; :auto-sitemap t                ; Generate sitemap.org automagically...
+;;          ;; :sitemap-filename "sitemap.org"  ; ... call it sitemap.org (it's the default)...
+;;          ;; :sitemap-title "Sitemap"         ; ... with title 'Sitemap'.
+;;          )
+;;         ("org-static"
+;;          :base-directory "~/Documents/svnmen/"
+;;          :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+;;          :publishing-directory "~/Documents/svnmen/"
+;;          :recursive t
+;;          :publishing-function org-publish-attachment)))
+
+;; (setq org-capture-templates
+;;       '(("t" "Task" entry (file+headline px-org-file "Tasks")
+;;          "** TODO %?\n  %i\n  %a\n")
+;;         ("j" "Journal" entry (file+headline px-org-file "Journal")
+;;          "* %?\nEntered on %U\n  %i\n  %a\n")
+;;         ("J" "Joke" entry (file+headline px-org-file "Jokes")
+;;          "* %?\nEntered on %U\n  %i\n  %a\n")))
+
+;; (setq org-export-html-postamble nil)
+;; (setq org-export-html-postamble t)
+;; (setq org-default-notes-file  "~/.org/orgx.org")
+(setq org-return-follows-link t)
+
+;; (if (auto-complete)
+;;     (auto-complete-mode t))
+
+;; (define-key paredit-mode [f1] '(message "plop"))
+
+
+;; (message "plop")
+
+;;   ;; (auto-complete-mode 1)
+;;   ;; (setq ac-auto-show-menu t
+;;   ;;       ac-auto-start t ﻿
+;;   ;;       ac-show-menu-immediately-on-au­to-complete t)
