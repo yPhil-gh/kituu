@@ -31,7 +31,7 @@ SOURCE_PACKS[02-samplv1]="svn co http://svn.code.sf.net/p/samplv1/code/trunk"
 SOURCE_PACKS[02-synthv1]="svn co http://svn.code.sf.net/p/synthv1/code/trunk"
 SOURCE_PACKS[03-qtractor]="svn co http://svn.code.sf.net/p/qtractor/code/trunk"
 SOURCE_PACKS[01-phasex]="git clone https://github.com/williamweston/phasex.git"
-SOURCE_PACKS[00-lv2]="svn checkout http://lv2plug.in/repo/trunk"
+# SOURCE_PACKS[00-lv2]="svn checkout http://lv2plug.in/repo/trunk"
 SOURCE_PACKS[05-fabla]="git clone https://github.com/harryhaaren/openAV-Fabla.git"
 SOURCE_PACKS[01-drobilla-lad]="svn co http://svn.drobilla.net/lad/trunk"
 # SOURCE_PACKS[03-ntk]="git clone git://git.tuxfamily.org/gitroot/non/fltk.git"
@@ -126,7 +126,7 @@ function update_package {
         if [ $? -eq 0 ]; then
             MESSAGE="\n$PACKAGE Updated ":$MESSAGE
             read -e -p "## Branch moved, build and install $PACKAGE? [Y/n] " YN
-            if [[ $YN == "y" || $YN == "Y" || $YN == "" || $ALWAYS_YES ]] ; then
+            if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
                 [[ -f ./waf ]] && build_waf || build_make
             fi
         fi

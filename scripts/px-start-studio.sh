@@ -3,12 +3,13 @@
 #VST_PATH=/usr/lib/vst:/usr/local/lib/vst
 #export VST_PATH
 
+# hydrogen
+# yoshimi
+
 APPS="
 qjackctl
 vmpk
 qmidinet
-hydrogen
-yoshimi
 "
 DAW=$1
 

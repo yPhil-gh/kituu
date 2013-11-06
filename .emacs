@@ -25,7 +25,7 @@
      (progn (message "installing %s" package)
             (package-refresh-contents)
             (package-install package))))
- '(org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode))
+ '(tabbar org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode))
 
 ;; (autoload 'magit-status "magit" nil t)
 
@@ -44,10 +44,10 @@
       (require 'cedet)
       (tool-bar-mode -1)))
 
-;; (when (package-installed-p 'tabbar)
-;;   (progn
-;;   (tabbar-mode t)
-;;   (message "tabbar!")))
+(when (package-installed-p 'tabbar)
+  (progn
+  (tabbar-mode t)
+  (message "tabbar!")))
 
 
 ;; JIRA! ______________________________________________________________________
@@ -417,7 +417,7 @@ This dates from old times, before VC, I'm keeping it out of pure nostalgy."
     (comment-dwim nil))
   (deactivate-mark))
 
-(defun tabbar-buffer-groups ()
+(defun px-tabbar-buffer-groups ()
   "Return the list of group names the current buffer belongs to.
 This function is a custom function for tabbar-mode's tabbar-buffer-groups."
   (list
@@ -431,7 +431,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
     (t
      "User Buffer"))))
 
-(setq tabbar-buffer-groups-function 'tabbar-buffer-groups)
+(setq tabbar-buffer-groups-function 'px-tabbar-buffer-groups)
 
 (defun iswitchb-local-keys ()
   "easily switch buffers (F5 or C-x b)"
