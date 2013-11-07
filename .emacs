@@ -4,11 +4,11 @@
 
 ;; Init! ______________________________________________________________________
 
-(let ((default-directory "~/.emacs.d/lisp/"))
-  (normal-top-level-add-subdirs-to-load-path))
-
 (make-directory "~/.emacs.d/lisp/" t)
 (make-directory "~/.emacs.d/backup/" t)
+
+(let ((default-directory "~/.emacs.d/lisp/"))
+  (normal-top-level-add-subdirs-to-load-path))
 
 
 ;; Packages! ____________________________________________________________________
@@ -491,7 +491,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; (auto-complete-mode t)
 (menu-bar-mode -1)
-(auto-fill-mode t)
+(auto-fill-mode -1)
 (fset 'yes-or-no-p 'y-or-n-p)
 (put 'overwrite-mode 'disabled t)
 (setq c-default-style "bsd"
@@ -605,25 +605,25 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (define-key global-map [f10] 'toggle-truncate-lines)
 (define-key global-map [f12] 'px-fullscreen)
 
-(global-set-key (kbd "C-s-g") 'goto-line)
-(global-set-key (kbd "C-s-t") 'sgml-close-tag)
-(global-set-key "\C-f" 'isearch-forward)
+(global-set-key (kbd "C-f") 'isearch-forward)
 (global-set-key (kbd "C-S-f") 'isearch-backward)
-(define-key isearch-mode-map "\C-f" 'isearch-repeat-forward)
+;; (global-set-key (kbd "C-m") 'magit-status)
+(global-set-key (kbd "C-s-t") 'sgml-close-tag)
+(define-key isearch-mode-map (kbd "C-f") 'isearch-repeat-forward)
 (define-key isearch-mode-map (kbd "C-S-f") 'isearch-repeat-backward)
 
-(global-set-key "ù" 'px-match-paren)
+(global-set-key (kbd "ù") 'px-match-paren)
 (global-set-key (kbd "C-ù") 'forward-sexp)
 (global-set-key (kbd "C-%") 'backward-sexp)
 
-(global-set-key (kbd "C-c C-g") 'px-websearch-that-bitch) ;; zob
+(global-set-key (kbd "C-c C-g") 'px-websearch-that-bitch)
 (global-set-key (kbd "s-r") 'replace-regexp)
 (global-set-key (kbd "s-²") (kbd "C-x b <return>")) ; Keyboard macro! (toggle last buffer)
-(global-set-key (kbd "s-t") 'sgml-tag) ;; zob
-(global-set-key (kbd "s-k") 'px-kill-buffer) ;; zob
-(global-set-key (kbd "s-p") 'php-mode) ;; zob
-(global-set-key (kbd "s-h") 'html-mode) ;; zob
-(global-set-key (kbd "s-j") 'js-mode) ;; zob
+(global-set-key (kbd "s-t") 'sgml-tag)
+(global-set-key (kbd "s-k") 'px-kill-buffer)
+(global-set-key (kbd "s-p") 'php-mode)
+(global-set-key (kbd "s-h") 'html-mode)
+(global-set-key (kbd "s-j") 'js-mode)
 (global-set-key (kbd "s-m") 'message-mail)
 (global-set-key (kbd "s-o") 'find-file-at-point)
 (global-set-key (kbd "s-d") 'px-date)
@@ -996,16 +996,3 @@ Revert HEAD to 7                                                  git reset --ha
 ;; (setq org-export-html-postamble t)
 ;; (setq org-default-notes-file  "~/.org/orgx.org")
 (setq org-return-follows-link t)
-
-;; (if (auto-complete)
-;;     (auto-complete-mode t))
-
-;; (define-key paredit-mode [f1] '(message "plop"))
-
-
-;; (message "plop")
-
-;;   ;; (auto-complete-mode 1)
-;;   ;; (setq ac-auto-show-menu t
-;;   ;;       ac-auto-start t ﻿
-;;   ;;       ac-show-menu-immediately-on-au­to-complete t)
