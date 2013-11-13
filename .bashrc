@@ -4,6 +4,8 @@
 # Time-stamp: <.bashrc - Tue 27-Mar-2012 16:01:07>
 # ===================================================================
 
+printf "\n\nI'm $TERM - $(date -d @1353294612 "+%Y-%m-%d %T")" >> ~/dump.txt
+
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
@@ -198,7 +200,7 @@ kituu_bash_prompt() {
   	    # PS1="\[\e]1;\u@\h: \W\007\e]2;\u@\h: \W\007\]\${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
   	    PS1="${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
 	    # PS1="> "
-            printf "\nI'm not dumb, I'm $TERM - $(date -d @1353294612 "+%Y-%m-%d %T") - $(env)" >> ~/dump.txt
+            printf "\n\nI'm not dumb, I'm $TERM - $(date -d @1353294612 "+%Y-%m-%d %T")" >> ~/dump.txt
 	    ;;
 	linux*)
 	    PS1="${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
