@@ -66,7 +66,7 @@ else
     bash
 fi
 
-export HISTCONTROL=ignoreboth HISTFILESIZE=5000 TERM=xterm-256color
+export HISTCONTROL=ignoreboth HISTFILESIZE=5000
 
 # Source generic funcs & aliases
 . ~/.kituu-commands.sh
