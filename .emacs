@@ -908,6 +908,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(smtpmail-smtp-server "smtp.gmail.com")
  '(standard-indent 2)
  '(tramp-default-method "ssh")
+ '(tramp-verbose 6)
  '(undo-limit 400000)
  '(undo-strong-limit 600000)
  '(undo-tree-auto-save-history t)
