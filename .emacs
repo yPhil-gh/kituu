@@ -25,7 +25,7 @@
      (progn (message "installing %s" package)
             (package-refresh-contents)
             (package-install package))))
- '(tabbar org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode))
+ '(org-jira tabbar org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode))
 
 ;; (autoload 'magit-status "magit" nil t)
 
@@ -52,7 +52,7 @@
 
 ;; JIRA! ______________________________________________________________________
 
-(setq jiralib-url "http://jira.sbcmaroc.com")
+(setq jiralib-url "http://jira.sbcmaroc.com:8080")
 
 
 ;; Server! ____________________________________________________________________
@@ -919,6 +919,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(vc-make-backup-files nil)
  '(web-vcs-default-download-directory (quote site-lisp-dir)))
 
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -984,15 +985,45 @@ Revert HEAD to 7                                                  git reset --ha
 ;;          :recursive t
 ;;          :publishing-function org-publish-attachment)))
 
-;; (setq org-capture-templates
-;;       '(("t" "Task" entry (file+headline px-org-file "Tasks")
-;;          "** TODO %?\n  %i\n  %a\n")
-;;         ("j" "Journal" entry (file+headline px-org-file "Journal")
-;;          "* %?\nEntered on %U\n  %i\n  %a\n")
-;;         ("J" "Joke" entry (file+headline px-org-file "Jokes")
-;;          "* %?\nEntered on %U\n  %i\n  %a\n")))
+(setq org-capture-templates
+      '(("t" "Task" entry (file+headline (car org-agenda-files) "Tasks")
+         "** TODO %?\n  %i\n  %a\n")
+        ("j" "Journal" entry (file+headline px-org-file "Journal")
+         "* %?\nEntered on %U\n  %i\n  %a\n")
+        ("J" "Joke" entry (file+headline px-org-file "Jokes")
+         "* %?\nEntered on %U\n  %i\n  %a\n")))
 
 ;; (setq org-export-html-postamble nil)
 ;; (setq org-export-html-postamble t)
 ;; (setq org-default-notes-file  "~/.org/orgx.org")
 (setq org-return-follows-link t)
+
+(require 'appt)
+;; (setq org-agenda-include-diary t)
+(setq appt-time-msg-list nil)
+(org-agenda-to-appt)
+
+(defadvice org-agenda-redo (after org-agenda-redo-add-appts)
+  "Pressing `r' on the agenda will also add appointments."
+  (progn
+    (setq appt-time-msg-list nil)
+    (org-agenda-to-appt)))
+
+(ad-activate 'org-agenda-redo)
+;; -----------------------------------
+
+;; I enable appt reminders, set the format to 'window and provide
+;; a display function that calls a python program to do the popup:
+
+;; -----------------------------------
+(progn
+  (appt-activate 1)
+  (setq appt-display-format 'window)
+  (setq appt-disp-window-function (function my-appt-disp-window))
+  (defun my-appt-disp-window (min-to-app new-time msg)
+    ;; (call-process "/home/px/bin/popup.py" nil 0 nil min-to-app msg new-time)
+    (message "REMINDER : %s" msg)
+    (call-process "/usr/bin/zenity" nil nil nil "--info" (format "--text=%s" msg))))
+
+;; (call-process "/home/px/bin/popup.py" nil 0 nil "0" "plop" "0")
+;; (call-process "/usr/bin/zenity" nil nil nil "--info" (format "--text=%s" msg))

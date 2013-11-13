@@ -47,7 +47,7 @@ z () {
     rm -rf ~/tmp/z/*
 }
 
-px-git-last-commit () {
+px-git-last-commit-to-clipboard () {
     git log | head -1 | cut -c 8-47 | xclip -selection clipboard
     echo "Last commit ($(git log | head -3 | cut -c 9-31 | tail -1) - $(git log | head -5 | cut -c 5-47 | tail -1)) copied to clipboard"
 }
