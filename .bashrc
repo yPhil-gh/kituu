@@ -4,8 +4,6 @@
 # Time-stamp: <.bashrc - Tue 27-Mar-2012 16:01:07>
 # ===================================================================
 
-printf "\n\nI'm $TERM - $(date -d @1353294612 "+%Y-%m-%d %T")" >> ~/dump.txt
-
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
@@ -49,12 +47,12 @@ if [ -n "${BASH+x}" ] ; then
         shopt -s autocd   # Just type dir name
     fi
 
-# Set nice ls output colors
+    # Set nice ls output colors
     if [ -x /usr/bin/dircolors ] ; then
 
         eval "`dircolors -b`"
         [ "$TERM" != "dumb" ] && eval "`dircolors -b`" && alias ls='ls --color=auto'
-# Same for N900
+        # Same for N900
     elif [ -x /usr/bin/gnu/dircolors ] ; then
         eval "`dircolors -b`"
         [ "$TERM" != "dumb" ] && eval "`dircolors -b`" && alias ls='/usr/bin/gnu/ls --color=auto'
@@ -93,79 +91,79 @@ Kituu_bash_prompt_commands () {
 
     case "$TERM" in
 	xterm*|rxvt*|screen*|eterm-color)
-local myChar=$(echo -e "\xE2\x80\xA2") # (•)
-;;
-*)
-local myChar="|"
-;;
-esac
+            local myChar=$(echo -e "\xE2\x80\xA2") # (•)
+            ;;
+        *)
+            local myChar="|"
+            ;;
+    esac
 
-kituu_titlebar='\[\033]0;\u@\h:\w\007\]'
+    kituu_titlebar='\[\033]0;\u@\h:\w\007\]'
 
-local kituu_load_color_lo="\e[0;91m"
-local kituu_load_color_md="\e[0;31m"
-local kituu_load_color_hi="\e[1;91m"
-local kituu_load_color_bk="\E[5m"
+    local kituu_load_color_lo="\e[0;91m"
+    local kituu_load_color_md="\e[0;31m"
+    local kituu_load_color_hi="\e[1;91m"
+    local kituu_load_color_bk="\E[5m"
 
-let halfload=$kituu_threshold_load/2
-if [ $kituu_load_average -gt $kituu_threshold_load ]; then
-    kituu_load_meter=`echo -e ${kituu_load_color_hi}${myChar}${myChar}${kituu_load_color_bk}${myChar}`
-    kituu_load_meter_size="nnn"
-elif [ $kituu_load_average -gt $halfload ]; then
-    kituu_load_meter=`echo -e ${kituu_load_color_md}${myChar}${myChar}`
-    kituu_load_meter_size="nn"
-else
-    kituu_load_meter=`echo -e ${kituu_load_color_lo}${myChar}`
-    kituu_load_meter_size="n"
-fi
+    let halfload=$kituu_threshold_load/2
+    if [ $kituu_load_average -gt $kituu_threshold_load ]; then
+        kituu_load_meter=`echo -e ${kituu_load_color_hi}${myChar}${myChar}${kituu_load_color_bk}${myChar}`
+        kituu_load_meter_size="nnn"
+    elif [ $kituu_load_average -gt $halfload ]; then
+        kituu_load_meter=`echo -e ${kituu_load_color_md}${myChar}${myChar}`
+        kituu_load_meter_size="nn"
+    else
+        kituu_load_meter=`echo -e ${kituu_load_color_lo}${myChar}`
+        kituu_load_meter_size="n"
+    fi
 
-# this is your top info, right next to username@machine - add info like this - no wait don't touch anything, it's still WIP
-kituu_info_up1=$kituu_time
-kituu_info_up2_size=${kituu_load_meter_size}
-kituu_info_up2=${kituu_load_meter}
+    # this is your top info, right next to username@machine - add info like this - no wait don't touch anything, it's still WIP
+    kituu_info_up1=$kituu_time
+    kituu_info_up2_size=${kituu_load_meter_size}
+    kituu_info_up2=${kituu_load_meter}
 
-# # No git for root. Bad root.
-# if [[ $UID != "0" && -e ~/scripts/git-completion.bash ]] ; then
-#     kituu_git_status=`echo $(__git_ps1) | sed 's/^ *//'`
-#     kituu_info_up3=${kituu_git_status}
-# fi
+    # # No git for root. Bad root.
+    # if [[ $UID != "0" && -e ~/scripts/git-completion.bash ]] ; then
+    #     kituu_git_status=`echo $(__git_ps1) | sed 's/^ *//'`
+    #     kituu_info_up3=${kituu_git_status}
+    # fi
 
-# The max. lengh of the pwd is half of the screen width - it should be automatically computed from the other elements (promptsize-path-some air)
-if [ "${HOSTTYPE}" = "arm" ]; then
-    pwdmaxlen=24
-else
-    # let pwdmaxlen=${COLUMNS}/2
-    (( pwdmaxlen = COLUMNS /2 ))
-fi
+    # The max. lengh of the pwd is half of the screen width - it should be automatically computed from the other elements (promptsize-path-some air)
+    if [ "${HOSTTYPE}" = "arm" ]; then
+        pwdmaxlen=24
+    else
+        # let pwdmaxlen=${COLUMNS}/2
+        (( pwdmaxlen = COLUMNS /2 ))
+    fi
 
-# Do not edit below or you are likely to be eaten by a grue - believe me lil buddy you'll think that everything works but it secretly will not ;p
-local dir=${PWD##*/}
-pwdmaxlen=$(( ( pwdmaxlen < ${#dir} ) ? ${#dir} : pwdmaxlen ))
+    # Do not edit below or you are likely to be eaten by a grue - believe me lil buddy you'll think that everything works but it secretly will not ;p
+    local dir=${PWD##*/}
+    pwdmaxlen=$(( ( pwdmaxlen < ${#dir} ) ? ${#dir} : pwdmaxlen ))
 
-if [ "${BASH_VERSINFO}" -gt "3" ] ; then # We are using BASH > 4
-    kituu_live_pwd=${PWD/#$HOME/\~}
-else
-    kituu_live_pwd=${PWD}
-fi
+    if [ "${BASH_VERSINFO}" -gt "3" ] ; then # We are using BASH > 4
+        kituu_live_pwd=${PWD/#$HOME/\~}
+    else
+        kituu_live_pwd=${PWD}
+    fi
 
-local pwdoffset=$(( ${#kituu_live_pwd} - pwdmaxlen ))
+    local pwdoffset=$(( ${#kituu_live_pwd} - pwdmaxlen ))
 
-if [ ${pwdoffset} -gt "0" ]
-then
-    kituu_live_pwd=${kituu_live_pwd:$pwdoffset:$pwdmaxlen}
-    kituu_live_pwd=${kituu_trunc_symbol}/${kituu_live_pwd#*/}
-fi
+    if [ ${pwdoffset} -gt "0" ]
+    then
+        kituu_live_pwd=${kituu_live_pwd:$pwdoffset:$pwdmaxlen}
+        kituu_live_pwd=${kituu_trunc_symbol}/${kituu_live_pwd#*/}
+    fi
 
-promptsize=`echo -n "┌─($kituu_user@$kituu_host)($kituu_info_up1)($kituu_info_up2_size)$kituu_git_status($kituu_live_pwd)─┐"`
+    promptsize=`echo -n "┌─($kituu_user@$kituu_host)($kituu_info_up1)($kituu_info_up2_size)$kituu_git_status($kituu_live_pwd)─┐"`
 
-let fillsize=${COLUMNS}-${#promptsize}
-kituu_fill=
+    let fillsize=${COLUMNS}-${#promptsize}
+    kituu_fill=
 
-while [ "$fillsize" -gt "0" ]
-do
-    kituu_fill=${kituu_fill}${kituu_line_char}
-    let fillsize=${fillsize}-1
-done
+    while [ "$fillsize" -gt "0" ]
+    do
+        kituu_fill=${kituu_fill}${kituu_line_char}
+        let fillsize=${fillsize}-1
+    done
 }
 
 kituu_bash_prompt() {
@@ -174,7 +172,7 @@ kituu_bash_prompt() {
     local kuc=$kituu_user_color
     local kpc=$kituu_user_color
 
-# [ $UID -eq "0" ] && kuc=$kRc # root's color
+    # [ $UID -eq "0" ] && kuc=$kRc # root's color
     if [ $UID -eq "0" ]
     then
 	local kuc="\[\e[1;31m\]"
@@ -184,12 +182,12 @@ kituu_bash_prompt() {
 	local kituu_user_symbol="$"
     fi
 
-# color path differently if not on my own machines
+    # color path differently if not on my own machines
     if grep -q moe /etc/hosts; then kpc=$kuc; else kpc="\[\e[1;34m\]"; fi
 
     # curl -L https://github.com/git/git/raw/master/contrib/completion/git-completion.bash > $scriptsdir/git-completion.bash
 
-# Return Smiley
+    # Return Smiley
     local kituu_smiley='$(if [[ $? -eq 0 ]]; then echo "\[\e[1;32m\]"":)"; else echo "\[\e[1;31m\]"":("; fi;)'
 
     case "$TERM" in
@@ -197,14 +195,10 @@ kituu_bash_prompt() {
 	    PS1="> "
 	    ;;
 	xterm*|rxvt*|eterm*|screen*)
-  	    # PS1="\[\e]1;\u@\h: \W\007\e]2;\u@\h: \W\007\]\${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
   	    PS1="${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
-	    # PS1="> "
-            printf "\n\nI'm not dumb, I'm $TERM - $(date -d @1353294612 "+%Y-%m-%d %T")" >> ~/dump.txt
 	    ;;
 	linux*)
 	    PS1="${knc}┌─(${kuc}\u${knc}@\h)(\$kituu_info_up1)(\$kituu_info_up2${knc})\$kituu_info_up3${knc}\${kituu_fill}(${kpc}\${kituu_live_pwd}${knc})─┐\n└─(${kituu_smiley}${knc})─> $kituu_user_symbol "
-	    # PS1="linux > "
 	    ;;
 	*)
 	    PS1="> "
