@@ -582,8 +582,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 (global-set-key (kbd "M-s-b") 'bookmark-set)
 (global-set-key (kbd "s-b") 'bookmark-jump)
-(define-key global-map [M-f1] 'px-bookmarks-toggle-last)
-;; (define-key global-map [s-b] 'bookmark-set)
 
 (global-set-key (kbd "C-h x") 'px-help-emacs)
 (global-set-key (kbd "C-h *") 'px-scratch)
@@ -646,7 +644,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-z") 'undo-tree-undo)
 (global-set-key (kbd "C-S-z") 'undo-tree-redo)
 
-(global-set-key (kbd "C-TAB") 'tabbar-forward)
+(define-key global-map [C-tab] 'tabbar-forward)
+;; (global-set-key (kbd "C-tab") 'tabbar-forward)
 (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
 
 ;; (define-key org-mode-map (kbd "C-<tab>") 'tabbar-forward)
@@ -861,6 +860,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(custom-enabled-themes (quote (tango-dark)))
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
+ '(diary-file "~/Ubuntu One/org/agenda.org")
  '(epa-popup-info-window nil)
  '(fold-dwim-outline-style-default (quote nested))
  '(font-use-system-font t)
@@ -891,6 +891,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(org-html-postamble t)
  '(org-html-postamble-format (quote (("fr" "<p class=\"author\"><a href=\"/men/wiki\">← Accueil</a> - <a href=\"#\">↑ Page</a> %a (%e) - MàJ %C - %v</p>"))))
  '(org-html-validation-link "<a href=\"http://validator.w3.org/check?uri=referer\">Valid HTML</a>")
+ '(org-return-follows-link t)
  '(org-support-shift-select (quote always))
  '(org-use-sub-superscripts nil)
  '(recenter-positions (quote (middle top bottom)))
@@ -973,24 +974,6 @@ Revert HEAD to 7                                                  git reset --ha
 (require 'ox-publish)
 (require 'ox-html)
 
-;; (setq org-publish-project-alist
-;;   '(("org-html"
-;;  :base-directory "~/org/"
-;;  :base-extension "org"
-;;  :publishing-directory "~/public_html/"
-;;  :recursive t
-;;  :publishing-function org-html-publish-to-html
-;;  :table-of-contents: nil
-;;  :auto-postamble nil)
-;; ("org-static"
-;;  :base-directory "~/org/"
-;;  :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
-;;  :publishing-directory "~/public_html/"
-;;  :recursive t
-;;  :publishing-function org-publish-attachment)
-;;    ("org" :components ("org-html" "org-static"))))
-
-;; (require 'org-publish)
 (setq org-publish-project-alist
       '(("mensup" :components ("org-notes" "org-static"))
         ("org-notes"
@@ -999,14 +982,7 @@ Revert HEAD to 7                                                  git reset --ha
          :publishing-directory "~/Documents/svnmen/"
          :recursive t
          :auto-postamble nil
-         ;; :table-of-contents headlines
-         ;; :section-numbers nil
-         :publishing-function org-html-publish-to-html
-         ;; :style "<link rel='stylesheet' href='wiki/css/stylesheet.css' />"
-          ;; :auto-sitemap t                ; Generate sitemap.org automagically...
-         ;; :sitemap-filename "sitemap.org"  ; ... call it sitemap.org (it's the default)...
-         ;; :sitemap-title "Sitemap"         ; ... with title 'Sitemap'.
-         )
+         :publishing-function org-html-publish-to-html)
         ("org-static"
          :base-directory "~/Documents/svnmen/"
          :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
@@ -1015,44 +991,30 @@ Revert HEAD to 7                                                  git reset --ha
          :publishing-function org-publish-attachment)))
 
 (setq org-capture-templates
-      '(("t" "Task" entry (file+headline (car org-agenda-files) "Tasks")
-         "** TODO %?\n  %i\n  %a\n")
-        ("j" "Journal" entry (file+headline px-org-file "Journal")
-         "* %?\nEntered on %U\n  %i\n  %a\n")
-        ("J" "Joke" entry (file+headline px-org-file "Jokes")
-         "* %?\nEntered on %U\n  %i\n  %a\n")))
-
-;; (setq org-export-html-postamble nil)
-;; (setq org-export-html-postamble t)
-;; (setq org-default-notes-file  "~/.org/orgx.org")
-(setq org-return-follows-link t)
+      '(("t" "Todo" entry (file+headline diary-file "Tasks")
+         "* TODO %?\n  %i\n DEADLINE: %^t\n %a")
+        ("r" "Rendez-vous" entry (file+headline diary-file "Rendez-vous")
+         "* Rendez-vous %?\n  %i\n %^t\n %a")
+        ("j" "Journal" entry (file+datetree diary-file)
+         "* %?\nEntered on %U\n  %i\n  %a")))
 
 (require 'appt)
-;; (setq org-agenda-include-diary t)
 (setq appt-time-msg-list nil)
 (org-agenda-to-appt)
 
 (defadvice org-agenda-redo (after org-agenda-redo-add-appts)
   "Pressing `r' on the agenda will also add appointments."
   (progn
+    (message "yowl")
     (setq appt-time-msg-list nil)
     (org-agenda-to-appt)))
 
 (ad-activate 'org-agenda-redo)
-;; -----------------------------------
 
-;; I enable appt reminders, set the format to 'window and provide
-;; a display function that calls a python program to do the popup:
-
-;; -----------------------------------
 (progn
   (appt-activate 1)
   (setq appt-display-format 'window)
   (setq appt-disp-window-function (function my-appt-disp-window))
   (defun my-appt-disp-window (min-to-app new-time msg)
-    ;; (call-process "/home/px/bin/popup.py" nil 0 nil min-to-app msg new-time)
     (message "REMINDER : %s" msg)
     (call-process "/usr/bin/zenity" nil nil nil "--info" (format "--text=%s" msg))))
-
-;; (call-process "/home/px/bin/popup.py" nil 0 nil "0" "plop" "0")
-;; (call-process "/usr/bin/zenity" nil nil nil "--info" (format "--text=%s" msg))
