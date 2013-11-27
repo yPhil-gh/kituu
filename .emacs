@@ -645,7 +645,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-z") 'undo-tree-undo)
 (global-set-key (kbd "C-S-z") 'undo-tree-redo)
 
-(global-set-key (kbd "C-<tab>") 'tabbar-forward)
+(global-set-key (kbd "C-TAB") 'tabbar-forward)
 (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
 
 ;; (define-key org-mode-map (kbd "C-<tab>") 'tabbar-forward)
@@ -887,6 +887,9 @@ Revert HEAD to 7                                                  git reset --ha
  '(mm-text-html-renderer (quote links))
  '(mumamo-margin-use (quote (left-margin 13)))
  '(org-agenda-files (quote ("~/Ubuntu One/org/agenda.org")))
+ '(org-html-postamble t)
+ '(org-html-postamble-format (quote (("fr" "<p class=\"author\"><a href=\"/men/wiki\">← Accueil</a> - <a href=\"#\">↑ Page</a> %a (%e) - MàJ %C - %v</p>"))))
+ '(org-html-validation-link "<a href=\"http://validator.w3.org/check?uri=referer\">Valid HTML</a>")
  '(org-support-shift-select (quote always))
  '(org-use-sub-superscripts nil)
  '(recenter-positions (quote (middle top bottom)))
@@ -965,26 +968,49 @@ Revert HEAD to 7                                                  git reset --ha
 
 ;; (setq org-directory "~/Ubuntu One/org")
 
-;; (require 'org-publish)
+(require 'ox-publish)
+(require 'ox-html)
+
 ;; (setq org-publish-project-alist
-;;       '(("mensup" :components ("org-notes" "org-static"))
-;;         ("org-notes"
-;;          :base-directory "~/Documents/svnmen/"
-;;          :base-extension "org"
-;;          :publishing-directory "~/Documents/svnmen/"
-;;          :recursive t
-;;          :table-of-contents nil
-;;          :publishing-function org-html-publish-to-html
-;;           ;; :auto-sitemap t                ; Generate sitemap.org automagically...
-;;          ;; :sitemap-filename "sitemap.org"  ; ... call it sitemap.org (it's the default)...
-;;          ;; :sitemap-title "Sitemap"         ; ... with title 'Sitemap'.
-;;          )
-;;         ("org-static"
-;;          :base-directory "~/Documents/svnmen/"
-;;          :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
-;;          :publishing-directory "~/Documents/svnmen/"
-;;          :recursive t
-;;          :publishing-function org-publish-attachment)))
+;;   '(("org-html"
+;;  :base-directory "~/org/"
+;;  :base-extension "org"
+;;  :publishing-directory "~/public_html/"
+;;  :recursive t
+;;  :publishing-function org-html-publish-to-html
+;;  :table-of-contents: nil
+;;  :auto-postamble nil)
+;; ("org-static"
+;;  :base-directory "~/org/"
+;;  :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+;;  :publishing-directory "~/public_html/"
+;;  :recursive t
+;;  :publishing-function org-publish-attachment)
+;;    ("org" :components ("org-html" "org-static"))))
+
+;; (require 'org-publish)
+(setq org-publish-project-alist
+      '(("mensup" :components ("org-notes" "org-static"))
+        ("org-notes"
+         :base-directory "~/Documents/svnmen/"
+         :base-extension "org"
+         :publishing-directory "~/Documents/svnmen/"
+         :recursive t
+         :auto-postamble nil
+         ;; :table-of-contents headlines
+         ;; :section-numbers nil
+         :publishing-function org-html-publish-to-html
+         ;; :style "<link rel='stylesheet' href='wiki/css/stylesheet.css' />"
+          ;; :auto-sitemap t                ; Generate sitemap.org automagically...
+         ;; :sitemap-filename "sitemap.org"  ; ... call it sitemap.org (it's the default)...
+         ;; :sitemap-title "Sitemap"         ; ... with title 'Sitemap'.
+         )
+        ("org-static"
+         :base-directory "~/Documents/svnmen/"
+         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+         :publishing-directory "~/Documents/svnmen/"
+         :recursive t
+         :publishing-function org-publish-attachment)))
 
 (setq org-capture-templates
       '(("t" "Task" entry (file+headline (car org-agenda-files) "Tasks")
