@@ -36,6 +36,7 @@
   (require 'edmacro nil 'noerror)     ; Built-in : Macro bits (Required by iswitchb)
   (require 'package nil 'noerror)
   (require 'ecb nil 'noerror)
+  (require 'uniquify nil 'noerror)
   (require 'auto-complete nil 'noerror))
 
 (if (>= emacs-major-version 24)
@@ -918,6 +919,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(undo-tree-enable-undo-in-region nil)
  '(undo-tree-history-directory-alist (quote (("." . "~/.emacs.d/backup/"))))
  '(undo-tree-visualizer-diff t)
+ '(uniquify-buffer-name-style (quote post-forward) nil (uniquify))
  '(user-full-name "Philippe Coatmeur")
  '(user-mail-address "philcm@gnu.org")
  '(vc-make-backup-files nil)
