@@ -1079,13 +1079,9 @@ Must be an XPM (use Gimp)."
       (add-text-properties 0 s
                            `(local-map
                              ,map mouse-face mode-line-highlight uri
-                             ,url help-echo
-                             ,(format "
-______________________________________
-mouse-1: View in mail-bug
-mouse-2: View on %s" url))
+                             ,msg help-echo
+                             ,(format "Appointment : %s" msg))
                            mail-bug-logo)
-
       mail-bug-logo)))
 
 (defun abug-notify-modeline (min-to-app new-time msg)
