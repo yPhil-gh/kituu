@@ -869,6 +869,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(global-linum-mode t)
  '(global-undo-tree-mode t)
  '(haml-backspace-backdents-nesting nil)
+ '(holiday-other-holidays (quote islamic-holidays))
  '(inhibit-startup-echo-area-message (user-login-name))
  '(inhibit-startup-screen t)
  '(iswitchb-mode t)
@@ -961,13 +962,13 @@ Revert HEAD to 7                                                  git reset --ha
 ;; ORG! ______________________________________________________________________
 
 ;; (add-to-list 'load-path (expand-file-name "~/git/org-mode/lisp"))
-(add-to-list 'auto-mode-alist '("\\.\\(org\\  |org_archive\\|txt\\)$" . org-mode))
-(require 'org-install)
-(require 'org-habit)
+;; (add-to-list 'auto-mode-alist '("\\.\\(org\\  |org_archive\\|txt\\)$" . org-mode))
+;; (require 'org-install)
+;; (require 'org-habit)
 
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cb" 'org-iswitchb)
+;; (global-set-key "\C-cl" 'org-store-link)
+;; (global-set-key "\C-ca" 'org-agenda)
+;; (global-set-key "\C-cb" 'org-iswitchb)
 
 ;; (setq org-directory "~/Ubuntu One/org")
 
@@ -991,21 +992,21 @@ Revert HEAD to 7                                                  git reset --ha
          :publishing-function org-publish-attachment)))
 
 (setq org-capture-templates
-      '(("t" "Todo" entry (file+headline diary-file "Tasks")
+      '(("t" "Todo" entry (file+headline (car org-agenda-files) "Tasks")
          "* TODO %?\n  %i\n DEADLINE: %^t\n %a")
-        ("r" "Rendez-vous" entry (file+headline diary-file "Rendez-vous")
+        ("r" "Rendez-vous" entry (file+headline (car org-agenda-files) "Rendez-vous")
          "* Rendez-vous %?\n  %i\n %^t\n %a")
-        ("j" "Journal" entry (file+datetree diary-file)
+        ("j" "Journal" entry (file+datetree (car org-agenda-files))
          "* %?\nEntered on %U\n  %i\n  %a")))
 
 (require 'appt)
+(setq org-agenda-include-diary t)
 (setq appt-time-msg-list nil)
 (org-agenda-to-appt)
 
 (defadvice org-agenda-redo (after org-agenda-redo-add-appts)
   "Pressing `r' on the agenda will also add appointments."
   (progn
-    (message "yowl")
     (setq appt-time-msg-list nil)
     (org-agenda-to-appt)))
 
@@ -1017,4 +1018,5 @@ Revert HEAD to 7                                                  git reset --ha
   (setq appt-disp-window-function (function my-appt-disp-window))
   (defun my-appt-disp-window (min-to-app new-time msg)
     (message "REMINDER : %s" msg)
+    (play-sound-file "/usr/share/sounds/purple/receive.wav")
     (call-process "/usr/bin/zenity" nil nil nil "--info" (format "--text=%s" msg))))
