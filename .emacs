@@ -1055,7 +1055,7 @@ Must be an XPM (use Gimp)."
   (setq nice-uri "plip")
   (if (null msg)
       " "
-    (let ((s (format "%d" (length msg)))
+    (let ((s 1)
           (map (make-sparse-keymap))
           (url (concat "http://" nice-uri)))
 
@@ -1069,14 +1069,24 @@ Must be an XPM (use Gimp)."
            (interactive "e")
            (browse-url ,url)))
 
-      (add-text-properties 0 (length s)
+      ;; (add-text-properties 0 s
+      ;;                      `(local-map
+      ;;                        ,map mouse-face mode-line-highlight uri
+      ;;                        ,url help-echo
+      ;;                        ,(format "%s" min-to-app new-time msg))
+      ;;                      "x")
+
+      (add-text-properties 0 s
                            `(local-map
                              ,map mouse-face mode-line-highlight uri
                              ,url help-echo
                              ,(format "
-%s" min-to-app new-time msg))
-                           s)
-      (concat mail-bug-logo ":" s))))
+______________________________________
+mouse-1: View in mail-bug
+mouse-2: View on %s" url))
+                           mail-bug-logo)
+
+      mail-bug-logo)))
 
 (defun abug-notify-modeline (min-to-app new-time msg)
   (progn (setq global-mode-string ())
