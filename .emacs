@@ -645,6 +645,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-S-z") 'undo-tree-redo)
 
 (define-key global-map [C-tab] 'tabbar-forward)
+;; (define-key org-mode-map [C-tab] 'tabbar-forward)
 ;; (global-set-key (kbd "C-tab") 'tabbar-forward)
 (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
 
@@ -983,9 +984,9 @@ Revert HEAD to 7                                                  git reset --ha
 
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline (car org-agenda-files) "Tasks")
-         "* TODO %?\n  %i\n DEADLINE: %^t\n %a")
+         "* TODO %?\n%i \n   DEADLINE: %^t")
         ("r" "Rendez-vous" entry (file+headline (car org-agenda-files) "Rendez-vous")
-         "* Rendez-vous %?\n  %i\n %^t\n %a")
+         "* RV %?\n  %i\n %^t\n %a")
         ("j" "Journal" entry (file+datetree (car org-agenda-files))
          "* %?\nEntered on %U\n  %i\n  %a")))
 
@@ -997,6 +998,7 @@ Revert HEAD to 7                                                  git reset --ha
 (defadvice org-agenda-redo (after org-agenda-redo-add-appts)
   "Pressing `r' on the agenda will also add appointments."
   (progn
+    (message "I'm useless")
     (setq appt-time-msg-list nil)
     (org-agenda-to-appt)))
 
@@ -1005,8 +1007,80 @@ Revert HEAD to 7                                                  git reset --ha
 (progn
   (appt-activate 1)
   (setq appt-display-format 'window)
-  (setq appt-disp-window-function (function my-appt-disp-window))
-  (defun my-appt-disp-window (min-to-app new-time msg)
-    (message "REMINDER : %s" msg)
-    (play-sound-file "/usr/share/sounds/purple/receive.wav")
-    (call-process "/usr/bin/zenity" nil nil nil "--info" (format "--text=%s" msg))))
+  (setq appt-disp-window-function (function abug-display)))
+
+(defun abug-display (min-to-app new-time msg)
+  (abug-notify (format "Appointment in %s minute(s)" min-to-app) msg
+               "/usr/share/icons/gnome/32x32/status/appointment-soon.png"
+               "/usr/share/sounds/ubuntu/stereo/message.ogg")
+  (abug-notify-modeline min-to-app new-time msg))
+(setq appt-disp-window-function (function abug-display))
+
+(defun abug-notify (title msg &optional icon sound)
+  "Show a popup if we're on X, or echo it otherwise; TITLE is the title
+of the message, MSG is the context. Optionally, you can provide an ICON and
+a sound to be played"
+  (interactive)
+  (when sound (shell-command
+               (concat "mplayer -really-quiet " sound " 2> /dev/null")))
+  (if (eq window-system 'x)
+      (shell-command
+       (concat "notify-send "
+               (if icon (concat "-i " icon) "")
+               " '" title "' '" msg "'"))
+    (message (concat title ": " msg))))
+
+;; (abug-notify "Warning" "The end is near"
+;;    "/usr/share/yelp/icons/hicolor/16x16/status/yelp-page-video.png" "/usr/share/sounds/purple/receive.wav")
+
+
+;; Modeline Notification
+(defcustom mail-bug-icon
+  (when (image-type-available-p 'xpm)
+    '(image :type xpm
+            :file "~/.emacs.d/lisp/mail-bug/greenbug.xpm"
+            :ascent center))
+  "Icon for the first account.
+Must be an XPM (use Gimp)."
+  :group 'mail-bug-interface)
+
+(defconst mail-bug-logo
+  (if (and window-system
+           mail-bug-icon)
+      (apply 'propertize " " `(display ,mail-bug-icon))
+    mbug-host-name))
+
+(defun abug-mode-line (min-to-app new-time msg)
+  "Construct an emacs modeline object."
+  (setq nice-uri "plip")
+  (if (null msg)
+      " "
+    (let ((s (format "%d" (length msg)))
+          (map (make-sparse-keymap))
+          (url (concat "http://" nice-uri)))
+
+      (define-key map (vector 'mode-line 'mouse-1)
+        `(lambda (e)
+           (interactive "e")
+           (switch-to-buffer "mail-bug")))
+
+      (define-key map (vector 'mode-line 'mouse-2)
+        `(lambda (e)
+           (interactive "e")
+           (browse-url ,url)))
+
+      (add-text-properties 0 (length s)
+                           `(local-map
+                             ,map mouse-face mode-line-highlight uri
+                             ,url help-echo
+                             ,(format "
+%s" min-to-app new-time msg))
+                           s)
+      (concat mail-bug-logo ":" s))))
+
+(defun abug-notify-modeline (min-to-app new-time msg)
+  (progn (setq global-mode-string ())
+         (add-to-list 'global-mode-string
+                      (abug-mode-line min-to-app new-time msg))))
+
+;; (abug-notify-modeline "10:04" "00:04" "plop")
