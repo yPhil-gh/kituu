@@ -984,7 +984,7 @@ Revert HEAD to 7                                                  git reset --ha
 
 (setq org-capture-templates
       '(("t" "Todo" entry (file+headline (car org-agenda-files) "Tasks")
-         "* TODO %?\n%i \n   DEADLINE: %^t")
+         "* TODO %?\n%i \n  DEADLINE: %^t")
         ("r" "Rendez-vous" entry (file+headline (car org-agenda-files) "Rendez-vous")
          "* RV %?\n  %i\n %^t\n %a")
         ("j" "Journal" entry (file+datetree (car org-agenda-files))
@@ -1003,6 +1003,10 @@ Revert HEAD to 7                                                  git reset --ha
     (org-agenda-to-appt)))
 
 (ad-activate 'org-agenda-redo)
+
+;; The defun to defadvice is org-capture-finalize
+
+(call-interactively 'appt-check)
 
 (progn
   (appt-activate 1)
@@ -1038,7 +1042,7 @@ a sound to be played"
 (defcustom mail-bug-icon
   (when (image-type-available-p 'xpm)
     '(image :type xpm
-            :file "~/.emacs.d/lisp/mail-bug/greenbug.xpm"
+            :file "~/.emacs.d/lisp/mail-bug/ladybug.xpm"
             :ascent center))
   "Icon for the first account.
 Must be an XPM (use Gimp)."
@@ -1048,39 +1052,29 @@ Must be an XPM (use Gimp)."
   (if (and window-system
            mail-bug-icon)
       (apply 'propertize " " `(display ,mail-bug-icon))
-    mbug-host-name))
+    "appt"))
 
 (defun abug-mode-line (min-to-app new-time msg)
   "Construct an emacs modeline object."
-  (setq nice-uri "plip")
   (if (null msg)
       " "
     (let ((s 1)
-          (map (make-sparse-keymap))
-          (url (concat "http://" nice-uri)))
+          (map (make-sparse-keymap)))
 
       (define-key map (vector 'mode-line 'mouse-1)
         `(lambda (e)
            (interactive "e")
            (switch-to-buffer "mail-bug")))
 
-      (define-key map (vector 'mode-line 'mouse-2)
-        `(lambda (e)
-           (interactive "e")
-           (browse-url ,url)))
-
-      ;; (add-text-properties 0 s
-      ;;                      `(local-map
-      ;;                        ,map mouse-face mode-line-highlight uri
-      ;;                        ,url help-echo
-      ;;                        ,(format "%s" min-to-app new-time msg))
-      ;;                      "x")
-
       (add-text-properties 0 s
                            `(local-map
                              ,map mouse-face mode-line-highlight uri
                              ,msg help-echo
-                             ,(format "Appointment : %s" msg))
+                             ,(format "
+Appointement in %s minutes :
+%s : %s
+______________________________________
+mouse-1: View in agenda" min-to-app new-time msg))
                            mail-bug-logo)
       mail-bug-logo)))
 
@@ -1089,4 +1083,4 @@ Must be an XPM (use Gimp)."
          (add-to-list 'global-mode-string
                       (abug-mode-line min-to-app new-time msg))))
 
-;; (abug-notify-modeline "10:04" "00:04" "plop")
+;; (abug-notify-modeline "3" "00:04" "plop")
