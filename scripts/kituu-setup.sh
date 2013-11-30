@@ -239,14 +239,14 @@ Comment[en_US]=Byobu tmuxed (zsh) shell (gnome-terminal)
 Comment=Byobu tmuxed (zsh) shell" > $AUTOSTART_DIR/byobu.desktop
 
     printf "[Desktop Entry]
-Name=Skype
-Comment=Skype Internet Telephony
-Exec=skype
-Icon=skype
+Name=Gajim
+Comment=Gajim Internet Telephony
+Exec=gajim
+Icon=gajim
 NoDisplay=false
 Terminal=false
 Type=Application
-Encoding=UTF-8" > $AUTOSTART_DIR/skype.desktop
+Encoding=UTF-8" > $AUTOSTART_DIR/gajim.desktop
 fi
 
 echo -e $SEP"...Done."
