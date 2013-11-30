@@ -129,7 +129,7 @@ if $debian; then
 ## Install $group? (${pack[$group]})
 [Y/n] " YN
 	    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-		sudo aptitude install ${pack[$group]}
+		sudo apt-get install ${pack[$group]}
 	    fi
 	done
     fi
