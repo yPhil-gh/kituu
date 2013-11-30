@@ -223,7 +223,7 @@ if [ -e $SCRIPTDIR/build-emacs.sh ]; then
 fi
 
 read -e -p "
-## Setup autostart apps? [Y/n] " YN
+## Setup autostart apps? (Byobu / tmux and Gajim) [Y/n] " YN
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 [[ ! -d $AUTOSTART_DIR ]] && mkdir -v $AUTOSTART_DIR
 
