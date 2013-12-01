@@ -1006,7 +1006,7 @@ Revert HEAD to 7                                                  git reset --ha
 
 ;; The defun to defadvice is org-capture-finalize
 
-(call-interactively 'appt-check)
+;; (call-interactively 'appt-check)
 
 (progn
   (appt-activate 1)
@@ -1016,7 +1016,7 @@ Revert HEAD to 7                                                  git reset --ha
 (defun abug-display (min-to-app new-time msg)
   (abug-notify (format "Appointment in %s minute(s)" min-to-app) msg
                "/usr/share/icons/gnome/32x32/status/appointment-soon.png"
-               "/usr/share/sounds/ubuntu/stereo/message.ogg")
+               "/usr/share/sounds/speech-dispatcher/test.wav")
   (abug-notify-modeline min-to-app new-time msg))
 (setq appt-disp-window-function (function abug-display))
 
@@ -1025,8 +1025,7 @@ Revert HEAD to 7                                                  git reset --ha
 of the message, MSG is the context. Optionally, you can provide an ICON and
 a sound to be played"
   (interactive)
-  (when sound (shell-command
-               (concat "mplayer -really-quiet " sound " 2> /dev/null")))
+  (when sound (play-sound-file sound))
   (if (eq window-system 'x)
       (shell-command
        (concat "notify-send "
@@ -1034,9 +1033,7 @@ a sound to be played"
                " '" title "' '" msg "'"))
     (message (concat title ": " msg))))
 
-;; (abug-notify "Warning" "The end is near"
-;;    "/usr/share/yelp/icons/hicolor/16x16/status/yelp-page-video.png" "/usr/share/sounds/purple/receive.wav")
-
+;; (abug-notify "Warning" "The end is near" "/usr/share/icons/gnome/32x32/status/appointment-soon.png" "/usr/share/sounds/speech-dispatcher/test.wav")
 
 ;; Modeline Notification
 (defcustom mail-bug-icon
