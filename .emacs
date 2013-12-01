@@ -39,6 +39,8 @@
   (require 'uniquify nil 'noerror)
   (require 'auto-complete nil 'noerror))
 
+  (require 'appt-bug)
+
 (if (>= emacs-major-version 24)
     (progn
       ;; (require 'mail-bug nil 'noerror)
@@ -448,7 +450,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 (require 'desktop)
 
-;; px-session (is broken with undo)
 ;; Desktop
 (setq desktop-path '("~/.emacs.d/backup/"))
 (setq desktop-dirname "~/.emacs.d/backup/")
@@ -458,7 +459,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (defun px-saved-session ()
   (file-exists-p (concat desktop-dirname "/" desktop-base-file-name)))
 
-(defun Session-restore-px ()
+(defun px-session-restore ()
   "Restore a saved emacs session."
   (interactive)
   (if (px-saved-session)
@@ -482,8 +483,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
   (interactive "MSession name: ")
   (message "So what do I do with this: %s ?" px-session-named-name)
   (desktop-save (concat desktop-dirname "/" px-session-named-name
-                        ".session") t)
-  )
+                        ".session") t))
 
 
 ;; Modes! _____________________________________________________________________
@@ -989,96 +989,3 @@ Revert HEAD to 7                                                  git reset --ha
          "* RV %?\n  %i\n %^t\n %a")
         ("j" "Journal" entry (file+datetree (car org-agenda-files))
          "* %?\nEntered on %U\n  %i\n  %a")))
-
-(require 'appt)
-(setq org-agenda-include-diary t)
-(setq appt-time-msg-list nil)
-(org-agenda-to-appt)
-
-
-(defadvice org-agenda-redo (after org-agenda-redo-add-appts)
-  "Pressing `r' on the agenda will also add appointments."
-  (progn
-    (message "I'm useless")
-    (setq appt-time-msg-list nil)
-    (org-agenda-to-appt)))
-
-(ad-activate 'org-agenda-redo)
-
-;; The defun to defadvice is org-capture-finalize
-
-;; (call-interactively 'appt-check)
-
-(progn
-  (appt-activate 1)
-  (setq appt-display-format 'window)
-  (setq appt-disp-window-function (function abug-display)))
-
-(defun abug-display (min-to-app new-time msg)
-  (abug-notify (format "Appointment in %s minute(s)" min-to-app) msg
-               "/usr/share/icons/gnome/32x32/status/appointment-soon.png"
-               "/usr/share/sounds/speech-dispatcher/test.wav")
-  (abug-notify-modeline min-to-app new-time msg))
-(setq appt-disp-window-function (function abug-display))
-
-(defun abug-notify (title msg &optional icon sound)
-  "Show a popup if we're on X, or echo it otherwise; TITLE is the title
-of the message, MSG is the context. Optionally, you can provide an ICON and
-a sound to be played"
-  (interactive)
-  (when sound (play-sound-file sound))
-  (if (eq window-system 'x)
-      (shell-command
-       (concat "notify-send "
-               (if icon (concat "-i " icon) "")
-               " '" title "' '" msg "'"))
-    (message (concat title ": " msg))))
-
-;; (abug-notify "Warning" "The end is near" "/usr/share/icons/gnome/32x32/status/appointment-soon.png" "/usr/share/sounds/speech-dispatcher/test.wav")
-
-;; Modeline Notification
-(defcustom mail-bug-icon
-  (when (image-type-available-p 'xpm)
-    '(image :type xpm
-            :file "~/.emacs.d/lisp/mail-bug/ladybug.xpm"
-            :ascent center))
-  "Icon for the first account.
-Must be an XPM (use Gimp)."
-  :group 'mail-bug-interface)
-
-(defconst mail-bug-logo
-  (if (and window-system
-           mail-bug-icon)
-      (apply 'propertize " " `(display ,mail-bug-icon))
-    "appt"))
-
-(defun abug-mode-line (min-to-app new-time msg)
-  "Construct an emacs modeline object."
-  (if (null msg)
-      " "
-    (let ((s 1)
-          (map (make-sparse-keymap)))
-
-      (define-key map (vector 'mode-line 'mouse-1)
-        `(lambda (e)
-           (interactive "e")
-           (switch-to-buffer "mail-bug")))
-
-      (add-text-properties 0 s
-                           `(local-map
-                             ,map mouse-face mode-line-highlight uri
-                             ,msg help-echo
-                             ,(format "
-Appointement in %s minutes :
-%s : %s
-______________________________________
-mouse-1: View in agenda" min-to-app new-time msg))
-                           mail-bug-logo)
-      mail-bug-logo)))
-
-(defun abug-notify-modeline (min-to-app new-time msg)
-  (progn (setq global-mode-string ())
-         (add-to-list 'global-mode-string
-                      (abug-mode-line min-to-app new-time msg))))
-
-;; (abug-notify-modeline "3" "00:04" "plop")
