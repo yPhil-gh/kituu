@@ -36,10 +36,9 @@
   (require 'edmacro nil 'noerror)     ; Built-in : Macro bits (Required by iswitchb)
   (require 'package nil 'noerror)
   (require 'ecb nil 'noerror)
+  (require 'appt-bug nil 'noerror)
   (require 'uniquify nil 'noerror)
   (require 'auto-complete nil 'noerror))
-
-  (require 'appt-bug)
 
 (if (>= emacs-major-version 24)
     (progn
