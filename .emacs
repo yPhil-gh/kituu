@@ -995,6 +995,7 @@ Revert HEAD to 7                                                  git reset --ha
 (setq appt-time-msg-list nil)
 (org-agenda-to-appt)
 
+
 (defadvice org-agenda-redo (after org-agenda-redo-add-appts)
   "Pressing `r' on the agenda will also add appointments."
   (progn
