@@ -988,3 +988,21 @@ Revert HEAD to 7                                                  git reset --ha
          "* RV %?\n  %i\n %^t\n %a")
         ("j" "Journal" entry (file+datetree (car org-agenda-files))
          "* %?\nEntered on %U\n  %i\n  %a")))
+
+(defun move-line-up ()
+  "Move up the current line."
+  (interactive)
+  (transpose-lines 1)
+  (forward-line -2)
+  (indent-according-to-mode))
+
+(defun move-line-down ()
+  "Move down the current line."
+  (interactive)
+  (forward-line 1)
+  (transpose-lines 1)
+  (forward-line -1)
+  (indent-according-to-mode))
+
+(global-set-key [(control shift up)]  'move-line-up)
+(global-set-key [(control shift down)]  'move-line-down)
