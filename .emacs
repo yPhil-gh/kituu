@@ -890,7 +890,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(mumamo-margin-use (quote (left-margin 13)))
  '(org-agenda-files (quote ("~/Ubuntu One/org/agenda.org")))
  '(org-html-postamble t)
- '(org-html-postamble-format (quote (("fr" "<p class=\"author\"><a href=\"/men/wiki\">← Accueil</a> - <a href=\"#\">↑ Page</a> %a (%e) - MàJ %C - %v</p>"))))
+ ;; '(org-html-postamble-format (quote (("fr" "<p class=\"author\"><a href=\"/men/wiki\">← Accueil</a> - <a href=\"#\">↑ Page</a> %a (%e) - MàJ %C - %v</p>"))))
  '(org-html-validation-link "<a href=\"http://validator.w3.org/check?uri=referer\">Valid HTML</a>")
  '(org-return-follows-link t)
  '(org-support-shift-select (quote always))
@@ -1004,5 +1004,12 @@ Revert HEAD to 7                                                  git reset --ha
   (forward-line -1)
   (indent-according-to-mode))
 
-(global-set-key [(control shift up)]  'move-line-up)
-(global-set-key [(control shift down)]  'move-line-down)
+(global-set-key [(meta shift up)]  'move-line-up)
+(global-set-key [(meta shift down)]  'move-line-down)
+
+(add-hook 'php-mode-hook 'my-php-mode-hook)
+(defun my-php-mode-hook ()
+  (setq-local comment-start "//")
+  (setq-local comment-padding " ")
+  (setq-local comment-end "")
+  (setq-local comment-style 'indent))
