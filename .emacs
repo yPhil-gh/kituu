@@ -1004,5 +1004,43 @@ Revert HEAD to 7                                                  git reset --ha
   (forward-line -1)
   (indent-according-to-mode))
 
-(global-set-key [(control shift up)]  'move-line-up)
-(global-set-key [(control shift down)]  'move-line-down)
+(global-set-key [(meta shift up)]  'move-line-up)
+(global-set-key [(meta shift down)]  'move-line-down)
+
+(defun unpop-to-mark-command ()
+  "Unpop off mark ring into the buffer's actual mark.
+Does not set point.  Does nothing if mark ring is empty."
+  (interactive)
+  (let ((num-times (if (equal last-command 'pop-to-mark-command) 2
+                     (if (equal last-command 'unpop-to-mark-command) 1
+                       (error "Previous command was not a (un)pop-to-mark-command")))))
+    (dotimes (x num-times)
+      (when mark-ring
+        (setq mark-ring (cons (copy-marker (mark-marker)) mark-ring))
+        (set-marker (mark-marker) (+ 0 (car (last mark-ring))) (current-buffer))
+        (when (null (mark t)) (ding))
+        (setq mark-ring (nbutlast mark-ring))
+        (goto-char (mark t)))
+      (deactivate-mark))))
+
+(defmacro my-unpop-to-mark-advice ()
+  "Enable reversing direction with un/pop-to-mark."
+  `(defadvice ,(key-binding (kbd "C-SPC")) (around my-unpop-to-mark activate)
+     "Unpop-to-mark with negative arg"
+     (let* ((arg (ad-get-arg 0))
+            (num (prefix-numeric-value arg)))
+       (cond
+        ;; Enabled repeated un-pops with C-SPC
+        ((eq last-command 'unpop-to-mark-command)
+         (if (and arg (> num 0) (<= num 4))
+             ad-do-it ;; C-u C-SPC reverses back to normal direction
+           ;; Otherwise continue to un-pop
+           (setq this-command 'unpop-to-mark-command)
+           (unpop-to-mark-command)))
+        ;; Negative argument un-pops: C-- C-SPC
+        ((< num 0)
+         (setq this-command 'unpop-to-mark-command)
+         (unpop-to-mark-command))
+        (t
+         ad-do-it)))))
+(my-unpop-to-mark-advice)
