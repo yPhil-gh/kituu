@@ -2,10 +2,10 @@
 alias rm="rm -i"
 alias cp="cp -i"
 
-if [[ ! $HOSTNAME == "N900" ]] ; then
-    alias grep="grep -nIs --color"
-    alias ls="ls --color"
-fi
+# if [[ ! $HOSTNAME == "N900" ]] ; then
+#     alias grep="grep -nIs --color"
+#     alias ls="ls --color"
+# fi
 
 alias ll="ls -lha"
 alias la="ls -A"
@@ -35,52 +35,52 @@ alias orgsync="cd ~/.org && git-sync.sh "
 alias gitlog="git log --pretty=format:'%Cred%h%Creset | %C(yellow)%ad%Creset | %C(bold blue)%an%Creset - %s - %C(yellow)%d%Creset'"
 
 # Commands
-function ssh () {
+function ssh {
     if [ $# -eq 1 ] ; then
         tmux rename-window `echo $1 | sed 's/.*@//g' | sed 's/.local//g'`
     fi
     command ssh $*
 }
 
-z () {
+function z {
     cd ~/tmp/z
     rm -rf ~/tmp/z/*
 }
 
-px-git-last-commit-to-clipboard () {
+function px-git-last-commit-to-clipboard {
     git log | head -1 | cut -c 8-47 | xclip -selection clipboard
     echo "Last commit ($(git log | head -3 | cut -c 9-31 | tail -1) - $(git log | head -5 | cut -c 5-47 | tail -1)) copied to clipboard"
 }
 
-px-broadcast-mic () {
+function px-broadcast-mic {
     arecord -f dat | ssh -C $1 aplay -f dat
 }
 
-px-ram-dump () {
+function px-ram-dump {
     sudo cat /proc/kcore | strings | awk 'length > 20' | less
 }
 
-px-bandwidth-monitor () {
+function px-bandwidth-monitor {
     [[ $# -eq 0 ]] && NIC="eth0" || NIC=$1
     while [ /bin/true ] ; do OLD=$NEW; NEW=`cat /proc/net/dev | grep $NIC | tr -s ' ' | cut -d' ' -f "3 11"`; echo $NEW $OLD | awk '{printf("\rin: % 9.2g\t\tout: % 9.2g", ($1-$3)/1024, ($2-$4)/1024)}'; sleep 1; done
 }
 
-px-flight_status() { if [[ $# -eq 3 ]];then offset=$3; else offset=0; fi; curl "http://mobile.flightview.com/TrackByRoute.aspx?view=detail&al="$1"&fn="$2"&dpdat=$(date +%Y%m%d -d ${offset}day)" 2>/dev/null |html2text | \grep ":"; }
+function px-flight_status() { if [[ $# -eq 3 ]];then offset=$3; else offset=0; fi; curl "http://mobile.flightview.com/TrackByRoute.aspx?view=detail&al="$1"&fn="$2"&dpdat=$(date +%Y%m%d -d ${offset}day)" 2>/dev/null |html2text | \grep ":"; }
 
-px-guitar-tuner () {
+function px-guitar-tuner {
     for N in E2 A2 D3 G3 B3 E4;do play -n synth 4 pluck $N repeat 2;done
 }
 
-px-what-is-this-program-doing-now () {
+function px-what-is-this-program-doing-now {
     diff <(lsof -p `pidof $1`) <(sleep 5; lsof -p `pidof $1`)
 }
 
-md () {
+function md {
     mkdir -p $1
     cd $1
 }
 
-px-sshmount () {
+function px-sshmount {
     if [ ! $(grep "fuse.*$USER" /etc/group) ] ; then sudo gpasswd -a $USER fuse && echo "$0 : added $USER to group fuse" ; fi
     if [ "$#" -eq "1" ] ; then
         fusermount -u $1 && echo "$0 : Unmounted $1"
@@ -93,17 +93,17 @@ px-sshmount () {
     fi
 }
 
-px-vnc () {
+function px-vnc {
     \ssh -f -L 5900:127.0.0.1:5900 $1 "x11vnc -scrollcopyrect -noxdamage -localhost -nopw -once -display :0" ; vinagre 127.0.0.1:5900
 }
 
-px-update-N900 () {
+function px-update-N900 {
     rm .bashrc .kituu-commands.sh -f
     wget --no-check-certificate -nc https://github.com/xaccrocheur/kituu/raw/master/.kituu-commands.sh https://github.com/xaccrocheur/kituu/raw/master/.bashrc
     bash
 }
 
-px-lan-scan () {
+function px-lan-scan {
     LOCAL_IP=$(ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}')
     MASK="${LOCAL_IP:0:10}"
     GATEWAY=$(route -n | \grep '^0.0.0.0' | awk '{print $2}')
@@ -120,46 +120,46 @@ px-lan-scan () {
     done
 }
 
-px-wake-up-trackpad () {
+function px-wake-up-trackpad {
     sudo rmmod psmouse
     sudo modprobe psmouse
 }
 
-px-commit-alten-pjs () {
+function px-commit-alten-pjs {
     cd ~/Documents/Alten/svn/Support\ AGRESSO/pieces_jointes/
     svn status | grep '^?' | sed -e 's/^? *//' | xargs --no-run-if-empty -d '\n' svn add
 }
 
-px-dirsizes () { for DIR in $1* ; do if [ -d $DIR ] ; then du -hsL $DIR ; fi ; done }
+function px-dirsizes { for DIR in $1* ; do if [ -d $DIR ] ; then du -hsL $DIR ; fi ; done }
 
-px-websearch () {
+function px-websearch {
     firefox "https://duckduckgo.com/?q=$*"
 }
 
-function google () {
+function google {
     u=`perl -MURI::Escape -wle 'print "http://google.com/search?q=". uri_escape(join " ",  @ARGV)' $@`
     links $u
 }
 
-px-find-this-and-do-that () {
+function px-find-this-and-do-that {
     find . -name $1 -exec $2 '{}' \;
 }
 
-px-bkp () {
+function px-bkp {
     cp -Rp $1 ${1%.*}.bkp-$(date +%y-%m-%d-%Hh%M).${1#*.}
 }
 
-px-ip () {
+function px-ip {
     echo -e "Local:   $(ip -o -4 addr show | awk -F '[ /]+' '/global/ {print $4}')"
     echo -e "distant: $(dig +short myip.opendns.com @resolver1.opendns.com)"
 }
 
-px-remind-me-this-in () {
+function px-remind-me-this-in {
     sleep $2
     zenity --info --text=$1
 }
 
-px-netstats () {
+function px-netstats {
     if hash ss 2>/dev/null; then
         echo -e "      $(ss -p | cut -f2 -sd\" | sort | uniq | wc -l) processes : $(ss -p | cut -f2 -sd\" | sort | uniq | xargs) \n"
     fi
@@ -176,7 +176,7 @@ Connected hostnames"
     fi
 }
 
-px-notes () {
+function px-notes {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
