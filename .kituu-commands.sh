@@ -2,7 +2,7 @@
 alias rm="rm -i"
 alias cp="cp -i"
 
-if [[ ! $HOSTNAME == "N900" ]] ; then
+if [[ ! $HOSTNAME == "N900" || ! $HOSTNAME == "RM696" ]] ; then
     alias grep="grep -nIs --color"
     alias ls="ls --color"
 fi
