@@ -13,7 +13,7 @@ type -P apt-get &>/dev/null || { debian=true >&2; }
 if [[ $1 = "-rw" ]]; then RW=true; fi
 if ($RW); then vc_prefix="git@github.com:" && message="RW mode ON" && git config --global user.name "xaccrocheur" && git config --global user.email xaccrocheur@gmail.com ; else vc_prefix="https://github.com/" && message="RW mode OFF"; fi
 
-if [[ ! $HOSTNAME == "N900" ]] ; then
+if [[ ! $HOSTNAME == "N900" ||  ! $HOSTNAME == "RM696" ]] ; then
     FANCY_ARGS="-v"
 else
     N900=true
