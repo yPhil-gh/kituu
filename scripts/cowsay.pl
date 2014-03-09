@@ -1,5 +1,7 @@
 #!/usr/bin/env perl
 
+use Text::Wrap;
+
 $num_args = $#ARGV + 1;
 
 if ($num_args != 1) {
@@ -8,22 +10,22 @@ if ($num_args != 1) {
     $WIDTH = $ARGV[0];
 }
 
-use Text::Wrap;
 $Text::Wrap::columns = $WIDTH;
 $Text::Wrap::unexpand = 0;
 $Text::Wrap::separator = "|$/";
 
 my $FORTUNE = `/usr/games/fortune -a`;
 
+chomp($FORTUNE);
+
 my $LINEWIDTH = $WIDTH - 1;
 
-my $TOP =  " " . '_' x $LINEWIDTH . "\n";
-my $BOTTOM =  " " . '-' x $LINEWIDTH . "\n";
+my $TOP =  "\n " . '_' x $LINEWIDTH . "\n";
+my $BOTTOM =  "\n " . '-' x $LINEWIDTH . "\n";
 
 my $o = "oO";
 
-my $COW ="
-       \\   ^__^
+my $COW ="       \\   ^__^
         \\  ($o)\\_______
            (__)\\       )\\/\\
                 ||----w |
@@ -33,6 +35,6 @@ my $COW ="
 my $text = wrap('/ ', '| ', $FORTUNE) . "\n";
 $text =~ s/(^.+)\K\|/' ' x ($Text::Wrap::columns - length($1) -1) . ' |'/gem;
 
-my $CHOP = chop($text);
+chop($text);
 
 print $TOP . $text . $BOTTOM . $COW;
