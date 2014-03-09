@@ -1,36 +1,43 @@
 #!/usr/bin/env perl
 
-use Text::Wrap;
-my $WIDTH = 39;
-$Text::Wrap::columns = $WIDTH;
-# $Text::Wrap::separator = "\t|\n";
-# $Text::Wrap::separator2 = "\t|\n";
-$Text::Wrap::separator = "|$/";
-# $Text::Wrap::separator2 = "|";
+use strict;
+my ($rows, $cols);
+$data = `stty -a`;
+if ($data =~ /rows (\d+)\; columns (\d+)/) {
+($rows, $cols) = ($1, $2);
+} else {
+print "No match.\n";
+}
 
-my $FORTUNE = `fortune -a`;
 
-my $LINEWIDTH = $WIDTH - 2;
+# use Text::Wrap;
+# my $WIDTH = 39;
+# $Text::Wrap::columns = $WIDTH;
+# $Text::Wrap::separator = "|$/";
 
-my $TOP =  "/" . '‾' x $LINEWIDTH . "\\\n";
-my $BOTTOM =  "\\" . '_' x $LINEWIDTH . "/\n";
+# my $FORTUNE = `fortune -a`;
 
-my $EYES = "oo";
+# my $LINEWIDTH = $WIDTH - 2;
 
-my $COW ="
-       \\   ^__^
-        \\  ($EYES)\\_______
-           (__)\\       )\\/\\
-                ||----w |
-                ||     ||
-";
+# my $TOP =  "/" . '‾' x $LINEWIDTH . "\\\n";
+# my $BOTTOM =  "\\" . '_' x $LINEWIDTH . "/\n";
 
-print $TOP;
+# my $EYES = "oo";
 
-my $text = wrap('| ', '| ', $FORTUNE) . "\n";
-$text =~ s/(^.+)\K\|/' ' x ($Text::Wrap::columns - length($1)) . '|'/gem;
-print $text;
+# my $COW ="
+#        \\   ^__^
+#         \\  ($EYES)\\_______
+#            (__)\\       )\\/\\
+#                 ||----w |
+#                 ||     ||
+# ";
 
-print $BOTTOM;
+# print $TOP;
 
-print $COW;
+# my $text = wrap('| ', '| ', $FORTUNE) . "\n";
+# $text =~ s/(^.+)\K\|/' ' x ($Text::Wrap::columns - length($1)) . '|'/gem;
+# print $text;
+
+# print $BOTTOM;
+
+# print $COW;
