@@ -14,11 +14,11 @@ if [[ $1 = "-rw" ]]; then RW=true; fi
 if ($RW); then vc_prefix="git@github.com:" && message="RW mode ON" && git config --global user.name "xaccrocheur" && git config --global user.email xaccrocheur@gmail.com ; else vc_prefix="https://github.com/" && message="RW mode OFF"; fi
 
 if [[ $HOSTNAME == "N900" || $HOSTNAME == "RM696" ]] ; then
-    echo "This machine is a phone"
     FANCY_ARGS=""
+    SYMLINK_MSG=""
 else
-    echo "This machine is NOT a phone"
     FANCY_ARGS="-v"
+    SYMLINK_MSG="(symlink)"
 fi
 
 # Packages
@@ -93,7 +93,7 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     for i in * ; do
 	if [[  ! -h ~/$i && $i != *#* && $i != *~* && $i != *git* && $i != "README.org" && $i != "." && "${i}" != ".." ]] ; then
 	    if [[ -e ~/$i ]] ; then echo "(move)" && mv $FANCY_ARGS ~/$i ~/$i.orig ; fi
-	    echo "(symlink)" && ln -s $FANCY_ARGS $REPODIR/$i ~/
+	    echo $SYMLINK_MSG && ln -s $FANCY_ARGS $REPODIR/$i ~/
 	fi
     done
 fi
