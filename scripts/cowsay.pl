@@ -17,10 +17,10 @@ my $FORTUNE = `fortune -a`;
 
 my $LINEWIDTH = $WIDTH - 1;
 
-my $TOP =  "/" . '‾' x $LINEWIDTH . "\\\n";
-my $BOTTOM =  "\\" . '_' x $LINEWIDTH . "/\n";
+my $TOP =  " " . '_' x $LINEWIDTH . "\n";
+my $BOTTOM =  " " . '-' x $LINEWIDTH . "\n";
 
-my $o = "oo";
+my $o = "oO";
 
 my $COW ="
        \\   ^__^
@@ -30,15 +30,9 @@ my $COW ="
                 ||     ||
 ";
 
-print $TOP;
-
-my $text = wrap('| ', '| ', $FORTUNE) . "\n";
+my $text = wrap('/ ', '| ', $FORTUNE) . "\n";
 $text =~ s/(^.+)\K\|/' ' x ($Text::Wrap::columns - length($1) -1) . ' |'/gem;
 
 my $CHOP = chop($text);
 
-print $text;
-
-print $BOTTOM;
-
-print $COW;
+print $TOP . $text . $BOTTOM . $COW;
