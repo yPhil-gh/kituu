@@ -13,7 +13,7 @@ $Text::Wrap::columns = $WIDTH;
 $Text::Wrap::unexpand = 0;
 $Text::Wrap::separator = "|$/";
 
-my $FORTUNE = `fortune -a`;
+my $FORTUNE = `/usr/games/fortune -a`;
 
 my $LINEWIDTH = $WIDTH - 1;
 
