@@ -193,6 +193,7 @@ zdump Africa/Morocco Europe/Paris
 
 # if [ -d ~/.org ] ; then cd ~/.org && git-sync.sh ; fi
 
+
 if (type "cowsay" > /dev/null && type "fortune" > /dev/null ); then
     cowsay `fortune -a`
 else
