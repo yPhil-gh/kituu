@@ -20,11 +20,11 @@ my $LINEWIDTH = $WIDTH - 1;
 my $TOP =  "/" . '‾' x $LINEWIDTH . "\\\n";
 my $BOTTOM =  "\\" . '_' x $LINEWIDTH . "/\n";
 
-my $EYES = "oo";
+my $o = "oo";
 
 my $COW ="
        \\   ^__^
-        \\  ($EYES)\\_______
+        \\  ($o)\\_______
            (__)\\       )\\/\\
                 ||----w |
                 ||     ||
