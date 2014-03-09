@@ -1,43 +1,44 @@
 #!/usr/bin/env perl
 
-use strict;
-my ($rows, $cols);
-$data = `stty -a`;
-if ($data =~ /rows (\d+)\; columns (\d+)/) {
-($rows, $cols) = ($1, $2);
+$num_args = $#ARGV + 1;
+
+if ($num_args != 1) {
+    $WIDTH = 40;
 } else {
-print "No match.\n";
+    $WIDTH = $ARGV[0];
 }
 
+use Text::Wrap;
+$Text::Wrap::columns = $WIDTH;
+$Text::Wrap::unexpand = 0;
+$Text::Wrap::separator = "|$/";
 
-# use Text::Wrap;
-# my $WIDTH = 39;
-# $Text::Wrap::columns = $WIDTH;
-# $Text::Wrap::separator = "|$/";
+my $FORTUNE = `fortune -a`;
 
-# my $FORTUNE = `fortune -a`;
+my $LINEWIDTH = $WIDTH - 1;
 
-# my $LINEWIDTH = $WIDTH - 2;
+my $TOP =  "/" . '‾' x $LINEWIDTH . "\\\n";
+my $BOTTOM =  "\\" . '_' x $LINEWIDTH . "/\n";
 
-# my $TOP =  "/" . '‾' x $LINEWIDTH . "\\\n";
-# my $BOTTOM =  "\\" . '_' x $LINEWIDTH . "/\n";
+my $EYES = "oo";
 
-# my $EYES = "oo";
+my $COW ="
+       \\   ^__^
+        \\  ($EYES)\\_______
+           (__)\\       )\\/\\
+                ||----w |
+                ||     ||
+";
 
-# my $COW ="
-#        \\   ^__^
-#         \\  ($EYES)\\_______
-#            (__)\\       )\\/\\
-#                 ||----w |
-#                 ||     ||
-# ";
+print $TOP;
 
-# print $TOP;
+my $text = wrap('| ', '| ', $FORTUNE) . "\n";
+$text =~ s/(^.+)\K\|/' ' x ($Text::Wrap::columns - length($1) -1) . ' |'/gem;
 
-# my $text = wrap('| ', '| ', $FORTUNE) . "\n";
-# $text =~ s/(^.+)\K\|/' ' x ($Text::Wrap::columns - length($1)) . '|'/gem;
-# print $text;
+my $CHOP = chop($text);
 
-# print $BOTTOM;
+print $text;
 
-# print $COW;
+print $BOTTOM;
+
+print $COW;
