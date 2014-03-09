@@ -79,6 +79,17 @@ kituu_threshold_load=4                # CPU-meter threshold
 
 kituu_host=$(hostname -s)
 
+# Cowsay !
+if (type "cowsay" > /dev/null && type "fortune" > /dev/null ); then
+    cowsay `fortune -a`
+else
+    if [[ -x "$HOME/scripts/cowsay.pl" ]]
+    then
+        $HOME/scripts/cowsay.pl
+    fi
+fi
+
+# Prompt
 Kituu_bash_prompt_commands () {
 
     history -a;
