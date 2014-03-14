@@ -34,6 +34,8 @@ alias orgsync="cd ~/.org && git-sync.sh "
 
 alias gitlog="git log --pretty=format:'%Cred%h%Creset | %C(yellow)%ad%Creset | %C(bold blue)%an%Creset - %s - %C(yellow)%d%Creset'"
 
+alias px-shell="gnome-terminal --command byobu --maximize --hide-menubar"
+
 # Commands
 function ssh () {
     if [ $# -eq 1 ] ; then
