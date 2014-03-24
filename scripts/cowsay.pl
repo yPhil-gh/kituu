@@ -1,5 +1,9 @@
 #!/usr/bin/env perl
 
+# A simple clone of cowsay for when it's not in your repos
+# Copyright xaccrocheur@gmail.com
+# This software is GPL2
+
 use Text::Wrap;
 
 $num_args = $#ARGV + 1;
