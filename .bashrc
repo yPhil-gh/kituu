@@ -80,8 +80,7 @@ kituu_threshold_load=4                # CPU-meter threshold
 kituu_host=$(hostname -s)
 
 # Cowsay !
-if (type "cowsay" > /dev/null && type "fortune" > /dev/null ); then
-    echo "no COWSAY package"
+if (type "cowsay" > /dev/null 2>&1 && type "fortune" > /dev/null 2>&1); then
     cowsay `fortune -a`
 else
     if [[ -x "$HOME/scripts/cowsay.pl" ]]

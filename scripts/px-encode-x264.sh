@@ -12,7 +12,7 @@ options="-vcodec libx264 -b 512k -flags +loop+mv4 -cmp 256 \
 
 avconv -y -i "$infile" -an -pass 1 -threads auto $options "$tmpfile"
 
-avconv -y -i "$infile" -acodec aac -ar 44100 -ab 96k -pass 2 -threads auto $options "$tmpfile"
+avconv -y -i "$infile" -acodec aac -strict experimental -ar 44100 -ab 96k -pass 2 -threads auto $options "$tmpfile"
 
 # Or
 # options=$options"-codec:a copy"
