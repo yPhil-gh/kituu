@@ -81,6 +81,7 @@ kituu_host=$(hostname -s)
 
 # Cowsay !
 if (type "cowsay" > /dev/null && type "fortune" > /dev/null ); then
+    echo "no COWSAY package"
     cowsay `fortune -a`
 else
     if [[ -x "$HOME/scripts/cowsay.pl" ]]

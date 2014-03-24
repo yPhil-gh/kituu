@@ -15,6 +15,6 @@ avconv -y -i "$infile" -an -pass 1 -threads auto $options "$tmpfile"
 avconv -y -i "$infile" -acodec aac -ar 44100 -ab 96k -pass 2 -threads auto $options "$tmpfile"
 
 # Or
-# options="-codec:a copy"
+# options=$options"-codec:a copy"
 
 qt-faststart "$tmpfile" "$outfile"
