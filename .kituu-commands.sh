@@ -37,6 +37,11 @@ alias gitlog="git log --pretty=format:'%Cred%h%Creset | %C(yellow)%ad%Creset | %
 alias px-shell="gnome-terminal --command byobu --maximize --hide-menubar"
 
 # Commands
+
+function px-cleanup-filenames () {
+    find -type f | rename -v 's/%20/_/g'
+}
+
 function ssh () {
     if [ $# -eq 1 ] ; then
         tmux rename-window `echo $1 | sed 's/.*@//g' | sed 's/.local//g'`

@@ -15,11 +15,11 @@ options=$options" -vf scale=iw*0.5:-1"
 # Copy audio
 options=$options" -codec:a copy"
 # Shut up
-options=$options" -loglevel quiet -v 1 "
+options=$options" -loglevel info "
 
-echo "Options : $options"
+# echo "Options : $options"
 
-avconv -y -i "$infile" -an -pass 1 -threads auto $options "$outfile"
+avconv -y -i "$infile" -threads auto $options "$outfile"
 # avconv -y -i "$infile" -an -pass 1 -threads auto $options "$tmpfile"
 
 # avconv -y -i "$infile" -acodec aac -strict experimental -ar 44100 -ab 96k -pass 2 -threads auto $options "$tmpfile"
