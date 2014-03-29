@@ -42,6 +42,17 @@ function px-cleanup-filenames () {
     find -type f | rename -v 's/%20/_/g'
 }
 
+
+function px-iterate-filenames () {
+    X=1;
+    for i in *; do
+        echo "Renaming $i to $(printf %04d.%s ${X%.*} ${i##*.})"
+        mv $i $(printf %04d.%s ${X%.*} ${i##*.})
+        let X="$X+1"
+    done
+}
+
+
 function ssh () {
     if [ $# -eq 1 ] ; then
         tmux rename-window `echo $1 | sed 's/.*@//g' | sed 's/.local//g'`
