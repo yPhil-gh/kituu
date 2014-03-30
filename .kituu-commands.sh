@@ -44,12 +44,34 @@ function px-cleanup-filenames () {
 
 
 function px-iterate-filenames () {
+
     X=1;
     for i in *; do
+        ii=
         echo "Renaming $i to $(printf %04d.%s ${X%.*} ${i##*.})"
-        mv $i $(printf %04d.%s ${X%.*} ${i##*.})
+
+        newfile=$(printf %04d.%s ${X%.*} ${i##*.})
+
+        if [ -f $newfile ]
+        then
+            echo the file $newfile exists
+            let Z="$X+1"
+            if [ -f $newfile ] ; then
+                let Z="$X+1"
+                mv -n $i $(printf %04d.%s ${Z%.*} ${i##*.})
+            else
+                mv -n $i $(printf %04d.%s ${X%.*} ${i##*.})
+            fi
+        else
+            echo the file $newfile does not exists
+            mv -n $i $(printf %04d.%s ${X%.*} ${i##*.})
+        fi
+
+        # mv -n $i $(printf %04d.%s ${X%.*} ${i##*.})
         let X="$X+1"
     done
+
+    echo "Processed $X files"
 }
 
 
