@@ -221,6 +221,7 @@ px-notes () {
 echo -e "
 ################# NOTES
 MAC Address: 48:A2:2D:E1:79:74 (Shenzhen Huaxuchang Telecom Technology Co.)
+MAC Address: 48:A2:2D:E1:79:74 (Shenzhen Huaxuchang Telecom Technology Co.)
 git reset --hard HEAD@{7}
 ZSH : rm -rf ^survivorfile
 rm -rf ^survivorfile
