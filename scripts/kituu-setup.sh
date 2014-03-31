@@ -13,11 +13,12 @@ type -P apt-get &>/dev/null || { debian=true >&2; }
 if [[ $1 = "-rw" ]]; then RW=true; fi
 if ($RW); then vc_prefix="git@github.com:" && message="RW mode ON" && git config --global user.name "xaccrocheur" && git config --global user.email xaccrocheur@gmail.com ; else vc_prefix="https://github.com/" && message="RW mode OFF"; fi
 
-if [[ ! $HOSTNAME == "N900" ]] ; then
-    FANCY_ARGS="-v"
-else
-    N900=true
+if [[ $HOSTNAME == "N900" || $HOSTNAME == "RM696" ]] ; then
     FANCY_ARGS=""
+    SYMLINK_MSG=""
+else
+    FANCY_ARGS="-v"
+    SYMLINK_MSG="(symlink)"
 fi
 
 # Packages
@@ -34,7 +35,7 @@ pack[emacs24_stable]="emacs24 emacs24-el emacs24-common-non-dfsg aspell-fr"
 pack[emacs24_snapshot]="snapshot-el emacs-snapshot-gtk emacs-snapshot aspell-fr"
 pack[calf_plugins_git_tools]="libtool autoconf libexpat1-dev libfftw3-dev libglib2.0-dev libfluidsynth-dev jackd1 lv2core libglade2-dev gtk2-engines-pixbuf"
 
-BASICS="python zsh vim byobu apt-file curl wget htop bc locate sshfs git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap sox p7zip-full links gajim"
+BASICS="python zsh vim byobu apt-file curl wget htop bc locate sshfs git subversion cowsay fortune fortunes-off zenity vinagre x11vnc ccze nmap sox p7zip-full links gajim unison"
 
 # icedtea-7-plugin
 
@@ -77,7 +78,7 @@ echo -e $SEP"Kituu! #################
 
 $message
 
-Welcome to Kituu, $(whoami). This script allows you to install and maintain various packages from misc places. And well, do what you want done on every machine you install, and are tired of doing over and over again (tiny pedestrian things like create a "tmp" dir in your home).
+Welcome to Kituu, $(whoami). This script allows you to install and maintain various packages from misc places. And well, do what you want done on every machine you install, and are tired of doing over and over again (tiny pedestrian things like create a "tmp" dir in your $HOME).
 You will be asked for every package (or group of packages in the case of binaries) if you want to install it ; After that you can run $(basename $0) again (it's in your PATH now if you use the dotfiles, specifically the .*shrc) to update the packages. Sounds good? Let's go."
 
 echo -e $SEP"Dotfiles and scripts"
@@ -92,7 +93,7 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     for i in * ; do
 	if [[  ! -h ~/$i && $i != *#* && $i != *~* && $i != *git* && $i != "README.org" && $i != "." && "${i}" != ".." ]] ; then
 	    if [[ -e ~/$i ]] ; then echo "(move)" && mv $FANCY_ARGS ~/$i ~/$i.orig ; fi
-	    echo "(symlink)" && ln -s $FANCY_ARGS $REPODIR/$i ~/
+	    echo $SYMLINK_MSG && ln -s $FANCY_ARGS $REPODIR/$i ~/
 	fi
     done
 fi

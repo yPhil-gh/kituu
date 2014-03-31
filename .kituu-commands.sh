@@ -2,7 +2,7 @@
 alias rm="rm -i"
 alias cp="cp -i"
 
-if [[ ! $HOSTNAME == "N900" ]] ; then
+if [[ ! $HOSTNAME == "RM696" ]] ; then
     alias grep="grep -nIs --color"
     alias ls="ls --color"
 fi
@@ -34,7 +34,47 @@ alias orgsync="cd ~/.org && git-sync.sh "
 
 alias gitlog="git log --pretty=format:'%Cred%h%Creset | %C(yellow)%ad%Creset | %C(bold blue)%an%Creset - %s - %C(yellow)%d%Creset'"
 
+alias px-shell="gnome-terminal --command byobu --maximize --hide-menubar"
+
 # Commands
+
+function px-cleanup-filenames () {
+    find -type f | rename -v 's/%20/_/g'
+}
+
+
+function px-iterate-filenames () {
+
+    X=1;
+    for i in *; do
+        ii=
+        echo "Renaming $i to $(printf %04d.%s ${X%.*} ${i##*.})"
+
+        newfile=$(printf %04d.%s ${X%.*} ${i##*.})
+
+        if [ -f $newfile ]
+        then
+            echo the file $newfile exists
+            let Z="$X+1"
+            if [ -f $newfile ] ; then
+                let Z="$X+1"
+                mv -n $i $(printf %04d.%s ${Z%.*} ${i##*.})
+            else
+                mv -n $i $(printf %04d.%s ${X%.*} ${i##*.})
+            fi
+        else
+            echo the file $newfile does not exists
+            mv -n $i $(printf %04d.%s ${X%.*} ${i##*.})
+        fi
+
+        # mv -n $i $(printf %04d.%s ${X%.*} ${i##*.})
+        let X="$X+1"
+    done
+
+    echo "Processed $X files"
+}
+
+
 function ssh () {
     if [ $# -eq 1 ] ; then
         tmux rename-window `echo $1 | sed 's/.*@//g' | sed 's/.local//g'`

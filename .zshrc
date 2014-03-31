@@ -193,7 +193,14 @@ zdump Africa/Morocco Europe/Paris
 
 # if [ -d ~/.org ] ; then cd ~/.org && git-sync.sh ; fi
 
-if (type "cowsay" > /dev/null && type "fortune" > /dev/null ); then cowsay `fortune -a` ; fi
+if (type "cowsay" > /dev/null && type "fortune" > /dev/null ); then
+    cowsay `fortune -a`
+else
+    if [[ -x "$HOME/scripts/cowsay.pl" ]]
+    then
+        $HOME/scripts/cowsay.pl
+    fi
+fi
 
 # Prompt
 function precmd {
