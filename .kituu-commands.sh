@@ -47,7 +47,6 @@ function px-iterate-filenames () {
 
     X=1;
     for i in *; do
-        ii=
         echo "Renaming $i to $(printf %04d.%s ${X%.*} ${i##*.})"
 
         newfile=$(printf %04d.%s ${X%.*} ${i##*.})
