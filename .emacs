@@ -152,6 +152,35 @@
 
 
 ;; Funcs! _________________________________________________________________
+(require 'sgml-mode) ; need sgml-skip-tag-forward
+
+(defun px-replace-oneshot ()
+"Use the title of the page to replace a named tag"
+  (interactive)
+  (goto-char 1)
+  (while
+      (search-forward "<title>"  nil t)
+
+    (setq p3 (point)) ; beginning of text content, after <div class="x-note">
+    (backward-char)
+    (sgml-skip-tag-forward 1)
+    (backward-char 30)
+    (setq p4 (point)) ; end of tag content, before the </div>
+
+    (setq contenu (buffer-substring-no-properties p3 p4))
+
+    (setq position1 (line-number-at-pos))
+
+    (setq bulletCnt (count-matches "[a-z]" p3 p4) )
+
+    (when (> bulletCnt 2)
+      (progn
+        (message (format "(%s) Found at line: %d" contenu position1))
+        (query-replace-regexp "<h2>Contents" (concat "<h2>" contenu))
+        (query-replace-regexp "<h1>*.*" "")
+        ))
+    (save-buffer (current-buffer))
+    (kill-buffer (current-buffer))))
 
 (defun px-date ()
   "Insert date"
