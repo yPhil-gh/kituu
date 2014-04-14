@@ -1,7 +1,7 @@
 # Vars
 # DSSI_PATH=/usr/lib/calf/
 export DSSI_PATH=/usr/lib/dssi/:/usr/lib/calf/:/usr/local/lib/calf/
-export LADSPA_PATH=/usr/lib/ladspa/:/usr/lib/calf/
+export LADSPA_PATH=/usr/lib/ladspa/:/usr/local/lib/calf/
 export VST_PATH=/usr/local/lib/lxvst/
 
 # Aliases
