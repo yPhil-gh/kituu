@@ -182,6 +182,19 @@
     (save-buffer (current-buffer))
     (kill-buffer (current-buffer))))
 
+(defun px-cleanup ()
+  "Cleanup"
+  (interactive)
+  (goto-char 1)
+  (progn
+    (query-replace-regexp "" "fi")
+    (query-replace-regexp "" "ff")
+    (query-replace-regexp "- " "")
+    ;; (query-replace-regexp " \\" "\"")
+    )
+  )
+
+
 (defun px-date ()
   "Insert date"
   (interactive)
