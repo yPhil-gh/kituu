@@ -5,11 +5,11 @@
 
 # hydrogen
 # yoshimi
+# vmpk
+# qmidinet
 
 APPS="
 qjackctl
-vmpk
-qmidinet
 "
 DAW=$1
 

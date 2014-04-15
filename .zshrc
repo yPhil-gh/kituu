@@ -1,10 +1,5 @@
 # My .zshrc - created 01 Jul 2012
 
-# My vars
-LXVST_PATH=~/Studio/LXVST
-PYTHONPATH=$PYTHONPATH:/usr/share/gst-python/0.10/examples/
-PATH=$PATH:~/scripts/beatnitpycker/
-
 #colourful man pages
 export LESS_TERMCAP_mb=$'\E[01;31m'       # begin blinking
 export LESS_TERMCAP_md=$'\E[01;38;5;74m'  # begin bold

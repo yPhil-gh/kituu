@@ -1,4 +1,8 @@
 # Vars
+
+PYTHONPATH=$PYTHONPATH:/usr/share/gst-python/0.10/examples/
+PATH=$PATH:~/scripts/beatnitpycker/:~/src/radium/bin/
+
 # DSSI_PATH=/usr/lib/calf/
 export DSSI_PATH=/usr/lib/dssi/:/usr/lib/calf/:/usr/local/lib/calf/
 export LADSPA_PATH=/usr/lib/ladspa/:/usr/local/lib/calf/
