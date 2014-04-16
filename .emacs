@@ -527,13 +527,13 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
                         ".session") t))
 
 
+
 ;; Modes! _____________________________________________________________________
 
 ;; (string-match "*message*" "*message*-plop")
 
 ;; (auto-complete-mode t)
 (menu-bar-mode -1)
-(auto-fill-mode -1)
 (fset 'yes-or-no-p 'y-or-n-p)
 (put 'overwrite-mode 'disabled t)
 (setq c-default-style "bsd"
@@ -547,12 +547,16 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (add-to-list 'auto-mode-alist '("\\.list\\'" . conf-mode))
 (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
 
+
 ;; Externals! _________________________________________________________________
 
 (setq browse-url-browser-function 'browse-url-generic
       browse-url-generic-program "firefox")
 
+
 ;; Hooks! _____________________________________________________________________
+
+(add-hook 'text-mode-hook 'turn-off-auto-fill)
 
 (add-hook 'haml-mode-hook
           (lambda ()
@@ -932,7 +936,6 @@ Revert HEAD to 7                                                  git reset --ha
  '(mumamo-margin-use (quote (left-margin 13)))
  '(org-agenda-files (quote ("~/Ubuntu One/org/agenda.org")))
  '(org-html-postamble t)
- ;; '(org-html-postamble-format (quote (("fr" "<p class=\"author\"><a href=\"/men/wiki\">← Accueil</a> - <a href=\"#\">↑ Page</a> %a (%e) - MàJ %C - %v</p>"))))
  '(org-html-validation-link "<a href=\"http://validator.w3.org/check?uri=referer\">Valid HTML</a>")
  '(org-return-follows-link t)
  '(org-support-shift-select (quote always))
@@ -955,6 +958,7 @@ Revert HEAD to 7                                                  git reset --ha
  '(show-paren-mode t)
  '(smtpmail-smtp-server "smtp.gmail.com")
  '(standard-indent 2)
+ '(text-mode-hook nil)
  '(tramp-default-method "ssh")
  '(tramp-verbose 6)
  '(undo-limit 400000)
