@@ -204,7 +204,7 @@ if (type -P firefox &>/dev/null); then
 <body style='background:#ccc'>
 <a href='http://opensimo.org/play/?a=Azer0,Counternatures' title='Music!'>
 <img id='logo' src='http://people.mozilla.com/~faaborg/files/shiretoko/firefoxIcon/firefox-128-noshadow.png' /></a>
-  <h1>Hi $(whoami), click to install/update extension</h1>
+  <h1>Hi $(whoami), click to install extension</h1>
   <ul>" > $PAGE
 echo -e $ADDONS >> $PAGE
 echo -e "</ul>
