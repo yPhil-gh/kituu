@@ -159,7 +159,7 @@
   (interactive)
   (goto-char 1)
   (while
-      (search-forward "<title>"  nil t)
+      (search-forward "modify"  nil t)
 
     (setq p3 (point)) ; beginning of text content, after <div class="x-note">
     (backward-char)
@@ -175,12 +175,14 @@
 
     (when (> bulletCnt 2)
       (progn
-        (message (format "(%s) Found at line: %d" contenu position1))
-        (query-replace-regexp "<h2>Contents" (concat "<h2>" contenu))
-        (query-replace-regexp "<h1>*.*" "")
+        (message (format "%d bullets" bulletCnt))
+        ;; (message (format "(%s) Found at line: %d" contenu position1))
+        ;; (query-replace-regexp "<h2>Contents" (concat "<h2>" contenu))
+        ;; (query-replace-regexp "<h1>*.*" "")
         ))
-    (save-buffer (current-buffer))
-    (kill-buffer (current-buffer))))
+    ;; (save-buffer (current-buffer))
+    ;; (kill-buffer (current-buffer))
+    ))
 
 (defun px-cleanup ()
   "Cleanup"

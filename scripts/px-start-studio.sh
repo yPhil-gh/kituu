@@ -13,7 +13,7 @@ qjackctl
 "
 DAW=$1
 
-ALL_APPS="$APPS $DAW"
+ALL_APPS="$APPS"
 
 kill_all() {
     for APP in $ALL_APPS ; do
@@ -28,6 +28,12 @@ if [ "$2" == "-k" ] ; then
     kill_all
     killall jackd
     exit 0
+fi
+
+if [ $DAW == "radium" ] ; then
+    echo "yo"
+    cd ~/src/radium/bin/
+    ./radium
 fi
 
 kill_all

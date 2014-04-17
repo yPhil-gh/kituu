@@ -54,6 +54,7 @@ MOZ[adblock_edge]="$MOZURL/394968/platform:2/addon-394968-latest.xpi?src=dp-btn-
 MOZ[color_picker]="$MOZURL/271/addon-271-latest.xpi"
 MOZ[TabCloser]="$MOZURL/9669/addon-9669-latest.xpi"
 MOZ[Ctrl-Tab]="$MOZURL/5244/addon-5244-latest.xpi"
+MOZ[TabCloser]="$MOZURL/5244/addon-9369-latest.xpi"
 MOZ[GreaseMonkey_jira]="https://raw.github.com/xaccrocheur/kituu/master/scripts/gm-jira.user.js"
 MOZ[Smart_Referer]="$MOZURL/327417/addon-327417-latest.xpi"
 MOZ[https_everywhere]="https://www.eff.org/https-everywhere"

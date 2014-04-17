@@ -20,6 +20,8 @@ PACKS[00-calf]="git clone https://github.com/falkTX/calf.git"
 
 BIN_BUILD="autoconf libqt4-dev dssi-dev librubberband-dev libboost-dev libglibmm-2.4-dev libsndfile-dev liblo-dev libxml2-dev uuid-dev libcppunit-dev libfftw3-dev libaubio-dev liblrdf-dev libsamplerate-dev libgnomecanvas2-dev libgnomecanvasmm-2.6-dev libcwiid-dev libgtkmm-2.4-dev libalsa-ocaml-dev libjack-jackd2-dev lv2-dev liblilv-dev libsuil-dev libsratom-dev liblash-compat-dev lv2-c++-tools libpaq-dev"
 
+# Carla=qt5-default libsmf-dev libmxml-dev
+
 BIN_PLUGINS="invada-studio-plugins-lv2 invada-studio-plugins-ladspa so-synth-lv2 swh-lv2 mda-lv2 wsynth-dssi xsynth-dssi zynaddsubfx-dssi calf-plugins abgate aeolus amb-plugins autotalent caps cmt eq10q foo-yc20 hexter ir.lv2 lv2fil lv2vocoder mcp-plugins mda-lv2 swh-lv2 tap-plugins vocproc wah-plugins xsynth-dssi zita-at1 fluid-soundfont-gm amsynth whysynth"
 
 BIN_PROD="linux-lowlatency qmidinet qjackctl vmpk"
