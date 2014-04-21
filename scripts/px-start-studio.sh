@@ -10,6 +10,7 @@
 
 APPS="
 qjackctl
+yoshimi
 "
 DAW=$1
 
@@ -26,7 +27,7 @@ kill_all() {
 
 if [ "$2" == "-k" ] ; then
     kill_all
-    killall jackd
+    # killall jackd
     exit 0
 fi
 
