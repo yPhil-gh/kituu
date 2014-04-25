@@ -229,6 +229,7 @@ px-notes () {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
+Allah ou akbar
 MAC Address: 48:A2:2D:E1:79:74 (Shenzhen Huaxuchang Telecom Technology Co.)
 MAC Address: 48:A2:2D:E1:79:74 (Shenzhen Huaxuchang Telecom Technology Co.)
 git reset --hard HEAD@{7}
@@ -251,6 +252,14 @@ a && middleman build --clean && Commit 'deployed' && Push master
 if ('$term' == emacs) set term=dumb
 sudo ln -s /usr/lib/i386-linux-gnu/libao.so.4 /usr/lib/libao.so.2
 sshfs name@server:/path/to/folder /path/to/mount/point
+
+# reset the index to the desired tree
+git reset 56e05fced
+# move the branch pointer back to the previous HEAD
+git reset --soft HEAD@{1}
+git commit -m 'Revert to 56e05fced'
+# Update working copy to reflect the new commit
+git reset --hard
 
 ## Use px-notes \"this is a new note\" to add a note
 "

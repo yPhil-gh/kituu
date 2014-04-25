@@ -152,6 +152,46 @@
 
 
 ;; Funcs! _________________________________________________________________
+
+(defun px-vc-manage-current-file ()
+  "VC-manage the current file."
+  (interactive)
+
+  (shell-command (format "cd %s" default-directory))
+
+  (defun s-trim-right (s)
+    "Remove whitespace at the end of S."
+    (if (string-match "[ \t\n\r]+\\'" s)
+        (replace-match "" t t s)
+      s))
+
+  (let* (
+         (commit-message (read-from-minibuffer
+                          (format "Enter commit MSG (default %s): " default-directory)
+                          nil nil nil nil default-directory))
+         (mysearch (shell-command-to-string "git log | head -7 | tail -1  | cut -c 8-47"))
+         (myreplace (shell-command-to-string "git log | head -1 | cut -c 8-47"))
+         (yo (format "%s" (s-trim-right mysearch)))
+         (ya (format "%s" (s-trim-right myreplace)))
+         )
+
+
+    (save-excursion
+      (goto-char (point-min))
+      (let ((count 0))
+        (while (re-search-forward yo nil t)
+          (replace-match ya))))
+
+    (progn
+      (message "%s|%s" yo ya)
+      (message "Committing...")
+      (save-buffer)
+      (shell-command (format "git commit -am \"%s\" && git push origin master" commit-message))
+      (shell-command "ssh simo -C 'cd opensimo/www/play/ && git pull'")
+      (message "Updating...")
+
+    (message "... Done."))))
+
 (require 'sgml-mode) ; need sgml-skip-tag-forward
 
 (defun px-replace-oneshot ()
