@@ -153,8 +153,11 @@
 
 ;; Funcs! _________________________________________________________________
 
+
 (defun px-vc-manage-current-file ()
-  "VC-manage the current file."
+  "VC-manage the current file.
+That means save it, check the hash of the previous commit, and replace it in the file with the current one.
+"
   (interactive)
 
   (shell-command (format "cd %s" default-directory))
@@ -187,9 +190,9 @@
       (message "Committing...")
       (save-buffer)
       (shell-command (format "git commit -am \"%s\" && git push origin master" commit-message))
+      (message "Upping in distant repo...")
       (shell-command "ssh simo -C 'cd opensimo/www/play/ && git pull'")
-      (message "Updating...")
-
+      (message "Still updating...")
     (message "... Done."))))
 
 (require 'sgml-mode) ; need sgml-skip-tag-forward
