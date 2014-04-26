@@ -52,7 +52,6 @@ function px-cleanup-filenames () {
     find -type f | rename -v 's/%20/_/g'
 }
 
-
 function px-iterate-filenames () {
 
     X=1;
