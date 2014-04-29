@@ -38,7 +38,10 @@
   (require 'ecb nil 'noerror)
   (require 'appt-bug nil 'noerror)
   (require 'uniquify nil 'noerror)
-  (require 'auto-complete nil 'noerror))
+  (require 'zeroconf nil 'noerror)
+(require 'auto-complete nil 'noerror))
+
+(zeroconf-init nil)                   ; NIL means "local"
 
 (if (>= emacs-major-version 24)
     (progn
@@ -190,10 +193,9 @@ That means save it, check the hash of the previous commit, and replace it in the
       (message "Committing...")
       (save-buffer)
       (shell-command (format "git commit -am \"%s\" && git push origin master" commit-message))
-      (message "Upping in distant repo...")
       (shell-command "ssh simo -C 'cd opensimo/www/play/ && git pull'")
-      (message "Still updating...")
-    (message "... Done."))))
+      (message "Upping in distant repo...")
+      (message "... Done."))))
 
 (require 'sgml-mode) ; need sgml-skip-tag-forward
 
@@ -618,6 +620,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
       paragraph-separate "$")
 
 ;; Vars! ______________________________________________________________________
+
+(setq dired-dwim-target t)
 
 ;; (all of this will slowly migrate to custom)
 (setq-default cursor-type 'bar)
