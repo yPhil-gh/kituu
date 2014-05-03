@@ -17,7 +17,7 @@ if [[ ! $HOSTNAME == "RM696" ]] ; then
     alias ls="ls --color"
 fi
 
-alias ll="ls -lha"
+alias ll="ls -lha --group-directories-first"
 alias la="ls -A"
 
 alias k="cd ~/.kituu/"
