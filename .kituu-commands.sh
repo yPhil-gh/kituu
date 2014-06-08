@@ -228,6 +228,7 @@ px-notes () {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
+/ssh:user@machine:
 Allah ou akbar
 MAC Address: 48:A2:2D:E1:79:74 (Shenzhen Huaxuchang Telecom Technology Co.)
 MAC Address: 48:A2:2D:E1:79:74 (Shenzhen Huaxuchang Telecom Technology Co.)
