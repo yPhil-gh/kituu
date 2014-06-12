@@ -1,0 +1,39 @@
+v2.2b (30 apr 2014):
+* engine optimization;
+* fixed bug with PhonoPaper export.
+v2.2 (15 apr 2014):
+* improved audio import quality;
+* multi-core support for audio import;
+* new high quality audio import mode - Filter Bank; you can enable it in the Settings -> Sound Quality -> Rec.Quality;
+* new effect: Gamma Correction;
+* PhonoPaper export;
+* bugs fixed.
+v2.1 (8 dec 2013):
+* layers;
+* multi-level undo buffer (default number of levels - 2, but you can change it in the app Settings);
+* improved brush manager (with such options as Load From JPG/PNG/GIF file, Save to PNG);
+* now any selection can be converted to brush;
+* new effects: Gain, Noise, Vibrato;
+* new keyboard shortcut: CTRL + Y (redo);
+* new keyboard shortcut: CTRL + A (select/unselect all);
+* new keyboard shortcuts: SHIFT + LEFT / RIGHT / UP / DOWN (faster movement);
+* now it is possible to move the selection (in the Selection mode only) by pressing LEFT, RIGHT, UP and DOWN button;
+* added Panic button (in the Project menu) - press it to stop all audio and MIDI tasks;
+* new Visualization settings: Pitch Panel (Show/Hide), Time Panel (Show/Hide);
+* added ability to change screen orientation manually (only for Android): Preferences -> Interface -> Angle;
+* additional File Browser functions: Remove, Rename, Cut, Copy, Paste, Create Directory;
+* now you can see the file size in the File Browser;
+* iOS: Audio Copy/Paste (Project -> Export/Import -> ...);
+* progressive JPEG support;
+* AIFF support (load only);
+* bugs fixed.
+v2.0 (20 sep 2013):
+* rewritten from scratch with the following systems support: iOS, Android, OSX, Linux, Windows;
+* optimized for realtime playing;
+* version 2 can load *.vns files from version 1, but not vice versa.
+v1.1 (26 jun 2007)
+* UI redesign;
+* improved sound quality;
+* bugs fixed.
+v1.0 (?? ??? 2007):
+* the first release (for Windows only).
