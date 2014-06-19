@@ -10,6 +10,7 @@
 (let ((default-directory "~/.emacs.d/lisp/"))
   (normal-top-level-add-subdirs-to-load-path))
 
+(add-to-list 'load-path "~/.emacs.d/lisp/")
 
 ;; Packages! ____________________________________________________________________
 (package-initialize)
@@ -25,13 +26,14 @@
      (progn (message "installing %s" package)
             (package-refresh-contents)
             (package-install package))))
- '(org-jira tabbar org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode))
+ '(org-jira tabbar org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode rainbow-mode))
 
 ;; (autoload 'magit-status "magit" nil t)
 
 ;; LIBS! ______________________________________________________________________
 
 (eval-and-compile
+  (require 'cl nil 'noerror)          ; Built-in : Common Lisp lib
   (require 'cl nil 'noerror)          ; Built-in : Common Lisp lib
   (require 'edmacro nil 'noerror)     ; Built-in : Macro bits (Required by iswitchb)
   (require 'package nil 'noerror)
@@ -41,6 +43,9 @@
   (require 'uniquify nil 'noerror)
   (require 'zeroconf nil 'noerror)
 (require 'auto-complete nil 'noerror))
+
+(require 'pixilang-mode)
+
 
 (zeroconf-init nil)                   ; NIL means "local"
 
@@ -143,7 +148,7 @@
 
 (set-face-underline 'font-lock-warning-face "yellow")
 
-(add-hook 'emacs-lisp-mode-hook
+(add-hook 'pixilang-mode-hook
           (lambda ()
             (font-lock-add-keywords nil
                                     '(("\\<\\(FIXME\\|HACK\\|BUG\\|pX\\):" 1 font-lock-warning-face t)))))
@@ -595,6 +600,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (add-to-list 'auto-mode-alist '("\\.list\\'" . conf-mode))
 (add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
 
+(add-to-list 'auto-mode-alist '("\\.pixi\\'" . pixilang-mode))
+
 
 ;; Externals! _________________________________________________________________
 
@@ -603,6 +610,16 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 
 ;; Hooks! _____________________________________________________________________
+
+(add-hook 'c-mode-hook 'my-c-mode-hook)
+(add-hook 'php-mode-hook 'my-c-mode-hook)
+
+
+(defun my-c-mode-hook ()
+  (setq-local comment-start "//")
+  (setq-local comment-padding " ")
+  (setq-local comment-end "")
+  (setq-local comment-style 'indent))
 
 (add-hook 'text-mode-hook 'turn-off-auto-fill)
 
@@ -721,7 +738,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "s-m") 'message-mail)
 (global-set-key (kbd "s-o") 'find-file-at-point)
 (global-set-key (kbd "s-d") 'px-date)
-(global-set-key (kbd "s-<") 'kmacro-end-and-call-macro)
+(global-set-key (kbd "<C-kp-0>") 'kmacro-end-and-call-macro)
 (global-set-key (kbd "C-s-m") 'apply-macro-to-region-lines)
 (global-set-key (kbd "<s-up>") (kbd "C-x C-SPC")) ; global mark ring
 ;; (global-set-key (kbd "<s-down>") (kbd "C-- C-SPC"))
@@ -729,6 +746,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-x g") 'magit-status)
 
 (global-set-key (kbd "<s-left>") (kbd "C-u C-SPC"))
+
+
 
 ;; THIS NEXT ONE BROKE HAVOC!!
 ;; (global-set-key (kbd "C-d") nil) ; I kept deleting stuff
@@ -1141,9 +1160,6 @@ Does not set point.  Does nothing if mark ring is empty."
          ad-do-it)))))
 (my-unpop-to-mark-advice)
 
-(add-hook 'php-mode-hook 'my-php-mode-hook)
-(defun my-php-mode-hook ()
-  (setq-local comment-start "//")
-  (setq-local comment-padding " ")
-  (setq-local comment-end "")
-  (setq-local comment-style 'indent))
+
+(add-hook 'emacs-lisp-mode-hook
+          (lambda () (modify-syntax-entry ?_ "w")))
