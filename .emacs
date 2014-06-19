@@ -38,14 +38,12 @@
   (require 'edmacro nil 'noerror)     ; Built-in : Macro bits (Required by iswitchb)
   (require 'package nil 'noerror)
   (require 'mail-bug nil 'noerror)
+  (require 'pixilang-mode nil 'noerror)
   (require 'ecb nil 'noerror)
   (require 'appt-bug nil 'noerror)
   (require 'uniquify nil 'noerror)
   (require 'zeroconf nil 'noerror)
 (require 'auto-complete nil 'noerror))
-
-(require 'pixilang-mode)
-
 
 (zeroconf-init nil)                   ; NIL means "local"
 
