@@ -1,6 +1,5 @@
 ;;; See https://github.com/xaccrocheur/kituu/
 ;; Keep it under 1k lines ;p
-;; Use C-h x to read about what this .emacs can do for you (quite a bit)
 
 ;; Init! ______________________________________________________________________
 
@@ -12,7 +11,9 @@
 
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
+
 ;; Packages! ____________________________________________________________________
+
 (package-initialize)
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
@@ -28,7 +29,6 @@
             (package-install package))))
  '(org-jira tabbar org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode rainbow-mode))
 
-;; (autoload 'magit-status "magit" nil t)
 
 ;; LIBS! ______________________________________________________________________
 
@@ -64,20 +64,43 @@
 (setq jiralib-url "http://jira.sbcmaroc.com:8080")
 
 
-;; Server! ____________________________________________________________________
+(defvar iswitchb-mode-map)
+(defvar iswitchb-buffer-ignore)
+(defvar show-paren-delay)
+(defvar recentf-max-saved-items)
+(defvar recentf-max-menu-items)
+(defvar ispell-dictionary)
+(defvar desktop-path)
+(defvar desktop-dirname)
+(defvar desktop-base-file-name)
+(defvar display-time-string)
+(defvar ediff-window-setup-function)
+(defvar ediff-split-window-function)
+(defvar tabbar-buffer-groups-function)
+(defvar px-bkp-new-name)
 
-(server-start)
-(defun ff/raise-frame-and-give-focus ()
-  (when window-system
-    (raise-frame)
-    (x-focus-frame (selected-frame))
-    (set-mouse-pixel-position (selected-frame) 4 4)
-    ))
-(add-hook 'server-switch-hook 'ff/raise-frame-and-give-focus)
 
+;; Funcs! _________________________________________________________________
+
+
+(defun move-line-up ()
+  "Move up the current line."
+  (interactive)
+  (transpose-lines 1)
+  (forward-line -2)
+  (indent-according-to-mode))
+
+(defun move-line-down ()
+  "Move down the current line."
+  (interactive)
+  (forward-line 1)
+  (transpose-lines 1)
+  (forward-line -1)
+  (indent-according-to-mode))
 
 (defun ido-goto-symbol (&optional symbol-list)
-  "Refresh imenu and jump to a place in the buffer using Ido."
+  "Refresh imenu and jump to a place in the buffer using Ido. Bound to M-i.
+Try it on your dad's stereo."
   (interactive)
   (unless (featurep 'imenu)
     (require 'imenu nil t))
@@ -123,37 +146,6 @@
                     (string= (car imenu--rescan-item) name))
           (add-to-list 'symbol-names name)
           (add-to-list 'name-and-pos (cons name position))))))))
-
-(global-set-key (kbd "M-i") 'ido-goto-symbol)
-
-(defvar iswitchb-mode-map)
-(defvar iswitchb-buffer-ignore)
-(defvar show-paren-delay)
-(defvar recentf-max-saved-items)
-(defvar recentf-max-menu-items)
-(defvar ispell-dictionary)
-(defvar desktop-path)
-(defvar desktop-dirname)
-(defvar desktop-base-file-name)
-(defvar display-time-string)
-(defvar ediff-window-setup-function)
-(defvar ediff-split-window-function)
-(defvar tabbar-buffer-groups-function)
-(defvar px-bkp-new-name)
-
-
-;; Keywords! _________________________________________________________________
-
-(set-face-underline 'font-lock-warning-face "yellow")
-
-
-(add-hook 'python-mode-hook
-          (lambda ()
-            (font-lock-add-keywords nil
-                                    '(("\\<\\(FIXME\\|HACK\\|BUG\\|pX\\):" 1 font-lock-warning-face t)))))
-
-;; Funcs! _________________________________________________________________
-
 
 (defun px-vc-manage-current-file ()
   "VC-manage the current file.
@@ -583,10 +575,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (put 'overwrite-mode 'disabled t)
 (setq c-default-style "bsd"
       c-basic-offset 2)
-;; (when (functionp 'savehist-mode) (savehist-mode 1))
-;; (semantic-mode t)
-;; (which-function-mode t)
-;; (yas-global-mode 1)
 (add-to-list 'auto-mode-alist '("\\.haml\\'" . haml-mode))
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.list\\'" . conf-mode))
@@ -605,7 +593,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 (add-hook 'c-mode-hook 'my-c-mode-hook)
 (add-hook 'php-mode-hook 'my-c-mode-hook)
-
 
 (defun my-c-mode-hook ()
   (setq-local comment-start "//")
@@ -628,6 +615,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (add-to-list 'fill-nobreak-predicate 'fill-french-nobreak-p)
 (setq paragraph-start "\\*\\|$"
       paragraph-separate "$")
+
 
 ;; Vars! ______________________________________________________________________
 
@@ -666,17 +654,18 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
                  "%b"))
         " [%*]"))
 
+
 ;; Keys! ______________________________________________________________________
+
+(global-set-key [(meta shift up)]  'move-line-up)
+(global-set-key [(meta shift down)]  'move-line-down)
+
+(global-set-key (kbd "M-i") 'ido-goto-symbol)
 
 (global-set-key (kbd "M-j")
                 (lambda ()
                   (interactive)
                   (join-line -1)))
-
-(defun px-join-line ()
-  (join-line 1))
-
-;; (global-set-key (kbd "C-j") 'join-line)
 
 (setq-default indent-tabs-mode nil)
 
@@ -690,11 +679,10 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-h x") 'px-help-emacs)
 (global-set-key (kbd "C-h *") 'px-scratch)
 
-;; (global-set-key (kbd "²") 'dabbrev-expand)
 (global-set-key (kbd "²") 'hippie-expand)
 
-(define-key global-map [(meta up)] '(lambda() (interactive) (scroll-other-window -1)))
-(define-key global-map [(meta down)] '(lambda() (interactive) (scroll-other-window 1)))
+;; (define-key global-map [(meta up)] '(lambda() (interactive) (scroll-other-window -1)))
+;; (define-key global-map [(meta down)] '(lambda() (interactive) (scroll-other-window 1)))
 
 (define-key global-map [f1] 'delete-other-windows)
 (define-key global-map [S-f1] 'px-help-emacs)
@@ -710,7 +698,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 (global-set-key (kbd "C-f") 'isearch-forward)
 (global-set-key (kbd "C-S-f") 'isearch-backward)
-;; (global-set-key (kbd "C-m") 'magit-status)
+
 (global-set-key (kbd "C-s-t") 'sgml-close-tag)
 (define-key isearch-mode-map (kbd "C-f") 'isearch-repeat-forward)
 (define-key isearch-mode-map (kbd "C-S-f") 'isearch-repeat-backward)
@@ -732,17 +720,11 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "s-d") 'px-date)
 (global-set-key (kbd "<C-kp-0>") 'kmacro-end-and-call-macro)
 (global-set-key (kbd "C-s-m") 'apply-macro-to-region-lines)
-(global-set-key (kbd "<s-up>") (kbd "C-x C-SPC")) ; global mark ring
-;; (global-set-key (kbd "<s-down>") (kbd "C-- C-SPC"))
 
 (global-set-key (kbd "C-x g") 'magit-status)
 
 (global-set-key (kbd "<s-left>") (kbd "C-u C-SPC"))
 
-
-
-;; THIS NEXT ONE BROKE HAVOC!!
-;; (global-set-key (kbd "C-d") nil) ; I kept deleting stuff
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
 (global-set-key (kbd "C-o") 'find-file)
 (global-set-key (kbd "C-S-o") 'my-desktop-read)
@@ -751,12 +733,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-S-z") 'undo-tree-redo)
 
 (define-key global-map [C-tab] 'tabbar-forward)
-;; (define-key org-mode-map [C-tab] 'tabbar-forward)
-;; (global-set-key (kbd "C-tab") 'tabbar-forward)
 (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
-
-;; (define-key org-mode-map (kbd "C-<tab>") 'tabbar-forward)
-;; (define-key org-mode-map (kbd "C-S-<tab>") 'tabbar-backward)
 
 (global-set-key (kbd "C-=") 'insert-pair-brace)        ;{}
 (global-set-key (kbd "C-)") 'insert-pair-paren)        ;()
@@ -765,184 +742,11 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-'") 'insert-pair-squote)       ;''
 (global-set-key (kbd "C-\"") 'insert-pair-dbquote)     ;""
 
-
 ;; (global-set-key (kbd "M-DEL") 'kill-word)
 
-(global-set-key (kbd "M-s") 'save-buffer) ; Meta+s saves !! (see C-h b for all bindings, and C-h k + keystroke(s) for help)
-;; (global-set-key (kbd "M-<backspace>") 'backward-kill-word)
+(global-set-key (kbd "M-s") 'save-buffer) ; Meta+s saves !!  (and Jesus too BTW) (see C-h b for all bindings, and C-h k + keystroke(s) for help)
 (global-set-key (kbd "M-o") 'recentf-open-files)
 (global-set-key (kbd "M-d") 'px-toggle-comments)
-
-
-;; Help! ______________________________________________________________________
-
-(defun px-help-emacs ()
-  (interactive)
-  (princ "* EMACS cheat cheet
-
-** notes
-- Bits in *Bold* are custom ones (eg specific to this emacs config)
-- A newline is added at the EOF and all trailing spaces are removed at each
-  file save.
-- The last session is availaible by running C-S-o and selecting 'last
-  session'.
-- The 'emacs buffers' like '*Scratch*' are hidden from the main - F5, C-x b -
-buffer list. If you really must see them, use the usual C-x C-b.
-- Tabs and spaces are mixed. Emacs tries to do the smart thing depending on
-context.
-- 's' (super) on a PC keyboard, is the 'windows logo' key
-- Kill-ring doesn't work in macros :(. Use registers instead.
-
-** THIS VERY EMACS CONFIG
-*Open file                                                        C-o*
-*Open recent file                                                 M-o*
-*Open file path at point                                          s-o*
-*Open last session (buffers)                                      C-S-o*
-*Save named session (buffers)                                     s-s*
-
-*Save buffer                                                      M-s*
-*Kill buffer                                                      s-k*
-*Undo                                                             C-z*
-*Redo                                                             C-S-z*
-*Switch last buffer                                               s-²*
-*Scroll buffer in other window/pane                               M-<arrow>*
-
-*Go back to previous position (marking current)                   s-<left>*
-
-*Next buffer                                                      C-TAB*
-*Previous buffer                                                  C-S-TAB*
-*Toggle two last buffers                                          s-²*
-
-*Close other window/pane                                          F1*
-*Switch to other window/pane                                      F2*
-*Split horizontally                                               F3*
-*Split vertically                                                 F4*
-*Switch to buffer (list)                                          F5*
-*Spell-check buffer                                               F7*
-*Word-wrap toggle                                                 F10*
-
-*Match brace (() and {})                                          ù*
-*Next brace pair                                                  C-ù*
-*Previous brace pair                                              C-S-ù*
-*Enclose region in <tag> (sgml-tag)                               s-t RET tag [ args... ]*
-*Select 'this' or <that> (enclosed)                               s-SPC*
-*Search selection in google                                       s-g*
-*Complete with every possible match                               ²*
-
-*Php-mode                                                         s-p*
-*Html-mode                                                        s-h*
-*Js-mode                                                          s-j*
-
-** EMACSEN
-Go to line                                                        M-g M-g
-Go back to previous position  (w/o marking current -?!)           C-u C-SPC
-Recenter window around current line                               C-l
-Intelligently recenter window                                     C-S-l
-Copy to register A                                                C-x r s A
-Paste from register A                                             C-x r g A
-Set bookmark at point                                             C-x r m RET
-Close HTML tag                                                    sgml-close-tag
-Switch to *Messages* buffer                                       C-h e
-Transpose current line with previous one                          C-x C-t
-
-** ORG-MODE
-Schedule item                                                     C-c C-s
-
-** RECTANGLES
-Kill/clear rectangle                                              C-x r k/c
-yank-rectangle (upper left corner at point)                       C-x r y
-Insert STRING on each rectangle line.                             C-x r t string <RET>
-
-** MISC EDITING
-capitalize-word                                                   M-c
-upcase-word                                                       M-u
-downcase-word                                                     M-l
-downcase-region                                                   C-x C-l
-uppercase-region                                                  C-x C-u
-
-** MACROS
-start-kbd-macro                                                   C-x (
-Start a new macro definition.
-end-kbd-macro                                                     C-x )
-End the current macro definition.
-call-last-kbd-macro                                               C-x e
-Execute the last defined macro.
-call-last-kbd-maco                                                M-(number) C-x e
-Do that last macro (number times).
-stat-kbd-macro                                                    C-u C-x (
-Execute last macro and add to it.
-name-last-kbd-macro
-Name the last macro before saving it.
-insert-last-keyboard-macro
-Insert the macro you made into a file.
-load-file
-Load a file with macros in it.
-kbd-macro-query                                                   C-x q
-Insert a query into a keyboard macro.
-exit-recursive-edit                                               M-C-c
-Get the hell out of a recursive edit.
-
-** EDIFF
-Next / previous diff                                              n / p
-Copy a diff into b / opposite                                     a / b
-Save a / b buffer                                                 wa / wb
-
-** GNUS
-Sort summary by author/date                                       C-c C-s C-a/d
-Search selected imap folder                                       G G
-Mark thread read                                                  T k
-
-** PHP-MODE
-Search PHP manual for <point>.                                    C-c C-f
-Browse PHP manual in a Web browser.                               C-c RET / C-c C-m
-
-** VERSION CONTROL
-vc-next-action                                                    C-x v v
-Perform the next logical control operation on file
-vc-register                                                       C-x v i
-Add a new file to version control
-
-vc-update                                                         C-x v +
-Get latest changes from version control
-vc-version-other-window                                           C-x v ~
-Look at other revisions
-vc-diff                                                           C-x v =
-Diff with other revisions
-vc-revert-buffer                                                  C-x v u
-Undo checkout
-vc-cancel-version                                                 C-x v c
-Delete latest rev (look at an old rev and re-check it)
-
-vc-directory                                                      C-x v d
-Show all files which are not up to date
-vc-annotate                                                       C-x v g
-Show when each line in a tracked file was added and by whom
-vc-create-snapshot                                                C-x v s
-Tag all the files with a symbolic name
-vc-retrieve-snapshot                                              C-x v r
-Undo checkouts and return to a snapshot with a symbolic name
-
-vc-print-log                                                      C-x v l
-Show log (not in ChangeLog format)
-vc-update-change-log                                              C-x v a
-Update changelog
-
-vc-merge                                                          C-x v m
-vc-insert-headers                                                 C-x v h
-
-M-x vc-resolve-conflicts
-Ediff-merge session on a file with conflict markers
-
-** OTHER
-View git log                                                      git reflog
-Revert HEAD to 7                                                  git reset --hard HEAD@{7}
-"
-         (generate-new-buffer "px-help-emacs"))
-  (switch-to-buffer "px-help-emacs")
-  (org-mode)
-  (goto-char (point-min))
-  (org-show-subtree))
-
 
 ;; Custom ! ______________________________________________________________________
 
@@ -1069,50 +873,32 @@ Revert HEAD to 7                                                  git reset --ha
 ;; ORG! ______________________________________________________________________
 
 
-(require 'ox-publish)
-(require 'ox-html)
+;; (require 'ox-publish)
+;; (require 'ox-html)
 
-(setq org-publish-project-alist
-      '(("mensup" :components ("org-notes" "org-static"))
-        ("org-notes"
-         :base-directory "~/Documents/svnmen/"
-         :base-extension "org"
-         :publishing-directory "~/Documents/svnmen/"
-         :recursive t
-         :auto-postamble nil
-         :publishing-function org-html-publish-to-html)
-        ("org-static"
-         :base-directory "~/Documents/svnmen/"
-         :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
-         :publishing-directory "~/Documents/svnmen/"
-         :recursive t
-         :publishing-function org-publish-attachment)))
+;; (setq org-publish-project-alist
+;;       '(("mensup" :components ("org-notes" "org-static"))
+;;         ("org-notes"
+;;          :base-directory "~/Documents/svnmen/"
+;;          :base-extension "org"
+;;          :publishing-directory "~/Documents/svnmen/"
+;;          :recursive t
+;;          :auto-postamble nil
+;;          :publishing-function org-html-publish-to-html)
+;;         ("org-static"
+;;          :base-directory "~/Documents/svnmen/"
+;;          :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf"
+;;          :publishing-directory "~/Documents/svnmen/"
+;;          :recursive t
+;;          :publishing-function org-publish-attachment)))
 
-(setq org-capture-templates
-      '(("t" "Todo" entry (file+headline (car org-agenda-files) "Tasks")
-         "* TODO %?\n%i \n  DEADLINE: %^t")
-        ("r" "Rendez-vous" entry (file+headline (car org-agenda-files) "Rendez-vous")
-         "* RV %?\n  %i\n %^t\n %a")
-        ("j" "Journal" entry (file+datetree (car org-agenda-files))
-         "* %?\nEntered on %U\n  %i\n  %a")))
-
-(defun move-line-up ()
-  "Move up the current line."
-  (interactive)
-  (transpose-lines 1)
-  (forward-line -2)
-  (indent-according-to-mode))
-
-(defun move-line-down ()
-  "Move down the current line."
-  (interactive)
-  (forward-line 1)
-  (transpose-lines 1)
-  (forward-line -1)
-  (indent-according-to-mode))
-
-(global-set-key [(meta shift up)]  'move-line-up)
-(global-set-key [(meta shift down)]  'move-line-down)
+;; (setq org-capture-templates
+;;       '(("t" "Todo" entry (file+headline (car org-agenda-files) "Tasks")
+;;          "* TODO %?\n%i \n  DEADLINE: %^t")
+;;         ("r" "Rendez-vous" entry (file+headline (car org-agenda-files) "Rendez-vous")
+;;          "* RV %?\n  %i\n %^t\n %a")
+;;         ("j" "Journal" entry (file+datetree (car org-agenda-files))
+;;          "* %?\nEntered on %U\n  %i\n  %a")))
 
 (defun unpop-to-mark-command ()
   "Unpop off mark ring into the buffer's actual mark.
