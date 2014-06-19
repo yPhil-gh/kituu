@@ -146,17 +146,11 @@
 
 (set-face-underline 'font-lock-warning-face "yellow")
 
-(add-hook 'pixilang-mode-hook
-          (lambda ()
-            (font-lock-add-keywords nil
-                                    '(("\\<\\(FIXME\\|HACK\\|BUG\\|pX\\):" 1 font-lock-warning-face t)))))
-
 
 (add-hook 'python-mode-hook
           (lambda ()
             (font-lock-add-keywords nil
                                     '(("\\<\\(FIXME\\|HACK\\|BUG\\|pX\\):" 1 font-lock-warning-face t)))))
-
 
 ;; Funcs! _________________________________________________________________
 
