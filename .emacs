@@ -657,9 +657,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; Keys! ______________________________________________________________________
 
-(global-set-key [(meta shift up)]  'move-line-up)
-(global-set-key [(meta shift down)]  'move-line-down)
-
 (global-set-key (kbd "M-i") 'ido-goto-symbol)
 
 (global-set-key (kbd "M-j")
@@ -723,6 +720,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 (global-set-key (kbd "C-x g") 'magit-status)
 
+;; Time-machine
 (global-set-key (kbd "<s-left>") (kbd "C-u C-SPC"))
 
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
@@ -742,11 +740,15 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-'") 'insert-pair-squote)       ;''
 (global-set-key (kbd "C-\"") 'insert-pair-dbquote)     ;""
 
-;; (global-set-key (kbd "M-DEL") 'kill-word)
+(global-set-key (kbd "M-DEL") 'kill-word)
 
 (global-set-key (kbd "M-s") 'save-buffer) ; Meta+s saves !!  (and Jesus too BTW) (see C-h b for all bindings, and C-h k + keystroke(s) for help)
+;; Recent files
 (global-set-key (kbd "M-o") 'recentf-open-files)
 (global-set-key (kbd "M-d") 'px-toggle-comments)
+
+(global-set-key (kbd "<M-S-up>")  'move-line-up)
+(global-set-key (kbd "<M-S-down>")  'move-line-down)
 
 ;; Custom ! ______________________________________________________________________
 
