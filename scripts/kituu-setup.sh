@@ -61,12 +61,9 @@ MOZ[https_everywhere]="https://www.eff.org/https-everywhere"
 
 # Lisp packages
 declare -A LISP
-LISP[tabbar]="git clone https://github.com/dholm/tabbar.git"
-LISP[haml-mode]="git clone https://github.com/nex3/haml-mode.git"
-LISP[undo-tree]="git clone http://www.dr-qubit.org/git/undo-tree.git"
 LISP[mail-bug]="git clone ${vc_prefix}xaccrocheur/mail-bug.git"
 LISP[appt-bug]="git clone ${vc_prefix}xaccrocheur/appt-bug.git"
-LISP[appt-bug]="git clone ${vc_prefix}xaccrocheur/appt-bug.git"
+LISP[pixilang-mode]="git clone ${vc_prefix}xaccrocheur/pixilang-mode.git"
 # LISP[nxhtml]="bzr branch lp:nxhtml"
 
 # Various repos (that go in $SCRIPTDIR)
