@@ -77,8 +77,8 @@ setopt AUTO_LIST
 # Implied by MENU_COMPLETE
 # setopt AUTO_MENU
 setopt MENU_COMPLETE
-# setopt extended_glob
-
+setopt EXTENDED_GLOB
+setopt NO_BARE_GLOB_QUAL
 # HISTORY
 
 # Implied by SHARE_HISTORY
