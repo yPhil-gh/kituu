@@ -657,6 +657,9 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; Keys! ______________________________________________________________________
 
+(global-set-key [(meta shift up)]  'move-line-up)
+(global-set-key [(meta shift down)]  'move-line-down)
+
 (global-set-key (kbd "M-i") 'ido-goto-symbol)
 
 (global-set-key (kbd "M-j")
@@ -720,7 +723,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 (global-set-key (kbd "C-x g") 'magit-status)
 
-;; Time-machine
 (global-set-key (kbd "<s-left>") (kbd "C-u C-SPC"))
 
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
@@ -740,15 +742,11 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-'") 'insert-pair-squote)       ;''
 (global-set-key (kbd "C-\"") 'insert-pair-dbquote)     ;""
 
-(global-set-key (kbd "M-DEL") 'kill-word)
+;; (global-set-key (kbd "M-DEL") 'kill-word)
 
 (global-set-key (kbd "M-s") 'save-buffer) ; Meta+s saves !!  (and Jesus too BTW) (see C-h b for all bindings, and C-h k + keystroke(s) for help)
-;; Recent files
 (global-set-key (kbd "M-o") 'recentf-open-files)
 (global-set-key (kbd "M-d") 'px-toggle-comments)
-
-(global-set-key (kbd "<M-S-up>")  'move-line-up)
-(global-set-key (kbd "<M-S-down>")  'move-line-down)
 
 ;; Custom ! ______________________________________________________________________
 
@@ -764,8 +762,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(bbdb-use-pop-up nil)
  '(bookmark-sort-flag nil)
  '(buffer-offer-save nil)
- '(c-basic-offset (quote set-from-style))
- '(c-default-style "gnu")
+ '(c-basic-offset (quote set-from-style) t)
+ '(c-default-style "gnu" t)
  '(canlock-password "ebef4a12d0fad1c648b4b829291adb16cdefb9da")
  '(comment-style (quote extra-line))
  '(completion-auto-help (quote lazy))
@@ -787,6 +785,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(inhibit-startup-screen t)
  '(iswitchb-mode t)
  '(keyboard-coding-system (quote utf-8) nil nil "nil before, now utf-8.")
+ ;; '(mail-host-address "philcm@gnu.org")
  '(mail-interactive t)
  '(mark-ring-max 8)
  '(mbug-bcc-to-sender t)
@@ -845,9 +844,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Dejavu sans mono" :background "gray20" :foreground "white" :height 105))))
+ '(default ((t (:family "DejaVu Sans Mono" :background "gray20" :foreground "white" :height 105))))
  '(font-lock-comment-face ((t (:slant italic))))
- '(font-lock-preprocessor-face ((t (:inherit font-lock-builtin-face :foreground "orange4"))))
  '(mode-line ((t (:background "gray10" :foreground "white" :box nil))))
  '(mode-line-buffer-id ((t (:weight bold :foreground "OrangeRed1"))))
  '(mode-line-inactive ((t (:inherit mode-line :background "gray33" :foreground "#eeeeec" :box nil :weight light))))
@@ -941,5 +939,5 @@ Does not set point.  Does nothing if mark ring is empty."
 (my-unpop-to-mark-advice)
 
 
-;; (add-hook 'emacs-lisp-mode-hook
-;;           (lambda () (modify-syntax-entry ?_ "w")))
+(add-hook 'emacs-lisp-mode-hook
+          (lambda () (modify-syntax-entry ?_ "w")))
