@@ -393,14 +393,16 @@ This dates from old times, before VC, I'm keeping it out of pure nostalgy."
   (x-send-client-message nil 0 nil "_NET_WM_STATE" 32 '(2 "_NET_WM_STATE_MAXIMIZED_VERT" 0)))
 
 (defun px-websearch-that-bitch (start end)
-  "Websearch selected string"
+  "Websearch selected string
+Bound to c-c g."
   (interactive "r")
   (let ((q (buffer-substring-no-properties start end)))
     (browse-url (concat "https://duckduckgo.com/?q="
                         (url-hexify-string q)))))
 
-(defun select-text-in-quote-px ()
-  "Select text between the nearest left and right delimiters."
+(defun px-select-text-in-quote ()
+  "Select text between the nearest left and right delimiters.
+Bound to S-SPC."
   (interactive)
   (let (b1 b2)
     (skip-chars-backward "^<>([{“「『‹«（〈《〔【〖⦃\"")
@@ -409,7 +411,7 @@ This dates from old times, before VC, I'm keeping it out of pure nostalgy."
     (setq b2 (point))
     (set-mark b1)))
 
-(global-set-key (kbd "s-SPC") 'select-text-in-quote-px)
+(global-set-key (kbd "S-SPC") 'px-select-text-in-quote)
 
 (defun px-insert-or-enclose-with-signs (leftSign rightSign)
   "Insert a matching bracket and place the cursor between them."
