@@ -27,7 +27,7 @@
      (progn (message "installing %s" package)
             (package-refresh-contents)
             (package-install package))))
- '(org-jira tabbar org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode rainbow-mode))
+ '(less-css-mode org-jira tabbar org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode rainbow-mode))
 
 
 ;; LIBS! ______________________________________________________________________
@@ -450,7 +450,8 @@ Bound to S-SPC."
 
 (defun px-frigo ()
   (interactive)
-  "Copy the current region, paste it in frigo.txt with a time tag, and save this file"
+  "Copy the current region, paste it in frigo.txt with a time tag, and save this file.
+Again, here by pure nostalgia."
   (unless (use-region-p) (error "No region selected"))
   (let ((bn (file-name-nondirectory (buffer-file-name))))
     (copy-region-as-kill (region-beginning) (region-end))
@@ -526,6 +527,16 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
           ("<up>"    . ignore             )
           ("<down>"  . ignore             ))))
 
+(defun px-laptop-mode ()
+  "smaller default size"
+  (interactive)
+  (set-face-attribute 'default nil :height 90))
+
+(defun px-desktop-mode ()
+  "default font size"
+  (interactive)
+  (set-face-attribute 'default nil :height 105))
+
 ;; Sessions! ______________________________________________________________________
 
 (require 'desktop)
@@ -566,7 +577,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
                         ".session") t))
 
 
-
 ;; Modes! _____________________________________________________________________
 
 ;; (string-match "*message*" "*message*-plop")
@@ -592,6 +602,9 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 
 ;; Hooks! _____________________________________________________________________
+
+(add-hook 'emacs-lisp-mode-hook
+          (lambda () (modify-syntax-entry ?_ "w")))
 
 (add-hook 'c-mode-hook 'my-c-mode-hook)
 (add-hook 'php-mode-hook 'my-c-mode-hook)
@@ -682,6 +695,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-h *") 'px-scratch)
 
 (global-set-key (kbd "²") 'hippie-expand)
+
+(define-key global-map [²] 'hippie-expand)
 
 ;; (define-key global-map [(meta up)] '(lambda() (interactive) (scroll-other-window -1)))
 ;; (define-key global-map [(meta down)] '(lambda() (interactive) (scroll-other-window 1)))
@@ -861,19 +876,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(tabbar-unselected ((t (:inherit tabbar-default :background "gray35"))))
  '(which-func ((t (:foreground "OrangeRed1"))) t))
 
-(defun px-laptop-mode ()
-  "smaller default size"
-  (interactive)
-  (set-face-attribute 'default nil :height 90))
-
-(defun px-desktop-mode ()
-  "default font size"
-  (interactive)
-  (set-face-attribute 'default nil :height 105))
-
 
 ;; ORG! ______________________________________________________________________
-
 
 ;; (require 'ox-publish)
 ;; (require 'ox-html)
@@ -901,45 +905,3 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 ;;          "* RV %?\n  %i\n %^t\n %a")
 ;;         ("j" "Journal" entry (file+datetree (car org-agenda-files))
 ;;          "* %?\nEntered on %U\n  %i\n  %a")))
-
-(defun unpop-to-mark-command ()
-  "Unpop off mark ring into the buffer's actual mark.
-Does not set point.  Does nothing if mark ring is empty."
-  (interactive)
-  (let ((num-times (if (equal last-command 'pop-to-mark-command) 2
-                     (if (equal last-command 'unpop-to-mark-command) 1
-                       (error "Previous command was not a (un)pop-to-mark-command")))))
-    (dotimes (x num-times)
-      (when mark-ring
-        (setq mark-ring (cons (copy-marker (mark-marker)) mark-ring))
-        (set-marker (mark-marker) (+ 0 (car (last mark-ring))) (current-buffer))
-        (when (null (mark t)) (ding))
-        (setq mark-ring (nbutlast mark-ring))
-        (goto-char (mark t)))
-      (deactivate-mark))))
-
-(defmacro my-unpop-to-mark-advice ()
-  "Enable reversing direction with un/pop-to-mark."
-  `(defadvice ,(key-binding (kbd "C-SPC")) (around my-unpop-to-mark activate)
-     "Unpop-to-mark with negative arg"
-     (let* ((arg (ad-get-arg 0))
-            (num (prefix-numeric-value arg)))
-       (cond
-        ;; Enabled repeated un-pops with C-SPC
-        ((eq last-command 'unpop-to-mark-command)
-         (if (and arg (> num 0) (<= num 4))
-             ad-do-it ;; C-u C-SPC reverses back to normal direction
-           ;; Otherwise continue to un-pop
-           (setq this-command 'unpop-to-mark-command)
-           (unpop-to-mark-command)))
-        ;; Negative argument un-pops: C-- C-SPC
-        ((< num 0)
-         (setq this-command 'unpop-to-mark-command)
-         (unpop-to-mark-command))
-        (t
-         ad-do-it)))))
-(my-unpop-to-mark-advice)
-
-
-(add-hook 'emacs-lisp-mode-hook
-          (lambda () (modify-syntax-entry ?_ "w")))
