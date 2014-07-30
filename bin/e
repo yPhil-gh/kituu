@@ -3,5 +3,5 @@
 if [ "$(pidof emacs)" ] ; then
     emacsclient "$@" &
 else
-    emacs -mm "$@" &
+    emacs -mm --no-bitmap-icon "$@" &
 fi

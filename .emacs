@@ -46,17 +46,10 @@
 
 (zeroconf-init nil)                   ; NIL means "local"
 
-(if (>= emacs-major-version 24)
-    (progn
-      ;; (require 'mail-bug nil 'noerror)
-      (require 'cedet)
-      (tool-bar-mode -1)))
-
 (when (package-installed-p 'tabbar)
   (progn
-  (tabbar-mode t)
-  (message "tabbar!")))
-
+    (tool-bar-mode -1)
+    (tabbar-mode t)))
 
 ;; JIRA! ______________________________________________________________________
 
@@ -848,7 +841,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(undo-tree-enable-undo-in-region nil)
  '(undo-tree-history-directory-alist (quote (("." . "~/.emacs.d/backup/"))))
  '(undo-tree-visualizer-diff t)
- ;; '(uniquify-buffer-name-style (quote post-forward) nil (uniquify))
+ '(uniquify-buffer-name-style (quote post-forward) nil (uniquify))
  '(user-full-name "Philippe Coatmeur")
  '(user-mail-address "philcm@gnu.org")
  '(vc-make-backup-files nil)
