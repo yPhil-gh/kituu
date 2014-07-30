@@ -10,6 +10,8 @@ AUTOSTART_DIR=~/.config/autostart
 SEP="\n################# "
 RW=false
 type -P apt-get &>/dev/null || { debian=true >&2; }
+if [[ $1 = "-rw" ]]; then RW=true; fi
+if ($RW); then vc_prefix="git@github.com:" && message="RW mode ON" && git config --global user.name "xaccrocheur" && git config --global user.email xaccrocheur@gmail.com ; else vc_prefix="https://github.com/" && message="RW mode OFF"; fi
 
 if [[ $HOSTNAME == "N900" || $HOSTNAME == "RM696" ]] ; then
     FANCY_ARGS=""
@@ -18,11 +20,6 @@ else
     FANCY_ARGS="-v"
     SYMLINK_MSG="(symlink)"
 fi
-
-[[ $1 = "-rw" ]] && RW=true
-[[ ! -d "$SCRIPTDIR" ]] && mkdir $FANCY_ARGS -p $SCRIPTDIR
-
-if ($RW); then vc_prefix="git@github.com:" && message="RW mode ON" && git config --global user.name "xaccrocheur" && git config --global user.email xaccrocheur@gmail.com ; else vc_prefix="https://github.com/" && message="RW mode OFF"; fi
 
 # Packages
 declare -A pack
@@ -111,6 +108,7 @@ fi
 
 echo -e $SEP"Various menial janitor tasks"
 read -e -p "#### Clean around? [Y/n] " YN
+
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     if [[ ! -d ~/tmp ]] ; then mkdir -v ~/tmp ; else echo -e "~/tmp \t\t\tOK" ; fi
     if [[ ! -d /mnt/tmp ]] ; then sudo mkdir -v /mnt/tmp ; else echo -e "/mnt/tmp \t\tOK" ; fi
@@ -137,6 +135,7 @@ if $debian; then
 fi
 
 
+[[ ! -d "$SCRIPTDIR" ]] && mkdir $FANCY_ARGS -p $SCRIPTDIR
 echo -e $SEP"Various repositories"
 read -e -p "#### Stuff? [Y/n] " YN
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
