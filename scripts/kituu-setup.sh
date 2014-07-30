@@ -3,8 +3,8 @@
 # Vars
 shopt -s dotglob
 REPODIR=~/.kituu
-LISPDIR=~/.emacs.d/lisp
-SCRIPTDIR=~/scripts
+LISPDIR=~/.emacs.d/elisp
+SCRIPTDIR=~/bin
 AUTOSTART_DIR=~/.config/autostart
 
 SEP="\n################# "

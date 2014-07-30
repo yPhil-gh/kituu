@@ -112,13 +112,6 @@ bindkey '^[[1;5C' forward-word
 bindkey '^[[3;3~' kill-word # alt-del kills word forward
 bindkey "^B" backward-kill-line
 
-# Path
-PATH=$PATH:~/scripts:~/bin
-PATH=$PATH:/usr/local/bin/vdi
-PATH=$PATH:/usr/lib/i386-linux-gnu
-
-# PATH=/usr/local/bin:$PATH
-
 # GNU Colors 否则自动补全时候选菜单中的选项不能彩色显示
 # [ -f /etc/DIR_COLORS ] && eval $(dircolors -b /etc/DIR_COLORS)
 # export ZLSCOLORS="${LS_COLORS}"

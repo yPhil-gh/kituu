@@ -1,5 +1,10 @@
-# Vars
+# This file is sourced from my .zshrc and my .bashrc to ensure that I have the same env no matter what shell.
+# https://github.com/xaccrocheur/kituu
 
+# Path
+PATH=$PATH:~/scripts:~/bin
+
+# Vars
 PYTHONPATH=$PYTHONPATH:/usr/share/gst-python/0.10/examples/
 PATH=$PATH:~/scripts/beatnitpycker/:~/src/radium/bin/
 

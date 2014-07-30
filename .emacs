@@ -9,8 +9,8 @@
 (let ((default-directory "~/.emacs.d/lisp/"))
   (normal-top-level-add-subdirs-to-load-path))
 
-(add-to-list 'load-path "~/.emacs.d/lisp/")
-
+;; (eval-and-compile
+;;   (require 'mail-bug nil 'noerror))
 
 ;; Packages! ____________________________________________________________________
 
@@ -18,8 +18,8 @@
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
-;; (add-to-list 'package-archives
-;;              '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 (mapc
  (lambda (package)
@@ -27,23 +27,22 @@
      (progn (message "installing %s" package)
             (package-refresh-contents)
             (package-install package))))
- '(less-css-mode org-jira tabbar org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode rainbow-mode))
+ '(web-mode less-css-mode org-jira tabbar org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode rainbow-mode))
 
 
 ;; LIBS! ______________________________________________________________________
 
 (eval-and-compile
   (require 'cl nil 'noerror)          ; Built-in : Common Lisp lib
-  (require 'cl nil 'noerror)          ; Built-in : Common Lisp lib
   (require 'edmacro nil 'noerror)     ; Built-in : Macro bits (Required by iswitchb)
   (require 'package nil 'noerror)
   (require 'mail-bug nil 'noerror)
   (require 'pixilang-mode nil 'noerror)
   (require 'ecb nil 'noerror)
-  (require 'appt-bug nil 'noerror)
-  (require 'uniquify nil 'noerror)
+  ;; (require 'uniquify nil 'noerror)
   (require 'zeroconf nil 'noerror)
-(require 'auto-complete nil 'noerror))
+  (require 'auto-complete nil 'noerror)
+)
 
 (zeroconf-init nil)                   ; NIL means "local"
 
@@ -849,7 +848,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(undo-tree-enable-undo-in-region nil)
  '(undo-tree-history-directory-alist (quote (("." . "~/.emacs.d/backup/"))))
  '(undo-tree-visualizer-diff t)
- '(uniquify-buffer-name-style (quote post-forward) nil (uniquify))
+ ;; '(uniquify-buffer-name-style (quote post-forward) nil (uniquify))
  '(user-full-name "Philippe Coatmeur")
  '(user-mail-address "philcm@gnu.org")
  '(vc-make-backup-files nil)
