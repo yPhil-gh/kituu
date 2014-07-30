@@ -3,10 +3,10 @@
 
 ;; Init! ______________________________________________________________________
 
-(make-directory "~/.emacs.d/lisp/" t)
+(make-directory "~/.emacs.d/elisp/" t)
 (make-directory "~/.emacs.d/backup/" t)
 
-(let ((default-directory "~/.emacs.d/lisp/"))
+(let ((default-directory "~/.emacs.d/elisp/"))
   (normal-top-level-add-subdirs-to-load-path))
 
 ;; (eval-and-compile
