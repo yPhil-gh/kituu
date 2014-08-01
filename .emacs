@@ -27,7 +27,7 @@
      (progn (message "installing %s" package)
             (package-refresh-contents)
             (package-install package))))
- '(web-mode less-css-mode org-jira tabbar org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode rainbow-mode))
+ '(mmm-mode less-css-mode org-jira tabbar org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode rainbow-mode))
 
 
 ;; LIBS! ______________________________________________________________________
@@ -46,15 +46,9 @@
 
 (zeroconf-init nil)                   ; NIL means "local"
 
-(when (package-installed-p 'tabbar)
-  (progn
-    (tool-bar-mode -1)
-    (tabbar-mode t)))
-
 ;; JIRA! ______________________________________________________________________
 
 (setq jiralib-url "http://jira.sbcmaroc.com:8080")
-
 
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
@@ -74,6 +68,27 @@
 
 ;; Funcs! _________________________________________________________________
 
+(defun px-pop-to-mark-command ()
+  "Pop off mark ring. Recenter."
+  (interactive)
+  (let ((current-prefix-arg '(t))) (call-interactively 'set-mark-command))
+  (let ((current-prefix-arg '(t))) (call-interactively 'recenter-top-bottom)))
+
+(defun px-unpop-to-mark-command ()
+  "Unpop off mark ring. Does nothing if mark ring is empty."
+  (interactive)
+      (when mark-ring
+        (setq mark-ring (cons (copy-marker (mark-marker)) mark-ring))
+        (set-marker (mark-marker) (car (last mark-ring)) (current-buffer))
+        (when (null (mark t)) (ding))
+        (setq mark-ring (nbutlast mark-ring))
+        (goto-char (marker-position (car (last mark-ring))))
+        (let ((current-prefix-arg '(t))) (call-interactively 'recenter-top-bottom))))
+
+(defun px-kill-other-buffers ()
+  "Kill all other buffers."
+  (interactive)
+  (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
 
 (defun move-line-up ()
   "Move up the current line."
@@ -431,6 +446,17 @@ Bound to S-SPC."
       (insert leftSign rightSign)
       (backward-char 1))))
 
+
+(defun px-insert-end-of-command-sign ()
+  "Insert a ; at the end of the current line."
+  (interactive)
+  (let ((st (point)))
+    (save-excursion
+      (move-end-of-line nil)
+      (insert ";")
+      (goto-char st))))
+
+
 ;; (test string)
 
 (defun insert-pair-paren () (interactive) (px-insert-or-enclose-with-signs "(" ")"))
@@ -491,7 +517,9 @@ Again, here by pure nostalgia."
         (forward-line)
         (comment-dwim nil))
     (comment-dwim nil))
-  (deactivate-mark))
+  (deactivate-mark)
+  (if (eq major-mode 'web-mode)
+      (web-mode-buffer-refresh)))
 
 (defun px-tabbar-buffer-groups ()
   "Return the list of group names the current buffer belongs to.
@@ -571,10 +599,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; Modes! _____________________________________________________________________
 
-;; (string-match "*message*" "*message*-plop")
-
 ;; (auto-complete-mode t)
-(menu-bar-mode -1)
 (fset 'yes-or-no-p 'y-or-n-p)
 (put 'overwrite-mode 'disabled t)
 (setq c-default-style "bsd"
@@ -582,15 +607,10 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (add-to-list 'auto-mode-alist '("\\.haml\\'" . haml-mode))
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.list\\'" . conf-mode))
-(add-to-list 'auto-mode-alist '("\\.inc$" . php-mode))
+(add-to-list 'auto-mode-alist '("\\.inc$" . web-mode))
+;; (add-to-list 'auto-mode-alist '("\\.php$" . web-mode))
 
 (add-to-list 'auto-mode-alist '("\\.pixi\\'" . pixilang-mode))
-
-
-;; Externals! _________________________________________________________________
-
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "firefox")
 
 
 ;; Hooks! _____________________________________________________________________
@@ -600,12 +620,15 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 (add-hook 'c-mode-hook 'my-c-mode-hook)
 (add-hook 'php-mode-hook 'my-c-mode-hook)
+(add-hook 'web-mode-hook 'my-c-mode-hook)
 
 (defun my-c-mode-hook ()
   (setq-local comment-start "//")
   (setq-local comment-padding " ")
   (setq-local comment-end "")
-  (setq-local comment-style 'indent))
+  (setq-local comment-style 'indent)
+  (web-mode-buffer-refresh)
+  )
 
 (add-hook 'text-mode-hook 'turn-off-auto-fill)
 
@@ -622,6 +645,12 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (add-to-list 'fill-nobreak-predicate 'fill-french-nobreak-p)
 (setq paragraph-start "\\*\\|$"
       paragraph-separate "$")
+
+
+;; Externals! _________________________________________________________________
+
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "firefox")
 
 
 ;; Vars! ______________________________________________________________________
@@ -664,6 +693,11 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; Keys! ______________________________________________________________________
 
+(global-set-key (kbd "C-;") 'px-insert-end-of-command-sign)
+
+
+(global-set-key [(meta shift up)]  'move-line-up)
+
 (global-set-key [(meta shift up)]  'move-line-up)
 (global-set-key [(meta shift down)]  'move-line-down)
 
@@ -687,8 +721,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-h *") 'px-scratch)
 
 (global-set-key (kbd "²") 'hippie-expand)
-
-(define-key global-map [²] 'hippie-expand)
 
 ;; (define-key global-map [(meta up)] '(lambda() (interactive) (scroll-other-window -1)))
 ;; (define-key global-map [(meta down)] '(lambda() (interactive) (scroll-other-window 1)))
@@ -729,10 +761,11 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "s-d") 'px-date)
 (global-set-key (kbd "<C-kp-0>") 'kmacro-end-and-call-macro)
 (global-set-key (kbd "C-s-m") 'apply-macro-to-region-lines)
+(global-set-key (kbd "<s-left>") 'px-pop-to-mark-command)
+(global-set-key (kbd "<s-right>") 'px-unpop-to-mark-command)
 
 (global-set-key (kbd "C-x g") 'magit-status)
 
-(global-set-key (kbd "<s-left>") (kbd "C-u C-SPC"))
 
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
 (global-set-key (kbd "C-o") 'find-file)
@@ -794,7 +827,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(inhibit-startup-screen t)
  '(iswitchb-mode t)
  '(keyboard-coding-system (quote utf-8) nil nil "nil before, now utf-8.")
- ;; '(mail-host-address "philcm@gnu.org")
  '(mail-interactive t)
  '(mark-ring-max 8)
  '(mbug-bcc-to-sender t)
@@ -803,6 +835,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(mbug-modal t)
  '(mbug-short-headers t)
  '(mbug-username "philcm")
+ '(menu-bar-mode nil)
  '(message-confirm-send t)
  '(message-default-charset (quote utf-8))
  '(mm-enable-external (quote ask))
@@ -832,7 +865,9 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(show-paren-mode t)
  '(smtpmail-smtp-server "smtp.gmail.com")
  '(standard-indent 2)
+ '(tabbar-mode t nil (tabbar))
  '(text-mode-hook nil)
+ '(tool-bar-mode nil)
  '(tramp-default-method "ssh")
  '(tramp-verbose 6)
  '(undo-limit 400000)
@@ -863,9 +898,11 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(tabbar-button-highlight ((t (:inherit tabbar-default :background "OrangeRed1"))))
  '(tabbar-default ((t (:inherit default :background "dim gray" :box (:line-width 1 :color "gray35")))))
  '(tabbar-highlight ((t (:background "OrangeRed1" :foreground "white" :box (:line-width 1 :color "OrangeRed1")))))
+ '(tabbar-modified ((t (:inherit tabbar-unselected :foreground "OrangeRed1"))))
  '(tabbar-selected ((t (:inherit tabbar-default :background "grey20" :foreground "OrangeRed1" :box (:line-width 1 :color "grey20")))))
  '(tabbar-separator ((t (:height 0.1))))
  '(tabbar-unselected ((t (:inherit tabbar-default :background "gray35"))))
+ '(web-mode-html-tag-face ((t (:foreground "RosyBrown2"))))
  '(which-func ((t (:foreground "OrangeRed1"))) t))
 
 
