@@ -50,6 +50,8 @@
 
 (setq jiralib-url "http://jira.sbcmaroc.com:8080")
 
+;; Vars!
+
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
 (defvar show-paren-delay)
@@ -71,8 +73,9 @@
 (defun px-pop-to-mark-command ()
   "Pop off mark ring. Recenter."
   (interactive)
-  (let ((current-prefix-arg '(t))) (call-interactively 'set-mark-command))
-  (let ((current-prefix-arg '(t))) (call-interactively 'recenter-top-bottom)))
+  (let ((current-prefix-arg '(t)))
+    (call-interactively 'set-mark-command)
+    (call-interactively 'recenter-top-bottom)))
 
 (defun px-unpop-to-mark-command ()
   "Unpop off mark ring. Does nothing if mark ring is empty."
@@ -669,14 +672,13 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  ispell-dictionary "francais"
 
  ;; delete-by-moving-to-trash t
- list-colors-sort 'hsv
 
- default-major-mode 'text-mode
  text-mode-hook 'turn-on-auto-fill
  fill-column 75
 
  ediff-window-setup-function (quote ediff-setup-windows-plain)
- ediff-split-window-function 'split-window-horizontally)
+ ediff-split-window-function 'split-window-horizontally
+)
 
 ;; Window title (with edited status + remote indication)
 (setq frame-title-format
