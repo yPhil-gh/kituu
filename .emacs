@@ -1,6 +1,24 @@
 ;;; See https://github.com/xaccrocheur/kituu/
 ;; Keep it under 1k lines ;p
 
+;; (with-selected-window (get-buffer-window)
+;;   (goto-char (point-max)))
+
+;; (defun scroll-viewport (n)
+;;   (let ((top (line-number-at-pos (window-start)))
+;;         (cur (line-number-at-pos (point))))
+;;     (recenter (+ (- cur top) n))))
+
+;; (global-set-key (kbd "<M-up>") (lambda (arg)
+;;                                  (interactive "p")
+;;                                  (or arg (setq arg 1))
+;;                                  (scroll-viewport (- arg))))
+
+;; (global-set-key (kbd "<M-down>") (lambda (arg)
+;;                                    (interactive "p")
+;;                                    (or arg (setq arg 1))
+;;                                    (scroll-viewport arg)))
+
 ;; Init! ______________________________________________________________________
 
 (make-directory "~/.emacs.d/elisp/" t)
@@ -27,7 +45,7 @@
      (progn (message "installing %s" package)
             (package-refresh-contents)
             (package-install package))))
- '(mmm-mode less-css-mode org-jira tabbar org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode rainbow-mode))
+ '(less-css-mode org-jira tabbar org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode rainbow-mode))
 
 
 ;; LIBS! ______________________________________________________________________
@@ -70,12 +88,45 @@
 
 ;; Funcs! _________________________________________________________________
 
+;; (line-number-at-pos (point-max))
+
+
 (defun px-pop-to-mark-command ()
   "Pop off mark ring. Recenter."
   (interactive)
-  (let ((current-prefix-arg '(t)))
+  ;; (setq start-line ((line-number-at-pos)))
+  (let ((current-prefix-arg '(t))
+        (start-line (line-number-at-pos))
+        (maxxx-line (line-number-at-pos (point-max)))
+        (view-lines (window-height))
+        )
+    ;; (message "Start: %s Max: %s View: %s" start-line maxxx-line view-lines)
     (call-interactively 'set-mark-command)
-    (call-interactively 'recenter-top-bottom)))
+
+    (let ((end-line (line-number-at-pos (point))))
+      (message "Start: %s Max: %s View: %s End: %s" start-line maxxx-line view-lines end-line)
+      (if (< end-line start-line)
+          (progn
+            (setq travelled (- start-line end-line))
+            (message "Up : Travelled %s" travelled)
+            (if (> (- start-line end-line) view-lines)
+                (progn
+                  (message "%s minus %s equals %s witch is greater than %s" start-line end-line travelled view-lines)
+                  (call-interactively 'recenter-top-bottom)
+                  ))
+            )
+        (progn
+          (setq travelled-down (- end-line start-line))
+          (message "Down : Travelled %s" travelled-down)
+          (if (> (- end-line start-line) view-lines)
+              (progn
+                (message "%s minus %s equals %s witch is greater than %s" end-line start-line travelled-down view-lines)
+                (call-interactively 'recenter-top-bottom)
+                ))
+          ))
+      )
+    ))
+
 
 (defun px-unpop-to-mark-command ()
   "Unpop off mark ring. Does nothing if mark ring is empty."
