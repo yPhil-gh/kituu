@@ -88,56 +88,47 @@
 
 ;; Funcs! _________________________________________________________________
 
-;; (line-number-at-pos (point-max))
-
+;; (message "%s minus %s equals %s witch is greater than %s" start-line end-line travelled view-lines)
 
 (defun px-pop-to-mark-command ()
-  "Pop off mark ring. Recenter."
+  "Go back up the mark history. Recenter if far away."
   (interactive)
-  ;; (setq start-line ((line-number-at-pos)))
   (let ((current-prefix-arg '(t))
         (start-line (line-number-at-pos))
         (maxxx-line (line-number-at-pos (point-max)))
-        (view-lines (window-height))
-        )
-    ;; (message "Start: %s Max: %s View: %s" start-line maxxx-line view-lines)
+        (view-lines (window-height)))
     (call-interactively 'set-mark-command)
 
     (let ((end-line (line-number-at-pos (point))))
-      (message "Start: %s Max: %s View: %s End: %s" start-line maxxx-line view-lines end-line)
       (if (< end-line start-line)
-          (progn
-            (setq travelled (- start-line end-line))
-            (message "Up : Travelled %s" travelled)
-            (if (> (- start-line end-line) view-lines)
-                (progn
-                  (message "%s minus %s equals %s witch is greater than %s" start-line end-line travelled view-lines)
-                  (call-interactively 'recenter-top-bottom)
-                  ))
-            )
-        (progn
-          (setq travelled-down (- end-line start-line))
-          (message "Down : Travelled %s" travelled-down)
-          (if (> (- end-line start-line) view-lines)
-              (progn
-                (message "%s minus %s equals %s witch is greater than %s" end-line start-line travelled-down view-lines)
-                (call-interactively 'recenter-top-bottom)
-                ))
-          ))
-      )
-    ))
-
+          (if (> (- start-line end-line) view-lines)
+              (call-interactively 'recenter-top-bottom))
+        (if (> (- end-line start-line) view-lines)
+            (call-interactively 'recenter-top-bottom))))))
 
 (defun px-unpop-to-mark-command ()
-  "Unpop off mark ring. Does nothing if mark ring is empty."
+  "Go forward down the mark history. Recenter if far away. Do nothing if mark ring is empty."
   (interactive)
-      (when mark-ring
-        (setq mark-ring (cons (copy-marker (mark-marker)) mark-ring))
-        (set-marker (mark-marker) (car (last mark-ring)) (current-buffer))
-        (when (null (mark t)) (ding))
-        (setq mark-ring (nbutlast mark-ring))
-        (goto-char (marker-position (car (last mark-ring))))
-        (let ((current-prefix-arg '(t))) (call-interactively 'recenter-top-bottom))))
+  (when mark-ring
+    (setq mark-ring (cons (copy-marker (mark-marker)) mark-ring))
+    (set-marker (mark-marker) (car (last mark-ring)) (current-buffer))
+    (when (null (mark t)) (ding))
+    (setq mark-ring (nbutlast mark-ring))
+    (goto-char (marker-position (car (last mark-ring))))
+
+    (let
+        ((current-prefix-arg '(t))
+         (start-line (line-number-at-pos))
+         (maxxx-line (line-number-at-pos (point-max)))
+         (view-lines (window-height)))
+      (call-interactively 'recenter-top-bottom)
+
+      (let ((end-line (line-number-at-pos (point))))
+        (if (< end-line start-line)
+            (if (> (- start-line end-line) view-lines)
+                (call-interactively 'recenter-top-bottom))
+          (if (> (- end-line start-line) view-lines)
+              (call-interactively 'recenter-top-bottom)))))))
 
 (defun px-kill-other-buffers ()
   "Kill all other buffers."
@@ -672,11 +663,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (add-hook 'emacs-lisp-mode-hook
           (lambda () (modify-syntax-entry ?_ "w")))
 
-(add-hook 'c-mode-hook 'my-c-mode-hook)
-(add-hook 'php-mode-hook 'my-c-mode-hook)
-(add-hook 'web-mode-hook 'my-c-mode-hook)
-
 (defun my-c-mode-hook ()
+  "Proper mono-line comments"
   (setq-local comment-start "//")
   (setq-local comment-padding " ")
   (setq-local comment-end "")
@@ -684,22 +672,29 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
   (web-mode-buffer-refresh)
   )
 
+(add-hook 'c-mode-hook 'my-c-mode-hook)
+(add-hook 'php-mode-hook 'my-c-mode-hook)
 (add-hook 'text-mode-hook 'turn-off-auto-fill)
-
 (add-hook 'haml-mode-hook
           (lambda ()
             (setq indent-tabs-mode nil)
             (define-key haml-mode-map "\C-m" 'newline-and-indent)))
-
 (add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)
 (add-hook 'find-file-hooks 'turn-on-font-lock)
-;; (add-hook 'mouse-leave-buffer-hook 'px-exit-minibuffer)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (add-to-list 'fill-nobreak-predicate 'fill-french-nobreak-p)
+
+;; FIXME: Find out what this is
 (setq paragraph-start "\\*\\|$"
       paragraph-separate "$")
 
+(mapcar (lambda (mode)
+	  (font-lock-add-keywords
+           mode
+           '(("\\<\\(FIXME\\):" 1 font-lock-warning-face prepend)
+             ("\\<\\(TODO\\|BUGGY\\):" 1 font-lock-warning-face prepend))))
+	'(text-mode latex-mode html-mode emacs-lisp-mode php-mode texinfo-mode))
 
 ;; Externals! _________________________________________________________________
 
