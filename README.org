@@ -48,8 +48,7 @@ boot time.
     - Symlink ~/.kituu/* in ~/*
       - (Now you have a new dir, ~/script/ and it's in your $PATH)
     - Install a selection of packages, sorted by groups: Multimedia, Dev, Music prod, etc. You're asked for each group if you want to install.
-    - Generate a local web page on the fly, allowing quick install of - the latest version of - my/your selection of Mozilla extensions
-    - Download, build and install the latest emacs from Savannah trunk
+    - Generate a local temp web page on the fly, allowing quick install of - the latest version of - my/your selection of Mozilla extensions
     - Update everything to the latest version at each subsequent run
 
 *** LICENSE
