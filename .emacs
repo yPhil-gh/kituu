@@ -129,6 +129,8 @@
       (push (concat "[[file:" project-dir url "][" url "]]\n") u2)))
   (beginning-of-buffer)
 
+(kill-buffer (current-buffer))
+
   (progn
     (with-current-buffer "BPM.org"
       (insert "** File: ")
