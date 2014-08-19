@@ -60,7 +60,7 @@
   ;; (require 'uniquify nil 'noerror)
   (require 'zeroconf nil 'noerror)
   (require 'auto-complete nil 'noerror)
-)
+  )
 
 
 (zeroconf-init nil)                   ; NIL means "local"
@@ -89,74 +89,112 @@
 
 ;; Funcs! _________________________________________________________________
 
-(defun extract-urls (fname)
-  "Extract HTML href url's,titles to buffer 'new-urls.csv' in | separated format."
-  ;; (kill-buffer "new-urls.org")
-  (setq in-buf (set-buffer (find-file fname))); Save for clean up
-  (beginning-of-buffer); Need to do this in case the buffer is already open
+(defun px-bpm-parse (fname)
+  "Extract elements. Basic Project Management."
+  (setq project-dir "/var/www/html/microlabel.git/")
+
+  (setq full-name (concat project-dir fname))
+
+  (setq in-buf (set-buffer (find-file full-name)))
   (setq u1 '())
   (setq u2 '())
   (setq u3 '())
+
+  (beginning-of-buffer)
+
+(message "Buffer: %s because fname: %s"(buffer-file-name) full-name)
 
   (while
       (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
     (when (match-string 0)
       (setq url (match-string 1) )
-      (setq title "plip" )
-      (setq u3 (cons (concat url "|" title "\n") u3))))
+      (push (concat "[[file:" project-dir url "][" url "]]\n") u3)))
+
   (beginning-of-buffer)
   (while
       (re-search-forward "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" nil t)
     (when (match-string 0)
-      (setq url (match-string 1) )
-      (setq title (match-string 2) )
-      (setq u1 (cons (concat url "|" title "\n") u1))))
- (beginning-of-buffer)
+      (setq url (match-string 1))
+      (setq title (match-string 2))
+      ;; (setq u1 (cons (concat "[[file:" project-dir url "][" title "]]\n") u1))
+
+      (push (concat "[[file:" project-dir url "][" title "]]\n") u1)
+      ))
+
+  (beginning-of-buffer)
   (while
       (re-search-forward "^.*<script.*src=\"\\([^\"]+\\)\"" nil t)
     (when (match-string 0)
-      (setq src (match-string 1) )
-      (setq title "plop" )
-      (setq u2 (cons (concat src "|" title "\n") u2))))
- (beginning-of-buffer)
-  ;; (kill-buffer in-buf)
+      (setq url (match-string 1))
+      (push (concat "[[file:" project-dir url "][" url "]]\n") u2)))
+  (beginning-of-buffer)
+
   (progn
-    (with-current-buffer (get-buffer-create "new-urls.org"); Send results to new buffer
+    (with-current-buffer "BPM.org"
       (insert "** File: ")
-      (insert fname)
-      (insert "\n*** HREF Links\n")
+
+      ;; (org-insert-link &optional COMPLETE-FILE LINK-LOCATION DEFAULT-DESCRIPTION)
+
+      (insert (concat "[[file:" full-name "][" fname "]]\n"))
+
+      (insert full-name)
+
+      (insert "\n*** HREF Links (by name)\n")
       (mapcar 'insert u1)
       (insert "\n*** SCRIPT Links\n")
       (mapcar 'insert u2)
       (insert "\n*** CSS Links\n")
       (mapcar 'insert u3)
       (insert "\n\n"))
-    (switch-to-buffer "new-urls.org")
+    (switch-to-buffer "BPM.org")
     (org-mode)))
 
-(defun px-project-links ()
+;; (defun px-bpm ()
+  (defun px-bpm (prj-root)
   "List all links"
-  (interactive)
+  ;; (interactive)
+  (interactive "sEnter project root directory ")
+
   (progn
-    ;; (kill-buffer in-buf)
-    (mapcar 'extract-urls '(
-                            "/var/www/html/microlabel.git/mr_header.php"
-                            "/var/www/html/microlabel.git/home.php"
-                            ))))
+
+    (with-current-buffer (get-buffer-create "BPM.org")
+      (insert "* File dependencies\n\n"))
+    ;; (mapcar 'px-bpm-parse '(
+                            ;; "/var/www/html/microlabel.git/home.php"
+                            ;; "/var/www/html/microlabel.git/add.php"
+                            ;; ))
+
+    (mapcar 'px-bpm-parse (directory-files prj-root nil "\\.php$"))
+
+    ))
+
+;(mapcar 'test-func '(list (directory-files DIRECTORY nil "\\.php$")))
+
+;(format "%s" (car (directory-files "/var/www/html/microlabel.git/" nil "\\.php$")))
 
 
-      ;; (if u1
-      ;;     (progn (insert "\n** HREF Links\n")
-      ;;            (mapcar 'insert u1))
-      ;;   (message "NO HREF Links"))
+;; (directory-files prj-root absolute)
+;(directory-files "/var/www/html/microlabel.git/")
 
-      ;; (if u2
-      ;;     (progn (insert "\n** SCRIPT Links\n")
-      ;;            (mapcar 'insert u2))
-      ;;   (message "NO HREF Links"))
+;; (directory-files DIRECTORY nil "\\.ext$")
 
-      ;; (insert "\n\n")
-      ;; )
+(defun hello (someone)
+  "Say hello to SOMEONE via M-x hello."
+  (interactive "sWho do you want to say hello to? ")
+  (message "Hello %s!" someone))
+
+;; (if u1
+;;     (progn (insert "\n** HREF Links\n")
+;;            (mapcar 'insert u1))
+;;   (message "NO HREF Links"))
+
+;; (if u2
+;;     (progn (insert "\n** SCRIPT Links\n")
+;;            (mapcar 'insert u2))
+;;   (message "NO HREF Links"))
+
+;; (insert "\n\n")
+;; )
 
 
 
@@ -314,7 +352,7 @@ That means save it, check the hash of the previous commit, and replace it in the
 (require 'sgml-mode) ; need sgml-skip-tag-forward
 
 (defun px-replace-oneshot ()
-"Use the title of the page to replace a named tag"
+  "Use the title of the page to replace a named tag"
   (interactive)
   (goto-char 1)
   (while
@@ -522,7 +560,7 @@ Bound to c-c g."
   (interactive "r")
   (let ((q (buffer-substring-no-properties start end)))
     (browse-url (concat "https://duckduckgo.com/?q="
-                        (url-hexify-string q)))))
+                        (url-hexify-string q) "!g"))))
 
 (defun px-select-text-in-quote ()
   "Select text between the nearest left and right delimiters.
@@ -802,7 +840,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
  ediff-window-setup-function (quote ediff-setup-windows-plain)
  ediff-split-window-function 'split-window-horizontally
-)
+ )
 
 ;; Window title (with edited status + remote indication)
 (setq frame-title-format
@@ -818,6 +856,9 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 
 ;; Keys! ______________________________________________________________________
+
+(define-key global-map [(super up)] '(lambda() (interactive) (scroll-other-window -1)))
+(define-key global-map [(super down)] '(lambda() (interactive) (scroll-other-window 1)))
 
 (global-set-key (kbd "C-c p") 'php-mode)
 
