@@ -97,7 +97,7 @@
   (setq u1 '())
   (setq u2 '())
   (while
-      (re-search-forward "^.*<script src=\"\\([^\"]+\\)\"" nil t)
+      (re-search-forward "^.*<script.*src=\"\\([^\"]+\\)\"" nil t)
     (when (match-string 0)            ; Got a match
       (setq src (match-string 1) )    ; URL
       (setq title "plop" )  ; Title
@@ -106,7 +106,7 @@
     )
 
   (while
-      (re-search-forward "^.*<a href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" nil t)
+      (re-search-forward "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" nil t)
     (when (match-string 0)            ; Got a match
       (setq url (match-string 1) )    ; URL
       (setq title (match-string 2) )  ; Title
@@ -118,7 +118,7 @@
 
   (progn
     (with-current-buffer (get-buffer-create "new-urls.org"); Send results to new buffer
-      (insert "* File: ")
+      (insert "** File: ")
       (insert fname)
 
 
@@ -136,9 +136,9 @@
       ;; )
 
 
-      (insert "\n** HREF Links\n")
+      (insert "\n*** HREF Links\n")
       (mapcar 'insert u1)
-      (insert "\n** SCRIPT Links\n")
+      (insert "\n*** SCRIPT Links\n")
       (mapcar 'insert u2)
       (insert "\n\n")
       )
