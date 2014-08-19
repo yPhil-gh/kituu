@@ -96,30 +96,53 @@
   (beginning-of-buffer); Need to do this in case the buffer is already open
   (setq u1 '())
   (setq u2 '())
-  (while
-      (re-search-forward "^.*<script.*src=\"\\([^\"]+\\)\"" nil t)
-    (when (match-string 0)            ; Got a match
-      (setq src (match-string 1) )    ; URL
-      (setq title "plop" )  ; Title
-      (setq u2 (cons (concat src "|" title "\n") u2)) ; Build the list of URLs
-      )
-    )
+  (setq u3 '())
 
+  (while
+      (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
+    (when (match-string 0)
+      (setq url (match-string 1) )
+      (setq title "plip" )
+      (setq u3 (cons (concat url "|" title "\n") u3))))
+  (beginning-of-buffer)
   (while
       (re-search-forward "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" nil t)
-    (when (match-string 0)            ; Got a match
-      (setq url (match-string 1) )    ; URL
-      (setq title (match-string 2) )  ; Title
-      (setq u1 (cons (concat url "|" title "\n") u1)) ; Build the list of URLs
-      )
-    )
-
-  (kill-buffer in-buf)
-
+    (when (match-string 0)
+      (setq url (match-string 1) )
+      (setq title (match-string 2) )
+      (setq u1 (cons (concat url "|" title "\n") u1))))
+ (beginning-of-buffer)
+  (while
+      (re-search-forward "^.*<script.*src=\"\\([^\"]+\\)\"" nil t)
+    (when (match-string 0)
+      (setq src (match-string 1) )
+      (setq title "plop" )
+      (setq u2 (cons (concat src "|" title "\n") u2))))
+ (beginning-of-buffer)
+  ;; (kill-buffer in-buf)
   (progn
     (with-current-buffer (get-buffer-create "new-urls.org"); Send results to new buffer
       (insert "** File: ")
       (insert fname)
+      (insert "\n*** HREF Links\n")
+      (mapcar 'insert u1)
+      (insert "\n*** SCRIPT Links\n")
+      (mapcar 'insert u2)
+      (insert "\n*** CSS Links\n")
+      (mapcar 'insert u3)
+      (insert "\n\n"))
+    (switch-to-buffer "new-urls.org")
+    (org-mode)))
+
+(defun px-project-links ()
+  "List all links"
+  (interactive)
+  (progn
+    ;; (kill-buffer in-buf)
+    (mapcar 'extract-urls '(
+                            "/var/www/html/microlabel.git/mr_header.php"
+                            "/var/www/html/microlabel.git/home.php"
+                            ))))
 
 
       ;; (if u1
@@ -135,26 +158,6 @@
       ;; (insert "\n\n")
       ;; )
 
-
-      (insert "\n*** HREF Links\n")
-      (mapcar 'insert u1)
-      (insert "\n*** SCRIPT Links\n")
-      (mapcar 'insert u2)
-      (insert "\n\n")
-      )
-
-    (switch-to-buffer "new-urls.org")
-    (org-mode)))
-
-
-;; Create a list of files to process
-;;
-(progn
-  (kill-buffer in-buf)
-  (mapcar 'extract-urls '(
-                          "/var/www/html/microlabel.git/mr_header.php"
-                          "/var/www/html/microlabel.git/home.php"
-                          )))
 
 
 ;; (message "%s minus %s equals %s witch is greater than %s" start-line end-line travelled view-lines)
