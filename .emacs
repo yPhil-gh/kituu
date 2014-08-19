@@ -62,6 +62,7 @@
   (require 'auto-complete nil 'noerror)
 )
 
+
 (zeroconf-init nil)                   ; NIL means "local"
 
 ;; JIRA! ______________________________________________________________________
@@ -87,6 +88,73 @@
 
 
 ;; Funcs! _________________________________________________________________
+
+(defun extract-urls (fname)
+  "Extract HTML href url's,titles to buffer 'new-urls.csv' in | separated format."
+  ;; (kill-buffer "new-urls.org")
+  (setq in-buf (set-buffer (find-file fname))); Save for clean up
+  (beginning-of-buffer); Need to do this in case the buffer is already open
+  (setq u1 '())
+  (setq u2 '())
+  (while
+      (re-search-forward "^.*<script src=\"\\([^\"]+\\)\"" nil t)
+    (when (match-string 0)            ; Got a match
+      (setq src (match-string 1) )    ; URL
+      (setq title "plop" )  ; Title
+      (setq u2 (cons (concat src "|" title "\n") u2)) ; Build the list of URLs
+      )
+    )
+
+  (while
+      (re-search-forward "^.*<a href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" nil t)
+    (when (match-string 0)            ; Got a match
+      (setq url (match-string 1) )    ; URL
+      (setq title (match-string 2) )  ; Title
+      (setq u1 (cons (concat url "|" title "\n") u1)) ; Build the list of URLs
+      )
+    )
+
+  (kill-buffer in-buf)
+
+  (progn
+    (with-current-buffer (get-buffer-create "new-urls.org"); Send results to new buffer
+      (insert "* File: ")
+      (insert fname)
+
+
+      ;; (if u1
+      ;;     (progn (insert "\n** HREF Links\n")
+      ;;            (mapcar 'insert u1))
+      ;;   (message "NO HREF Links"))
+
+      ;; (if u2
+      ;;     (progn (insert "\n** SCRIPT Links\n")
+      ;;            (mapcar 'insert u2))
+      ;;   (message "NO HREF Links"))
+
+      ;; (insert "\n\n")
+      ;; )
+
+
+      (insert "\n** HREF Links\n")
+      (mapcar 'insert u1)
+      (insert "\n** SCRIPT Links\n")
+      (mapcar 'insert u2)
+      (insert "\n\n")
+      )
+
+    (switch-to-buffer "new-urls.org")
+    (org-mode)))
+
+;; Create a list of files to process
+;;
+(progn
+  (kill-buffer in-buf)
+  (mapcar 'extract-urls '(
+                          "/var/www/html/microlabel.git/mr_header.php"
+                          "/var/www/html/microlabel.git/home.php"
+                          )))
+
 
 ;; (message "%s minus %s equals %s witch is greater than %s" start-line end-line travelled view-lines)
 
@@ -562,9 +630,7 @@ Again, here by pure nostalgia."
         (forward-line)
         (comment-dwim nil))
     (comment-dwim nil))
-  (deactivate-mark)
-  (if (eq major-mode 'web-mode)
-      (web-mode-buffer-refresh)))
+  (deactivate-mark))
 
 (defun px-tabbar-buffer-groups ()
   "Return the list of group names the current buffer belongs to.
@@ -652,13 +718,23 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (add-to-list 'auto-mode-alist '("\\.haml\\'" . haml-mode))
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.list\\'" . conf-mode))
-(add-to-list 'auto-mode-alist '("\\.inc$" . web-mode))
 ;; (add-to-list 'auto-mode-alist '("\\.php$" . web-mode))
 
 (add-to-list 'auto-mode-alist '("\\.pixi\\'" . pixilang-mode))
 
 
 ;; Hooks! _____________________________________________________________________
+
+(defun my-find-file-check-make-large-file-read-only-hook ()
+  "If a file is over a given size, make the buffer read only."
+  (when (> (buffer-size) (* 1024 1024))
+    (setq buffer-read-only t)
+    (buffer-disable-undo)
+    (fundamental-mode)))
+
+(add-hook 'find-file-hooks 'my-find-file-check-make-large-file-read-only-hook)
+
+(add-hook 'recentf-dialog-mode-hook 'hl-line-mode)
 
 (add-hook 'emacs-lisp-mode-hook
           (lambda () (modify-syntax-entry ?_ "w")))
@@ -668,9 +744,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
   (setq-local comment-start "//")
   (setq-local comment-padding " ")
   (setq-local comment-end "")
-  (setq-local comment-style 'indent)
-  (web-mode-buffer-refresh)
-  )
+  (setq-local comment-style 'indent))
 
 (add-hook 'c-mode-hook 'my-c-mode-hook)
 (add-hook 'php-mode-hook 'my-c-mode-hook)
@@ -694,7 +768,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
            mode
            '(("\\<\\(FIXME\\):" 1 font-lock-warning-face prepend)
              ("\\<\\(TODO\\|BUGGY\\):" 1 font-lock-warning-face prepend))))
-	'(text-mode latex-mode html-mode emacs-lisp-mode php-mode texinfo-mode))
+	'(text-mode latex-mode html-mode emacs-lisp-mode php-mode texinfo-mode js-mode))
 
 ;; Externals! _________________________________________________________________
 
@@ -740,6 +814,9 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 
 ;; Keys! ______________________________________________________________________
+
+(global-set-key (kbd "C-c p") 'php-mode)
+
 
 (global-set-key (kbd "C-;") 'px-insert-end-of-command-sign)
 
@@ -852,8 +929,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(bbdb-use-pop-up nil)
  '(bookmark-sort-flag nil)
  '(buffer-offer-save nil)
- '(c-basic-offset (quote set-from-style) t)
- '(c-default-style "gnu" t)
+ '(c-basic-offset (quote set-from-style))
+ '(c-default-style "gnu")
  '(canlock-password "ebef4a12d0fad1c648b4b829291adb16cdefb9da")
  '(comment-style (quote extra-line))
  '(completion-auto-help (quote lazy))
@@ -862,6 +939,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
  '(diary-file "~/Ubuntu One/org/agenda.org")
+ '(ecb-options-version "2.40")
  '(epa-popup-info-window nil)
  '(fold-dwim-outline-style-default (quote nested))
  '(font-use-system-font t)
@@ -897,8 +975,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(org-use-sub-superscripts nil)
  '(recenter-positions (quote (middle top bottom)))
  '(recenter-redisplay nil)
- '(recentf-auto-cleanup (quote never))
- '(recentf-exclude (quote ("emacs.d\\/session")))
+ ;; '(recentf-auto-cleanup (quote never))
+ '(recentf-exclude (quote ("emacs.d")))
  '(recentf-max-menu-items 60)
  '(recentf-max-saved-items 120)
  '(recentf-mode t)
@@ -929,7 +1007,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(user-mail-address "philcm@gnu.org")
  '(vc-make-backup-files nil)
  '(web-vcs-default-download-directory (quote site-lisp-dir)))
-
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

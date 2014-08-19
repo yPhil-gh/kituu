@@ -55,6 +55,7 @@ alias px-shell="gnome-terminal --command byobu --maximize --hide-menubar"
 
 function px-cleanup-filenames () {
     find -type f | rename -v 's/%20/_/g'
+    find -type f | rename -v 's/ /_/g'
 }
 
 function px-iterate-filenames () {
