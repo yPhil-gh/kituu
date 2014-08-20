@@ -124,7 +124,7 @@
     (when (match-string 0)
       (setq url (match-string 1))
       (setq title (match-string 2))
-      (push (concat "[[file:" project-dir url "][" title "]]\n") u1)))
+      (push (concat "[[file:" url "][" title "]] -> " url "\n") u1)))
 
   (beginning-of-buffer)
   (while
