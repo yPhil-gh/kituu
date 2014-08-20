@@ -89,20 +89,35 @@
 
 ;; Funcs! _________________________________________________________________
 
+(defun this-buffer-is-open (buffer)
+  "Test if BUFFER is actually on screen"
+  (if (get-buffer buffer)
+      t
+    nil))
+
 (defun px-bpm-parse (fname)
   "Extract elements. Basic Project Management."
   (setq project-dir "/var/www/html/microlabel.git/")
-
+  (setq killer t)
   (setq full-name (concat project-dir fname))
 
-  (setq in-buf (set-buffer (find-file full-name)))
+  (message "KILLER BEFORE: %s" killer)
+
+  (if (this-buffer-is-open fname)
+      (progn
+        (message "%s is OPEN!" fname)
+        (setq killer nil))
+    )
+
+  (message "KILLER AFTER: %s" killer)
+
+  (find-file full-name)
+
   (setq u1 '())
   (setq u2 '())
   (setq u3 '())
 
-  (beginning-of-buffer)
-
-(message "Buffer: %s because fname: %s"(buffer-file-name) full-name)
+  ;; (beginning-of-buffer)
 
   (while
       (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
@@ -127,15 +142,28 @@
     (when (match-string 0)
       (setq url (match-string 1))
       (push (concat "[[file:" project-dir url "][" url "]]\n") u2)))
-  (beginning-of-buffer)
+  ;; (beginning-of-buffer)
 
-(kill-buffer (current-buffer))
+  (message "KILLER at this point: %s" killer)
+
+;;   (setq testo t)
+;;   (setq testo nil)
+
+;; (if testo
+;;     (message "TRUE!")
+;;   (message "false")
+;; )
+
+  (if killer
+      (progn
+        (message "TRUE! killing %s " fname)
+        (kill-buffer (current-buffer)))
+    (message "Not killing %s " fname)
+    )
 
   (progn
     (with-current-buffer "BPM.org"
       (insert "** File: ")
-
-      ;; (org-insert-link &optional COMPLETE-FILE LINK-LOCATION DEFAULT-DESCRIPTION)
 
       (insert (concat "[[file:" full-name "][" fname "]]\n"))
 
@@ -151,56 +179,17 @@
     (switch-to-buffer "BPM.org")
     (org-mode)))
 
-;; (defun px-bpm ()
-  (defun px-bpm (prj-root)
+(defun px-bpm (prj-root)
   "List all links"
-  ;; (interactive)
   (interactive "sEnter project root directory ")
 
   (progn
 
     (with-current-buffer (get-buffer-create "BPM.org")
       (insert "* File dependencies\n\n"))
-    ;; (mapcar 'px-bpm-parse '(
-                            ;; "/var/www/html/microlabel.git/home.php"
-                            ;; "/var/www/html/microlabel.git/add.php"
-                            ;; ))
-
-    (mapcar 'px-bpm-parse (directory-files prj-root nil "\\.php$"))
-
-    ))
-
-;(mapcar 'test-func '(list (directory-files DIRECTORY nil "\\.php$")))
-
-;(format "%s" (car (directory-files "/var/www/html/microlabel.git/" nil "\\.php$")))
+    (mapcar 'px-bpm-parse (directory-files prj-root nil "\\.php$"))))
 
 
-;; (directory-files prj-root absolute)
-;(directory-files "/var/www/html/microlabel.git/")
-
-;; (directory-files DIRECTORY nil "\\.ext$")
-
-(defun hello (someone)
-  "Say hello to SOMEONE via M-x hello."
-  (interactive "sWho do you want to say hello to? ")
-  (message "Hello %s!" someone))
-
-;; (if u1
-;;     (progn (insert "\n** HREF Links\n")
-;;            (mapcar 'insert u1))
-;;   (message "NO HREF Links"))
-
-;; (if u2
-;;     (progn (insert "\n** SCRIPT Links\n")
-;;            (mapcar 'insert u2))
-;;   (message "NO HREF Links"))
-
-;; (insert "\n\n")
-;; )
-
-
-
-;; (message "%s minus %s equals %s witch is greater than %s" start-line end-line travelled view-lines)
 
 (defun px-pop-to-mark-command ()
   "Go back up the mark history. Recenter if far away."
