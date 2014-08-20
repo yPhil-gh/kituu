@@ -117,8 +117,6 @@
   (setq u2 '())
   (setq u3 '())
 
-  ;; (beginning-of-buffer)
-
   (while
       (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
     (when (match-string 0)
@@ -167,15 +165,13 @@
 
       (insert (concat "[[file:" full-name "][" fname "]]\n"))
 
-      (insert full-name)
-
       (insert "\n*** HREF Links (by name)\n")
       (mapcar 'insert u1)
       (insert "\n*** SCRIPT Links\n")
       (mapcar 'insert u2)
       (insert "\n*** CSS Links\n")
       (mapcar 'insert u3)
-      (insert "\n\n"))
+      (insert "--------------------------------------------------------\n\n"))
     (switch-to-buffer "BPM.org")
     (org-mode)))
 
@@ -184,6 +180,9 @@
   (interactive "sEnter project root directory ")
 
   (progn
+
+  (if (this-buffer-is-open "BPM.org")
+        (kill-buffer "BPM.org")))
 
     (with-current-buffer (get-buffer-create "BPM.org")
       (insert "* File dependencies\n\n"))
