@@ -89,29 +89,24 @@
 
 ;; Funcs! _________________________________________________________________
 
-(defun this-buffer-is-open (buffer)
-  "Test if BUFFER is actually on screen"
+(defun this-buffer-is-open-p (buffer)
+  "Test if BUFFER open"
   (if (get-buffer buffer)
       t
     nil))
 
 (defun px-bpm-parse (fname)
-  "Extract elements. Basic Project Management."
-  (setq project-dir "/var/www/html/microlabel.git/")
+  "List file dependancies when called from `px-bpm' . Yep, that *is* Basic Project Management."
+
+  (setq base_name (file-name-nondirectory fname))
+
+  (message "Parsing: %s " base_name)
   (setq killer t)
-  (setq full-name (concat project-dir fname))
 
-  (message "KILLER BEFORE: %s" killer)
+  (if (this-buffer-is-open-p base_name)
+      (setq killer nil))
 
-  (if (this-buffer-is-open fname)
-      (progn
-        (message "%s is OPEN!" fname)
-        (setq killer nil))
-    )
-
-  (message "KILLER AFTER: %s" killer)
-
-  (find-file full-name)
+  (find-file fname)
 
   (setq u1 '())
   (setq u2 '())
@@ -129,10 +124,7 @@
     (when (match-string 0)
       (setq url (match-string 1))
       (setq title (match-string 2))
-      ;; (setq u1 (cons (concat "[[file:" project-dir url "][" title "]]\n") u1))
-
-      (push (concat "[[file:" project-dir url "][" title "]]\n") u1)
-      ))
+      (push (concat "[[file:" project-dir url "][" title "]]\n") u1)))
 
   (beginning-of-buffer)
   (while
@@ -140,54 +132,38 @@
     (when (match-string 0)
       (setq url (match-string 1))
       (push (concat "[[file:" project-dir url "][" url "]]\n") u2)))
-  ;; (beginning-of-buffer)
-
-  (message "KILLER at this point: %s" killer)
-
-;;   (setq testo t)
-;;   (setq testo nil)
-
-;; (if testo
-;;     (message "TRUE!")
-;;   (message "false")
-;; )
 
   (if killer
-      (progn
-        (message "TRUE! killing %s " fname)
-        (kill-buffer (current-buffer)))
-    (message "Not killing %s " fname)
-    )
+      (kill-buffer (current-buffer)))
 
   (progn
     (with-current-buffer "BPM.org"
       (insert "** File: ")
-
-      (insert (concat "[[file:" full-name "][" fname "]]\n"))
-
+      (insert (concat "[[file:" fname "][" base_name "]]\n"))
       (insert "\n*** HREF Links (by name)\n")
       (mapcar 'insert u1)
       (insert "\n*** SCRIPT Links\n")
       (mapcar 'insert u2)
       (insert "\n*** CSS Links\n")
       (mapcar 'insert u3)
-      (insert "--------------------------------------------------------\n\n"))
-    (switch-to-buffer "BPM.org")
-    (org-mode)))
+      (insert "______________________________________________________________________________\n\n"))
+    (switch-to-buffer "BPM.org")))
 
-(defun px-bpm (prj-root)
-  "List all links"
-  (interactive "sEnter project root directory ")
-
+(defun px-bpm (prj_root)
+  "List all links in PRJ_ROOT using `px-bpm-parse'"
+  (interactive "sProject root directory ")
   (progn
-
-  (if (this-buffer-is-open "BPM.org")
-        (kill-buffer "BPM.org")))
+    (if (this-buffer-is-open-p "BPM.org")
+        (kill-buffer "BPM.org"))
 
     (with-current-buffer (get-buffer-create "BPM.org")
-      (insert "* File dependencies\n\n"))
-    (mapcar 'px-bpm-parse (directory-files prj-root nil "\\.php$"))))
+      (insert (concat "* File dependencies for [[file:" prj_root "][" prj_root "]]\n\n")))
 
+    (mapcar 'px-bpm-parse (directory-files prj_root t "\\.php$" nil))
+    (message "Loading links...")
+    (org-mode)
+    (beginning-of-buffer)
+    (org-cycle)))
 
 
 (defun px-pop-to-mark-command ()
