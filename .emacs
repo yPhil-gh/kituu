@@ -95,6 +95,19 @@
       t
     nil))
 
+(defun string-starts-with-p (string prefix)
+  "Return t if STRING starts with prefix."
+  (and (string-match (rx-to-string `(: bos ,prefix) t)
+                     string)
+       t))
+
+(defun px-bpm-format-error (url)
+  (if (not (file-exists-p (expand-file-name url)))
+      (if (string-starts-with-p url "http")
+          (setq err_msg (propertize "linked" 'font-lock-face 'font-lock-warning-face))
+        (setq err_msg (propertize "error" 'font-lock-face 'font-lock-warning-face)))
+    (setq err_msg "")))
+
 (defun px-bpm-parse (fname)
   "Extract elements. Basic Project Management."
   (setq killer t)
@@ -118,8 +131,6 @@
 
       (find-file fname)
 
-      (setq wesh "makaynsh")
-
       (setq kayn nil)
 
       (message "Reading %s" base_name)
@@ -128,39 +139,30 @@
       (while
           (re-search-forward "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" nil t)
         (when (match-string 0)
-          (setq wesh "kayn")
           (setq kayn t)
           (let ((url (match-string 1))
                 (title (match-string 2)))
-            (if (not (file-exists-p (expand-file-name url)))
-                (setq err_msg "(error)")
-              (setq err_msg ""))
+            (px-bpm-format-error url)
             (push (concat "- [[file:" url "][" title "]] -> " url " "  err_msg "\n") u1))))
 
       (goto-char (point-min))
       (while
           (re-search-forward "^.*<script.*src=\"\\([^\"]+\\)\"" nil t)
         (when (match-string 0)
-          (setq wesh "kayn")
           (setq kayn t)
           (let ((url (match-string 1)))
             (progn
-              (if (not (file-exists-p (expand-file-name url)))
-                  (setq err_msg "(error)")
-                (setq err_msg ""))
+              (px-bpm-format-error url)
               (push (concat "- [[file:" (expand-file-name url) "][" url "]] " err_msg "\n") u2)))))
 
       (goto-char (point-min))
       (while
           (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
         (when (match-string 0)
-          (setq wesh "kayn")
           (setq kayn t)
           (let ((url (match-string 1)))
             (progn
-              (if (not (file-exists-p (expand-file-name url)))
-                  (setq err_msg (propertize "error" 'font-lock-face 'font-lock-warning-face))
-                (setq err_msg ""))
+              (px-bpm-format-error url)
               (push (concat "- [[file:" (expand-file-name url) "][" url "]] " err_msg "\n") u3)))))
 
       (if killer
