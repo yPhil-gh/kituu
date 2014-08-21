@@ -154,6 +154,7 @@
   "List all links"
   (interactive "sProject root directory (or list of files) ")
 
+
   (progn
 
   (if (this-buffer-is-open "BPM.org")
@@ -162,10 +163,9 @@
     (with-current-buffer (get-buffer-create "BPM.org")
       (insert (concat "* File dependencies : [[file:" prj-root "][" prj-root "]]\n\n")))
 
-    (mapcar 'px-bpm-parse (directory-files prj-root t "\\.php$" nil))
+    (mapcar 'px-bpm-parse (directory-files prj-root t "\\.php$"))
     (beginning-of-buffer)
     (org-cycle))
-
 
 (defun px-pop-to-mark-command ()
   "Go back up the mark history. Recenter if far away."
