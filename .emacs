@@ -103,8 +103,8 @@
 
   (setq fpath (file-name-directory fname))
 
-  (message "fname: %s" fname)
-  (message "fpath: %s" fpath)
+  ;; (message "fname: %s" fname)
+  ;; (message "fpath: %s" fpath)
 
   (let
       ((u1 '())
@@ -137,15 +137,18 @@
               (if (not (file-exists-p (expand-file-name url)))
                   (progn
                     (message "NOPE: %s does not exist" (expand-file-name url))
-                    (setq nurl (concat fpath url)))
+                    ;; (set url (concat fpath url))
+                    (message "New URL: %s" url)
+                    (setq err_msg "(error)")
+                    )
+
                 (progn
                   (message "OK: %s does exist" (expand-file-name url))
-                  (setq nurl url))
+                  (setq err_msg "")
+                  )
                 )
 
-              (message "NEW url: %s" url)
-
-              (push (concat "- [[file:" (expand-file-name url) "][" url "]]\n") u2)
+              (push (concat "- [[file:" (expand-file-name url) "][" url "]] " err_msg "\n") u2)
 
               ))
           ))
