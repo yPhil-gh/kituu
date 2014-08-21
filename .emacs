@@ -89,7 +89,7 @@
 
 ;; Funcs! _________________________________________________________________
 
-(defun this-buffer-is-open (buffer)
+(defun this-buffer-is-open-p (buffer)
   "Test if BUFFER is actually on screen"
   (if (get-buffer buffer)
       t
@@ -98,8 +98,10 @@
 (defun px-bpm-parse (fname)
   "Extract elements. Basic Project Management."
   (setq killer t)
-  (setq base_name (file-name-nondirectory fname))
 
+  (message "fname: %s" fname)
+
+  (setq base_name (file-name-nondirectory fname))
 
   (let
       ((u1 '())
@@ -107,71 +109,75 @@
        (u3 '()))
     (progn
 
-     (if (this-buffer-is-open base_name)
-         (setq killer nil))
+      (if (this-buffer-is-open-p base_name)
+          (setq killer nil))
 
-     (message "Parsing %s" base_name)
+      ;; (message "Parsing %s" base_name)
 
-     (find-file fname)
+      (find-file fname)
 
-     (beginning-of-buffer)
-     (while
-         (re-search-forward "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" nil t)
-       (when (match-string 0)
-         (setq url (match-string 1))
-         (setq title (match-string 2))
-         (push (concat "[[file:" url "][" title "]]\n") u1)
-         ))
+      (beginning-of-buffer)
+      (while
+          (re-search-forward "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" nil t)
+        (when (match-string 0)
+          (let ((url (match-string 1))
+                (title (match-string 2)))
+            (push (concat "[[file:" url "][" title "]]\n") u1))
+          ))
 
-     (beginning-of-buffer)
-     (while
-         (re-search-forward "^.*<script.*src=\"\\([^\"]+\\)\"" nil t)
-       (when (match-string 0)
-         (setq url (match-string 1))
-         (push (concat "[[file:" url "][" url "]]\n") u2)))
+      (beginning-of-buffer)
+      (while
+          (re-search-forward "^.*<script.*src=\"\\([^\"]+\\)\"" nil t)
+        (when (match-string 0)
+          (let ((url (match-string 1)))
+            (push (concat "[[file:" url "][" url "]]\n") u2))
+          ))
 
-     (beginning-of-buffer)
-     (while
-         (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
-       (when (match-string 0)
-         (setq url (match-string 1) )
-         (push (concat "[[file:" url "][" url "]]\n") u3)))
+      (beginning-of-buffer)
+      (while
+          (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
+        (when (match-string 0)
+          (let ((url (match-string 1)))
+            (push (concat "[[file:" url "][" url "]]\n") u3))
+          ))
 
-     (if killer
-         (kill-buffer (current-buffer)))
+      (if killer
+          (kill-buffer (current-buffer)))
 
-     (progn
-       (with-current-buffer "BPM.org"
-         (insert "** File: ")
+      (progn
+        (with-current-buffer "BPM.org"
+          (insert "** File: ")
 
-         (insert (concat "[[file:" fname "][" fname "]]\n"))
+          (insert (concat "[[file:" fname "][" fname "]]\n"))
 
-         (insert "\n*** HREF Links (by name)\n")
-         (mapcar 'insert u1)
-         (insert "\n*** SCRIPT Links\n")
-         (mapcar 'insert u2)
-         (insert "\n*** CSS Links\n")
-         (mapcar 'insert u3)
-         (insert "--------------------------------------------------------\n\n"))
-       (switch-to-buffer "BPM.org")
-       (org-mode))
-
-)))
-
+          (insert "\n*** HREF Links (by name)\n")
+          (mapcar 'insert u1)
+          (insert "\n*** SCRIPT Links\n")
+          (mapcar 'insert u2)
+          (insert "\n*** CSS Links\n")
+          (mapcar 'insert u3)
+          (insert "--------------------------------------------------------\n\n"))
+        (switch-to-buffer "BPM.org")))))
 
 (defun px-bpm (prj-root)
   "List all links"
-  (interactive "sProject root directory (or list of files) ")
+  ;; (interactive "sProject root directory (or list of files) ")
+  (interactive (list (read-file-name "Project root directory (or list of files) ")) )
   (progn
-  (if (this-buffer-is-open "BPM.org")
+  (if (this-buffer-is-open-p "BPM.org")
         (kill-buffer "BPM.org")))
     (with-current-buffer (get-buffer-create "BPM.org")
-      ;; (insert (concat "* File dependencies : [[file:" prj-root "][" prj-root "]]\n\n"))
-      )
-    (mapcar 'px-bpm-parse (directory-files prj-root t "\\.php$"))
-    ;; (beginning-of-buffer)
-    ;; (org-cycle)
-    )
+      (insert (concat "* File dependencies : [[file:" prj-root "][" prj-root "]]\n\n")))
+
+    (if (file-accessible-directory-p prj-root)
+        (mapcar 'px-bpm-parse (directory-files prj-root t "\\.php$"))
+      (mapcar 'px-bpm-parse `(,prj-root)))
+    (org-mode)
+    (beginning-of-buffer)
+    (org-cycle))
+
+;; (file-accessible-directory-p "/var/")
+
 
 (defun px-pop-to-mark-command ()
   "Go back up the mark history. Recenter if far away."
