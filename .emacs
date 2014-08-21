@@ -129,16 +129,14 @@
 
       ;; (message "Reading %s" base_name)
 
-      (setq u2z '())
-
-      (analyze-file fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'u2z)
+      (analyze-file fname "^.*<script.*src=\"\\([^\"]+\\)\"" u2)
 
       (defun analyze-file (file regexp elm-list)
         "analyze."
       (find-file file)
       (setq kayn nil)
       (setq base_name (file-name-nondirectory file))
-      (message "Reading %s list: %s" base_name elm-list)
+      (message "Reading %s" base_name)
 
       (goto-char (point-min))
       (while
@@ -149,7 +147,7 @@
           ;;   (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u2))
 
           (setq url (match-string 1))
-          (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") elm-list)
+          (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u2)
 
           )))
 
@@ -196,7 +194,7 @@
         (insert "\n*** HREF Links (by name)\n")
         ;; (mapcar 'insert u1)
         (insert "\n*** SCRIPT Links\n")
-        (mapcar 'insert u2z)
+        (mapcar 'insert u2)
         (insert "\n*** CSS Links\n")
         ;; (mapcar 'insert u3)
         (insert "\n*** Requires\n")
