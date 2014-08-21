@@ -160,7 +160,8 @@
         (when (match-string 0)
           (setq kayn t)
           (let ((url (match-string 1)))
-              (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u4))))
+              (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u4)
+              )))
 
       (if killer
           (kill-buffer (current-buffer)))
@@ -168,8 +169,8 @@
       (progn
         (with-current-buffer "BPM.org"
           (if kayn
-              (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-variable-name-face) ": "))
-            (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-builtin-face) ": ")))
+              (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-variable-name-face) " "))
+            (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-builtin-face) " ")))
           (insert (concat "[[file:" fname "][" fname "]]\n"))
           (insert "\n*** HREF Links (by name)\n")
           (mapcar 'insert u1)
@@ -179,6 +180,8 @@
           (mapcar 'insert u3)
           (insert "\n*** Requires\n")
           (mapcar 'insert u4)
+          (insert "\n*** Requires into\n")
+          (mapcar 'insert u5)
           (insert "--------------------------------------------------------\n\n"))
         ))))
 
@@ -199,7 +202,6 @@
   (org-mode)
   (goto-char (point-min))
   (org-cycle))
-
 
 (defun px-pop-to-mark-command ()
   "Go back up the mark history. Recenter if far away."
