@@ -120,8 +120,6 @@
     (when (match-string 0)
       (setq url (match-string 1))
       (setq title (match-string 2))
-      ;; (setq u1 (cons (concat "[[file:" project-dir url "][" title "]]\n") u1))
-
       (push (concat "[[file:" project-dir url "][" title "]]\n") u1)
       ))
 
@@ -131,7 +129,6 @@
     (when (match-string 0)
       (setq url (match-string 1))
       (push (concat "[[file:" project-dir url "][" url "]]\n") u2)))
-  ;; (beginning-of-buffer)
 
   (if killer
       (kill-buffer (current-buffer)))
