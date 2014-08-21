@@ -123,67 +123,86 @@
       (if (get-buffer base_name)
           (setq killer nil))
 
-      (find-file fname)
+      ;; (find-file fname)
 
+      ;; (setq kayn nil)
+
+      ;; (message "Reading %s" base_name)
+
+      (setq u2z '())
+
+      (analyze-file fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'u2z)
+
+      (defun analyze-file (file regexp elm-list)
+        "analyze."
+      (find-file file)
       (setq kayn nil)
-
-      (message "Reading %s" base_name)
-
-      (goto-char (point-min))
-      (while
-          (re-search-forward "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" nil t)
-        (when (match-string 0)
-          (setq kayn t)
-          (let ((url (match-string 1))
-                (title (match-string 2)))
-            (push (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n") u1))))
+      (setq base_name (file-name-nondirectory file))
+      (message "Reading %s list: %s" base_name elm-list)
 
       (goto-char (point-min))
       (while
-          (re-search-forward "^.*<script.*src=\"\\([^\"]+\\)\"" nil t)
+          (re-search-forward regexp nil t)
         (when (match-string 0)
           (setq kayn t)
-          (let ((url (match-string 1)))
-              (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u2))))
+          ;; (let ((url (match-string 1)))
+          ;;   (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u2))
 
-      (goto-char (point-min))
-      (while
-          (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
-        (when (match-string 0)
-          (setq kayn t)
-          (let ((url (match-string 1)))
-              (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u3))))
+          (setq url (match-string 1))
+          (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") elm-list)
 
-      (goto-char (point-min))
-      (while
-          (re-search-forward "^require.*\'\\(.*\\)'" nil t)
-        (when (match-string 0)
-          (setq kayn t)
-          (let ((url (match-string 1)))
-              (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u4)
-              )))
+          )))
 
+      ;; (goto-char (point-min))
+      ;; (while
+      ;;     (re-search-forward "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" nil t)
+      ;;   (when (match-string 0)
+      ;;     (setq kayn t)
+      ;;     (let ((url (match-string 1))
+      ;;           (title (match-string 2)))
+      ;;       (push (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n") u1))))
+
+      ;; (goto-char (point-min))
+      ;; (while
+      ;;     (re-search-forward "^.*<script.*src=\"\\([^\"]+\\)\"" nil t)
+      ;;   (when (match-string 0)
+      ;;     (setq kayn t)
+      ;;     (let ((url (match-string 1)))
+      ;;       (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u2))))
+
+      ;; (goto-char (point-min))
+      ;; (while
+      ;;     (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
+      ;;   (when (match-string 0)
+      ;;     (setq kayn t)
+      ;;     (let ((url (match-string 1)))
+      ;;       (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u3))))
+
+      ;; (goto-char (point-min))
+      ;; (while
+      ;;     (re-search-forward "^require.*\'\\(.*\\)'" nil t)
+      ;;   (when (match-string 0)
+      ;;     (setq kayn t)
+      ;;     (let ((url (match-string 1)))
+      ;;       (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u4)
+      ;;       )))
       (if killer
           (kill-buffer (current-buffer)))
-
-      (progn
-        (with-current-buffer "BPM.org"
-          (if kayn
-              (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-variable-name-face) " "))
-            (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-builtin-face) " ")))
-          (insert (concat "[[file:" fname "][" fname "]]\n"))
-          (insert "\n*** HREF Links (by name)\n")
-          (mapcar 'insert u1)
-          (insert "\n*** SCRIPT Links\n")
-          (mapcar 'insert u2)
-          (insert "\n*** CSS Links\n")
-          (mapcar 'insert u3)
-          (insert "\n*** Requires\n")
-          (mapcar 'insert u4)
-          (insert "\n*** Requires into\n")
-          (mapcar 'insert u5)
-          (insert "--------------------------------------------------------\n\n"))
-        ))))
+      (with-current-buffer "BPM.org"
+        (if kayn
+            (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-variable-name-face) " "))
+          (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-builtin-face) " ")))
+        (insert (concat "[[file:" fname "][" fname "]]\n"))
+        (insert "\n*** HREF Links (by name)\n")
+        ;; (mapcar 'insert u1)
+        (insert "\n*** SCRIPT Links\n")
+        (mapcar 'insert u2z)
+        (insert "\n*** CSS Links\n")
+        ;; (mapcar 'insert u3)
+        (insert "\n*** Requires\n")
+        ;; (mapcar 'insert u4)
+        (insert "--------------------------------------------------------\n\n"))
+      )))
 
 (defun px-bpm (prj-root)
   "List all links"
@@ -193,7 +212,7 @@
   (if (get-buffer bpm-buffer)
       (kill-buffer bpm-buffer))
   (with-current-buffer (get-buffer-create bpm-buffer)
-    (insert (concat "* File dependencies for [[file:" prj-root "][" prj-root "]] (" (format-time-string "%Y-%m-%d %T ") ")\n\n")))
+    (insert (concat "* File dependencies for [[file:" prj-root "][" prj-root "]] (" (format-time-string "%Y-%m-%d %T") ")\n\n")))
 
   (if (file-accessible-directory-p prj-root)
       (mapcar 'px-bpm-parse (directory-files prj-root t "\\.php$"))
