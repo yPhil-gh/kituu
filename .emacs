@@ -97,14 +97,13 @@
 
 (defun px-bpm-parse (fname)
   "Extract elements. Basic Project Management."
-  (setq project-dir "/var/www/html/microlabel.git/")
   (setq killer t)
-  (setq full-name (concat project-dir fname))
+  (setq base_name (file-name-nondirectory fname))
 
-  (if (this-buffer-is-open fname)
+  (if (this-buffer-is-open base_name)
         (setq killer nil))
 
-  (find-file full-name)
+  (find-file fname)
 
   (setq u1 '())  (setq u2 '())  (setq u3 '())
 
@@ -112,7 +111,7 @@
       (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
     (when (match-string 0)
       (setq url (match-string 1) )
-      (push (concat "[[file:" project-dir url "][" url "]]\n") u3)))
+      (push (concat "[[file:" url "][" url "]]\n") u3)))
 
   (beginning-of-buffer)
   (while
@@ -120,7 +119,7 @@
     (when (match-string 0)
       (setq url (match-string 1))
       (setq title (match-string 2))
-      (push (concat "[[file:" project-dir url "][" title "]]\n") u1)
+      (push (concat "[[file:" url "][" title "]]\n") u1)
       ))
 
   (beginning-of-buffer)
@@ -128,7 +127,7 @@
       (re-search-forward "^.*<script.*src=\"\\([^\"]+\\)\"" nil t)
     (when (match-string 0)
       (setq url (match-string 1))
-      (push (concat "[[file:" project-dir url "][" url "]]\n") u2)))
+      (push (concat "[[file:" url "][" url "]]\n") u2)))
 
   (if killer
       (kill-buffer (current-buffer)))
@@ -137,7 +136,7 @@
     (with-current-buffer "BPM.org"
       (insert "** File: ")
 
-      (insert (concat "[[file:" full-name "][" fname "]]\n"))
+      (insert (concat "[[file:" fname "][" fname "]]\n"))
 
       (insert "\n*** HREF Links (by name)\n")
       (mapcar 'insert u1)
@@ -160,7 +159,7 @@
 
     (with-current-buffer (get-buffer-create "BPM.org")
       (insert "* File dependencies\n\n"))
-    (mapcar 'px-bpm-parse (directory-files prj-root nil "\\.php$"))
+    (mapcar 'px-bpm-parse (directory-files prj-root t "\\.php$" nil))
     ;; (directory-files "/var/www/html/microlabel.git/" t "\\.php$" nil)
     )
 
