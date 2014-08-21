@@ -89,44 +89,38 @@
 
 ;; Funcs! _________________________________________________________________
 
-(defun this-buffer-is-open-p (buffer)
-  "Test if BUFFER is actually on screen"
-  (if (get-buffer buffer)
-      t
-    nil))
-
-(defun string-starts-with-p (string prefix)
-  "Return t if STRING starts with prefix."
-  (and (string-match (rx-to-string `(: bos ,prefix) t)
-                     string)
-       t))
-
-(defun px-bpm-format-error (url)
-  (if (not (file-exists-p (expand-file-name url)))
-      (if (string-starts-with-p url "http")
-          (setq err_msg (propertize "linked" 'font-lock-face 'font-lock-warning-face))
-        (setq err_msg (propertize "error" 'font-lock-face 'font-lock-warning-face)))
-    (setq err_msg "")))
-
 (defun px-bpm-parse (fname)
   "Extract elements. Basic Project Management."
+
+  (defun string-starts-with-p (string prefix)
+    "Return t if STRING starts with prefix."
+    (and (string-match (rx-to-string `(: bos ,prefix) t)
+                       string)
+         t))
+
+  (defun px-bpm-format-error (url)
+    (if (not (file-exists-p (expand-file-name url)))
+        (if (or (string-starts-with-p url "http")
+                (string-starts-with-p url "//"))
+            (setq err_msg (propertize "External" 'font-lock-face 'font-lock-keyword-face))
+          (setq err_msg (propertize "Error" 'font-lock-face 'font-lock-warning-face)))
+      (setq err_msg "")))
+
   (setq killer t)
 
   (setq base_name (file-name-nondirectory fname))
 
   (setq fpath (file-name-directory fname))
 
-  ;; (message "fname: %s" fname)
-  ;; (message "fpath: %s" fpath)
-
   (let
       ((u1 '())
        (u2 '())
        (u3 '())
-       (u4 '()))
+       (u4 '())
+       (u5 '()))
     (progn
 
-      (if (this-buffer-is-open-p base_name)
+      (if (get-buffer base_name)
           (setq killer nil))
 
       (find-file fname)
@@ -142,8 +136,7 @@
           (setq kayn t)
           (let ((url (match-string 1))
                 (title (match-string 2)))
-            (px-bpm-format-error url)
-            (push (concat "- [[file:" url "][" title "]] -> " url " "  err_msg "\n") u1))))
+            (push (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n") u1))))
 
       (goto-char (point-min))
       (while
@@ -151,9 +144,7 @@
         (when (match-string 0)
           (setq kayn t)
           (let ((url (match-string 1)))
-            (progn
-              (px-bpm-format-error url)
-              (push (concat "- [[file:" (expand-file-name url) "][" url "]] " err_msg "\n") u2)))))
+              (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u2))))
 
       (goto-char (point-min))
       (while
@@ -161,20 +152,24 @@
         (when (match-string 0)
           (setq kayn t)
           (let ((url (match-string 1)))
-            (progn
-              (px-bpm-format-error url)
-              (push (concat "- [[file:" (expand-file-name url) "][" url "]] " err_msg "\n") u3)))))
+              (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u3))))
+
+      (goto-char (point-min))
+      (while
+          (re-search-forward "^require.*\'\\(.*\\)'" nil t)
+        (when (match-string 0)
+          (setq kayn t)
+          (let ((url (match-string 1)))
+              (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u4))))
 
       (if killer
           (kill-buffer (current-buffer)))
 
       (progn
         (with-current-buffer "BPM.org"
-
           (if kayn
               (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-variable-name-face) ": "))
             (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-builtin-face) ": ")))
-
           (insert (concat "[[file:" fname "][" fname "]]\n"))
           (insert "\n*** HREF Links (by name)\n")
           (mapcar 'insert u1)
@@ -182,35 +177,25 @@
           (mapcar 'insert u2)
           (insert "\n*** CSS Links\n")
           (mapcar 'insert u3)
+          (insert "\n*** Requires\n")
+          (mapcar 'insert u4)
           (insert "--------------------------------------------------------\n\n"))
-        (switch-to-buffer "BPM.org")
-
-        ;; (org-restart-font-lock)
-))))
-
-
-;; font-lock-builtin-face 	font-lock-comment-delimiter-face
-;; font-lock-comment-face 	font-lock-constant-face
-;; font-lock-doc-face 	font-lock-function-name-face
-;; font-lock-keyword-face 	font-lock-negation-char-face
-;; font-lock-preprocessor-face 	font-lock-reference-face
-;; font-lock-string-face 	font-lock-syntactic-face-function
-;; font-lock-type-face 	font-lock-variable-name-face
-;; font-lock-warning-face
+        ))))
 
 (defun px-bpm (prj-root)
   "List all links"
   ;; (interactive "sProject root directory (or list of files) ")
   (interactive (list (read-file-name "Project root directory (or list of files) ")) )
-
-  (if (this-buffer-is-open-p "BPM.org")
-      (kill-buffer "BPM.org"))
-  (with-current-buffer (get-buffer-create "BPM.org")
-    (insert (concat "* File dependencies : [[file:" prj-root "][" prj-root "]]\n\n")))
+  (setq bpm-buffer "BPM.org")
+  (if (get-buffer bpm-buffer)
+      (kill-buffer bpm-buffer))
+  (with-current-buffer (get-buffer-create bpm-buffer)
+    (insert (concat "* File dependencies for [[file:" prj-root "][" prj-root "]] (" (format-time-string "%Y-%m-%d %T ") ")\n\n")))
 
   (if (file-accessible-directory-p prj-root)
       (mapcar 'px-bpm-parse (directory-files prj-root t "\\.php$"))
     (mapcar 'px-bpm-parse `(,prj-root)))
+  (switch-to-buffer bpm-buffer)
   (org-mode)
   (goto-char (point-min))
   (org-cycle))
