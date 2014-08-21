@@ -123,67 +123,47 @@
       (if (get-buffer base_name)
           (setq killer nil))
 
-      ;; (find-file fname)
+      (find-file fname)
 
-      ;; (setq kayn nil)
-
-      ;; (message "Reading %s" base_name)
-
-      (analyze-file fname "^.*<script.*src=\"\\([^\"]+\\)\"" u2)
-
-      (defun analyze-file (file regexp elm-list)
-        "analyze."
-      (find-file file)
       (setq kayn nil)
-      (setq base_name (file-name-nondirectory file))
+
       (message "Reading %s" base_name)
+
 
       (goto-char (point-min))
       (while
-          (re-search-forward regexp nil t)
+          (re-search-forward "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" nil t)
         (when (match-string 0)
           (setq kayn t)
-          ;; (let ((url (match-string 1)))
-          ;;   (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u2))
+          (let ((url (match-string 1))
+                (title (match-string 2)))
+            (push (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n") u1))))
 
-          (setq url (match-string 1))
-          (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u2)
+      (goto-char (point-min))
+      (while
+          (re-search-forward "^.*<script.*src=\"\\([^\"]+\\)\"" nil t)
+        (when (match-string 0)
+          (setq kayn t)
+          (let ((url (match-string 1)))
+            (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u2))))
 
-          )))
+      (goto-char (point-min))
+      (while
+          (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
+        (when (match-string 0)
+          (setq kayn t)
+          (let ((url (match-string 1)))
+            (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u3))))
 
-      ;; (goto-char (point-min))
-      ;; (while
-      ;;     (re-search-forward "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" nil t)
-      ;;   (when (match-string 0)
-      ;;     (setq kayn t)
-      ;;     (let ((url (match-string 1))
-      ;;           (title (match-string 2)))
-      ;;       (push (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n") u1))))
+      (goto-char (point-min))
+      (while
+          (re-search-forward "^require.*\'\\(.*\\)'" nil t)
+        (when (match-string 0)
+          (setq kayn t)
+          (let ((url (match-string 1)))
+            (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u4)
+            )))
 
-      ;; (goto-char (point-min))
-      ;; (while
-      ;;     (re-search-forward "^.*<script.*src=\"\\([^\"]+\\)\"" nil t)
-      ;;   (when (match-string 0)
-      ;;     (setq kayn t)
-      ;;     (let ((url (match-string 1)))
-      ;;       (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u2))))
-
-      ;; (goto-char (point-min))
-      ;; (while
-      ;;     (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
-      ;;   (when (match-string 0)
-      ;;     (setq kayn t)
-      ;;     (let ((url (match-string 1)))
-      ;;       (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u3))))
-
-      ;; (goto-char (point-min))
-      ;; (while
-      ;;     (re-search-forward "^require.*\'\\(.*\\)'" nil t)
-      ;;   (when (match-string 0)
-      ;;     (setq kayn t)
-      ;;     (let ((url (match-string 1)))
-      ;;       (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u4)
-      ;;       )))
       (if killer
           (kill-buffer (current-buffer)))
       (with-current-buffer "BPM.org"
@@ -192,13 +172,13 @@
           (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-builtin-face) " ")))
         (insert (concat "[[file:" fname "][" fname "]]\n"))
         (insert "\n*** HREF Links (by name)\n")
-        ;; (mapcar 'insert u1)
+        (mapcar 'insert u1)
         (insert "\n*** SCRIPT Links\n")
         (mapcar 'insert u2)
         (insert "\n*** CSS Links\n")
-        ;; (mapcar 'insert u3)
+        (mapcar 'insert u3)
         (insert "\n*** Requires\n")
-        ;; (mapcar 'insert u4)
+        (mapcar 'insert u4)
         (insert "--------------------------------------------------------\n\n"))
       )))
 
