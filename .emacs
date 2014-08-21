@@ -152,7 +152,7 @@
 
 (defun px-bpm (prj-root)
   "List all links"
-  (interactive "sEnter project root directory ")
+  (interactive "sProject root directory (or list of files) ")
 
   (progn
 
@@ -160,10 +160,11 @@
         (kill-buffer "BPM.org")))
 
     (with-current-buffer (get-buffer-create "BPM.org")
-      (insert "* File dependencies\n\n"))
+      (insert (concat "* File dependencies : [[file:" prj-root "][" prj-root "]]\n\n")))
+
     (mapcar 'px-bpm-parse (directory-files prj-root t "\\.php$" nil))
     (beginning-of-buffer)
-)
+    (org-cycle))
 
 
 (defun px-pop-to-mark-command ()
