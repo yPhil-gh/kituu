@@ -118,14 +118,18 @@
 
       (find-file fname)
 
+      (message "Reading %s" base_name)
+
       (beginning-of-buffer)
       (while
           (re-search-forward "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" nil t)
         (when (match-string 0)
           (let ((url (match-string 1))
                 (title (match-string 2)))
-            (push (concat "- [[file:" url "][" title "]] -> " url "\n") u1))
-          ))
+            (if (not (file-exists-p (expand-file-name url)))
+                (setq err_msg "(error)")
+              (setq err_msg ""))
+            (push (concat "- [[file:" url "][" title "]] -> " url " "  err_msg "\n") u1))))
 
       (beginning-of-buffer)
       (while
@@ -133,25 +137,10 @@
         (when (match-string 0)
           (let ((url (match-string 1)))
             (progn
-
               (if (not (file-exists-p (expand-file-name url)))
-                  (progn
-                    (message "NOPE: %s does not exist" (expand-file-name url))
-                    ;; (set url (concat fpath url))
-                    (message "New URL: %s" url)
-                    (setq err_msg "(error)")
-                    )
-
-                (progn
-                  (message "OK: %s does exist" (expand-file-name url))
-                  (setq err_msg "")
-                  )
-                )
-
-              (push (concat "- [[file:" (expand-file-name url) "][" url "]] " err_msg "\n") u2)
-
-              ))
-          ))
+                  (setq err_msg "(error)")
+                (setq err_msg ""))
+              (push (concat "- [[file:" (expand-file-name url) "][" url "]] " err_msg "\n") u2)))))
 
       (beginning-of-buffer)
       (while
@@ -159,10 +148,10 @@
         (when (match-string 0)
           (let ((url (match-string 1)))
             (progn
-              (push (concat "- [[file:" (expand-file-name url) "][" url "]]\n") u3)
-              )
-            )
-          ))
+              (if (not (file-exists-p (expand-file-name url)))
+                  (setq err_msg "(error)")
+                (setq err_msg ""))
+              (push (concat "- [[file:" (expand-file-name url) "][" url "]] " err_msg "\n") u3)))))
 
       (if killer
           (kill-buffer (current-buffer)))
@@ -185,17 +174,17 @@
   ;; (interactive "sProject root directory (or list of files) ")
   (interactive (list (read-file-name "Project root directory (or list of files) ")) )
   (progn
-  (if (this-buffer-is-open-p "BPM.org")
+    (if (this-buffer-is-open-p "BPM.org")
         (kill-buffer "BPM.org")))
-    (with-current-buffer (get-buffer-create "BPM.org")
-      (insert (concat "* File dependencies : [[file:" prj-root "][" prj-root "]]\n\n")))
+  (with-current-buffer (get-buffer-create "BPM.org")
+    (insert (concat "* File dependencies : [[file:" prj-root "][" prj-root "]]\n\n")))
 
-    (if (file-accessible-directory-p prj-root)
-        (mapcar 'px-bpm-parse (directory-files prj-root t "\\.php$"))
-      (mapcar 'px-bpm-parse `(,prj-root)))
-    (org-mode)
-    (beginning-of-buffer)
-    (org-cycle))
+  (if (file-accessible-directory-p prj-root)
+      (mapcar 'px-bpm-parse (directory-files prj-root t "\\.php$"))
+    (mapcar 'px-bpm-parse `(,prj-root)))
+  (org-mode)
+  (beginning-of-buffer)
+  (org-cycle))
 
 
 (defun px-pop-to-mark-command ()
