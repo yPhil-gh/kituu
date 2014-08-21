@@ -101,21 +101,12 @@
   (setq killer t)
   (setq full-name (concat project-dir fname))
 
-  (message "KILLER BEFORE: %s" killer)
-
   (if (this-buffer-is-open fname)
-      (progn
-        (message "%s is OPEN!" fname)
         (setq killer nil))
-    )
-
-  (message "KILLER AFTER: %s" killer)
 
   (find-file full-name)
 
-  (setq u1 '())
-  (setq u2 '())
-  (setq u3 '())
+  (setq u1 '())  (setq u2 '())  (setq u3 '())
 
   (while
       (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
@@ -142,22 +133,8 @@
       (push (concat "[[file:" project-dir url "][" url "]]\n") u2)))
   ;; (beginning-of-buffer)
 
-  (message "KILLER at this point: %s" killer)
-
-;;   (setq testo t)
-;;   (setq testo nil)
-
-;; (if testo
-;;     (message "TRUE!")
-;;   (message "false")
-;; )
-
   (if killer
-      (progn
-        (message "TRUE! killing %s " fname)
-        (kill-buffer (current-buffer)))
-    (message "Not killing %s " fname)
-    )
+      (kill-buffer (current-buffer)))
 
   (progn
     (with-current-buffer "BPM.org"
