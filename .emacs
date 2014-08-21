@@ -159,7 +159,7 @@
           (let ((url (match-string 1)))
             (progn
               (if (not (file-exists-p (expand-file-name url)))
-                  (setq err_msg "(error)")
+                  (setq err_msg (propertize "error" 'font-lock-face 'font-lock-warning-face))
                 (setq err_msg ""))
               (push (concat "- [[file:" (expand-file-name url) "][" url "]] " err_msg "\n") u3)))))
 
@@ -183,7 +183,7 @@
           (insert "--------------------------------------------------------\n\n"))
         (switch-to-buffer "BPM.org")
 
-        (org-restart-font-lock)
+        ;; (org-restart-font-lock)
 ))))
 
 
