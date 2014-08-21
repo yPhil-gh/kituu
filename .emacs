@@ -103,6 +103,8 @@
   (if (this-buffer-is-open base_name)
         (setq killer nil))
 
+  (message "Parsing %s" base_name)
+
   (find-file fname)
 
   (setq u1 '())  (setq u2 '())  (setq u3 '())
@@ -160,8 +162,8 @@
     (with-current-buffer (get-buffer-create "BPM.org")
       (insert "* File dependencies\n\n"))
     (mapcar 'px-bpm-parse (directory-files prj-root t "\\.php$" nil))
-    ;; (directory-files "/var/www/html/microlabel.git/" t "\\.php$" nil)
-    )
+    (beginning-of-buffer)
+)
 
 
 (defun px-pop-to-mark-command ()
