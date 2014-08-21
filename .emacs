@@ -100,6 +100,14 @@
   (setq killer t)
   (setq base_name (file-name-nondirectory fname))
 
+
+  (let
+      ((u1 '())
+       (u2 '())
+       (u3 '()))
+    ())
+
+
   (if (this-buffer-is-open base_name)
         (setq killer nil))
 
@@ -108,12 +116,6 @@
   (find-file fname)
 
   (setq u1 '())  (setq u2 '())  (setq u3 '())
-
-  (while
-      (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
-    (when (match-string 0)
-      (setq url (match-string 1) )
-      (push (concat "[[file:" url "][" url "]]\n") u3)))
 
   (beginning-of-buffer)
   (while
@@ -130,6 +132,13 @@
     (when (match-string 0)
       (setq url (match-string 1))
       (push (concat "[[file:" url "][" url "]]\n") u2)))
+
+  (beginning-of-buffer)
+  (while
+      (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
+    (when (match-string 0)
+      (setq url (match-string 1) )
+      (push (concat "[[file:" url "][" url "]]\n") u3)))
 
   (if killer
       (kill-buffer (current-buffer)))
@@ -153,16 +162,11 @@
 (defun px-bpm (prj-root)
   "List all links"
   (interactive "sProject root directory (or list of files) ")
-
-
   (progn
-
   (if (this-buffer-is-open "BPM.org")
         (kill-buffer "BPM.org")))
-
     (with-current-buffer (get-buffer-create "BPM.org")
       (insert (concat "* File dependencies : [[file:" prj-root "][" prj-root "]]\n\n")))
-
     (mapcar 'px-bpm-parse (directory-files prj-root t "\\.php$"))
     (beginning-of-buffer)
     (org-cycle))
