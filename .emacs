@@ -120,7 +120,7 @@
 
       (message "Reading %s" base_name)
 
-      (beginning-of-buffer)
+      (goto-char (point-min))
       (while
           (re-search-forward "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" nil t)
         (when (match-string 0)
@@ -131,7 +131,7 @@
               (setq err_msg ""))
             (push (concat "- [[file:" url "][" title "]] -> " url " "  err_msg "\n") u1))))
 
-      (beginning-of-buffer)
+      (goto-char (point-min))
       (while
           (re-search-forward "^.*<script.*src=\"\\([^\"]+\\)\"" nil t)
         (when (match-string 0)
@@ -142,7 +142,7 @@
                 (setq err_msg ""))
               (push (concat "- [[file:" (expand-file-name url) "][" url "]] " err_msg "\n") u2)))))
 
-      (beginning-of-buffer)
+      (goto-char (point-min))
       (while
           (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
         (when (match-string 0)
@@ -168,6 +168,7 @@
           (mapcar 'insert u3)
           (insert "--------------------------------------------------------\n\n"))
         (switch-to-buffer "BPM.org")))))
+
 
 (defun px-bpm (prj-root)
   "List all links"
