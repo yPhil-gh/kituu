@@ -99,20 +99,22 @@
   "Extract elements. Basic Project Management."
   (setq killer t)
 
-  (message "fname: %s" fname)
-
   (setq base_name (file-name-nondirectory fname))
+
+  (setq fpath (file-name-directory fname))
+
+  (message "fname: %s" fname)
+  (message "fpath: %s" fpath)
 
   (let
       ((u1 '())
        (u2 '())
-       (u3 '()))
+       (u3 '())
+       (u4 '()))
     (progn
 
       (if (this-buffer-is-open-p base_name)
           (setq killer nil))
-
-      ;; (message "Parsing %s" base_name)
 
       (find-file fname)
 
@@ -122,7 +124,7 @@
         (when (match-string 0)
           (let ((url (match-string 1))
                 (title (match-string 2)))
-            (push (concat "[[file:" url "][" title "]]\n") u1))
+            (push (concat "- [[file:" url "][" title "]] -> " url "\n") u1))
           ))
 
       (beginning-of-buffer)
@@ -130,7 +132,22 @@
           (re-search-forward "^.*<script.*src=\"\\([^\"]+\\)\"" nil t)
         (when (match-string 0)
           (let ((url (match-string 1)))
-            (push (concat "[[file:" url "][" url "]]\n") u2))
+            (progn
+
+              (if (not (file-exists-p (expand-file-name url)))
+                  (progn
+                    (message "NOPE: %s does not exist" (expand-file-name url))
+                    (setq nurl (concat fpath url)))
+                (progn
+                  (message "OK: %s does exist" (expand-file-name url))
+                  (setq nurl url))
+                )
+
+              (message "NEW url: %s" url)
+
+              (push (concat "- [[file:" (expand-file-name url) "][" url "]]\n") u2)
+
+              ))
           ))
 
       (beginning-of-buffer)
@@ -138,7 +155,10 @@
           (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
         (when (match-string 0)
           (let ((url (match-string 1)))
-            (push (concat "[[file:" url "][" url "]]\n") u3))
+            (progn
+              (push (concat "- [[file:" (expand-file-name url) "][" url "]]\n") u3)
+              )
+            )
           ))
 
       (if killer
@@ -147,9 +167,7 @@
       (progn
         (with-current-buffer "BPM.org"
           (insert "** File: ")
-
           (insert (concat "[[file:" fname "][" fname "]]\n"))
-
           (insert "\n*** HREF Links (by name)\n")
           (mapcar 'insert u1)
           (insert "\n*** SCRIPT Links\n")
@@ -175,8 +193,6 @@
     (org-mode)
     (beginning-of-buffer)
     (org-cycle))
-
-;; (file-accessible-directory-p "/var/")
 
 
 (defun px-pop-to-mark-command ()
