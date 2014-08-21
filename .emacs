@@ -118,12 +118,18 @@
 
       (find-file fname)
 
+      (setq wesh "makaynsh")
+
+      (setq kayn nil)
+
       (message "Reading %s" base_name)
 
       (goto-char (point-min))
       (while
           (re-search-forward "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" nil t)
         (when (match-string 0)
+          (setq wesh "kayn")
+          (setq kayn t)
           (let ((url (match-string 1))
                 (title (match-string 2)))
             (if (not (file-exists-p (expand-file-name url)))
@@ -135,6 +141,8 @@
       (while
           (re-search-forward "^.*<script.*src=\"\\([^\"]+\\)\"" nil t)
         (when (match-string 0)
+          (setq wesh "kayn")
+          (setq kayn t)
           (let ((url (match-string 1)))
             (progn
               (if (not (file-exists-p (expand-file-name url)))
@@ -146,6 +154,8 @@
       (while
           (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
         (when (match-string 0)
+          (setq wesh "kayn")
+          (setq kayn t)
           (let ((url (match-string 1)))
             (progn
               (if (not (file-exists-p (expand-file-name url)))
@@ -158,7 +168,11 @@
 
       (progn
         (with-current-buffer "BPM.org"
-          (insert "** File: ")
+
+          (if kayn
+              (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-variable-name-face) ": "))
+            (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-builtin-face) ": ")))
+
           (insert (concat "[[file:" fname "][" fname "]]\n"))
           (insert "\n*** HREF Links (by name)\n")
           (mapcar 'insert u1)
@@ -167,16 +181,28 @@
           (insert "\n*** CSS Links\n")
           (mapcar 'insert u3)
           (insert "--------------------------------------------------------\n\n"))
-        (switch-to-buffer "BPM.org")))))
+        (switch-to-buffer "BPM.org")
 
+        (org-restart-font-lock)
+))))
+
+
+;; font-lock-builtin-face 	font-lock-comment-delimiter-face
+;; font-lock-comment-face 	font-lock-constant-face
+;; font-lock-doc-face 	font-lock-function-name-face
+;; font-lock-keyword-face 	font-lock-negation-char-face
+;; font-lock-preprocessor-face 	font-lock-reference-face
+;; font-lock-string-face 	font-lock-syntactic-face-function
+;; font-lock-type-face 	font-lock-variable-name-face
+;; font-lock-warning-face
 
 (defun px-bpm (prj-root)
   "List all links"
   ;; (interactive "sProject root directory (or list of files) ")
   (interactive (list (read-file-name "Project root directory (or list of files) ")) )
-  (progn
-    (if (this-buffer-is-open-p "BPM.org")
-        (kill-buffer "BPM.org")))
+
+  (if (this-buffer-is-open-p "BPM.org")
+      (kill-buffer "BPM.org"))
   (with-current-buffer (get-buffer-create "BPM.org")
     (insert (concat "* File dependencies : [[file:" prj-root "][" prj-root "]]\n\n")))
 
@@ -184,7 +210,7 @@
       (mapcar 'px-bpm-parse (directory-files prj-root t "\\.php$"))
     (mapcar 'px-bpm-parse `(,prj-root)))
   (org-mode)
-  (beginning-of-buffer)
+  (goto-char (point-min))
   (org-cycle))
 
 
