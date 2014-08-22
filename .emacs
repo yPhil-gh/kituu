@@ -93,12 +93,13 @@
   "Extract elements from FNAME. Mapcare'd from `px-bpm'."
 
   (defun string-starts-with-p (string prefix)
-    "Return t if STRING starts with prefix."
-    (and (string-match (rx-to-string `(: bos ,prefix) t)
-                       string)
-         t))
+    "Return t if STRING starts with prefix. Internal defun of `px-bpm-open-file'."
+    (and
+     (string-match (rx-to-string `(: bos ,prefix) t) string)
+     t))
 
   (defun px-bpm-format-error (url)
+    "Try to open URL and return (propertized) ERR_MSG. Internal defun of `px-bpm-open-file'."
     (if (not (file-exists-p (expand-file-name url)))
         (if (or (string-starts-with-p url "http")
                 (string-starts-with-p url "//"))
@@ -106,11 +107,19 @@
           (setq err_msg (propertize "Error" 'font-lock-face 'font-lock-warning-face)))
       (setq err_msg "")))
 
-  (defun px-bpm-parse (fname regexp elm-list)
-    "Open FNAME and run REGEXP upon it, then push the result to ELM-LIST"
+  (defun px-bpm-parse (fname regexp elm-list &optional nd-regexp)
+    "Open FNAME and run REGEXP upon it, then push the org-formatted result to ELM-LIST. Internal defun of `px-bpm-open-file'."
     (find-file fname)
     (goto-char (point-min))
-    ;; (message "Yo! list: %s fname: %s" elm-list fname)
+
+    ;; (if depth
+    ;;     (progn
+    ;;       (message "Bound! : %s" depth)
+    ;;       (if (> depth 1)
+    ;;           (message "Recurse!"))
+    ;;       )
+    ;;   (message "UnBound!")
+    ;;   )
 
     (while
         (re-search-forward regexp nil t)
@@ -120,9 +129,35 @@
         (setq title (match-string 2))
         (if (not (eq title ""))
             (add-to-list elm-list (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n"))
-          (add-to-list elm-list (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n")))
-        ;; (mapcar 'px-bpm-open-file `(,url))
-        )))
+          (add-to-list elm-list (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n")))))
+
+    (if (and nd-regexp kayn)
+        (progn
+          (message "Bound! : %s" nd-regexp)
+
+          (find-file url)
+          (goto-char (point-min))
+
+          ;; (if depth
+          ;;     (progn
+          ;;       (message "Bound! : %s" depth)
+          ;;       (if (> depth 1)
+          ;;           (message "Recurse!"))
+          ;;       )
+          ;;   (message "UnBound!")
+          ;;   )
+
+          (while
+              (re-search-forward nd-regexp nil t)
+            (when (match-string 0)
+              (message "Found! in %s" url)
+              (setq kayn t)
+              (setq nurl (match-string 0))
+              (add-to-list elm-list (concat "  - [[file:" nurl "][" nurl "]]\n"))
+              ))
+          )
+      )
+)
 
   (let
       ((list-href '())
@@ -141,9 +176,13 @@
       (message "Reading %s" base_name)
 
       (px-bpm-parse fname "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" 'list-href)
-      (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script)
+      ;; (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "'\\([\0-\377[:nonascii:]]*.php\\)")
+      (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "zobilamush")
       (px-bpm-parse fname "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" 'list-css)
       (px-bpm-parse fname "^require.*\'\\(.*\\)'" 'list-require)
+
+;; "'\\(.*.php\\)"
+
 
       (if killer
           (kill-buffer (current-buffer)))
@@ -180,6 +219,7 @@ Basic (web) Project Management."
 
   (with-current-buffer (get-buffer-create bpm-buffer)
     (insert (concat "* File dependencies for [[file:" prj-root "][" prj-root "]] (" (format-time-string "%Y-%m-%d %T") ")\n\n")))
+
   (if (file-accessible-directory-p prj-root)
       (mapcar 'px-bpm-open-file (directory-files prj-root t (concat "\\." ext-filter "$")))
     (mapcar 'px-bpm-open-file `(,prj-root)))
