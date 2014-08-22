@@ -89,8 +89,8 @@
 
 ;; Funcs! _________________________________________________________________
 
-(defun px-bpm-parse (fname)
-  "Extract elements. Basic Project Management."
+(defun px-bpm-open-file (fname)
+  "Extract elements from FNAME. Mapcare'd from `px-bpm'."
 
   (defun string-starts-with-p (string prefix)
     "Return t if STRING starts with prefix."
@@ -106,10 +106,11 @@
           (setq err_msg (propertize "Error" 'font-lock-face 'font-lock-warning-face)))
       (setq err_msg "")))
 
-  (defun px-bpm-analyze (fname regexp elm-list)
+  (defun px-bpm-parse (fname regexp elm-list)
     "Open FNAME and run REGEXP upon it, then push the result to ELM-LIST"
     (find-file fname)
     (goto-char (point-min))
+    ;; (message "Yo! list: %s fname: %s" elm-list fname)
 
     (while
         (re-search-forward regexp nil t)
@@ -119,30 +120,30 @@
         (setq title (match-string 2))
         (if (not (eq title ""))
             (add-to-list elm-list (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n"))
-          (add-to-list elm-list (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n"))))))
-
-  (setq killer t)
-  (setq base_name (file-name-nondirectory fname))
-  (setq fpath (file-name-directory fname))
+          (add-to-list elm-list (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n")))
+        ;; (mapcar 'px-bpm-open-file `(,url))
+        )))
 
   (let
       ((list-href '())
        (list-script '())
        (list-css '())
        (list-require '())
-       (u5 '()))
+       (base_name (file-name-nondirectory fname))
+       (fpath (file-name-directory fname))
+       (killer t)
+       (kayn nil))
     (progn
 
       (if (get-buffer base_name)
           (setq killer nil))
       (find-file fname)
-      (setq kayn nil)
       (message "Reading %s" base_name)
 
-      (px-bpm-analyze fname "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" 'list-href)
-      (px-bpm-analyze fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script)
-      (px-bpm-analyze fname "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" 'list-css)
-      (px-bpm-analyze fname "^require.*\'\\(.*\\)'" 'list-require)
+      (px-bpm-parse fname "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" 'list-href)
+      (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script)
+      (px-bpm-parse fname "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" 'list-css)
+      (px-bpm-parse fname "^require.*\'\\(.*\\)'" 'list-require)
 
       (if killer
           (kill-buffer (current-buffer)))
@@ -162,19 +163,26 @@
         (insert "--------------------------------------------------------\n\n"))
       )))
 
-(defun px-bpm (prj-root)
-  "List all links"
-  ;; (interactive "sProject root directory (or list of files) ")
-  (interactive (list (read-file-name "Project root directory (or list of files) ")) )
+(defun px-bpm (prj-root &optional ext-filter)
+  "List all links in PRJ-ROOT using `px-bpm-open-file'.
+Basic (web) Project Management."
+  (interactive
+   (let (prj-root ext-filter)
+     (setq prj-root (read-file-name "Project root directory (or list of files) "))
+     (if (file-accessible-directory-p prj-root)
+         (setq ext-filter (read-regexp "Filter on extension (regexp)? ")))
+     (list prj-root ext-filter)))
+
   (setq bpm-buffer "BPM.org")
+
   (if (get-buffer bpm-buffer)
       (kill-buffer bpm-buffer))
+
   (with-current-buffer (get-buffer-create bpm-buffer)
     (insert (concat "* File dependencies for [[file:" prj-root "][" prj-root "]] (" (format-time-string "%Y-%m-%d %T") ")\n\n")))
-
   (if (file-accessible-directory-p prj-root)
-      (mapcar 'px-bpm-parse (directory-files prj-root t "\\.php$"))
-    (mapcar 'px-bpm-parse `(,prj-root)))
+      (mapcar 'px-bpm-open-file (directory-files prj-root t (concat "\\." ext-filter "$")))
+    (mapcar 'px-bpm-open-file `(,prj-root)))
   (switch-to-buffer bpm-buffer)
   (org-mode)
   (goto-char (point-min))
