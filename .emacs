@@ -127,13 +127,15 @@
 
           (setq deep_base_name (file-name-nondirectory url))
 
-          (message "Bound! deep_base_name: %s" deep_base_name)
+          ;; (message "Bound! deep_base_name: %s" deep_base_name)
 
           (if (and (not (string-starts-with-p deep_base_name "jquery.min")) (not (string-starts-with-p deep_base_name "jquery-")))
               (progn
-                (message "Open: deep_base_name: %s" deep_base_name)
+                ;; (message "Open: deep_base_name: %s" deep_base_name)
                 (find-file url))
             )
+
+          (message "Reading %s" deep_base_name)
 
           (goto-char (point-min))
 
@@ -143,7 +145,7 @@
           (while
               (re-search-forward nd-regexp nil t)
             (when (match-string 0)
-              (message "Found! in %s" url)
+              ;; (message "Found! in %s" url)
               ;; (setq kayn t)
               ;; (setq nurl (match-string 0))
               ;; (add-to-list elm-list (concat "  - [[file:" nurl "][" nurl "]]\n") t)
@@ -173,7 +175,7 @@
       (message "Reading %s" base_name)
       (px-bpm-parse fname "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" 'list-href)
       ;; (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "'\\([\0-\377[:nonascii:]]*.php\\)")
-      (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "\\(.*.php\\)")
+      (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "[^\n ].*.php")
       (px-bpm-parse fname "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" 'list-css)
       (px-bpm-parse fname "^require.*\'\\(.*\\)'" 'list-require)
       (if killer
