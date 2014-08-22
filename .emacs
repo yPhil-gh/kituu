@@ -124,10 +124,21 @@
 
     (if (and nd-regexp kayn)
         (progn
-          (message "Bound! : %s" nd-regexp)
 
-          (find-file url)
+          (setq deep_base_name (file-name-nondirectory url))
+
+          (message "Bound! deep_base_name: %s" deep_base_name)
+
+          (if (and (not (string-starts-with-p deep_base_name "jquery.min")) (not (string-starts-with-p deep_base_name "jquery-")))
+              (progn
+                (message "Open: deep_base_name: %s" deep_base_name)
+                (find-file url))
+            )
+
           (goto-char (point-min))
+
+          (if (get-buffer deep_base_name)
+              (setq killer nil))
 
           (while
               (re-search-forward nd-regexp nil t)
@@ -141,9 +152,11 @@
                    (elm-list-deep '()))
                 (add-to-list elm-list (concat "  - [[file:" nurl "][" nurl "]] (found in " url ")\n") t))
               ))
-          (kill-buffer (current-buffer)))))
-
-
+          ;; (setq mylist elm-list)
+          ;; (message "Car: %s"  (car mylist))
+          (if killer
+              (kill-buffer (current-buffer)))
+          )))
   (let
       ((list-href '())
        (list-script '())
@@ -154,21 +167,15 @@
        (killer t)
        (kayn nil))
     (progn
-
       (if (get-buffer base_name)
           (setq killer nil))
       (find-file fname)
       (message "Reading %s" base_name)
-
       (px-bpm-parse fname "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" 'list-href)
       ;; (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "'\\([\0-\377[:nonascii:]]*.php\\)")
-      (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "zobilamush")
+      (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "\\(.*.php\\)")
       (px-bpm-parse fname "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" 'list-css)
       (px-bpm-parse fname "^require.*\'\\(.*\\)'" 'list-require)
-
-;; "'\\(.*.php\\)"
-
-
       (if killer
           (kill-buffer (current-buffer)))
       (with-current-buffer "BPM.org"
