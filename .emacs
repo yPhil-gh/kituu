@@ -112,15 +112,6 @@
     (find-file fname)
     (goto-char (point-min))
 
-    ;; (if depth
-    ;;     (progn
-    ;;       (message "Bound! : %s" depth)
-    ;;       (if (> depth 1)
-    ;;           (message "Recurse!"))
-    ;;       )
-    ;;   (message "UnBound!")
-    ;;   )
-
     (while
         (re-search-forward regexp nil t)
       (when (match-string 0)
@@ -138,26 +129,20 @@
           (find-file url)
           (goto-char (point-min))
 
-          ;; (if depth
-          ;;     (progn
-          ;;       (message "Bound! : %s" depth)
-          ;;       (if (> depth 1)
-          ;;           (message "Recurse!"))
-          ;;       )
-          ;;   (message "UnBound!")
-          ;;   )
-
           (while
               (re-search-forward nd-regexp nil t)
             (when (match-string 0)
               (message "Found! in %s" url)
-              (setq kayn t)
-              (setq nurl (match-string 0))
-              (add-to-list elm-list (concat "  - [[file:" nurl "][" nurl "]]\n"))
+              ;; (setq kayn t)
+              ;; (setq nurl (match-string 0))
+              ;; (add-to-list elm-list (concat "  - [[file:" nurl "][" nurl "]]\n") t)
+              (let
+                  ((nurl (match-string 0))
+                   (elm-list-deep '()))
+                (add-to-list elm-list (concat "  - [[file:" nurl "][" nurl "]] (found in " url ")\n") t))
               ))
-          )
-      )
-)
+          (kill-buffer (current-buffer)))))
+
 
   (let
       ((list-href '())
