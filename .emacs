@@ -107,33 +107,29 @@
       (setq err_msg "")))
 
   (defun px-bpm-analyze (fname regexp elm-list)
+    "Open FNAME and run REGEXP upon it, then push the result to ELM-LIST"
     (find-file fname)
     (goto-char (point-min))
-
-    (message "fname %s regexp %s elm-list %s " fname regexp elm-list)
 
     (while
         (re-search-forward regexp nil t)
       (when (match-string 0)
         (setq kayn t)
         (setq url (match-string 1))
-        ;; (setq url "plop")
-        (add-to-list elm-list (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n"))
-          ;; (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") elm-list)
-        ))
-    )
+        (setq title (match-string 2))
+        (if (not (eq title ""))
+            (add-to-list elm-list (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n"))
+          (add-to-list elm-list (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n"))))))
 
   (setq killer t)
-
   (setq base_name (file-name-nondirectory fname))
-
   (setq fpath (file-name-directory fname))
 
   (let
-      ((u1 '())
-       (u2 '())
-       (u3 '())
-       (u4 '())
+      ((list-href '())
+       (list-script '())
+       (list-css '())
+       (list-require '())
        (u5 '()))
     (progn
 
@@ -143,53 +139,10 @@
       (setq kayn nil)
       (message "Reading %s" base_name)
 
-      (goto-char (point-min))
-      (while
-          (re-search-forward "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" nil t)
-        (when (match-string 0)
-          (setq kayn t)
-          (let ((url (match-string 1))
-                (title (match-string 2)))
-            (push (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n") u1)
-            ;; (add-to-list 'lst-href (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n"))
-            )))
-
-      (px-bpm-analyze fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'u2)
-      (px-bpm-analyze fname "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" 'u3)
-      (px-bpm-analyze fname "^require.*\'\\(.*\\)'" 'u4)
-
-      ;; (goto-char (point-min))
-      ;; (while
-      ;;     (re-search-forward "^.*<script.*src=\"\\([^\"]+\\)\"" nil t)
-      ;;   (when (match-string 0)
-      ;;     (setq kayn t)
-      ;;     (let ((url (match-string 1)))
-      ;;       (add-to-list 'u2 (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n"))
-      ;;       (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u2))))
-
-      ;; (goto-char (point-min))
-      ;; (while
-      ;;     (re-search-forward "^.*<script.*src=\"\\([^\"]+\\)\"" nil t)
-      ;;   (when (match-string 0)
-      ;;     (setq kayn t)
-      ;;     (let ((url (match-string 1)))
-      ;;       (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u2))))
-
-      ;; (goto-char (point-min))
-      ;; (while
-      ;;     (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
-      ;;   (when (match-string 0)
-      ;;     (setq kayn t)
-      ;;     (let ((url (match-string 1)))
-      ;;       (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u3))))
-
-      ;; (goto-char (point-min))
-      ;; (while
-      ;;     (re-search-forward "^require.*\'\\(.*\\)'" nil t)
-      ;;   (when (match-string 0)
-      ;;     (setq kayn t)
-      ;;     (let ((url (match-string 1)))
-      ;;       (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u4))))
+      (px-bpm-analyze fname "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" 'list-href)
+      (px-bpm-analyze fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script)
+      (px-bpm-analyze fname "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" 'list-css)
+      (px-bpm-analyze fname "^require.*\'\\(.*\\)'" 'list-require)
 
       (if killer
           (kill-buffer (current-buffer)))
@@ -199,13 +152,13 @@
           (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-builtin-face) " ")))
         (insert (concat "[[file:" fname "][" fname "]]\n"))
         (insert "\n*** HREF Links (by name)\n")
-        (mapcar 'insert u1)
+        (mapcar 'insert list-href)
         (insert "\n*** SCRIPT Links\n")
-        (mapcar 'insert u2)
+        (mapcar 'insert list-script)
         (insert "\n*** CSS Links\n")
-        (mapcar 'insert u3)
+        (mapcar 'insert list-css)
         (insert "\n*** Requires\n")
-        (mapcar 'insert u4)
+        (mapcar 'insert list-require)
         (insert "--------------------------------------------------------\n\n"))
       )))
 
