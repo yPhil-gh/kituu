@@ -106,6 +106,23 @@
           (setq err_msg (propertize "Error" 'font-lock-face 'font-lock-warning-face)))
       (setq err_msg "")))
 
+  (defun px-bpm-analyze (fname regexp elm-list)
+    (find-file fname)
+    (goto-char (point-min))
+
+    (message "fname %s regexp %s elm-list %s " fname regexp elm-list)
+
+    (while
+        (re-search-forward regexp nil t)
+      (when (match-string 0)
+        (setq kayn t)
+        (setq url (match-string 1))
+        ;; (setq url "plop")
+        (add-to-list elm-list (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n"))
+          ;; (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") elm-list)
+        ))
+    )
+
   (setq killer t)
 
   (setq base_name (file-name-nondirectory fname))
@@ -122,13 +139,9 @@
 
       (if (get-buffer base_name)
           (setq killer nil))
-
       (find-file fname)
-
       (setq kayn nil)
-
       (message "Reading %s" base_name)
-
 
       (goto-char (point-min))
       (while
@@ -137,32 +150,46 @@
           (setq kayn t)
           (let ((url (match-string 1))
                 (title (match-string 2)))
-            (push (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n") u1))))
-
-      (goto-char (point-min))
-      (while
-          (re-search-forward "^.*<script.*src=\"\\([^\"]+\\)\"" nil t)
-        (when (match-string 0)
-          (setq kayn t)
-          (let ((url (match-string 1)))
-            (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u2))))
-
-      (goto-char (point-min))
-      (while
-          (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
-        (when (match-string 0)
-          (setq kayn t)
-          (let ((url (match-string 1)))
-            (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u3))))
-
-      (goto-char (point-min))
-      (while
-          (re-search-forward "^require.*\'\\(.*\\)'" nil t)
-        (when (match-string 0)
-          (setq kayn t)
-          (let ((url (match-string 1)))
-            (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u4)
+            (push (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n") u1)
+            ;; (add-to-list 'lst-href (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n"))
             )))
+
+      (px-bpm-analyze fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'u2)
+      (px-bpm-analyze fname "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" 'u3)
+      (px-bpm-analyze fname "^require.*\'\\(.*\\)'" 'u4)
+
+      ;; (goto-char (point-min))
+      ;; (while
+      ;;     (re-search-forward "^.*<script.*src=\"\\([^\"]+\\)\"" nil t)
+      ;;   (when (match-string 0)
+      ;;     (setq kayn t)
+      ;;     (let ((url (match-string 1)))
+      ;;       (add-to-list 'u2 (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n"))
+      ;;       (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u2))))
+
+      ;; (goto-char (point-min))
+      ;; (while
+      ;;     (re-search-forward "^.*<script.*src=\"\\([^\"]+\\)\"" nil t)
+      ;;   (when (match-string 0)
+      ;;     (setq kayn t)
+      ;;     (let ((url (match-string 1)))
+      ;;       (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u2))))
+
+      ;; (goto-char (point-min))
+      ;; (while
+      ;;     (re-search-forward "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" nil t)
+      ;;   (when (match-string 0)
+      ;;     (setq kayn t)
+      ;;     (let ((url (match-string 1)))
+      ;;       (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u3))))
+
+      ;; (goto-char (point-min))
+      ;; (while
+      ;;     (re-search-forward "^require.*\'\\(.*\\)'" nil t)
+      ;;   (when (match-string 0)
+      ;;     (setq kayn t)
+      ;;     (let ((url (match-string 1)))
+      ;;       (push (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n") u4))))
 
       (if killer
           (kill-buffer (current-buffer)))
