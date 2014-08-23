@@ -124,36 +124,38 @@
     ;;         (add-to-list elm-list (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n"))
     ;;       (add-to-list elm-list (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n")))))
 
-    (if (file-exists-p fname)
-        (with-temp-buffer
-          (insert-file-contents-literally fname)
-          (goto-char (point-min))
-          (while
-              (re-search-forward regexp nil t)
-            (when (match-string 0)
-              (setq kayn t)
-              (setq url (match-string 1))
-              (setq title (match-string 2))
-              (if (not (eq title ""))
-                  (add-to-list elm-list (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n"))
-                (add-to-list elm-list (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n")))))))
+    (with-temp-buffer
+      (insert-file-contents-literally fname)
+      (goto-char (point-min))
+
+      (setq base_name (file-name-nondirectory fname))
+      (setq fpath (file-name-directory fname))
+
+      (setq freal-name (concat fpath base_name))
+      (message "freal-name: %s" freal-name)
+
+      (while
+          (re-search-forward regexp nil t)
+        (when (match-string 0)
+          (setq kayn t)
+          (setq url (match-string 1))
+          (message "url: %s" url)
+          (setq title (match-string 2))
+          (if (not (eq title ""))
+              (add-to-list elm-list (concat "- [[file:" (concat fpath url) "][" url "]] " (px-bpm-format-error (concat fpath url)) "\n"))
+            (add-to-list elm-list (concat "- [[file:" (concat fpath url) "][" title "]] -> " (concat fpath url) " " (px-bpm-format-error (concat fpath url)) "\n"))))))
 
     (if (and nd-regexp kayn)
         (progn
-
           (setq deep_base_name (file-name-nondirectory url))
-
           (if (and (not (string-starts-with-p deep_base_name "jquery.min")) (not (string-starts-with-p deep_base_name "jquery-")))
               (progn
                 ;; (find-file-literally url)
                 (message "Reading %s" deep_base_name)
-
-                (if (file-exists-p url)
+                (if (file-exists-p (concat fpath url))
                     (with-temp-buffer
-                      (insert-file-contents-literally url)
+                      (insert-file-contents-literally (concat fpath url))
                       (goto-char (point-min))
-                      ;; (if (get-buffer deep_base_name)
-                      ;;     (setq killer nil))
                       (while
                           (re-search-forward nd-regexp nil t)
                         (when (match-string 0)
@@ -190,8 +192,8 @@
     (progn
       ;; (if (get-buffer base_name)
       ;;     (setq killer nil))
-      (find-file fname)
-      (message "Reading %s" base_name)
+      ;; (find-file fname)
+      ;; (message "Reading %s" base_name)
       (px-bpm-parse fname "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" 'list-href)
       ;; (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "'\\([\0-\377[:nonascii:]]*.php\\)")
       (setq iter-p t)
@@ -200,6 +202,14 @@
       (px-bpm-parse fname "^require.*\'\\(.*\\)'" 'list-require)
       ;; (if killer
       ;;     (kill-buffer (current-buffer)))
+      ;; (with-temp-buffer
+      ;;   (insert-file-contents-literally fname)
+      ;;   (px-bpm-parse fname "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" 'list-href)
+      ;;   ;; (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "'\\([\0-\377[:nonascii:]]*.php\\)")
+      ;;   (setq iter-p t)
+      ;;   (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "[^\n ].*.php")
+      ;;   (px-bpm-parse fname "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" 'list-css)
+      ;;   (px-bpm-parse fname "^require.*\'\\(.*\\)'" 'list-require))
       (with-current-buffer "BPM.org"
         (if kayn
             (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-variable-name-face) " "))
@@ -234,15 +244,10 @@ Basic (web) Project Management."
   (with-current-buffer (get-buffer-create bpm-buffer)
     (insert (concat "* File dependencies for [[file:" prj-root "][" prj-root "]] (" (format-time-string "%Y-%m-%d %T") ")\n\n")))
 
-  (setq buffers-before (cl-copy-list (buffer-list)))
-  ;; (set-difference 'buffers-before '(buffer-list))
-  (message "Car: %s" (car buffers-before))
-
   (if (file-accessible-directory-p prj-root)
       (mapcar 'px-bpm-open-file (directory-files prj-root t (concat "\\." ext-filter "$")))
     (mapcar 'px-bpm-open-file `(,prj-root)))
 
-  (mapc 'kill-buffer (set-difference (buffer-list) buffers-before))
   (switch-to-buffer bpm-buffer)
   (org-mode)
   (goto-char (point-min))
