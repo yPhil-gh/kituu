@@ -125,43 +125,44 @@
 
     (if (and nd-regexp kayn)
         (progn
-          (if iter-p
-              (progn
-                (add-to-list elm-list "\n**** More deps\n" t)
-                (setq iter-p nil)))
 
           (setq deep_base_name (file-name-nondirectory url))
 
           (if (and (not (string-starts-with-p deep_base_name "jquery.min")) (not (string-starts-with-p deep_base_name "jquery-")))
               (progn
-                (find-file url)
-
+                ;; (find-file-literally url)
                 (message "Reading %s" deep_base_name)
 
-                (goto-char (point-min))
-
-                ;; (if (get-buffer deep_base_name)
-                ;;     (setq killer nil))
-
-                (while
-                    (re-search-forward nd-regexp nil t)
-                  (when (match-string 0)
-                    (let
-                        ((nurl (match-string 0))
-                         (elm-list-deep '()))
-                      (progn
-                        (add-to-list elm-list (concat "  - [[file:" (expand-file-name nurl) "][" nurl "]] (found in " url ")\n") t)))
-                    ))))
-
+                (if (file-exists-p url)
+                    (with-temp-buffer
+                      (insert-file-contents-literally url)
+                      (goto-char (point-min))
+                      ;; (if (get-buffer deep_base_name)
+                      ;;     (setq killer nil))
+                      (while
+                          (re-search-forward nd-regexp nil t)
+                        (when (match-string 0)
+                          (let
+                              ((nurl (match-string 0))
+                               (elm-list-deep '()))
+                            (progn
+                              (if iter-p
+                                  (progn
+                                    (add-to-list elm-list "\n**** More deps\n" t)
+                                    (setq iter-p nil)))
+                              (add-to-list elm-list (concat "  - [[file:" (expand-file-name nurl) "][" nurl "]] (found in " url ")\n") t)))
+                          ))
+                      )
+                    )
+                ;; (if (memq (current-buffer) buffers-before)
+                ;;     (kill-buffer (current-buffer)))
+                ))
           ;; (setq mylist elm-list)
           ;; (message "Car: %s"  (car mylist))
-
-          (if (memq (current-buffer) buffers-before)
-              (kill-buffer (current-buffer)))
-
           ;; (if killer
           ;;     (kill-buffer (current-buffer)))
           )))
+
   (let
       ((list-href '())
        (list-script '())
@@ -214,8 +215,6 @@ Basic (web) Project Management."
 
   (if (get-buffer bpm-buffer)
       (kill-buffer bpm-buffer))
-
-
 
   (with-current-buffer (get-buffer-create bpm-buffer)
     (insert (concat "* File dependencies for [[file:" prj-root "][" prj-root "]] (" (format-time-string "%Y-%m-%d %T") ")\n\n")))
