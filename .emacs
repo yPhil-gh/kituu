@@ -93,9 +93,10 @@
   "Extract elements from FNAME. Mapcare'd from `px-bpm'."
 
   (defun string-starts-with-p (string prefix)
-    "Return t if STRING starts with prefix. Internal defun of `px-bpm-open-file'."
+    "Return t if STRING starts with PREFIX. Internal defun of `px-bpm-open-file'."
     (and
-     (string-match (rx-to-string `(: bos ,prefix) t) string)
+     (string-match (rx-to-string `(: bos ,prefix) t)
+                   string)
      t))
 
   (defun px-bpm-format-error (url)
@@ -124,10 +125,9 @@
 
     (if (and nd-regexp kayn)
         (progn
-
           (if iter-p
               (progn
-                (add-to-list elm-list "\n\n**** More deps\n" t)
+                (add-to-list elm-list "\n**** More deps\n" t)
                 (setq iter-p nil)))
 
           (setq deep_base_name (file-name-nondirectory url))
@@ -140,8 +140,8 @@
 
                 (goto-char (point-min))
 
-                (if (get-buffer deep_base_name)
-                    (setq killer nil))
+                ;; (if (get-buffer deep_base_name)
+                ;;     (setq killer nil))
 
                 (while
                     (re-search-forward nd-regexp nil t)
@@ -155,8 +155,12 @@
 
           ;; (setq mylist elm-list)
           ;; (message "Car: %s"  (car mylist))
-          (if killer
+
+          (if (memq (current-buffer) buffers-before)
               (kill-buffer (current-buffer)))
+
+          ;; (if killer
+          ;;     (kill-buffer (current-buffer)))
           )))
   (let
       ((list-href '())
@@ -168,8 +172,8 @@
        (killer t)
        (kayn nil))
     (progn
-      (if (get-buffer base_name)
-          (setq killer nil))
+      ;; (if (get-buffer base_name)
+      ;;     (setq killer nil))
       (find-file fname)
       (message "Reading %s" base_name)
       (px-bpm-parse fname "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" 'list-href)
@@ -178,8 +182,8 @@
       (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "[^\n ].*.php")
       (px-bpm-parse fname "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" 'list-css)
       (px-bpm-parse fname "^require.*\'\\(.*\\)'" 'list-require)
-      (if killer
-          (kill-buffer (current-buffer)))
+      ;; (if killer
+      ;;     (kill-buffer (current-buffer)))
       (with-current-buffer "BPM.org"
         (if kayn
             (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-variable-name-face) " "))
@@ -211,12 +215,20 @@ Basic (web) Project Management."
   (if (get-buffer bpm-buffer)
       (kill-buffer bpm-buffer))
 
+
+
   (with-current-buffer (get-buffer-create bpm-buffer)
     (insert (concat "* File dependencies for [[file:" prj-root "][" prj-root "]] (" (format-time-string "%Y-%m-%d %T") ")\n\n")))
+
+  (setq buffers-before (cl-copy-list (buffer-list)))
+  ;; (set-difference 'buffers-before '(buffer-list))
+  (message "Car: %s" (car buffers-before))
 
   (if (file-accessible-directory-p prj-root)
       (mapcar 'px-bpm-open-file (directory-files prj-root t (concat "\\." ext-filter "$")))
     (mapcar 'px-bpm-open-file `(,prj-root)))
+
+  (mapc 'kill-buffer (set-difference (buffer-list) buffers-before))
   (switch-to-buffer bpm-buffer)
   (org-mode)
   (goto-char (point-min))
