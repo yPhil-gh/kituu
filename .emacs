@@ -99,9 +99,11 @@
                    string)
      t))
 
-  (defun px-bpm-error (url)
+  (defun px-bpm-error (url &optional fpath)
     "Try to open URL and return (propertized) ERR_MSG. Internal defun of `px-bpm-read-file'."
-    (if (not (file-exists-p (expand-file-name url)))
+    (if fpath
+        (setq url-full (concat fpath url)))
+    (if (not (file-exists-p (expand-file-name url-full)))
         (if (or (string-starts-with-p url "http")
                 (string-starts-with-p url "//"))
             (setq err_msg (propertize "External" 'font-lock-face 'font-lock-keyword-face))
@@ -111,29 +113,27 @@
   (defun px-bpm-parse (fname regexp elm-list &optional nd-regexp)
     "Read FNAME in a temp buffer and run REGEXP upon it, then push the org-formatted result to ELM-LIST.
 Internal defun of `px-bpm-read-file'."
-
     (with-temp-buffer
       (insert-file-contents-literally fname)
       (goto-char (point-min))
       (setq base_name (file-name-nondirectory fname))
       (setq fpath (file-name-directory fname))
       (setq freal-name (concat fpath base_name))
-
       (while
           (re-search-forward regexp nil t)
         (when (match-string 0)
-          (setq kayn t)
+          (setq url-found-p t)
           (setq url (match-string 1))
           (setq title (match-string 2))
-          (message "regex: %s url: %s title: %s" regexp url title)
           (if title
-              (add-to-list elm-list (concat "- [[file:" (concat fpath url) "][" title "]] -> [[file:" (concat fpath url) "][" url "]]"
- " " (px-bpm-error (concat fpath url)) "\n"))
+              (add-to-list elm-list
+                           (concat "- [[file:" (concat fpath url) "][" title "]] -> [[file:" (concat fpath url) "][" url "]]"
+                                   " " (px-bpm-error url fpath) "\n"))
+            (add-to-list elm-list
+                         (concat "- [[file:" (concat fpath url) "][" url "]] " (px-bpm-error url fpath) "\n"))
+            ))))
 
-            (add-to-list elm-list (concat "- [[file:" (concat fpath url) "][" url "]] " (px-bpm-error (concat fpath url)) "\n"))
-))))
-
-    (if (and nd-regexp kayn)
+    (if (and nd-regexp url-found-p)
         (progn
           (setq deep_base_name (file-name-nondirectory url))
           (if (and (not (string-starts-with-p deep_base_name "jquery.min")) (not (string-starts-with-p deep_base_name "jquery-")))
@@ -146,8 +146,7 @@ Internal defun of `px-bpm-read-file'."
                       (while
                           (re-search-forward nd-regexp nil t)
                         (when (match-string 0)
-                          (let
-                              ((nurl (match-string 0)) (elm-list-deep '()))
+                          (let ((nurl (match-string 0)) (elm-list-deep '()))
                             (progn
                               (if iter-p
                                   (progn
@@ -163,7 +162,7 @@ Internal defun of `px-bpm-read-file'."
        (list-script '())
        (list-css '())
        (list-require '())
-       (kayn nil))
+       (url-found-p nil))
     (progn
       (px-bpm-parse fname "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" 'list-href)
       ;; (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "'\\([\0-\377[:nonascii:]]*.php\\)")
@@ -172,7 +171,7 @@ Internal defun of `px-bpm-read-file'."
       (px-bpm-parse fname "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" 'list-css)
       (px-bpm-parse fname "^require.*\'\\(.*\\)'" 'list-require)
       (with-current-buffer "BPM.org"
-        (if kayn
+        (if url-found-p
             (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-variable-name-face) " "))
           (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-builtin-face) " ")))
         (insert (concat "[[file:" fname "][" fname "]]\n"))
@@ -188,7 +187,7 @@ Internal defun of `px-bpm-read-file'."
 
 (defun px-bpm (prj-root &optional ext-filter)
   "List all links in PRJ-ROOT using `px-bpm-read-file'.
-Basic (web) Project Management."
+Basic (web/app) Project Management."
   (interactive
    (let (prj-root ext-filter)
      (setq prj-root (read-file-name "Project root directory (or list of files) "))
