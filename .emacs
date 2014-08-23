@@ -89,18 +89,18 @@
 
 ;; Funcs! _________________________________________________________________
 
-(defun px-bpm-open-file (fname)
+(defun px-bpm-read-file (fname)
   "Extract elements from FNAME. Mapcare'd from `px-bpm'."
 
   (defun string-starts-with-p (string prefix)
-    "Return t if STRING starts with PREFIX. Internal defun of `px-bpm-open-file'."
+    "Return t if STRING starts with PREFIX. Internal defun of `px-bpm-read-file'."
     (and
      (string-match (rx-to-string `(: bos ,prefix) t)
                    string)
      t))
 
-  (defun px-bpm-format-error (url)
-    "Try to open URL and return (propertized) ERR_MSG. Internal defun of `px-bpm-open-file'."
+  (defun px-bpm-error (url)
+    "Try to open URL and return (propertized) ERR_MSG. Internal defun of `px-bpm-read-file'."
     (if (not (file-exists-p (expand-file-name url)))
         (if (or (string-starts-with-p url "http")
                 (string-starts-with-p url "//"))
@@ -109,48 +109,35 @@
       (setq err_msg "")))
 
   (defun px-bpm-parse (fname regexp elm-list &optional nd-regexp)
-    "Open FNAME and run REGEXP upon it, then push the org-formatted result to ELM-LIST. Internal defun of `px-bpm-open-file'."
-
-    ;; (find-file fname)
-    ;; (goto-char (point-min))
-
-    ;; (while
-    ;;     (re-search-forward regexp nil t)
-    ;;   (when (match-string 0)
-    ;;     (setq kayn t)
-    ;;     (setq url (match-string 1))
-    ;;     (setq title (match-string 2))
-    ;;     (if (not (eq title ""))
-    ;;         (add-to-list elm-list (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n"))
-    ;;       (add-to-list elm-list (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n")))))
+    "Read FNAME in a temp buffer and run REGEXP upon it, then push the org-formatted result to ELM-LIST.
+Internal defun of `px-bpm-read-file'."
 
     (with-temp-buffer
       (insert-file-contents-literally fname)
       (goto-char (point-min))
-
       (setq base_name (file-name-nondirectory fname))
       (setq fpath (file-name-directory fname))
-
       (setq freal-name (concat fpath base_name))
-      (message "freal-name: %s" freal-name)
 
       (while
           (re-search-forward regexp nil t)
         (when (match-string 0)
           (setq kayn t)
           (setq url (match-string 1))
-          (message "url: %s" url)
           (setq title (match-string 2))
-          (if (not (eq title ""))
-              (add-to-list elm-list (concat "- [[file:" (concat fpath url) "][" url "]] " (px-bpm-format-error (concat fpath url)) "\n"))
-            (add-to-list elm-list (concat "- [[file:" (concat fpath url) "][" title "]] -> " (concat fpath url) " " (px-bpm-format-error (concat fpath url)) "\n"))))))
+          (message "regex: %s url: %s title: %s" regexp url title)
+          (if title
+              (add-to-list elm-list (concat "- [[file:" (concat fpath url) "][" title "]] -> [[file:" (concat fpath url) "][" url "]]"
+ " " (px-bpm-error (concat fpath url)) "\n"))
+
+            (add-to-list elm-list (concat "- [[file:" (concat fpath url) "][" url "]] " (px-bpm-error (concat fpath url)) "\n"))
+))))
 
     (if (and nd-regexp kayn)
         (progn
           (setq deep_base_name (file-name-nondirectory url))
           (if (and (not (string-starts-with-p deep_base_name "jquery.min")) (not (string-starts-with-p deep_base_name "jquery-")))
               (progn
-                ;; (find-file-literally url)
                 (message "Reading %s" deep_base_name)
                 (if (file-exists-p (concat fpath url))
                     (with-temp-buffer
@@ -160,56 +147,30 @@
                           (re-search-forward nd-regexp nil t)
                         (when (match-string 0)
                           (let
-                              ((nurl (match-string 0))
-                               (elm-list-deep '()))
+                              ((nurl (match-string 0)) (elm-list-deep '()))
                             (progn
                               (if iter-p
                                   (progn
                                     (add-to-list elm-list "\n**** More deps\n" t)
                                     (setq iter-p nil)))
-                              (add-to-list elm-list (concat "  - [[file:" (expand-file-name nurl) "][" nurl "]] (found in " url ")\n") t)))
-                          ))
-                      )
-                    )
-                ;; (if (memq (current-buffer) buffers-before)
-                ;;     (kill-buffer (current-buffer)))
-                ))
-          ;; (setq mylist elm-list)
-          ;; (message "Car: %s"  (car mylist))
-          ;; (if killer
-          ;;     (kill-buffer (current-buffer)))
-          )))
+                              (add-to-list elm-list
+                                           (concat "- ~" nurl "~ (found in [[file:" (concat fpath url) "][" url "]])\n")
+                                           t)
+                              )))))))))))
 
   (let
       ((list-href '())
        (list-script '())
        (list-css '())
        (list-require '())
-       (base_name (file-name-nondirectory fname))
-       (fpath (file-name-directory fname))
-       (killer t)
        (kayn nil))
     (progn
-      ;; (if (get-buffer base_name)
-      ;;     (setq killer nil))
-      ;; (find-file fname)
-      ;; (message "Reading %s" base_name)
       (px-bpm-parse fname "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" 'list-href)
       ;; (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "'\\([\0-\377[:nonascii:]]*.php\\)")
       (setq iter-p t)
       (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "[^\n ].*.php")
       (px-bpm-parse fname "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" 'list-css)
       (px-bpm-parse fname "^require.*\'\\(.*\\)'" 'list-require)
-      ;; (if killer
-      ;;     (kill-buffer (current-buffer)))
-      ;; (with-temp-buffer
-      ;;   (insert-file-contents-literally fname)
-      ;;   (px-bpm-parse fname "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" 'list-href)
-      ;;   ;; (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "'\\([\0-\377[:nonascii:]]*.php\\)")
-      ;;   (setq iter-p t)
-      ;;   (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "[^\n ].*.php")
-      ;;   (px-bpm-parse fname "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" 'list-css)
-      ;;   (px-bpm-parse fname "^require.*\'\\(.*\\)'" 'list-require))
       (with-current-buffer "BPM.org"
         (if kayn
             (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-variable-name-face) " "))
@@ -223,11 +184,10 @@
         (mapcar 'insert list-css)
         (insert "\n*** Requires\n")
         (mapcar 'insert list-require)
-        (insert "--------------------------------------------------------\n\n"))
-      )))
+        (insert "--------------------------------------------------------\n\n")))))
 
 (defun px-bpm (prj-root &optional ext-filter)
-  "List all links in PRJ-ROOT using `px-bpm-open-file'.
+  "List all links in PRJ-ROOT using `px-bpm-read-file'.
 Basic (web) Project Management."
   (interactive
    (let (prj-root ext-filter)
@@ -236,17 +196,15 @@ Basic (web) Project Management."
          (setq ext-filter (read-regexp "Filter on extension (regexp)? ")))
      (list prj-root ext-filter)))
 
-  (setq bpm-buffer "BPM.org")
-
-  (if (get-buffer bpm-buffer)
+  (if (get-buffer (setq bpm-buffer "BPM.org"))
       (kill-buffer bpm-buffer))
 
   (with-current-buffer (get-buffer-create bpm-buffer)
     (insert (concat "* File dependencies for [[file:" prj-root "][" prj-root "]] (" (format-time-string "%Y-%m-%d %T") ")\n\n")))
 
   (if (file-accessible-directory-p prj-root)
-      (mapcar 'px-bpm-open-file (directory-files prj-root t (concat "\\." ext-filter "$")))
-    (mapcar 'px-bpm-open-file `(,prj-root)))
+      (mapcar 'px-bpm-read-file (directory-files prj-root t (concat "\\." ext-filter "$")))
+    (mapcar 'px-bpm-read-file `(,prj-root)))
 
   (switch-to-buffer bpm-buffer)
   (org-mode)
