@@ -110,18 +110,33 @@
 
   (defun px-bpm-parse (fname regexp elm-list &optional nd-regexp)
     "Open FNAME and run REGEXP upon it, then push the org-formatted result to ELM-LIST. Internal defun of `px-bpm-open-file'."
-    (find-file fname)
-    (goto-char (point-min))
 
-    (while
-        (re-search-forward regexp nil t)
-      (when (match-string 0)
-        (setq kayn t)
-        (setq url (match-string 1))
-        (setq title (match-string 2))
-        (if (not (eq title ""))
-            (add-to-list elm-list (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n"))
-          (add-to-list elm-list (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n")))))
+    ;; (find-file fname)
+    ;; (goto-char (point-min))
+
+    ;; (while
+    ;;     (re-search-forward regexp nil t)
+    ;;   (when (match-string 0)
+    ;;     (setq kayn t)
+    ;;     (setq url (match-string 1))
+    ;;     (setq title (match-string 2))
+    ;;     (if (not (eq title ""))
+    ;;         (add-to-list elm-list (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n"))
+    ;;       (add-to-list elm-list (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n")))))
+
+    (if (file-exists-p fname)
+        (with-temp-buffer
+          (insert-file-contents-literally fname)
+          (goto-char (point-min))
+          (while
+              (re-search-forward regexp nil t)
+            (when (match-string 0)
+              (setq kayn t)
+              (setq url (match-string 1))
+              (setq title (match-string 2))
+              (if (not (eq title ""))
+                  (add-to-list elm-list (concat "- [[file:" (expand-file-name url) "][" url "]] " (px-bpm-format-error url) "\n"))
+                (add-to-list elm-list (concat "- [[file:" url "][" title "]] -> " url " " (px-bpm-format-error url) "\n")))))))
 
     (if (and nd-regexp kayn)
         (progn
