@@ -124,32 +124,40 @@
 
     (if (and nd-regexp kayn)
         (progn
-          (setq killer t)
+
+          (if iter-p
+              (progn
+                (add-to-list elm-list "\n\n**** More deps\n" t)
+                (setq iter-p nil)))
+
           (setq deep_base_name (file-name-nondirectory url))
 
           (if (and (not (string-starts-with-p deep_base_name "jquery.min")) (not (string-starts-with-p deep_base_name "jquery-")))
               (progn
-                (message "Open: deep_base_name: %s" deep_base_name)
-                (find-file url)))
+                (find-file url)
 
-          (message "Reading %s" deep_base_name)
+                (message "Reading %s" deep_base_name)
 
-          (goto-char (point-min))
+                (goto-char (point-min))
 
-          (if (get-buffer deep_base_name)
-              (setq killer nil))
+                (if (get-buffer deep_base_name)
+                    (setq killer nil))
 
-          (while
-              (re-search-forward nd-regexp nil t)
-            (when (match-string 0)
-              ;; (message "Found! in %s" url)
-              (let
-                  ((nurl (match-string 0))
-                   (elm-list-deep '()))
-                (add-to-list elm-list (concat "  - [[file:" nurl "][" nurl "]] (found in " url ")\n") t))))
+                (while
+                    (re-search-forward nd-regexp nil t)
+                  (when (match-string 0)
+                    (let
+                        ((nurl (match-string 0))
+                         (elm-list-deep '()))
+                      (progn
+                        (add-to-list elm-list (concat "  - [[file:" (expand-file-name nurl) "][" nurl "]] (found in " url ")\n") t)))
+                    ))))
+
+          ;; (setq mylist elm-list)
+          ;; (message "Car: %s"  (car mylist))
           (if killer
-              (kill-buffer (current-buffer))))))
-
+              (kill-buffer (current-buffer)))
+          )))
   (let
       ((list-href '())
        (list-script '())
@@ -166,6 +174,7 @@
       (message "Reading %s" base_name)
       (px-bpm-parse fname "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" 'list-href)
       ;; (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "'\\([\0-\377[:nonascii:]]*.php\\)")
+      (setq iter-p t)
       (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "[^\n ].*.php")
       (px-bpm-parse fname "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" 'list-css)
       (px-bpm-parse fname "^require.*\'\\(.*\\)'" 'list-require)
@@ -197,10 +206,10 @@ Basic (web) Project Management."
          (setq ext-filter (read-regexp "Filter on extension (regexp)? ")))
      (list prj-root ext-filter)))
 
-  (setq all_buffers (cl-copy-list (buffer-list)))
-  ;; (set-difference 'all_buffers '(buffer-list))
+  (setq bpm-buffer "BPM.org")
 
-  (message "Car: " (car all_buffers))
+  (if (get-buffer bpm-buffer)
+      (kill-buffer bpm-buffer))
 
   (with-current-buffer (get-buffer-create bpm-buffer)
     (insert (concat "* File dependencies for [[file:" prj-root "][" prj-root "]] (" (format-time-string "%Y-%m-%d %T") ")\n\n")))
@@ -208,7 +217,6 @@ Basic (web) Project Management."
   (if (file-accessible-directory-p prj-root)
       (mapcar 'px-bpm-open-file (directory-files prj-root t (concat "\\." ext-filter "$")))
     (mapcar 'px-bpm-open-file `(,prj-root)))
-  (mapc 'kill-buffer (set-difference 'all_buffers '(buffer-list)))
   (switch-to-buffer bpm-buffer)
   (org-mode)
   (goto-char (point-min))
@@ -229,8 +237,6 @@ Basic (web) Project Management."
               (call-interactively 'recenter-top-bottom))
         (if (> (- end-line start-line) view-lines)
             (call-interactively 'recenter-top-bottom))))))
-
-
 
 (defun px-unpop-to-mark-command ()
   "Go forward down the mark history. Recenter if far away. Do nothing if mark ring is empty."
