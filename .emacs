@@ -56,7 +56,7 @@
   (require 'package nil 'noerror)
   (require 'mail-bug nil 'noerror)
   (require 'pixilang-mode nil 'noerror)
-  (require 'ecb nil 'noerror)
+  (require 'bpm nil 'noerror)
   ;; (require 'uniquify nil 'noerror)
   (require 'zeroconf nil 'noerror)
   (require 'auto-complete nil 'noerror)
@@ -86,129 +86,49 @@
 (defvar tabbar-buffer-groups-function)
 (defvar px-bkp-new-name)
 
-
 ;; Funcs! _________________________________________________________________
 
-(defun px-bpm-read-file (fname)
-  "Extract elements from FNAME. Mapcare'd from `px-bpm'."
 
-  (defun string-starts-with-p (string prefix)
-    "Return t if STRING starts with PREFIX. Internal defun of `px-bpm-read-file'."
-    (and
-     (string-match (rx-to-string `(: bos ,prefix) t)
-                   string)
-     t))
+(defun test-rx-read-file (test-file test-reg)
+  "Test rx form"
+  (if (get-buffer (setq test-buffer "RX"))
+      (kill-buffer test-buffer))
 
-  (defun px-bpm-error (url &optional fpath)
-    "Try to open URL and return (propertized) ERR_MSG. Internal defun of `px-bpm-read-file'."
-    (if fpath
-        (setq url-full (concat fpath url)))
-    (if (not (file-exists-p (expand-file-name url-full)))
-        (if (or (string-starts-with-p url "http")
-                (string-starts-with-p url "//"))
-            (setq err_msg (propertize "External" 'font-lock-face 'font-lock-keyword-face))
-          (setq err_msg (propertize "Error" 'font-lock-face 'font-lock-warning-face)))
-      (setq err_msg "")))
+  (with-temp-buffer
+    (insert-file-contents-literally test-file)
+    (goto-char (point-min))
 
-  (defun px-bpm-parse (fname regexp elm-list &optional nd-regexp)
-    "Read FNAME in a temp buffer and run REGEXP upon it, then push the org-formatted result to ELM-LIST.
-Internal defun of `px-bpm-read-file'."
-    (with-temp-buffer
-      (insert-file-contents-literally fname)
-      (goto-char (point-min))
-      (setq base_name (file-name-nondirectory fname))
-      (setq fpath (file-name-directory fname))
-      (setq freal-name (concat fpath base_name))
-      (while
-          (re-search-forward regexp nil t)
-        (when (match-string 0)
-          (setq url-found-p t)
-          (setq url (match-string 1))
-          (setq title (match-string 2))
-          (if title
-              (add-to-list elm-list
-                           (concat "- [[file:" (concat fpath url) "][" title "]] -> [[file:" (concat fpath url) "][" url "]]"
-                                   " " (px-bpm-error url fpath) "\n"))
-            (add-to-list elm-list
-                         (concat "- [[file:" (concat fpath url) "][" url "]] " (px-bpm-error url fpath) "\n"))
-            ))))
-
-    (if (and nd-regexp url-found-p)
-        (progn
-          (setq deep_base_name (file-name-nondirectory url))
-          (if (and (not (string-starts-with-p deep_base_name "jquery.min")) (not (string-starts-with-p deep_base_name "jquery-")))
+    (while
+        (re-search-forward test-reg nil t)
+      (when (match-string 0)
+        (let ((one (match-string 1))
+              (two (match-string 2)))
+          (if one
               (progn
-                (message "Reading %s" deep_base_name)
-                (if (file-exists-p (concat fpath url))
-                    (with-temp-buffer
-                      (insert-file-contents-literally (concat fpath url))
-                      (goto-char (point-min))
-                      (while
-                          (re-search-forward nd-regexp nil t)
-                        (when (match-string 0)
-                          (let ((nurl (match-string 0)) (elm-list-deep '()))
-                            (progn
-                              (if iter-p
-                                  (progn
-                                    (add-to-list elm-list "\n**** More deps\n" t)
-                                    (setq iter-p nil)))
-                              (add-to-list elm-list
-                                           (concat "- ~" nurl "~ (found in [[file:" (concat fpath url) "][" url "]])\n")
-                                           t)
-                              )))))))))))
+                (pop-to-buffer test-buffer)
+                (goto-char (point-max))
+                (insert (format "Found (%s) and possibly (%s) in (%s)" one two test-file)))))))))
 
-  (let
-      ((list-href '())
-       (list-script '())
-       (list-css '())
-       (list-require '())
-       (url-found-p nil))
-    (progn
-      (px-bpm-parse fname "^.*<a.*href=\"\\([^\"]+\\)\"[^>]+>\\([^<]+\\)</a>" 'list-href)
-      ;; (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "'\\([\0-\377[:nonascii:]]*.php\\)")
-      (setq iter-p t)
-      (px-bpm-parse fname "^.*<script.*src=\"\\([^\"]+\\)\"" 'list-script "[^\n ].*.php")
-      (px-bpm-parse fname "^.*<link.*href=\"\\([^\"]+\\)\".*rel=\"stylesheet\"" 'list-css)
-      (px-bpm-parse fname "^require.*\'\\(.*\\)'" 'list-require)
-      (with-current-buffer "BPM.org"
-        (if url-found-p
-            (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-variable-name-face) " "))
-          (insert (concat "** " (propertize "File" 'font-lock-face 'font-lock-builtin-face) " ")))
-        (insert (concat "[[file:" fname "][" fname "]]\n"))
-        (insert "\n*** HREF Links (by name)\n")
-        (mapcar 'insert list-href)
-        (insert "\n*** SCRIPT Links\n")
-        (mapcar 'insert list-script)
-        (insert "\n*** CSS Links\n")
-        (mapcar 'insert list-css)
-        (insert "\n*** Requires\n")
-        (mapcar 'insert list-require)
-        (insert "--------------------------------------------------------\n\n")))))
-
-(defun px-bpm (prj-root &optional ext-filter)
-  "List all links in PRJ-ROOT using `px-bpm-read-file'.
-Basic (web/app) Project Management."
+(defun test-rx (file)
+  "Test rx form"
   (interactive
-   (let (prj-root ext-filter)
-     (setq prj-root (read-file-name "Project root directory (or list of files) "))
-     (if (file-accessible-directory-p prj-root)
-         (setq ext-filter (read-regexp "Filter on extension (regexp)? ")))
-     (list prj-root ext-filter)))
+   (let (file)
+     (setq file (read-file-name "File to search: "))
+     (list file)))
+  (test-rx-read-file file
+                     (rx
+                      "$(function"
+                      (*? anything)
+                      (or "'" "\"")
+                      (group
+                       (* (not (any "'" "\"")))
+                       ".php"
+                       )
+                      (or "'" "\"")
+                      (*? anything)
+                      "})"
+                      )))
 
-  (if (get-buffer (setq bpm-buffer "BPM.org"))
-      (kill-buffer bpm-buffer))
-
-  (with-current-buffer (get-buffer-create bpm-buffer)
-    (insert (concat "* File dependencies for [[file:" prj-root "][" prj-root "]] (" (format-time-string "%Y-%m-%d %T") ")\n\n")))
-
-  (if (file-accessible-directory-p prj-root)
-      (mapcar 'px-bpm-read-file (directory-files prj-root t (concat "\\." ext-filter "$")))
-    (mapcar 'px-bpm-read-file `(,prj-root)))
-
-  (switch-to-buffer bpm-buffer)
-  (org-mode)
-  (goto-char (point-min))
-  (org-cycle))
 
 (defun px-pop-to-mark-command ()
   "Go back up the mark history. Recenter if far away."
