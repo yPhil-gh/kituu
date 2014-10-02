@@ -26,7 +26,7 @@ declare -A pack
 pack[dev_tools]="build-essential texinfo libtool"
 pack[dev_clojure]="leiningen openjdk-7-jre"
 pack[dev_python]="python-pip python-scipy"
-pack[base_utils]="unison baobab gparted virtualbox"
+pack[base_utils]="unison baobab gparted"
 pack[view&players]="smplayer"
 pack[image_tools]="gimp inkscape blender libav-tools"
 pack[music_prod]="qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder so-synth-lv2 swh-lv2 vmpk qmidinet calf-plugins nekobee fluidsynth-dssi hexter swami qarecord lingot"
@@ -100,7 +100,7 @@ if $debian; then
     read -e -p "#### Install basic packages ($BASICS) ? [Y/n] " YN
 
     if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-        sudo apt-get install $BASICS
+        sudo apt install $BASICS
     fi
 fi
 
@@ -127,7 +127,7 @@ if $debian; then
 ## Install $group? (${pack[$group]})
 [Y/n] " YN
 	    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-		sudo apt-get install ${pack[$group]}
+		sudo apt install ${pack[$group]}
 	    fi
 	done
     fi
@@ -215,7 +215,7 @@ if [ -e $SCRIPTDIR/build-emacs.sh ]; then
     echo -e $SEP"Emacs trunk"
     read -e -p "## Download, build and install / update (trunk: ~500Mb initial DL) emacs? [Y/n] " YN
     if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-        # sudo apt-get install build-dep emacs23
+        # sudo apt install build-dep emacs23
 	build-emacs.sh
     fi
 fi
@@ -236,15 +236,6 @@ Name=Byobu
 Comment[en_US]=Byobu tmuxed (zsh) shell (gnome-terminal)
 Comment=Byobu tmuxed (zsh) shell" > $AUTOSTART_DIR/byobu.desktop
 
-    printf "[Desktop Entry]
-Name=Gajim
-Comment=Gajim Internet Telephony
-Exec=gajim
-Icon=gajim
-NoDisplay=false
-Terminal=false
-Type=Application
-Encoding=UTF-8" > $AUTOSTART_DIR/gajim.desktop
 fi
 
 echo -e $SEP"...Done."
