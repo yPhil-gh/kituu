@@ -45,7 +45,7 @@
      (progn (message "installing %s" package)
             (package-refresh-contents)
             (package-install package))))
- '(less-css-mode org-jira tabbar org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode rainbow-mode))
+ '(ttl-mode less-css-mode org-jira tabbar org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode rainbow-mode))
 
 
 ;; LIBS! ______________________________________________________________________
@@ -681,6 +681,16 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 
 ;; Modes! _____________________________________________________________________
+
+(autoload 'ttl-mode "ttl-mode" "Major mode for OWL or Turtle files" t)
+(add-hook 'ttl-mode-hook    ; Turn on font lock when in ttl mode
+          'turn-on-font-lock)
+(setq auto-mode-alist
+      (append
+       (list
+        '("\\.n3" . ttl-mode)
+        '("\\.ttl" . ttl-mode))
+       auto-mode-alist))
 
 ;; (auto-complete-mode t)
 (fset 'yes-or-no-p 'y-or-n-p)
