@@ -109,7 +109,7 @@ read -e -p "#### Clean around? [Y/n] " YN
 
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     if [[ ! -d ~/tmp ]] ; then mkdir -v ~/tmp ; else echo -e "~/tmp \t\t\tOK" ; fi
-    if [[ ! -d ~/bin ]] ; then mkdir -vp ~/bin/src ; else echo -e "~/bin/src \t\t\tOK" ; fi
+    if [[ ! -d ~/bin/src ]] ; then mkdir -vp ~/bin/src ; else echo -e "~/bin/src \t\tOK" ; fi
     if [[ ! -d /mnt/tmp ]] ; then sudo mkdir -v /mnt/tmp ; else echo -e "/mnt/tmp \t\tOK" ; fi
     if [[ ! $SHELL == "/bin/zsh" ]] ; then echo "Setting SHELL to zsh" && chsh -s /bin/zsh ; else echo -e "zsh shell \t\tOK" ; fi
     sudo adduser $(whoami) audio
