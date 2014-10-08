@@ -33,11 +33,11 @@
 ;; Packages! ____________________________________________________________________
 
 (package-initialize)
-;; (add-to-list 'package-archives
-             ;; '("melpa" . "http://melpa.milkbox.net/packages/") t)
-
 (add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/"))
+	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
+;;(add-to-list 'package-archives
+  ;;           '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 (mapc
  (lambda (package)
@@ -45,7 +45,7 @@
      (progn (message "installing %s" package)
             (package-refresh-contents)
             (package-install package))))
- '(ttl-mode less-css-mode org-jira tabbar org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode rainbow-mode))
+ '(ttl-mode less-css-mode tabbar org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode rainbow-mode))
 
 
 ;; LIBS! ______________________________________________________________________

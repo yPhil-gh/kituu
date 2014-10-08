@@ -16,6 +16,8 @@ bindsym XF86AudioRaiseVolume exec --no-startup-id amixer set Master 3%+
 
 hide_edge_borders both
 
+exec --no-startup-id i3-msg 'workspace 1; exec gnome-terminal --command byobu --maximize --hide-menubar; workspace 2; exec firefox; workspace 3; exec thunderbird'
+
 # gtk-theme-name Adwaita
 # gtk-fallback-icon-theme gnome
 
