@@ -29,7 +29,7 @@ alias k="cd ~/.kituu/"
 alias m="cd ~/.emacs.d/lisp/mail-bug/"
 alias a="cd /var/www/adamweb/git.adamweb"
 alias t="cd ~/tmp"
-alias s="cd ~/src"
+alias s="cd ~/bin/src"
 
 alias pss='ps aux | grep $(echo $1 | sed "s/^\(.\)/[\1]/g")'
 alias mss="sudo cat /var/log/syslog | grep $1"
