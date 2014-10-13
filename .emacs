@@ -700,7 +700,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (add-to-list 'auto-mode-alist '("\\.haml\\'" . haml-mode))
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
 (add-to-list 'auto-mode-alist '("\\.list\\'" . conf-mode))
-;; (add-to-list 'auto-mode-alist '("\\.php$" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.php$" . php-mode))
 
 (add-to-list 'auto-mode-alist '("\\.pixi\\'" . pixilang-mode))
 
