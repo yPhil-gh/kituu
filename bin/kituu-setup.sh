@@ -24,18 +24,17 @@ fi
 # Packages
 declare -A pack
 pack[qtractor_svn]="libqt4-dev libjack-dev libalsa-ocaml-dev libsndfile1-dev liblilv-dev zlib1g-dev libladspa-ocaml-dev libsuil-dev dssi-dev libsamplerate-dev librubberband-dev liblo-dev"
-pack[dev_tools]="build-essential texinfo libtool"
+pack[dev_tools]="build-essential"
 pack[dev_clojure]="leiningen openjdk-7-jre"
 pack[dev_python]="python-pip python-scipy"
 pack[base_utils]="unison baobab gparted"
-pack[view&players]="smplayer"
 pack[image_tools]="gimp inkscape blender libav-tools"
 pack[music_prod]="qjackctl qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder distrho-mini-series distrho-mverb distrho-nekobi distrho-plugin-ports-lv2 distrho-plugins-lv2 lingot triceratops-lv2 abgate arctican-plugins-lv2 beatslash-lv2 sorcer so-synth-lv2 swh-lv2 qmidinet calf-plugins hexter swami synthv1-lv2 tal-plugins-lv2 teragonaudio-plugins-lv2 triceratops-lv2 wolpertinger-lv2 x42-plugins zam-plugins sunvox drmr carla-lv2"
 pack[games]="extremetuxracer supertuxkart stuntrally xonotic"
-pack[emacs24_stable]="emacs24 emacs24-el emacs24-common-non-dfsg aspell-fr"
-pack[emacs24_snapshot]="snapshot-el emacs-snapshot-gtk emacs-snapshot aspell-fr"
+pack[emacs24_stable]="emacs24 aspell-fr"
+# pack[emacs24_snapshot]="snapshot-el emacs-snapshot-gtk emacs-snapshot aspell-fr"
 
-BASICS="dos2unix python zsh vim byobu apt-file curl wget htop bc locate sshfs git subversion cowsay fortune fortunes-off zenity vinagre x11vnc nmap sox p7zip-full links gajim unison nautilus-dropbox xclip"
+BASICS="dos2unix python zsh vim byobu apt-file curl wget htop bc locate sshfs git subversion cowsay fortune fortunes-off zenity vinagre x11vnc nmap sox p7zip-full links gajim unison nautilus-dropbox xclip smplayer"
 
 # icedtea-7-plugin
 
