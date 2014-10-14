@@ -29,7 +29,7 @@ pack[dev_clojure]="leiningen openjdk-7-jre"
 pack[dev_python]="python-pip python-scipy"
 pack[base_utils]="unison baobab gparted"
 pack[image_tools]="gimp inkscape blender libav-tools"
-pack[music_prod]="qjackctl qtractor invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder distrho-mini-series distrho-mverb distrho-nekobi distrho-plugin-ports-lv2 distrho-plugins-lv2 lingot triceratops-lv2 abgate arctican-plugins-lv2 beatslash-lv2 sorcer so-synth-lv2 swh-lv2 qmidinet calf-plugins hexter swami synthv1-lv2 tal-plugins-lv2 teragonaudio-plugins-lv2 triceratops-lv2 wolpertinger-lv2 x42-plugins zam-plugins sunvox drmr carla-lv2"
+pack[music_prod]="qjackctl invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder distrho-mini-series distrho-mverb distrho-nekobi distrho-plugin-ports-lv2 distrho-plugins-lv2 lingot triceratops-lv2 abgate arctican-plugins-lv2 beatslash-lv2 sorcer so-synth-lv2 swh-lv2 qmidinet calf-plugins hexter swami synthv1-lv2 tal-plugins-lv2 teragonaudio-plugins-lv2 triceratops-lv2 wolpertinger-lv2 x42-plugins zam-plugins sunvox drmr carla-lv2"
 pack[games]="extremetuxracer supertuxkart stuntrally xonotic"
 pack[emacs24_stable]="emacs24 aspell-fr"
 # pack[emacs24_snapshot]="snapshot-el emacs-snapshot-gtk emacs-snapshot aspell-fr"
@@ -221,7 +221,7 @@ if [ -e $SCRIPTDIR/build-emacs.sh ]; then
 fi
 
 read -e -p "
-## Setup autostart apps? (Byobu / tmux and Gajim) [Y/n] " YN
+## Setup autostart apps? (Byobu / tmux) [Y/n] " YN
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 [[ ! -d $AUTOSTART_DIR ]] && mkdir -v $AUTOSTART_DIR
 
