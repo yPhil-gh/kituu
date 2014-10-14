@@ -24,7 +24,7 @@ fi
 # Packages
 declare -A pack
 pack[qtractor_svn]="libqt4-dev libjack-dev libalsa-ocaml-dev libsndfile1-dev liblilv-dev zlib1g-dev libladspa-ocaml-dev libsuil-dev dssi-dev libsamplerate-dev librubberband-dev liblo-dev"
-pack[dev_tools]="build-essential"
+pack[dev_tools]="build-essential autoconf"
 pack[dev_clojure]="leiningen openjdk-7-jre"
 pack[dev_python]="python-pip python-scipy"
 pack[base_utils]="unison baobab gparted"
