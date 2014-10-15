@@ -112,7 +112,7 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     if [[ ! -d /mnt/tmp ]] ; then sudo mkdir -v /mnt/tmp ; else echo -e "/mnt/tmp \t\tOK" ; fi
     if [[ ! $SHELL == "/bin/zsh" ]] ; then echo "Setting SHELL to zsh" && chsh -s /bin/zsh ; else echo -e "zsh shell \t\tOK" ; fi
     sudo adduser $(whoami) audio
-    cp $FANCY_ARGS ~/.kituu/bin/*.desktop ~/.local/share/applications/
+    sudo cp $FANCY_ARGS ~/.kituu/bin/*.desktop /usr/share/applications/
 fi
 
 
