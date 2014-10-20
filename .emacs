@@ -67,9 +67,24 @@
 
 ;; JIRA! ______________________________________________________________________
 
-(setq jiralib-url "http://jira.sbcmaroc.com:8080")
+;; (setq jiralib-url "http://jira.sbcmaroc.com:8080")
 
 ;; Vars!
+; style I want to use in c++ mode
+(c-add-style "my-style"
+	     '("stroustrup"
+	       (indent-tabs-mode . nil)                           ; use spaces rather than tabs
+	       (c-basic-offset . 4)                               ; indent by four spaces
+	       (c-offsets-alist . ((inline-open . 0)              ; custom indentation rules
+				   (brace-list-open . 0)
+				   (statement-case-open . +)))))
+
+(defun my-c++-mode-hook ()
+  (c-set-style "my-style")        ; use my-style defined above
+  (auto-fill-mode)
+  (c-toggle-auto-hungry-state 1))
+
+(add-hook 'c++-mode-hook 'my-c++-mode-hook)
 
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
@@ -924,7 +939,10 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
  '(diary-file "~/Ubuntu One/org/agenda.org")
+ '(ecb-layout-name "left1")
+ '(ecb-layout-window-sizes (quote (("Cdev-def" (ecb-directories-buffer-name 0.15418502202643172 . 0.23880597014925373) (ecb-sources-buffer-name 0.1762114537444934 . 0.23880597014925373) (ecb-methods-buffer-name 0.3303964757709251 . 0.19402985074626866) (ecb-analyse-buffer-name 0.3303964757709251 . 0.22388059701492538) (ecb-symboldef-buffer-name 0.3303964757709251 . 0.3283582089552239)) ("left1" (ecb-directories-buffer-name 0.27312775330396477 . 0.2835820895522388) (ecb-sources-buffer-name 0.14977973568281938 . 0.34328358208955223) (ecb-history-buffer-name 0.12334801762114538 . 0.34328358208955223) (ecb-methods-buffer-name 0.27312775330396477 . 0.3582089552238806)))))
  '(ecb-options-version "2.40")
+ '(ecb-primary-secondary-mouse-buttons (quote mouse-1--mouse-2))
  '(epa-popup-info-window nil)
  '(fold-dwim-outline-style-default (quote nested))
  '(font-use-system-font t)
@@ -960,7 +978,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(org-use-sub-superscripts nil)
  '(recenter-positions (quote (middle top bottom)))
  '(recenter-redisplay nil)
- ;; '(recentf-auto-cleanup (quote never))
  '(recentf-exclude (quote ("emacs.d")))
  '(recentf-max-menu-items 60)
  '(recentf-max-saved-items 120)
@@ -977,6 +994,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(smtpmail-smtp-server "smtp.gmail.com")
  '(standard-indent 2)
  '(tabbar-mode t nil (tabbar))
+ '(tags-add-tables t)
  '(text-mode-hook nil)
  '(tool-bar-mode nil)
  '(tramp-default-method "ssh")
