@@ -62,6 +62,28 @@
   (require 'auto-complete nil 'noerror)
   )
 
+(require 'semantic/ia)
+(require 'semantic/bovine/gcc)
+
+(semantic-mode 1)
+
+(defun my-semantic-hook ()
+  (imenu-add-to-menubar "TAGS"))
+(add-hook 'semantic-init-hooks 'my-semantic-hook)
+
+(global-ede-mode 1)                      ; Enable the Project management system
+;(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion
+;(global-srecode-minor-mode 1)            ; Enable template insertion menu
+
+;; if you want to enable support for gnu global
+;(when (cedet-gnu-global-version-check t)
+; (semanticdb-enable-gnu-global-databases 'c-mode)
+; (semanticdb-enable-gnu-global-databases 'c++-mode)
+
+;; enable ctags for some languages:
+ ;; Unix Shell, Perl, Pascal, Tcl, Fortran, Asm
+;(when (cedet-ectag-version-check t)
+; (semantic-load-enable-primary-exuberent-ctags-support))
 
 (zeroconf-init nil)                   ; NIL means "local"
 
@@ -987,6 +1009,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(savehist-mode t nil (savehist))
  '(scroll-conservatively 200)
  '(scroll-margin 3)
+ '(semanticdb-project-roots (quote ("~/bin/src")))
  '(send-mail-function (quote smtpmail-send-it))
  '(server-mode t)
  '(show-paren-delay 0)
@@ -1030,7 +1053,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(tabbar-selected ((t (:inherit tabbar-default :background "grey20" :foreground "OrangeRed1" :box (:line-width 1 :color "grey20")))))
  '(tabbar-separator ((t (:height 0.1))))
  '(tabbar-unselected ((t (:inherit tabbar-default :background "gray35"))))
- '(web-mode-html-tag-face ((t (:foreground "RosyBrown2"))))
+ '(web-mode-html-tag-face ((t (:foreground "RosyBrown2"))) t)
  '(which-func ((t (:foreground "OrangeRed1"))) t))
 
 
