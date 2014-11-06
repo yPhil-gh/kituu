@@ -1,0 +1,15 @@
+[Bookmarks]
+/home/px/Downloads/
+/usr/share/fonts/
+/home/px/bin/src/GGSR/
+[Recent]
+/home/px/Downloads/Blender_themes/65267_maya2014/
+/home/px/Downloads/Blender_themes/72104_nvidia_Theme_zip/
+/home/px/Downloads/Blender_themes/66771_rainyday/
+/home/px/bin/src/GGSR/
+/home/px/Downloads/72397_Car_blend/
+/home/px/Downloads/72338_Rigged_Car_blend_zip/
+/home/px/Downloads/73216_car_low_poly_blend/
+/usr/share/fonts/truetype/larabie/
+/usr/share/fonts/truetype/nanum/
+/usr/share/fonts/truetype/inconsolata/
