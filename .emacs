@@ -834,14 +834,14 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; Keys! ______________________________________________________________________
 
+(global-set-key (kbd "C-c t") 'sgml-tag)
+
 (define-key global-map [(super up)] '(lambda() (interactive) (scroll-other-window -1)))
 (define-key global-map [(super down)] '(lambda() (interactive) (scroll-other-window 1)))
 
 (global-set-key (kbd "C-c p") 'php-mode)
 
-
 (global-set-key (kbd "C-;") 'px-insert-end-of-command-sign)
-
 
 (global-set-key [(meta shift up)]  'move-line-up)
 
@@ -881,7 +881,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (define-key global-map [f5] 'iswitchb-buffer) ;new way
 (define-key global-map [f7] 'flyspell-buffer)
 (define-key global-map [M-f7] 'flyspell-mode)
-(define-key global-map [f10] 'toggle-truncate-lines)
+(define-key global-map [M-f10] 'toggle-truncate-lines)
 (define-key global-map [f12] 'px-fullscreen)
 
 (global-set-key (kbd "C-f") 'isearch-forward)

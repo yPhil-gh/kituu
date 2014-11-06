@@ -1,73 +1,45 @@
 #!/usr/bin/python
+###############################################################################
+#
+#  $Id: example1.py 718 2012-04-15 23:59:35Z weegreenblobbie $
+#
+###############################################################################
 
+# Import the Nsound module
+from Nsound import *
 
-# ensure that PyGTK 2.0 is loaded - not an older version
-import pygtk
-pygtk.require('2.0')
-# import the GTK module
-import gtk
-import gobject
+sr = 44100.0
 
-class MyGUI:
+# Creating the Pac Man background tone.
 
-  def __init__( self, title):
-    self.window = gtk.Window()
-    self.title = title
-    self.window.set_title( title)
-    self.window.set_size_request( -1, -1)
-    self.window.connect( "destroy", self.destroy)
-    self.create_interior()
-    self.window.show_all()
+sine = Sine(sr)
 
-  def create_interior( self):
-    self.mainbox = gtk.ScrolledWindow()
-    self.mainbox.set_policy( gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-    self.window.add( self.mainbox)
-    # model creation
-    # text, color, editable
-    self.model = gtk.ListStore( str, str, bool)
-    self.model.append( ["Editable and red","#FF0000",True])
-    self.model.append( ["Noneditable","#FFFFFF",False])
-    self.model.append( ["Noneditable and green","#00FF00",False])
-    # the treeview
-    treeview = gtk.TreeView( self.model) #@+
-    # individual columns
-    # Text column
-    col = gtk.TreeViewColumn( "Text")
-    treeview.append_column( col)
-    cell = gtk.CellRendererText()
-    col.pack_start( cell, expand=False)
-    col.set_attributes( cell, text=0, cell_background=1, editable=2) #@+
-    cell.connect('edited', self._text_changed, 0)
-    col.set_sort_column_id( 0)
-    # Editable column
-    col = gtk.TreeViewColumn( "Editable")
-    treeview.append_column( col)
-    cell = gtk.CellRendererToggle()
-    cell.set_property( "activatable", True)
-    col.pack_start( cell, expand=False)
-    col.set_attributes( cell, active=2, cell_background=1)
-    col.set_sort_column_id( 2)
-    cell.connect('toggled', self._editable_toggled, 2)
-    # pack the mainbox
-    self.mainbox.add( treeview)
-    # show the box
-    self.mainbox.set_size_request( 260, 200)
-    self.mainbox.show()
+time = 0.40
+h_time = time / 2.0
 
-  def _text_changed( self, w, row, new_value, column):
-    self.model[row][column] = new_value
+# The first tone.
+f1  = sine.drawLine(h_time, 345, 923) \
+   << sine.drawLine(h_time, 923, 345)
 
-  def _editable_toggled( self, w, row, column):
-    self.model[row][column] = not self.model[row][column]
+pac_man = sine.generate(7*time, f1)
 
-  def main( self):
-    gtk.main()
+# Here we create an envelop to smoothly finish the waveform, removing
+# any clicking that might have occured.
+envelope = sine.drawLine(7*time-0.005, 1.0, 1.0) \
+        << sine.drawLine(0.005, 1.0, 0.0)
 
-  def destroy( self, w):
-    gtk.main_quit()
+pac_man *= envelope
 
+pac_man.normalize()
+pac_man *= 0.25
 
-if __name__ == "__main__":
-  m = MyGUI( "TreeView example III.")
-  m.main()
+pac_man >> "example1.wav"
+
+# Play to audio device.
+
+from Nsound import use
+use("portaudio")
+
+pb = AudioPlayback(sr, 1, 16)
+
+pac_man >> pb
