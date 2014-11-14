@@ -26,7 +26,7 @@ alias ll="ls -lha --group-directories-first"
 alias la="ls -A"
 
 alias k="cd ~/.kituu/"
-alias m="cd ~/.emacs.d/lisp/mail-bug/"
+alias m="cd /var/www/html/microlabel"
 alias a="cd /var/www/adamweb/git.adamweb"
 alias t="cd ~/tmp"
 alias s="cd ~/bin/src"
