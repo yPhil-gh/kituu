@@ -53,6 +53,10 @@ alias px-shell="gnome-terminal --command byobu --maximize --hide-menubar"
 
 # Commands
 
+function px-install-ketacho-games () {
+    sudo apt install A7Xpg Noiz2sa parsec47 tumiki-fighters rrootage
+}
+
 function px-cleanup-filenames () {
     find -type f | rename -v 's/%20/_/g'
     find -type f | rename -v 's/ /_/g'

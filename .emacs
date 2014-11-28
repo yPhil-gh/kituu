@@ -21,6 +21,9 @@
 
 ;; Init! ______________________________________________________________________
 
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+
 (make-directory "~/.emacs.d/elisp/" t)
 (make-directory "~/.emacs.d/backup/" t)
 
@@ -57,7 +60,6 @@
   (require 'mail-bug nil 'noerror)
   (require 'pixilang-mode nil 'noerror)
   (require 'bpm nil 'noerror)
-  ;; (require 'uniquify nil 'noerror)
   (require 'zeroconf nil 'noerror)
   (require 'auto-complete nil 'noerror)
   )
@@ -1006,6 +1008,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(recentf-mode t)
  '(recentf-save-file "~/.emacs.d/backup/recentf")
  '(require-final-newline t)
+ '(save-place t nil (saveplace))
+ '(save-place-file "~/emacs.d/.places")
  '(savehist-mode t nil (savehist))
  '(scroll-conservatively 200)
  '(scroll-margin 3)
@@ -1041,6 +1045,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  ;; If there is more than one, they won't work right.
  '(default ((t (:family "DejaVu Sans Mono" :background "gray20" :foreground "white" :height 105))))
  '(font-lock-comment-face ((t (:slant italic))))
+ '(highlight ((t (:background "#ce5c00" :foreground "#2e3436"))))
+ '(iswitchb-current-match ((t (:inherit which-func))))
  '(mode-line ((t (:background "gray10" :foreground "white" :box nil))))
  '(mode-line-buffer-id ((t (:weight bold :foreground "OrangeRed1"))))
  '(mode-line-inactive ((t (:inherit mode-line :background "gray33" :foreground "#eeeeec" :box nil :weight light))))
