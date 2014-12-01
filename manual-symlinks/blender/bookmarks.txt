@@ -1,5 +1,7 @@
 [Bookmarks]
 /home/px/
 /home/px/bin/src/GGSR/
+/home/px/Downloads/
 [Recent]
+/home/px/Downloads/
 /home/px/bin/src/GGSR/
