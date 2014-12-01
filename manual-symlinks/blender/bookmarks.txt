@@ -3,5 +3,6 @@
 /home/px/bin/src/GGSR/
 /home/px/Downloads/
 [Recent]
-/home/px/Downloads/
 /home/px/bin/src/GGSR/
+/home/px/Downloads/
+/home/px/Downloads/75872_Flying_drone_v_1_1_zip/
