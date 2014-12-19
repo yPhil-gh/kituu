@@ -22,6 +22,11 @@ if [[ ! $HOSTNAME == "RM696" ]] ; then
     alias ls="ls --color"
 fi
 
+if [ -z "$SSH_AUTH_SOCK" ] ; then
+    eval `ssh-agent -s`
+    ssh-add
+fi
+
 alias ll="ls -lha --group-directories-first"
 alias la="ls -A"
 
