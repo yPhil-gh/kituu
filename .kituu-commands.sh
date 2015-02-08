@@ -58,6 +58,10 @@ alias px-shell="gnome-terminal --command byobu --maximize --hide-menubar"
 
 # Commands
 
+function px-search-and-replace () {
+    find ./ -type f -exec sed -i -e "s/$1/$2/g" {} \;
+}
+
 function px-install-ketacho-games () {
     sudo apt install A7Xpg Noiz2sa parsec47 tumiki-fighters rrootage
 }
@@ -68,32 +72,24 @@ function px-cleanup-filenames () {
 }
 
 function px-iterate-filenames () {
-
     X=1;
     for i in *; do
-        echo "Renaming $i to $(printf %04d.%s ${X%.*} ${i##*.})"
-
-        newfile=$(printf %04d.%s ${X%.*} ${i##*.})
-
-        if [ -f $newfile ]
-        then
-            echo the file $newfile exists
-            let Z="$X+1"
-            if [ -f $newfile ] ; then
+        if [ ! -d $i ] ; then
+            echo "Renaming $i to $(printf %04d.%s ${X%.*} ${i##*.})"
+            newfile=$(printf %04d.%s ${X%.*} ${i##*.})
+            if [ -f $newfile ]
+            then
+                echo the file $newfile exists
                 let Z="$X+1"
                 mv -n $i $(printf %04d.%s ${Z%.*} ${i##*.})
             else
+                echo the file $newfile does not exists
                 mv -n $i $(printf %04d.%s ${X%.*} ${i##*.})
             fi
-        else
-            echo the file $newfile does not exists
-            mv -n $i $(printf %04d.%s ${X%.*} ${i##*.})
+            # mv -n $i $(printf %04d.%s ${X%.*} ${i##*.})
+            let X="$X+1"
         fi
-
-        # mv -n $i $(printf %04d.%s ${X%.*} ${i##*.})
-        let X="$X+1"
     done
-
     echo "Processed $X files"
 }
 

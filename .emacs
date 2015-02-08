@@ -982,6 +982,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(keyboard-coding-system (quote utf-8) nil nil "nil before, now utf-8.")
  '(mail-interactive t)
  '(mark-ring-max 8)
+ '(max-lisp-eval-depth 6000)
+ '(max-specpdl-size 13000)
  '(mbug-bcc-to-sender t)
  '(mbug-host-name "imap.riseup.net")
  '(mbug-inline-images t)
