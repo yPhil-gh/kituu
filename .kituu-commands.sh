@@ -72,21 +72,23 @@ function px-cleanup-filenames () {
 }
 
 function px-iterate-filenames () {
+
+    digits=%04d.%s
+
     X=1;
     for i in *; do
         if [ ! -d $i ] ; then
             echo "Renaming $i to $(printf %04d.%s ${X%.*} ${i##*.})"
-            newfile=$(printf %04d.%s ${X%.*} ${i##*.})
+            newfile=$(printf ${digits} ${X%.*} ${i##*.})
             if [ -f $newfile ]
             then
                 echo the file $newfile exists
                 let Z="$X+1"
-                mv -n $i $(printf %04d.%s ${Z%.*} ${i##*.})
+                mv -n $i $(printf ${digits} ${Z%.*} ${i##*.})
             else
                 echo the file $newfile does not exists
-                mv -n $i $(printf %04d.%s ${X%.*} ${i##*.})
+                mv -n $i $(printf ${digits} ${X%.*} ${i##*.})
             fi
-            # mv -n $i $(printf %04d.%s ${X%.*} ${i##*.})
             let X="$X+1"
         fi
     done
