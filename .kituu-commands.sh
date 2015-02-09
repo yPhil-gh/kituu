@@ -95,7 +95,6 @@ function px-iterate-filenames () {
     echo "Processed $X files"
 }
 
-
 function ssh () {
     if [ $# -eq 1 ] ; then
         tmux rename-window `echo $1 | sed 's/.*@//g' | sed 's/.local//g'`
