@@ -75,22 +75,41 @@ function px-iterate-filenames () {
 
     digits=%04d.%s
 
+    mkdir -vp tmp
+    rm -rf tmp/*
+
     X=1;
     for i in *; do
         if [ ! -d $i ] ; then
             echo "Renaming $i to $(printf %04d.%s ${X%.*} ${i##*.})"
-            newfile=$(printf ${digits} ${X%.*} ${i##*.})
+            newfile=tmp/$(printf ${digits} ${X%.*} ${i##*.})
             if [ -f $newfile ]
             then
                 echo the file $newfile exists
                 let Z="$X+1"
-                mv -n $i $(printf ${digits} ${Z%.*} ${i##*.})
+                cp $i tmp/$(printf ${digits} ${Z%.*} ${i##*.})
             else
                 echo the file $newfile does not exists
-                mv -n $i $(printf ${digits} ${X%.*} ${i##*.})
+                cp $i tmp/$(printf ${digits} ${X%.*} ${i##*.})
             fi
             let X="$X+1"
         fi
+    done
+    echo "Processed $X files"
+}
+
+function px-iterate-simple () {
+
+    digits=%04d.%s
+
+    mkdir -vp tmp
+    rm -rf tmp/*
+
+    X=1;
+    for i in *; do
+            echo "Copying $i to tmp/$(printf %04d.%s ${X%.*} ${i##*.})"
+            cp $i tmp/$(printf ${digits} ${X%.*} ${i##*.})
+            let X="$X+1"
     done
     echo "Processed $X files"
 }
