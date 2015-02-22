@@ -80,7 +80,7 @@ function px-iterate-filenames () {
 
     X=1;
     for i in *; do
-        if [ ! -d $i ] ; then
+        if [ -d $i ] ; then
             echo "Renaming $i to $(printf %04d.%s ${X%.*} ${i##*.})"
             newfile=tmp/$(printf ${digits} ${X%.*} ${i##*.})
             if [ -f $newfile ]
@@ -111,6 +111,10 @@ function px-iterate-simple () {
             cp $i tmp/$(printf ${digits} ${X%.*} ${i##*.})
             let X="$X+1"
     done
+
+    find . -maxdepth 1 -type f -exec rm -rf '{}' \; && cp tmp/* . && rm -rf tmp/
+
+    # rm -rf *. && cp tmp/* . && rm -rf tmp/
     echo "Processed $X files"
 }
 
