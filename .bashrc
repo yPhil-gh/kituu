@@ -83,9 +83,9 @@ kituu_host=$(hostname -s)
 if (type "cowsay" > /dev/null 2>&1 && type "fortune" > /dev/null 2>&1); then
     cowsay `fortune -a`
 else
-    if [[ -x "$HOME/scripts/cowsay.pl" ]]
+    if [[ -x "$HOME/bin/cowsay.pl" ]]
     then
-        $HOME/scripts/cowsay.pl
+        $HOME/bin/cowsay.pl
     fi
 fi
 
