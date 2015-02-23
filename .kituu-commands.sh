@@ -19,7 +19,7 @@ alias cp="cp -i"
 
 if [[ ! $HOSTNAME == "RM696" ]] ; then
     alias grep="grep -nIs --color"
-    alias ls="ls --color"
+    alias ls="ls --color --group-directories-first"
 fi
 
 if [ -z "$SSH_AUTH_SOCK" ] ; then
@@ -27,7 +27,7 @@ if [ -z "$SSH_AUTH_SOCK" ] ; then
     ssh-add
 fi
 
-alias ll="ls -lha --group-directories-first"
+alias ll="ls -lha"
 alias la="ls -A"
 
 alias k="cd ~/.kituu/"
