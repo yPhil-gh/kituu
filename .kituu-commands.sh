@@ -18,7 +18,7 @@ alias rm="rm -i"
 alias cp="cp -i"
 
 if [[ ! $HOSTNAME == "RM696" ]] ; then
-    alias grep="grep -nIs --color"
+    alias grep="grep -nIs --color --exclude-dir='.git'"
     alias ls="ls --color --group-directories-first"
 fi
 
@@ -71,7 +71,7 @@ function px-cleanup-filenames () {
     find -type f | rename -v 's/ /_/g'
 }
 
-function px-iterate-filenames () {
+function px-reorder-filenames () {
 
     digits=%04d.%s
 
@@ -80,42 +80,11 @@ function px-iterate-filenames () {
 
     X=1;
     for i in *; do
-        if [ -d $i ] ; then
-            echo "Renaming $i to $(printf %04d.%s ${X%.*} ${i##*.})"
-            newfile=tmp/$(printf ${digits} ${X%.*} ${i##*.})
-            if [ -f $newfile ]
-            then
-                echo the file $newfile exists
-                let Z="$X+1"
-                cp $i tmp/$(printf ${digits} ${Z%.*} ${i##*.})
-            else
-                echo the file $newfile does not exists
-                cp $i tmp/$(printf ${digits} ${X%.*} ${i##*.})
-            fi
-            let X="$X+1"
-        fi
-    done
-    echo "Processed $X files"
-}
-
-function px-iterate-simple () {
-
-    digits=%04d.%s
-
-    mkdir -vp tmp
-    rm -rf tmp/*
-
-    X=1;
-    for i in *; do
-            echo "Copying $i to tmp/$(printf %04d.%s ${X%.*} ${i##*.})"
-            cp $i tmp/$(printf ${digits} ${X%.*} ${i##*.})
-            let X="$X+1"
+        cp $i tmp/$(printf ${digits} ${X%.*} ${i##*.}) && echo "$i => $(printf %04d.%s ${X%.*} ${i##*.})"
+        let X="$X+1"
     done
 
-    find . -maxdepth 1 -type f -exec rm -rf '{}' \; && cp tmp/* . && rm -rf tmp/
-
-    # rm -rf *. && cp tmp/* . && rm -rf tmp/
-    echo "Processed $X files"
+    find . -maxdepth 1 -type f -exec rm -rf '{}' \; && cp tmp/* . && rm -rf tmp/ && echo "Processed $X files"
 }
 
 function ssh () {
@@ -264,13 +233,11 @@ px-notes () {
 echo -e "
 ################# NOTES
 /ssh:user@machine:
-Allah ou akbar
 MAC Address: 48:A2:2D:E1:79:74 (Shenzhen Huaxuchang Telecom Technology Co.)
 MAC Address: 48:A2:2D:E1:79:74 (Shenzhen Huaxuchang Telecom Technology Co.)
 git reset --hard HEAD@{7}
 ZSH : rm -rf ^survivorfile
-rm -rf ^survivorfile
-rm -f !(survivor_file)
+BASH: rm -f !(survivor_file)
 0608853025
 find . -type f -printf '%TY-%Tm-%Td %TT %p
 ' | sort

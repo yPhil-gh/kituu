@@ -1,24 +1,6 @@
 ;;; See https://github.com/xaccrocheur/kituu/
 ;; Keep it under 1k lines ;p
 
-;; (with-selected-window (get-buffer-window)
-;;   (goto-char (point-max)))
-
-;; (defun scroll-viewport (n)
-;;   (let ((top (line-number-at-pos (window-start)))
-;;         (cur (line-number-at-pos (point))))
-;;     (recenter (+ (- cur top) n))))
-
-;; (global-set-key (kbd "<M-up>") (lambda (arg)
-;;                                  (interactive "p")
-;;                                  (or arg (setq arg 1))
-;;                                  (scroll-viewport (- arg))))
-
-;; (global-set-key (kbd "<M-down>") (lambda (arg)
-;;                                    (interactive "p")
-;;                                    (or arg (setq arg 1))
-;;                                    (scroll-viewport arg)))
-
 ;; Init! ______________________________________________________________________
 
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
@@ -94,14 +76,15 @@
 ;; (setq jiralib-url "http://jira.sbcmaroc.com:8080")
 
 ;; Vars!
+
 ; style I want to use in c++ mode
 (c-add-style "my-style"
-	     '("stroustrup"
-	       (indent-tabs-mode . nil)                           ; use spaces rather than tabs
-	       (c-basic-offset . 4)                               ; indent by four spaces
-	       (c-offsets-alist . ((inline-open . 0)              ; custom indentation rules
-				   (brace-list-open . 0)
-				   (statement-case-open . +)))))
+             '("stroustrup"
+               (indent-tabs-mode . nil)                           ; use spaces rather than tabs
+               (c-basic-offset . 4)                               ; indent by four spaces
+               (c-offsets-alist . ((inline-open . 0)              ; custom indentation rules
+                                   (brace-list-open . 0)
+                                   (statement-case-open . +)))))
 
 (defun my-c++-mode-hook ()
   (c-set-style "my-style")        ; use my-style defined above
@@ -109,6 +92,10 @@
   (c-toggle-auto-hungry-state 1))
 
 (add-hook 'c++-mode-hook 'my-c++-mode-hook)
+
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+(setq indent-line-function 'insert-tab)
 
 (defvar iswitchb-mode-map)
 (defvar iswitchb-buffer-ignore)
@@ -503,7 +490,7 @@ This dates from old times, before VC, I'm keeping it out of pure nostalgy."
 
 (defun px-query-replace-in-open-buffers (arg1 arg2)
   "query-replace in all open files"
-  (interactive "sRegexp:\nsReplace with:")
+  (interactive "sRegexp: \nsReplace with: ")
   (mapcar
    (lambda (x)
      (find-file x)
@@ -954,7 +941,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(bookmark-sort-flag nil)
  '(buffer-offer-save nil)
  '(c-basic-offset (quote set-from-style))
- '(c-default-style "gnu")
+ '(c-default-style (quote ((c++-mode . ""))))
  '(canlock-password "ebef4a12d0fad1c648b4b829291adb16cdefb9da")
  '(comment-style (quote extra-line))
  '(completion-auto-help (quote lazy))
@@ -1021,7 +1008,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(show-paren-delay 0)
  '(show-paren-mode t)
  '(smtpmail-smtp-server "smtp.gmail.com")
- '(standard-indent 2)
+ '(standard-indent 4)
  '(tabbar-mode t nil (tabbar))
  '(tags-add-tables t)
  '(text-mode-hook nil)
