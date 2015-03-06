@@ -989,6 +989,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(org-return-follows-link t)
  '(org-support-shift-select (quote always))
  '(org-use-sub-superscripts nil)
+ '(read-file-name-completion-ignore-case t)
  '(recenter-positions (quote (middle top bottom)))
  '(recenter-redisplay nil)
  '(recentf-exclude (quote ("emacs.d")))

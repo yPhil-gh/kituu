@@ -80,7 +80,15 @@ function px-reorder-filenames () {
 
     X=1;
     for i in *; do
-        cp $i tmp/$(printf ${digits} ${X%.*} ${i##*.}) && echo "$i => $(printf %04d.%s ${X%.*} ${i##*.})"
+        newfile=$(printf ${digits} ${X%.*} ${i##*.})
+
+        color="\e[32m"
+
+        if [ -f "$i" ] ; then
+            [[ "$i" != "$newfile" ]] && color="\e[31m"
+            cp $i tmp/$(printf ${digits} ${X%.*} ${i##*.}) && echo "$color$i => $(printf %04d.%s ${X%.*} ${i##*.})\e[0m"
+        fi
+
         let X="$X+1"
     done
 
