@@ -571,7 +571,12 @@ Bound to S-SPC."
 ;; (test string)
 
 (defun insert-pair-paren () (interactive) (px-insert-or-enclose-with-signs "(" ")"))
-(defun insert-pair-brace () (interactive) (px-insert-or-enclose-with-signs "{" "}"))
+(defun insert-pair-brace () (interactive) (px-insert-or-enclose-with-signs "{" "}")
+  (newline-and-indent)
+  (newline-and-indent)
+  (previous-line)
+  (c-indent-line-or-region)
+)
 (defun insert-pair-bracket () (interactive) (px-insert-or-enclose-with-signs "[" "]"))
 (defun insert-pair-single-angle () (interactive) (px-insert-or-enclose-with-signs "<" ">"))
 (defun insert-pair-squote () (interactive) (px-insert-or-enclose-with-signs "'" "'"))
@@ -823,6 +828,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; Keys! ______________________________________________________________________
 
+(global-set-key (kbd "<C-return>") (kbd "C-e C-j")) ; Keyboard macro! (open new line)
+
 (global-set-key (kbd "C-c t") 'sgml-tag)
 
 (define-key global-map [(super up)] '(lambda() (interactive) (scroll-other-window -1)))
@@ -958,6 +965,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(fold-dwim-outline-style-default (quote nested))
  '(font-use-system-font t)
  '(global-auto-complete-mode t)
+ '(global-auto-revert-mode t)
  '(global-font-lock-mode t)
  '(global-linum-mode t)
  '(global-undo-tree-mode t)
