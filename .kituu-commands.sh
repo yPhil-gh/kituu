@@ -240,6 +240,7 @@ px-notes () {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
+unison -fat -fastcheck true -batch ~/tmp/.pr0n /media/px/Nokia N9/tmp/.pr0n/
 /ssh:user@machine:
 MAC Address: 48:A2:2D:E1:79:74 (Shenzhen Huaxuchang Telecom Technology Co.)
 MAC Address: 48:A2:2D:E1:79:74 (Shenzhen Huaxuchang Telecom Technology Co.)
