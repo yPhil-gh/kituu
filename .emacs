@@ -17,39 +17,20 @@
 
 ;; Packages! ____________________________________________________________________
 
-(if (>= emacs-major-version 24)
-    (progn
-      (package-initialize)
-      (add-to-list 'package-archives
-                   '("melpa" . "http://melpa.milkbox.net/packages/") t)
-      (mapc
-       (lambda (package)
-         (unless (package-installed-p package)
-           (progn (message "installing %s" package)
-                  (package-refresh-contents)
-                  (package-install package))))
-       '(ttl-mode
-         less-css-mode
-         tabbar
-         org
-         auto-complete
-         undo-tree
-         magit
-         clojure-mode
-         markdown-mode
-         yasnippet
-         paredit
-         paredit-menu
-         php-mode
-         haml-mode
-         rainbow-mode))
-
-      (tabbar-mode t)
-      (message "##################### plop!")
-      ))
+(package-initialize)
+(add-to-list 'package-archives
+	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
 ;;(add-to-list 'package-archives
   ;;           '("marmalade" . "http://marmalade-repo.org/packages/"))
+
+(mapc
+ (lambda (package)
+   (unless (package-installed-p package)
+     (progn (message "installing %s" package)
+            (package-refresh-contents)
+            (package-install package))))
+ '(ttl-mode less-css-mode tabbar org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode rainbow-mode))
 
 
 ;; LIBS! ______________________________________________________________________
@@ -756,8 +737,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 
 ;; Hooks! _____________________________________________________________________
-(add-hook 'java-mode-hook (lambda ()
-                                (setq c-basic-offset 4)))
 
 (defun my-find-file-check-make-large-file-read-only-hook ()
   "If a file is over a given size, make the buffer read only."
@@ -848,8 +827,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 
 ;; Keys! ______________________________________________________________________
-
-(global-set-key (kbd "<C-return>") (kbd "C-e C-j")) ; Keyboard macro! (open new line)
 
 (global-set-key (kbd "C-c t") 'sgml-tag)
 
@@ -954,7 +931,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "M-o") 'recentf-open-files)
 (global-set-key (kbd "M-d") 'px-toggle-comments)
 
-;; Custom ! This comes first ______________________________________________________________________
+;; Custom ! ______________________________________________________________________
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -975,7 +952,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(completion-auto-help (quote lazy))
  '(cursor-in-non-selected-windows nil)
  '(custom-enabled-themes (quote (tango-dark)))
- '(custom-safe-themes (quote ("a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
  '(diary-file "~/Ubuntu One/org/agenda.org")
@@ -987,7 +963,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(fold-dwim-outline-style-default (quote nested))
  '(font-use-system-font t)
  '(global-auto-complete-mode t)
- '(global-auto-revert-mode nil)
  '(global-font-lock-mode t)
  '(global-linum-mode t)
  '(global-undo-tree-mode t)
@@ -1040,7 +1015,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(show-paren-mode t)
  '(smtpmail-smtp-server "smtp.gmail.com")
  '(standard-indent 4)
- '(tabbar-mode nil nil (tabbar))
+ '(tabbar-mode t nil (tabbar))
  '(tags-add-tables t)
  '(text-mode-hook nil)
  '(tool-bar-mode nil)
@@ -1081,6 +1056,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(tabbar-unselected ((t (:inherit tabbar-default :background "gray35"))))
  '(web-mode-html-tag-face ((t (:foreground "RosyBrown2"))) t)
  '(which-func ((t (:foreground "OrangeRed1"))) t))
+
 
 ;; ORG! ______________________________________________________________________
 
