@@ -58,6 +58,11 @@ alias px-shell="gnome-terminal --command byobu --maximize --hide-menubar"
 
 # Commands
 
+
+function px-bell () {
+    play --no-show-progress /usr/share/sounds/freedesktop/stereo/bell.oga
+}
+
 function px-search-and-replace () {
     find ./ -type f -exec sed -i -e "s/$1/$2/g" {} \;
 }

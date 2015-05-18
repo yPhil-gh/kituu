@@ -828,6 +828,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; Keys! ______________________________________________________________________
 
+(global-set-key (kbd "<C-return>") (kbd "C-e C-j")) ; Keyboard macro! (open new line)
+
 (global-set-key (kbd "C-c t") 'sgml-tag)
 
 (define-key global-map [(super up)] '(lambda() (interactive) (scroll-other-window -1)))
