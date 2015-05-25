@@ -368,6 +368,24 @@ That means save it, check the hash of the previous commit, and replace it in the
       (add-to-list 'bookmark-alist latest))
     (recenter-top-bottom 15)))
 
+(defadvice
+  isearch-forward
+  (after isearch-forward-recenter activate)
+  (recenter))
+(ad-activate 'isearch-forward)
+
+(defadvice
+  isearch-repeat-forward
+  (after isearch-repeat-forward-recenter activate)
+  (recenter))
+(ad-activate 'isearch-repeat-forward)
+
+(defadvice
+  isearch-repeat-backward
+  (after isearch-repeat-backward-recenter activate)
+  (recenter))
+(ad-activate 'isearch-repeat-backward)
+
 ;; Apparently obsolete (and broken : Stays in help-mode)
 
 ;; (defadvice view-echo-area-messages (after view-echo-area-messages-in-help-mode)
