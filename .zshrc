@@ -260,6 +260,16 @@ setprompt () {
     done
     PR_NO_COLOUR="%{$terminfo[sgr0]%}"
 
+
+    for i in "${babasses[@]}"; do
+        if [[ "$i" = "$HOSTNAME" ]]; then
+            HOSTCOLOR=$PR_RED
+            break
+        else
+            HOSTCOLOR=$PR_BLUE
+        fi
+    done
+
     ###
     # See if we can use extended characters to look nicer.
 
@@ -315,7 +325,7 @@ setprompt () {
 
 	PROMPT='$PR_SET_CHARSET$PR_STITLE${(e)PR_TITLEBAR}\
 $PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT(\
-$PR_GREEN%(!.%SROOT%s.%n)$PR_NO_COLOUR@$PR_RED%m$PR_NO_COLOUR:$PR_GREEN%l\
+$PR_GREEN%(!.%SROOT%s.%n)$PR_NO_COLOUR@$HOSTCOLOR%m$PR_NO_COLOUR:$PR_GREEN%l\
 $PR_NO_COLOUR)$PR_SHIFT_IN$PR_HBAR$PR_HBAR${(e)PR_FILLBAR}$PR_HBAR$PR_SHIFT_OUT(\
 $PR_GREEN%$PR_PWDLEN<...<%~%<<\
 $PR_NO_COLOUR)$PR_SHIFT_IN$PR_HBAR$PR_URCORNER$PR_SHIFT_OUT\

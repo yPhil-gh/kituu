@@ -17,6 +17,8 @@ export VST_PATH=/usr/local/lib/lxvst/
 alias rm="rm -i"
 alias cp="cp -i"
 
+babasses=("mail2" "RM696")
+
 if [[ ! $HOSTNAME == "RM696" ]] ; then
     alias grep="grep -nIs --color --exclude-dir='.git'"
     alias ls="ls --color --group-directories-first"
