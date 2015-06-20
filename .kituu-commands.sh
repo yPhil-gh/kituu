@@ -27,7 +27,7 @@ if [ -z "$SSH_AUTH_SOCK" ] ; then
     ssh-add
 fi
 
-alias ll="ls -lha"
+alias ll="ls -lhat"
 alias la="ls -A"
 
 alias k="cd ~/.kituu/"
