@@ -189,7 +189,7 @@ if (type "cowsay" > /dev/null && type "fortune" > /dev/null ); then
 else
     if [[ -x "$HOME/scripts/cowsay.pl" ]]
     then
-        perl $HOME/scripts/cowsay.pl
+        perl $HOME/scripts/cowsay.pl dlfp
     fi
 fi
 
