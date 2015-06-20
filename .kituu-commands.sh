@@ -60,8 +60,7 @@ alias px-shell="gnome-terminal --command byobu --maximize --hide-menubar"
 
 # Commands
 
-
-function px-bell () {
+px-bell () {
     play --no-show-progress /usr/share/sounds/freedesktop/stereo/bell.oga
 }
 
