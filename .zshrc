@@ -251,15 +251,12 @@ setprompt () {
     done
     PR_NO_COLOUR="%{$terminfo[sgr0]%}"
 
-
-    for i in "${babasses[@]}"; do
-        if [[ "$i" = "$HOSTNAME" ]]; then
-            HOSTCOLOR=$PR_RED
-            break
-        else
-            HOSTCOLOR=$PR_BLUE
-        fi
-    done
+    if [[ "$HOSTNAME" = "mail2" ]]; then
+        HOSTCOLOR=$PR_RED
+        break
+    else
+        HOSTCOLOR=$PR_BLUE
+    fi
 
     ###
     # See if we can use extended characters to look nicer.
