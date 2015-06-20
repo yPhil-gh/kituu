@@ -69,6 +69,10 @@ autoload -U compinit
 autoload -U complist
 autoload -U colors
 
+compinit
+complist
+colors
+
 # Commodities
 setopt AUTO_CD
 setopt COMPLETE_IN_WORD
