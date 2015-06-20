@@ -251,7 +251,7 @@ setprompt () {
     done
     PR_NO_COLOUR="%{$terminfo[sgr0]%}"
 
-    if [[ "$HOST" = "meg" ]]; then
+    if [[ "$HOST" = "mail2" ]]; then
         HOSTCOLOR=$PR_RED
     else
         HOSTCOLOR=$PR_BLUE
