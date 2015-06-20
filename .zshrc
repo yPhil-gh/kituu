@@ -73,7 +73,7 @@ autoload -U colors
 setopt auto_cd
 setopt complete_in_word
 setopt emacs
-setopt auto_list
+# setopt auto_list
 # implied by menu_complete
 # setopt auto_menu
 setopt menu_complete
