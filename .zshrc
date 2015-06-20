@@ -70,17 +70,17 @@ autoload -U complist
 autoload -U colors
 
 # Commodities
-setopt AUTO_CD
-setopt COMPLETE_IN_WORD
+setopt auto_cd
+setopt complete_in_word
 setopt emacs
-setopt AUTO_LIST
-# Implied by MENU_COMPLETE
-# setopt AUTO_MENU
-setopt MENU_COMPLETE
-setopt EXTENDED_GLOB
-setopt NO_BARE_GLOB_QUAL
-# HISTORY
+setopt auto_list
+# implied by menu_complete
+# setopt auto_menu
+setopt menu_complete
+setopt extended_glob
+setopt no_bare_glob_qual
 
+# HISTORY
 # Implied by SHARE_HISTORY
 # setopt INC_APPEND_HISTORY
 setopt SHARE_HISTORY
@@ -132,6 +132,7 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' menu select
 # zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
 # zstyle ':completion:*:descriptions' format '%U%F{yellow}%d%f%u'
+# ===== Completion
 
 # compdef pkill=kill
 # compdef pkill=killall
