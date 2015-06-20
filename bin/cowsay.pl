@@ -12,7 +12,7 @@ if ($#ARGV + 1 == 1) {
         $moo = `/usr/games/fortune -a`;
         $o = "-o";
     } elsif ($ARGV[0] eq "dlfp") {
-        $moo = `curl http://sam.linuxfr.org/random.txt 2>/dev/null`;
+        $moo = `wget -qO- http://sam.linuxfr.org/random.txt 2>/dev/null`;
         $o = "--";
     } else {
         $moo = $ARGV[0];
