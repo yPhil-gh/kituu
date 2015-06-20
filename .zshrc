@@ -81,16 +81,20 @@ setopt no_bare_glob_qual
 # HISTORY
 # Implied by SHARE_HISTORY
 # setopt INC_APPEND_HISTORY
-setopt SHARE_HISTORY
+setopt share_history
 # timestamp
-setopt EXTENDED_HISTORY
-# This is default but hey
-setopt HIST_SAVE_BY_COPY
-setopt HIST_IGNORE_DUPS
-setopt HIST_SAVE_NO_DUPS
-setopt HIST_EXPIRE_DUPS_FIRST
-setopt HIST_IGNORE_SPACE
-setopt BANG_HIST
+setopt extended_history
+# this is default but hey
+setopt hist_save_by_copy
+setopt hist_ignore_dups # Do not write events to history that are duplicates of previous events
+setopt hist_save_no_dups
+setopt hist_find_no_dups # When searching history don't display results already cycled through twice
+setopt hist_expire_dups_first
+setopt hist_ignore_space # remove command line from history list when first character on the line is a space
+setopt bang_hist
+setopt append_history # Allow multiple terminal sessions to all append to one zsh command history
+setopt inc_append_history # Add comamnds as they are typed, don't wait until shell exit
+setopt hist_expire_dups_first # when trimming history, lose oldest duplicates first
 
 # larger than SAVEHIST to accomodate dups
 export HISTSIZE=10500
@@ -209,18 +213,6 @@ function precmd {
 	PR_FILLBAR="\${(l.(($TERMWIDTH - ($promptsize + $pwdsize)))..${PR_HBAR}.)}"
     fi
 }
-
-# setopt extended_glob
-# preexec () {
-#     if [[ "$TERM" == "screen" ]]; then
-# 	local CMD=${1[(wr)^(*=*|sudo|-*)]}
-# 	echo -n "\ek$CMD\e\\"
-#     fi
-# }
-
-# # Activations
-# compinit
-# colors
 
 setprompt () {
     ###

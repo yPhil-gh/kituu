@@ -1,44 +1,46 @@
 #!/usr/bin/env perl
 
 # A simple clone of cowsay for when it's not in your repos
-# Copyright xaccrocheur@gmail.com
-# This software is GPL2
+
+$width = 40;
+$o = "oO";
 
 use Text::Wrap;
 
-$num_args = $#ARGV + 1;
-
-if ($num_args != 1) {
-    $WIDTH = 40;
+if ($#ARGV + 1 == 1) {
+    if ($ARGV[0] eq "fortune") {
+        $moo = `/usr/games/fortune -a`;
+    } elsif ($ARGV[0] eq "dlfp") {
+        $moo = `curl http://sam.linuxfr.org/random.txt 2>/dev/null`;
+    } else {
+        $moo = $ARGV[0];
+    }
 } else {
-    $WIDTH = $ARGV[0];
+    $moo = "I got nothing to moo";
 }
 
-$Text::Wrap::columns = $WIDTH;
+$Text::Wrap::columns = $width;
 $Text::Wrap::unexpand = 0;
 $Text::Wrap::separator = "|$/";
 
-my $FORTUNE = `/usr/games/fortune -a`;
+chomp($moo);
 
-chomp($FORTUNE);
+my $linewidth = $width - 1;
 
-my $LINEWIDTH = $WIDTH - 1;
+my $top =  "\n " . '_' x $linewidth . "\n";
+my $bottom =  "\n " . '-' x $linewidth . "\n";
 
-my $TOP =  "\n " . '_' x $LINEWIDTH . "\n";
-my $BOTTOM =  "\n " . '-' x $LINEWIDTH . "\n";
 
-my $o = "oO";
-
-my $COW ="       \\   ^__^
+my $cow ="       \\   ^__^
         \\  ($o)\\_______
            (__)\\       )\\/\\
                 ||----w |
                 ||     ||
 ";
 
-my $text = wrap('/ ', '| ', $FORTUNE) . "\n";
+my $text = wrap('/ ', '| ', $moo) . "\n";
 $text =~ s/(^.+)\K\|/' ' x ($Text::Wrap::columns - length($1) -1) . ' |'/gem;
 
 chop($text);
 
-print $TOP . $text . $BOTTOM . $COW;
+print $top . $text . $bottom . $cow;
