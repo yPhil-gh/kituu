@@ -65,9 +65,9 @@ function preexec() {
 
 # See EOF for notes
 # Enable compsys completion.
-autoload -U compinit
-autoload -U complist
-autoload -U colors
+autoload -U compinit && compinit
+# autoload -U complist && complist
+autoload -U colors && colors
 
 # Commodities
 setopt auto_cd
@@ -127,9 +127,9 @@ zstyle ':completion:*:*:kill:*:processes' list-colors "=(#b) #([0-9]#)*=36=31"
 # zstyle -e ':completion::*:hosts' hosts 'reply=($(sed -e "/^#/d" -e "s/ .*\$//" -e "s/,/ /g" /etc/ssh_known_hosts(N) ~/.ssh/known_hosts(N) 2>/dev/null | xargs) $(grep \^Host ~/.ssh/config(N) | cut -f2 -d\  2>/dev/null | xargs))'
 
 # zstyle
-zstyle ':completion:*' menu select
-# zstyle ':completion:*' completer _expand _complete _ignored _approximate
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' menu select=2
+zstyle ':completion:*' completer _expand _complete _ignored _approximate
+# zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 # zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
 # zstyle ':completion:*:descriptions' format '%U%F{yellow}%d%f%u'
 # ===== Completion
