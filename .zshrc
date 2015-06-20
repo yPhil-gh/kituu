@@ -67,7 +67,7 @@ function preexec() {
 # Enable compsys completion.
 autoload -U compinit && compinit
 # autoload -U complist && complist
-autoload -U colors && colors
+# autoload -U colors && colors
 
 # Commodities
 setopt auto_cd
