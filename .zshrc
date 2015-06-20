@@ -251,6 +251,12 @@ setprompt () {
     done
     PR_NO_COLOUR="%{$terminfo[sgr0]%}"
 
+    if [[ "$HOST" = "meg" ]]; then
+        HOSTCOLOR=$PR_RED
+    else
+        HOSTCOLOR=$PR_BLUE
+    fi
+
     ###
     # See if we can use extended characters to look nicer.
 

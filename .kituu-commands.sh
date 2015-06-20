@@ -22,15 +22,6 @@ if [[ ! $HOSTNAME == "RM696" ]] ; then
     alias ls="ls --color --group-directories-first"
 fi
 
-echo "$HOST";
-
-if [[ "$HOST" = "mail2" ]]; then
-    HOSTCOLOR=$PR_RED
-    break
-else
-    HOSTCOLOR=$PR_BLUE
-fi
-
 if [ -z "$SSH_AUTH_SOCK" ] ; then
     eval `ssh-agent -s`
     ssh-add
