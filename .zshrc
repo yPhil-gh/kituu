@@ -257,8 +257,6 @@ setprompt () {
         HOSTCOLOR=${PR_BLUE}
     fi
 
-    echo $HOST;
-
     ###
     # See if we can use extended characters to look nicer.
 
