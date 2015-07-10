@@ -71,6 +71,9 @@
 
 (zeroconf-init nil)                   ; NIL means "local"
 
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+(add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
+
 ;; JIRA! ______________________________________________________________________
 
 ;; (setq jiralib-url "http://jira.sbcmaroc.com:8080")
@@ -344,11 +347,7 @@ That means save it, check the hash of the previous commit, and replace it in the
   (progn
     (query-replace-regexp "" "fi")
     (query-replace-regexp "" "ff")
-    (query-replace-regexp "- " "")
-    ;; (query-replace-regexp " \\" "\"")
-    )
-  )
-
+    (query-replace-regexp "- " "")))
 
 (defun px-date ()
   "Insert date"
@@ -359,60 +358,6 @@ That means save it, check the hash of the previous commit, and replace it in the
   "Real, mozilla-like full screen."
   (interactive)
   (set-frame-parameter nil 'fullscreen (if (frame-parameter nil 'fullscreen) nil 'fullboth)))
-
-(defadvice bookmark-jump (after bookmark-jump activate)
-  "Bubble last bookmark to the top of the alist"
-  (progn
-    (let ((latest (bookmark-get-bookmark bookmark)))
-      (setq bookmark-alist (delq latest bookmark-alist))
-      (add-to-list 'bookmark-alist latest))
-    (recenter-top-bottom 15)))
-
-;; (defadvice
-;;   isearch-forward
-;;   (after isearch-forward-recenter activate)
-;;   (recenter))
-;; (ad-activate 'isearch-forward)
-
-;; (defadvice
-;;   isearch-repeat-forward
-;;   (after isearch-repeat-forward-recenter activate)
-;;   (recenter))
-;; (ad-activate 'isearch-repeat-forward)
-
-;; (defadvice
-;;   isearch-repeat-backward
-;;   (after isearch-repeat-backward-recenter activate)
-;;   (recenter))
-;; (ad-activate 'isearch-repeat-backward)
-
-;; Apparently obsolete (and broken : Stays in help-mode)
-
-;; (defadvice view-echo-area-messages (after view-echo-area-messages-in-help-mode)
-;;   "Toggle `help-mode' to use the keys (mostly 'q' to quit)."
-;;   (help-mode))
-
-;; (ad-activate 'view-echo-area-messages)
-
-
-(defun px-bookmarks-toggle-last ()
-  "Jump to last bookmark"
-  (interactive)
-  (bookmark-jump (second bookmark-alist)))
-
-;; (defun px-push-mark-once-and-back ()
-;;   "Mark current point (`push-mark') and `set-mark-command' (C-u C-SPC) away."
-;;   (interactive)
-;;   (let ((current-prefix-arg '(4))) ; C-u
-;;     (if (not (eq last-command 'px-push-mark-once-and-back))
-;;         (progn
-;;           (push-mark)
-;;           (call-interactively 'set-mark-command))
-;;       (call-interactively 'set-mark-command)))
-;;   (recenter-top-bottom)
-;; )
-
-;; (global-set-key (kbd "<s-left>") 'px-push-mark-once-and-back)
 
 (defun px-match-paren (arg)
   "Go to the matching paren if on a paren; otherwise insert <key>."
@@ -849,6 +794,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "<C-return>") (kbd "C-e C-j")) ; Keyboard macro! (open new line)
 
 (global-set-key (kbd "C-c t") 'sgml-tag)
+(global-set-key (kbd "C-c r") 'rgrep)
 
 (define-key global-map [(super up)] '(lambda() (interactive) (scroll-other-window -1)))
 (define-key global-map [(super down)] '(lambda() (interactive) (scroll-other-window 1)))
@@ -986,6 +932,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(global-font-lock-mode t)
  '(global-linum-mode t)
  '(global-undo-tree-mode t)
+ '(grep-find-ignored-directories (quote ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "compiled" "libs/bootstrap")))
  '(haml-backspace-backdents-nesting nil)
  '(holiday-other-holidays (quote islamic-holidays))
  '(inhibit-startup-echo-area-message (user-login-name))

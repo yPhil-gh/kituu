@@ -56,6 +56,8 @@ alias gitlog="git log --pretty=format:'%Cred%h%Creset | %C(yellow)%ad%Creset | %
 
 alias px-shell="gnome-terminal --command byobu --maximize --hide-menubar"
 
+alias duf='du -sk * | sort -n | perl -ne '\''($s,$f)=split(m{\t});for (qw(K M G)) {if($s<1024) {printf("%.1f",$s);print "$_\t$f"; last};$s=$s/1024}'\'
+
 # Commands
 
 px-bell () {
