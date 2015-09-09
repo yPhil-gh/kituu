@@ -31,7 +31,7 @@ alias ll="ls -lha"
 alias la="ls -A"
 
 alias k="cd ~/.kituu/"
-alias m="cd /var/www/html/microlabel"
+alias m="cd ~/Documents/manyrecords"
 alias a="cd /var/www/adamweb/git.adamweb"
 alias t="cd ~/tmp"
 alias s="cd ~/bin/src"
@@ -60,8 +60,23 @@ alias duf='du -sk * | sort -n | perl -ne '\''($s,$f)=split(m{\t});for (qw(K M G)
 
 # Commands
 
+function px-cleanup-qtractor-takes () {
+
+    for wav in *.wav
+    # do grep -q -F "$wav" $1 || ls -la "$wav"
+    do grep -q -F "$wav" $1 || rm -rvf "$wav"
+    done
+
+    # for peak in *.peak
+    # do grep -q -F "$peak" $1 || ls -la "$peak"
+    # done
+
+    # for i in *.wav; do grep -c $i $1; done
+}
+
+
 px-bell () {
-    play --no-show-progress /usr/share/sounds/freedesktop/stereo/bell.oga
+    paplay /usr/share/sounds/freedesktop/stereo/bell.oga
 }
 
 function px-search-and-replace () {
@@ -70,6 +85,10 @@ function px-search-and-replace () {
 
 function px-install-ketacho-games () {
     sudo apt install A7Xpg Noiz2sa parsec47 tumiki-fighters rrootage
+}
+
+function px-install-audio-plugins () {
+    sudo apt install samplv1-lv2 qmidiarp synthv1-lv2 artyfx swh-lv2 mda-lv2 rkrlv2 carla-lv2 cmt fluid-soundfont-gm dpf-plugins fomp xsynth-dssi distrho-plugin-ports-lv2 tal-plugins calf-plugins
 }
 
 function px-cleanup-filenames () {
