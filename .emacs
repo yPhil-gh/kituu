@@ -46,16 +46,16 @@
   (require 'auto-complete nil 'noerror)
   )
 
-(require 'semantic/ia)
-(require 'semantic/bovine/gcc)
+;; (require 'semantic/ia)
+;; (require 'semantic/bovine/gcc)
 
-(semantic-mode 1)
+;; (semantic-mode 1)
 
-(defun my-semantic-hook ()
-  (imenu-add-to-menubar "TAGS"))
-(add-hook 'semantic-init-hooks 'my-semantic-hook)
+;; (defun my-semantic-hook ()
+;;   (imenu-add-to-menubar "TAGS"))
+;; (add-hook 'semantic-init-hooks 'my-semantic-hook)
 
-(global-ede-mode 1)                      ; Enable the Project management system
+;; (global-ede-mode 1)                      ; Enable the Project management system
 ;(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion
 ;(global-srecode-minor-mode 1)            ; Enable template insertion menu
 
@@ -530,8 +530,11 @@ Bound to S-SPC."
       (insert ";")
       (goto-char st))))
 
-
-;; (test string)
+(defun px-insert-jq ()
+  "Insert jquery object skel."
+  (interactive)
+  (insert "$(\"\")")
+  (left-char 2))
 
 (defun insert-pair-paren () (interactive) (px-insert-or-enclose-with-signs "(" ")"))
 (defun insert-pair-brace () (interactive) (px-insert-or-enclose-with-signs "{" "}")
@@ -791,13 +794,18 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; Keys! ______________________________________________________________________
 
+
+
+
+
 (global-set-key (kbd "<C-return>") (kbd "C-e C-j")) ; Keyboard macro! (open new line)
 
 (global-set-key (kbd "C-c t") 'sgml-tag)
 (global-set-key (kbd "C-c r") 'rgrep)
+(global-set-key (kbd "C-c j") 'px-insert-jq)
 
-(define-key global-map [(super up)] '(lambda() (interactive) (scroll-other-window -1)))
-(define-key global-map [(super down)] '(lambda() (interactive) (scroll-other-window 1)))
+(define-key global-map [(meta up)] '(lambda() (interactive) (scroll-other-window -1)))
+(define-key global-map [(meta down)] '(lambda() (interactive) (scroll-other-window 1)))
 
 (global-set-key (kbd "C-c p") 'php-mode)
 
@@ -975,7 +983,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(savehist-mode t nil (savehist))
  '(scroll-conservatively 200)
  '(scroll-margin 3)
- '(semanticdb-project-roots (quote ("~/bin/src")))
  '(send-mail-function (quote smtpmail-send-it))
  '(server-mode t)
  '(show-paren-delay 0)
