@@ -117,6 +117,15 @@
 
 ;; Funcs! _________________________________________________________________
 
+(defun px-shell-command (cmd)
+  "Invoke CMD in a `px-shell'"
+  (interactive "sShell command: ")
+      (progn
+        (split-window-sensibly (selected-window))
+        (other-window 1)
+        (shell (get-buffer-create "px-shell"))
+        (process-send-string (get-buffer-process "px-shell") (concat "reset\n" cmd "\nexit 0 &> /dev/null\n")))
+      (other-window 1))
 
 (defun test-rx-read-file (test-file test-reg)
   "Test rx form"
@@ -794,8 +803,9 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; Keys! ______________________________________________________________________
 
-(global-set-key (kbd "<C-return>") (kbd "C-e C-j")) ; Keyboard macro! (open new line)
+(global-set-key (kbd "<f6>") 'px-shell-command) ; Keyboard macro! (open new line)
 
+(global-set-key (kbd "<C-return>") (kbd "C-e C-j")) ; Keyboard macro! (open new line)
 (global-set-key (kbd "C-c t") 'sgml-tag)
 (global-set-key (kbd "C-c r") 'rgrep)
 (global-set-key (kbd "C-c j") 'px-insert-jq)
