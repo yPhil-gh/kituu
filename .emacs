@@ -648,43 +648,22 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; Sessions! ______________________________________________________________________
 
-(require 'desktop)
-
-;; Desktop
-(setq desktop-path '("~/.emacs.d/backup/"))
-(setq desktop-dirname "~/.emacs.d/backup/")
-(setq desktop-base-file-name "emacs-desktop")
-
-;; (the lock file is ~/.emacs.d/backup/.emacs.desktop.lock)
-(defun px-saved-session ()
-  (file-exists-p (concat desktop-dirname "/" desktop-base-file-name)))
+;; Automatically save and restore sessions
+(setq desktop-dirname             "~/.emacs.d/backup/"
+      desktop-base-file-name      "emacs.desktop"
+      desktop-base-lock-name      "lock"
+      desktop-path                (list desktop-dirname)
+      desktop-save                t
+      desktop-files-not-to-save   "^$" ;reload tramp paths
+      desktop-load-locked-desktop nil)
+(desktop-save-mode 0)
 
 (defun px-session-restore ()
-  "Restore a saved emacs session."
+  "Load the desktop and enable autosaving"
   (interactive)
-  (if (px-saved-session)
-      (progn
-        ;; (delete-file (concat desktop-dirname "/.emacs.desktop.lock"))
-        (desktop-read)
-        (recenter-top-bottom 15))
-    (message "No desktop (session) file found.")))
-
-(defun px-session-save ()
-  "Save an emacs session."
-  (interactive)
-  (if (px-saved-session)
-      (if (y-or-n-p "Save session? ")
-          (desktop-save-in-desktop-dir)
-        (message "Session not saved."))
-    (desktop-save-in-desktop-dir)))
-
-(defun px-session-save-named (px-session-named-name)
-  "Prompt the user for a session name."
-  (interactive "MSession name: ")
-  (message "So what do I do with this: %s ?" px-session-named-name)
-  (desktop-save (concat desktop-dirname "/" px-session-named-name
-                        ".session") t))
-
+  (let ((desktop-load-locked-desktop "ask"))
+    (desktop-read)
+    (desktop-save-mode 1)))
 
 ;; Modes! _____________________________________________________________________
 

@@ -7,6 +7,7 @@ PATH=$PATH:~/scripts:~/bin
 # Vars
 PYTHONPATH=$PYTHONPATH:/usr/share/gst-python/0.10/examples/
 PATH=$PATH:~/scripts/beatnitpycker/:~/src/radium/bin/
+PATH=$PATH:/opt/nodejs/bin/
 
 # DSSI_PATH=/usr/lib/calf/
 export DSSI_PATH=/usr/lib/dssi/:/usr/lib/calf/:/usr/local/lib/calf/
