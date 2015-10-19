@@ -51,6 +51,14 @@ alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
 alias I="sudo apt-get install"
 alias S="sudo apt-cache search"
 
+alias b="bundle"
+alias bi="b install --path vendor"
+alias bil="bi --local"
+alias bu="b update"
+alias be="b exec"
+alias binit="bi && b package && echo 'vendor/ruby' >> .gitignore"
+
+
 alias orgsync="cd ~/.org && git-sync.sh "
 
 alias gitlog="git log --pretty=format:'%Cred%h%Creset | %C(yellow)%ad%Creset | %C(bold blue)%an%Creset - %s - %C(yellow)%d%Creset'"
@@ -78,6 +86,7 @@ function px-cleanup-qtractor-takes () {
 
 px-bell () {
     paplay /usr/share/sounds/freedesktop/stereo/bell.oga
+    notify-send "Heads Up!"
 }
 
 function px-search-and-replace () {
