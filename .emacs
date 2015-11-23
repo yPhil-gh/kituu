@@ -37,7 +37,7 @@
 
 (eval-and-compile
   (require 'cl nil 'noerror)          ; Built-in : Common Lisp lib
-  (require 'edmacro nil 'noerror)     ; Built-in : Macro bits (Required by iswitchb)
+  ;; (require 'edmacro nil 'noerror)     ; Built-in : Macro bits (Required by iswitchb)
   (require 'package nil 'noerror)
   (require 'mail-bug nil 'noerror)
   (require 'pixilang-mode nil 'noerror)
@@ -80,6 +80,9 @@
 
 ;; Vars!
 
+;; Keep unreadable files in recentf
+(setq recentf-keep '(file-remote-p file-readable-p))
+
 ; style I want to use in c++ mode
 (c-add-style "my-style"
              '("stroustrup"
@@ -100,20 +103,20 @@
 (setq-default tab-width 4)
 (setq indent-line-function 'insert-tab)
 
-(defvar iswitchb-mode-map)
-(defvar iswitchb-buffer-ignore)
-(defvar show-paren-delay)
-(defvar recentf-max-saved-items)
-(defvar recentf-max-menu-items)
-(defvar ispell-dictionary)
-(defvar desktop-path)
-(defvar desktop-dirname)
-(defvar desktop-base-file-name)
-(defvar display-time-string)
-(defvar ediff-window-setup-function)
-(defvar ediff-split-window-function)
-(defvar tabbar-buffer-groups-function)
-(defvar px-bkp-new-name)
+;; (defvar iswitchb-mode-map)
+;; (defvar iswitchb-buffer-ignore)
+;; (defvar show-paren-delay)
+;; (defvar recentf-max-saved-items)
+;; (defvar recentf-max-menu-items)
+;; (defvar ispell-dictionary)
+;; (defvar desktop-path)
+;; (defvar desktop-dirname)
+;; (defvar desktop-base-file-name)
+;; (defvar display-time-string)
+;; (defvar ediff-window-setup-function)
+;; (defvar ediff-split-window-function)
+;; (defvar tabbar-buffer-groups-function)
+;; (defvar px-bkp-new-name)
 
 ;; Funcs! _________________________________________________________________
 
@@ -626,15 +629,15 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 (setq tabbar-buffer-groups-function 'px-tabbar-buffer-groups)
 
-(defun iswitchb-local-keys ()
-  "easily switch buffers (F5 or C-x b)"
-  (mapc (lambda (K)
-          (let* ((key (car K)) (fun (cdr K)))
-            (define-key iswitchb-mode-map (edmacro-parse-keys key) fun)))
-        '(("<right>" . iswitchb-next-match)
-          ("<left>"  . iswitchb-prev-match)
-          ("<up>"    . ignore             )
-          ("<down>"  . ignore             ))))
+;; (defun iswitchb-local-keys ()
+;;   "easily switch buffers (F5 or C-x b)"
+;;   (mapc (lambda (K)
+;;           (let* ((key (car K)) (fun (cdr K)))
+;;             (define-key iswitchb-mode-map (edmacro-parse-keys key) fun)))
+;;         '(("<right>" . iswitchb-next-match)
+;;           ("<left>"  . iswitchb-prev-match)
+;;           ("<up>"    . ignore             )
+;;           ("<down>"  . ignore             ))))
 
 (defun px-laptop-mode ()
   "smaller default size"
@@ -720,7 +723,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
           (lambda ()
             (setq indent-tabs-mode nil)
             (define-key haml-mode-map "\C-m" 'newline-and-indent)))
-(add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)
+;; (add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)
 (add-hook 'find-file-hooks 'turn-on-font-lock)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
@@ -755,7 +758,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  bookmark-default-file "~/.emacs.d/bookmarks" ;; keep my ~/ clean
  bookmark-save-flag 1
 
- iswitchb-buffer-ignore '("^ " "*.")
+ ;; iswitchb-buffer-ignore '("^ " "*.")
  ispell-dictionary "francais"
 
  ;; delete-by-moving-to-trash t
@@ -831,7 +834,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (define-key global-map [M-f2] 'swap-buffers-in-windows)
 (define-key global-map [f3] 'split-window-vertically)
 (define-key global-map [f4] 'split-window-horizontally)
-(define-key global-map [f5] 'iswitchb-buffer) ;new way
+(define-key global-map [f5] 'ido-switch-buffer) ;std way
 (define-key global-map [f7] 'flyspell-buffer)
 (define-key global-map [M-f7] 'flyspell-mode)
 (define-key global-map [M-f10] 'toggle-truncate-lines)
@@ -874,8 +877,10 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-z") 'undo-tree-undo)
 (global-set-key (kbd "C-S-z") 'undo-tree-redo)
 
-(define-key global-map [C-tab] 'tabbar-forward)
-(global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
+;; (define-key global-map [M-tab] 'tabbar-forward)
+;; (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
+(global-set-key (kbd "<M-left>") 'tabbar-backward)
+(global-set-key (kbd "<M-right>") 'tabbar-forward)
 
 (global-set-key (kbd "C-=") 'insert-pair-brace)        ;{}
 (global-set-key (kbd "C-)") 'insert-pair-paren)        ;()
@@ -915,7 +920,19 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(delete-selection-mode t)
  '(diary-file "~/Ubuntu One/org/agenda.org")
  '(ecb-layout-name "left1")
- '(ecb-layout-window-sizes (quote (("Cdev-def" (ecb-directories-buffer-name 0.15418502202643172 . 0.23880597014925373) (ecb-sources-buffer-name 0.1762114537444934 . 0.23880597014925373) (ecb-methods-buffer-name 0.3303964757709251 . 0.19402985074626866) (ecb-analyse-buffer-name 0.3303964757709251 . 0.22388059701492538) (ecb-symboldef-buffer-name 0.3303964757709251 . 0.3283582089552239)) ("left1" (ecb-directories-buffer-name 0.27312775330396477 . 0.2835820895522388) (ecb-sources-buffer-name 0.14977973568281938 . 0.34328358208955223) (ecb-history-buffer-name 0.12334801762114538 . 0.34328358208955223) (ecb-methods-buffer-name 0.27312775330396477 . 0.3582089552238806)))))
+ '(ecb-layout-window-sizes
+   (quote
+    (("Cdev-def"
+      (ecb-directories-buffer-name 0.15418502202643172 . 0.23880597014925373)
+      (ecb-sources-buffer-name 0.1762114537444934 . 0.23880597014925373)
+      (ecb-methods-buffer-name 0.3303964757709251 . 0.19402985074626866)
+      (ecb-analyse-buffer-name 0.3303964757709251 . 0.22388059701492538)
+      (ecb-symboldef-buffer-name 0.3303964757709251 . 0.3283582089552239))
+     ("left1"
+      (ecb-directories-buffer-name 0.27312775330396477 . 0.2835820895522388)
+      (ecb-sources-buffer-name 0.14977973568281938 . 0.34328358208955223)
+      (ecb-history-buffer-name 0.12334801762114538 . 0.34328358208955223)
+      (ecb-methods-buffer-name 0.27312775330396477 . 0.3582089552238806)))))
  '(ecb-options-version "2.40")
  '(ecb-primary-secondary-mouse-buttons (quote mouse-1--mouse-2))
  '(epa-popup-info-window nil)
@@ -925,12 +942,16 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(global-font-lock-mode t)
  '(global-linum-mode t)
  '(global-undo-tree-mode t)
- '(grep-find-ignored-directories (quote ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "compiled" "libs/bootstrap")))
+ '(grep-find-ignored-directories
+   (quote
+    ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "compiled" "libs/bootstrap")))
  '(haml-backspace-backdents-nesting nil)
  '(holiday-other-holidays (quote islamic-holidays))
+ '(ido-everywhere t)
+ '(ido-ignore-buffers (quote ("\\` " "*Messages*")))
+ '(ido-mode (quote both) nil (ido))
  '(inhibit-startup-echo-area-message (user-login-name))
  '(inhibit-startup-screen t)
- '(iswitchb-mode t)
  '(keyboard-coding-system (quote utf-8) nil nil "nil before, now utf-8.")
  '(mail-interactive t)
  '(mark-ring-max 8)
@@ -950,18 +971,16 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(mumamo-margin-use (quote (left-margin 13)))
  '(org-agenda-files (quote ("~/Ubuntu One/org/agenda.org")))
  '(org-html-postamble t)
- '(org-html-validation-link "<a href=\"http://validator.w3.org/check?uri=referer\">Valid HTML</a>")
+ '(org-html-validation-link
+   "<a href=\"http://validator.w3.org/check?uri=referer\">Valid HTML</a>")
  '(org-return-follows-link t)
  '(org-support-shift-select (quote always))
  '(org-use-sub-superscripts nil)
  '(read-file-name-completion-ignore-case t)
  '(recenter-positions (quote (middle top bottom)))
  '(recenter-redisplay nil)
- '(recentf-exclude (quote ("emacs.d")))
- '(recentf-max-menu-items 60)
- '(recentf-max-saved-items 120)
+ '(recentf-auto-cleanup (quote never))
  '(recentf-mode t)
- '(recentf-save-file "~/.emacs.d/backup/recentf")
  '(require-final-newline t)
  '(save-place t nil (saveplace))
  '(save-place-file "~/emacs.d/.places")
@@ -997,10 +1016,15 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :background "gray20" :foreground "white" :height 105))))
+ '(default ((t (:background "gray20" :foreground "white"))))
  '(font-lock-comment-face ((t (:slant italic))))
  '(highlight ((t (:background "#ce5c00" :foreground "#2e3436"))))
- '(iswitchb-current-match ((t (:inherit which-func))))
+ '(ido-first-match ((t (:inherit which-func))))
+ '(markdown-header-face-2 ((t (:inherit markdown-header-face :foreground "deep sky blue"))))
+ '(markdown-header-face-3 ((t (:inherit markdown-header-face :foreground "coral"))))
+ '(markdown-header-face-4 ((t (:inherit markdown-header-face :foreground "navajo white"))))
+ '(markdown-header-face-5 ((t (:inherit markdown-header-face :foreground "yellow green"))))
+ '(markdown-header-face-6 ((t (:inherit markdown-header-face :foreground "magenta3"))))
  '(mode-line ((t (:background "gray10" :foreground "white" :box nil))))
  '(mode-line-buffer-id ((t (:weight bold :foreground "OrangeRed1"))))
  '(mode-line-inactive ((t (:inherit mode-line :background "gray33" :foreground "#eeeeec" :box nil :weight light))))
