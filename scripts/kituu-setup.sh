@@ -28,7 +28,7 @@ pack[dev_tools]="build-essential autoconf"
 pack[dev_python]="python-pip python-scipy"
 pack[base_utils]="unison baobab gparted"
 pack[image_tools]="gimp inkscape blender"
-pack[music_prod]="qtractor qjackctl kxstudio-meta-audio-plugins-lv2 invada-studio-plugins-lv2 ir.lv2 mda-lv2 lv2vocoder distrho-mini-series distrho-mverb distrho-nekobi distrho-plugin-ports-lv2 distrho-plugins-lv2 lingot triceratops-lv2 abgate arctican-plugins-lv2 beatslash-lv2 sorcer so-synth-lv2 swh-lv2 qmidinet calf-plugins hexter swami synthv1-lv2 tal-plugins-lv2 teragonaudio-plugins-lv2 triceratops-lv2 wolpertinger-lv2 x42-plugins zam-plugins drmr carla-plugins-lv2 drumkv1-lv2 synthv1-lv2 samplv1-lv2 jalv lilv-utils guitarix artyfx swh-plugins fluid-soundfont-gm fluid-soundfont-gs"
+pack[music_prod]="qtractor ardour4 qjackctl kxstudio-meta-audio-plugins-lv2 invada-studio-plugins-lv2 ir.lv2 mda-lv2 lv2vocoder distrho-mini-series distrho-mverb distrho-nekobi distrho-plugin-ports-lv2 distrho-plugins-lv2 lingot triceratops-lv2 abgate arctican-plugins-lv2 beatslash-lv2 sorcer so-synth-lv2 swh-lv2 qmidinet calf-plugins hexter swami synthv1-lv2 tal-plugins-lv2 teragonaudio-plugins-lv2 triceratops-lv2 wolpertinger-lv2 x42-plugins zam-plugins drmr carla-plugins-lv2 drumkv1-lv2 synthv1-lv2 samplv1-lv2 jalv lilv-utils guitarix artyfx swh-plugins fluid-soundfont-gm fluid-soundfont-gs"
 pack[games]="extremetuxracer supertuxkart stuntrally xonotic"
 pack[emacs]="emacs aspell-fr"
 # pack[dev_clojure]="leiningen openjdk-7-jre"
@@ -112,7 +112,7 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     if [[ ! -d /mnt/tmp ]] ; then sudo mkdir -v /mnt/tmp ; else echo -e "/mnt/tmp \t\tOK" ; fi
     if [[ ! $SHELL == "/bin/zsh" ]] ; then echo "Setting SHELL to zsh" && chsh -s /bin/zsh ; else echo -e "zsh shell \t\tOK" ; fi
     sudo adduser $(whoami) audio
-    sudo cp $FANCY_ARGS ~/.kituu/bin/*.desktop /usr/share/applications/
+    sudo cp $FANCY_ARGS ~/.kituu/scripts/*.desktop /usr/share/applications/
 fi
 
 
