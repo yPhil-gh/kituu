@@ -34,7 +34,7 @@ pack[emacs]="emacs aspell-fr"
 # pack[dev_clojure]="leiningen openjdk-7-jre"
 # pack[emacs24_snapshot]="snapshot-el emacs-snapshot-gtk emacs-snapshot aspell-fr"
 
-BASICS="dos2unix python zsh vim byobu apt-file curl wget htop bc locate sshfs git subversion cowsay fortune fortunes-off zenity vinagre x11vnc nmap sox p7zip-full links gajim unison nautilus-dropbox xclip smplayer"
+BASICS="dos2unix python zsh vim byobu apt-file curl wget htop bc locate sshfs git cowsay fortune fortunes-off zenity vinagre x11vnc nmap sox p7zip-full links unison nautilus-dropbox xclip smplayer"
 
 # icedtea-7-plugin
 
