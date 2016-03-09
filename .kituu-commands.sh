@@ -33,7 +33,6 @@ alias la="ls -A"
 
 alias k="cd ~/.kituu/"
 alias m="cd ~/Documents/manyrecords"
-alias a="cd /var/www/adamweb/git.adamweb"
 alias t="cd ~/tmp"
 alias s="cd ~/bin/src"
 
@@ -48,8 +47,8 @@ alias U="urpmi"
 alias Commit="git commit -am"
 alias Push="git push origin"
 alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
-alias I="sudo apt-get install"
-alias S="sudo apt-cache search"
+alias a="sudo apt install"
+alias aa="sudo apt-cache search"
 
 alias b="bundle"
 alias bi="b install --path vendor"
