@@ -1,4 +1,17 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+# set -o xtrace
+
+# Set magic variables for current file & dir
+__dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+__file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
+__base="$(basename ${__file} .sh)"
+__root="$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
+
+arg1="${1:-}"
 
 # Vars
 shopt -s dotglob
@@ -9,8 +22,7 @@ AUTOSTART_DIR=~/.config/autostart
 
 SEP="\n################# "
 RW=false
-type -P apt-get &>/dev/null || { debian=true >&2; }
-if [[ $1 = "-rw" ]]; then RW=true; fi
+if [[ ${arg1} = "-rw" ]]; then RW=true; fi
 if ($RW); then vc_prefix="git@github.com:" && message="RW mode ON" && git config --global user.name "xaccrocheur" && git config --global user.email xaccrocheur@gmail.com ; else vc_prefix="https://github.com/" && message="RW mode OFF"; fi
 
 if [[ $HOSTNAME == "N900" || $HOSTNAME == "RM696" ]] ; then
@@ -87,50 +99,56 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     fi
 
     for i in * ; do
-	if [[  ! -h ~/$i && $i != *#* && $i != *~* && $i != *git* && $i != "README.org" && $i != "." && "${i}" != ".." ]] ; then
+	if [[  ! -h ~/$i && $i != *#* && $i != *~* && $i != *git* && $i != "README.org" && $i != "Qtractor.conf" && $i != "." && "${i}" != ".." ]] ; then
 	    if [[ -e ~/$i ]] ; then echo "(move)" && mv $FANCY_ARGS ~/$i ~/$i.orig ; fi
 	    echo $SYMLINK_MSG && ln -s $FANCY_ARGS $REPODIR/$i ~/
 	fi
     done
 fi
 
-if $debian; then
-    echo -e $SEP"Basic binary packages"
-    read -e -p "#### Install basic packages ($BASICS) ? [Y/n] " YN
+echo -e $SEP"Basic binary packages"
+read -e -p "#### Install basic packages ($BASICS) ? [Y/n] " YN
 
-    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-        sudo apt install $BASICS
-    fi
+if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
+    sudo apt install $BASICS
 fi
 
 echo -e $SEP"Various menial janitor tasks"
-read -e -p "#### Clean around? [Y/n] " YN
+read -e -p "#### Create base dirs, set shell & desktop files, add user to audio? [Y/n] " YN
 
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     if [[ ! -d ~/tmp ]] ; then mkdir -v ~/tmp ; else echo -e "~/tmp \t\t\tOK" ; fi
-    if [[ ! -d ~/bin/src ]] ; then mkdir -vp ~/bin/src ; else echo -e "~/bin/src \t\tOK" ; fi
+    if [[ ! -d ~/src ]] ; then mkdir -vp ~/src ; else echo -e "~/src \t\tOK" ; fi
     if [[ ! -d /mnt/tmp ]] ; then sudo mkdir -v /mnt/tmp ; else echo -e "/mnt/tmp \t\tOK" ; fi
     if [[ ! $SHELL == "/bin/zsh" ]] ; then echo "Setting SHELL to zsh" && chsh -s /bin/zsh ; else echo -e "zsh shell \t\tOK" ; fi
     sudo adduser $(whoami) audio
     sudo cp $FANCY_ARGS ~/.kituu/scripts/*.desktop /usr/share/applications/
 fi
 
+read -e -p "#### Symlink Qtractor conf file? [Y/n] " YN
+
+if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
+
+Qconf="$REPODIR/Qtractor.conf"
+
+if [[ -e $Qconf ! -h $Qconf ]] ; then rm -fv $Qconf ; fi
+
+    ln -s $REPODIR/Qtractor.conf ~/.config/rncbc.org/
+fi
 
 # Packages
-if $debian; then
-    echo -e $SEP"Binary package groups"
-    read -e -p "#### Install package groups? [Y/n] " YN
+echo -e $SEP"Binary package groups"
+read -e -p "#### Install package groups? [Y/n] " YN
 
-    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
+if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 	for group in "${!pack[@]}" ; do
 	    read -e -p "
 ## Install $group? (${pack[$group]})
 [Y/n] " YN
 	    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-		sudo apt install ${pack[$group]}
+		    sudo apt install ${pack[$group]}
 	    fi
 	done
-    fi
 fi
 
 
@@ -175,16 +193,17 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     done
 fi
 
-if (type -P firefox &>/dev/null); then
-    PAGE=~/tmp/kituu-addons.html
-    echo -e $SEP"Mozilla add-ons"
-    for ADDON in "${!MOZ[@]}" ; do
+PAGE=~/tmp/kituu-addons.html
+ADDONS=""
+ADDON_NAMES=""
+echo -e $SEP"Mozilla add-ons"
+for ADDON in "${!MOZ[@]}" ; do
 	ADDONS=$ADDONS"    <li><a href='"${MOZ[$ADDON]}"'>$ADDON</a></li>\n"
 	ADDON_NAMES=$ADDON", "$ADDON_NAMES
-    done
-    read -e -p "Install add-ons ($ADDON_NAMES)?
+done
+read -e -p "Install add-ons ($ADDON_NAMES)?
 [Y/n] " YN
-    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
+if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 	echo -e "
 <html>
 <head>
@@ -201,14 +220,13 @@ if (type -P firefox &>/dev/null); then
 <img id='logo' src='http://people.mozilla.com/~faaborg/files/shiretoko/firefoxIcon/firefox-128-noshadow.png' /></a>
   <h1>Hi $(whoami), click to install extension</h1>
   <ul>" > $PAGE
-echo -e $ADDONS >> $PAGE
-echo -e "</ul>
+    echo -e $ADDONS >> $PAGE
+    echo -e "</ul>
   <hr />
   <div style='margin-left: auto;margin-right: auto;width:75%;text-align:center;'><a href='https://github.com/xaccrocheur/kituu'><img id='id' src='http://a0.twimg.com/profile_images/998643823/xix_normal.jpg' /></a>&nbsp;&nbsp;Don't forget that you're a genius, $(whoami) ;)</div>
 </body>
-</html>" >> $PAGE && firefox $PAGE &
+</html>" >> $PAGE && xdg-open $PAGE
 	# printf $ADDONS
-    fi
 fi
 
 if [ -e $SCRIPTDIR/build-emacs.sh ]; then
