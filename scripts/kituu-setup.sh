@@ -123,7 +123,7 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     Qconf=${Qdir}/Qtractor.conf
     if [[ ! -h ${Qconf} ]] ; then
         rm -fv ${Qconf}
-        # ln -sv ${REPODIR}/Template.qtt ${Qdir}
+        ln -sv ${REPODIR}/Template.qtt ${Qdir}
         ln -sv ${REPODIR}/Qtractor.conf ${Qdir}
     else
         echo ${Qconf}" Already managed"

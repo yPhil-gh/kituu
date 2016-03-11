@@ -1,8 +1,8 @@
 <!DOCTYPE qtractorSession>
 <session version="Qtractor 0.7.4">
  <properties>
-  <directory>/home/px/Dropbox/STUDIO/Qtractor/PhonyGrenouilles</directory>
-  <description>PhonyGrenouilles</description>
+  <directory>/home/px/Dropbox/STUDIO/Qtractor/</directory>
+  <description>Basic template</description>
   <sample-rate>44100</sample-rate>
   <tempo>150</tempo>
   <ticks-per-beat>960</ticks-per-beat>
@@ -82,7 +82,7 @@
       <preset></preset>
       <direct-access-param>-1</direct-access-param>
       <activate-subject-index>23</activate-subject-index>
-      <activated>0</activated>
+      <activated>1</activated>
       <configs/>
       <params>
        <param index="4" name="Bypass">0</param>
@@ -119,16 +119,7 @@
     <input-panning>0</input-panning>
     <input-controllers/>
     <input-plugins/>
-    <input-connects>
-     <connect index="0">
-      <client>system</client>
-      <port>capture_1</port>
-     </connect>
-     <connect index="1">
-      <client>system</client>
-      <port>capture_2</port>
-     </connect>
-    </input-connects>
+    <input-connects/>
     <output-gain>1</output-gain>
     <output-panning>0</output-panning>
     <output-controllers/>
@@ -197,7 +188,7 @@
       <port>0:nanoKEY2 MIDI 1</port>
      </connect>
      <connect index="0">
-      <client>28:FastTrack Pro</client>
+      <client>24:FastTrack Pro</client>
       <port>0:FastTrack Pro MIDI 1</port>
      </connect>
     </input-connects>
@@ -222,7 +213,7 @@
  <tracks>
   <view>
    <pixels-per-beat>32</pixels-per-beat>
-   <horizontal-zoom>100</horizontal-zoom>
+   <horizontal-zoom>50</horizontal-zoom>
    <vertical-zoom>100</vertical-zoom>
    <snap-per-beat>1</snap-per-beat>
    <edit-head>0</edit-head>
@@ -286,6 +277,22 @@
      </params>
      <controllers/>
      <editor-pos>635,403</editor-pos>
+     <form-pos>0,0</form-pos>
+    </plugin>
+    <plugin type="AuxSend">
+     <index>2</index>
+     <label>AuxSend</label>
+     <preset></preset>
+     <direct-access-param>0</direct-access-param>
+     <activated>1</activated>
+     <configs>
+      <config key="audioBusName">Reverb</config>
+     </configs>
+     <params>
+      <param index="0" name="Send Gain">0.0622098</param>
+     </params>
+     <controllers/>
+     <editor-pos>0,0</editor-pos>
      <form-pos>0,0</form-pos>
     </plugin>
     <audio-output-bus-name></audio-output-bus-name>
@@ -363,7 +370,7 @@
       <config key="audioBusName">Reverb</config>
      </configs>
      <params>
-      <param index="0" name="Send Gain">0.25</param>
+      <param index="0" name="Send Gain">0.0366845</param>
      </params>
      <controllers/>
      <editor-pos>0,0</editor-pos>
@@ -432,6 +439,22 @@
      </params>
      <controllers/>
      <editor-pos>635,403</editor-pos>
+     <form-pos>0,0</form-pos>
+    </plugin>
+    <plugin type="AuxSend">
+     <index>2</index>
+     <label>AuxSend</label>
+     <preset></preset>
+     <direct-access-param>0</direct-access-param>
+     <activated>1</activated>
+     <configs>
+      <config key="audioBusName">Reverb</config>
+     </configs>
+     <params>
+      <param index="0" name="Send Gain">0.0197362</param>
+     </params>
+     <controllers/>
+     <editor-pos>0,0</editor-pos>
      <form-pos>0,0</form-pos>
     </plugin>
     <audio-output-bus-name></audio-output-bus-name>
