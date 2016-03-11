@@ -1,0 +1,444 @@
+<!DOCTYPE qtractorSession>
+<session version="Qtractor 0.7.4">
+ <properties>
+  <directory>/home/px/Dropbox/STUDIO/Qtractor/PhonyGrenouilles</directory>
+  <description>PhonyGrenouilles</description>
+  <sample-rate>44100</sample-rate>
+  <tempo>150</tempo>
+  <ticks-per-beat>960</ticks-per-beat>
+  <beats-per-bar>4</beats-per-bar>
+  <beat-divisor>2</beat-divisor>
+ </properties>
+ <state>
+  <loop-start>0</loop-start>
+  <loop-end>0</loop-end>
+  <punch-in>0</punch-in>
+  <punch-out>0</punch-out>
+ </state>
+ <devices>
+  <audio-engine>
+   <audio-control>
+    <transport-mode>duplex</transport-mode>
+    <timebase>1</timebase>
+   </audio-control>
+   <audio-bus mode="duplex" name="Master">
+    <monitor>0</monitor>
+    <channels>2</channels>
+    <auto-connect>1</auto-connect>
+    <input-gain>1</input-gain>
+    <input-panning>0</input-panning>
+    <input-controllers/>
+    <input-plugins/>
+    <input-connects>
+     <connect index="0">
+      <client>system</client>
+      <port>capture_2</port>
+     </connect>
+     <connect index="1">
+      <client>system</client>
+      <port>capture_2</port>
+     </connect>
+    </input-connects>
+    <output-gain>1</output-gain>
+    <output-panning>0</output-panning>
+    <output-controllers/>
+    <output-plugins>
+     <plugin type="LV2">
+      <filename>http://guitarix.sourceforge.net/plugins/gxtuner#tuner</filename>
+      <index>0</index>
+      <label>GxTuner</label>
+      <preset></preset>
+      <direct-access-param>-1</direct-access-param>
+      <activate-subject-index>19</activate-subject-index>
+      <activated>0</activated>
+      <configs/>
+      <params>
+       <param index="1" name="REFFREQ">440</param>
+       <param index="2" name="Tuner Mode">0</param>
+       <param index="3" name="TEMPERAMENT">0</param>
+       <param index="4" name="THRESHOLD">-50</param>
+       <param index="6" name="RESET">-1</param>
+       <param index="7" name="LEVEL">-45</param>
+       <param index="8" name="CHANNELL">0</param>
+       <param index="9" name="MIDI_ON">0</param>
+       <param index="10" name="FASTNOTE">0</param>
+       <param index="11" name="PITCHBEND">0</param>
+       <param index="12" name="SINGLENOTE">0</param>
+       <param index="13" name="BPM">0</param>
+       <param index="14" name="VELOCITY">64</param>
+       <param index="15" name="VERIFY">1</param>
+       <param index="16" name="GATE">0</param>
+       <param index="17" name="SYNTHFREQ">220</param>
+       <param index="18" name="GAIN">1</param>
+      </params>
+      <controllers/>
+      <editor-pos>735,479</editor-pos>
+      <form-pos>0,0</form-pos>
+     </plugin>
+     <plugin type="LV2">
+      <filename>http://calf.sourceforge.net/plugins/Limiter</filename>
+      <index>0</index>
+      <label>Calf_Limiter</label>
+      <preset></preset>
+      <direct-access-param>-1</direct-access-param>
+      <activate-subject-index>23</activate-subject-index>
+      <activated>0</activated>
+      <configs/>
+      <params>
+       <param index="4" name="Bypass">0</param>
+       <param index="5" name="Input Gain">1</param>
+       <param index="6" name="Output Gain">1</param>
+       <param index="15" name="Limit">1</param>
+       <param index="16" name="Lookahead">5</param>
+       <param index="17" name="Release">50</param>
+       <param index="19" name="ASC">1</param>
+       <param index="21" name="ASC Level">0.5</param>
+       <param index="22" name="Oversampling">1</param>
+      </params>
+      <controllers/>
+      <editor-pos>663,492</editor-pos>
+      <form-pos>0,0</form-pos>
+     </plugin>
+    </output-plugins>
+    <output-connects>
+     <connect index="0">
+      <client>system</client>
+      <port>playback_1</port>
+     </connect>
+     <connect index="1">
+      <client>system</client>
+      <port>playback_2</port>
+     </connect>
+    </output-connects>
+   </audio-bus>
+   <audio-bus mode="duplex" name="Reverb">
+    <monitor>1</monitor>
+    <channels>2</channels>
+    <auto-connect>1</auto-connect>
+    <input-gain>1</input-gain>
+    <input-panning>0</input-panning>
+    <input-controllers/>
+    <input-plugins/>
+    <input-connects>
+     <connect index="0">
+      <client>system</client>
+      <port>capture_1</port>
+     </connect>
+     <connect index="1">
+      <client>system</client>
+      <port>capture_2</port>
+     </connect>
+    </input-connects>
+    <output-gain>1</output-gain>
+    <output-panning>0</output-panning>
+    <output-controllers/>
+    <output-plugins>
+     <plugin type="LV2">
+      <filename>http://calf.sourceforge.net/plugins/Reverb</filename>
+      <index>0</index>
+      <label>Calf_Reverb</label>
+      <preset></preset>
+      <direct-access-param>-1</direct-access-param>
+      <activate-subject-index>16</activate-subject-index>
+      <activated>1</activated>
+      <configs/>
+      <params>
+       <param index="7" name="Decay time">1.5</param>
+       <param index="8" name="High Frq Damp">5000</param>
+       <param index="9" name="Room size">1</param>
+       <param index="10" name="Diffusion">0.5</param>
+       <param index="11" name="Wet Amount">2</param>
+       <param index="12" name="Dry Amount">0</param>
+       <param index="13" name="Pre Delay">0</param>
+       <param index="14" name="Bass Cut">300</param>
+       <param index="15" name="Treble Cut">5000</param>
+      </params>
+      <controllers/>
+      <editor-pos>617,537</editor-pos>
+      <form-pos>0,0</form-pos>
+     </plugin>
+    </output-plugins>
+    <output-connects>
+     <connect index="0">
+      <client>system</client>
+      <port>playback_1</port>
+     </connect>
+     <connect index="1">
+      <client>system</client>
+      <port>playback_2</port>
+     </connect>
+    </output-connects>
+   </audio-bus>
+  </audio-engine>
+  <midi-engine>
+   <midi-control>
+    <mmc-mode>duplex</mmc-mode>
+    <mmc-device>127</mmc-device>
+    <spp-mode>duplex</spp-mode>
+    <clock-mode>none</clock-mode>
+   </midi-control>
+   <midi-bus mode="duplex" name="Master">
+    <monitor>0</monitor>
+    <input-gain>1</input-gain>
+    <input-panning>0</input-panning>
+    <input-controllers/>
+    <input-plugins>
+     <audio-output-bus-name></audio-output-bus-name>
+     <audio-output-bus>0</audio-output-bus>
+     <audio-output-auto-connect>1</audio-output-auto-connect>
+    </input-plugins>
+    <input-connects>
+     <connect index="0">
+      <client>128:jack_midi</client>
+      <port>0:port</port>
+     </connect>
+     <connect index="0">
+      <client>32:nanoKEY2</client>
+      <port>0:nanoKEY2 MIDI 1</port>
+     </connect>
+     <connect index="0">
+      <client>28:FastTrack Pro</client>
+      <port>0:FastTrack Pro MIDI 1</port>
+     </connect>
+    </input-connects>
+    <output-gain>1</output-gain>
+    <output-panning>0</output-panning>
+    <output-controllers/>
+    <output-plugins>
+     <audio-output-bus-name></audio-output-bus-name>
+     <audio-output-bus>0</audio-output-bus>
+     <audio-output-auto-connect>1</audio-output-auto-connect>
+    </output-plugins>
+    <output-connects>
+     <connect index="0">
+      <client>128:jack_midi</client>
+      <port>0:port</port>
+     </connect>
+    </output-connects>
+    <midi-map/>
+   </midi-bus>
+  </midi-engine>
+ </devices>
+ <tracks>
+  <view>
+   <pixels-per-beat>32</pixels-per-beat>
+   <horizontal-zoom>100</horizontal-zoom>
+   <vertical-zoom>100</vertical-zoom>
+   <snap-per-beat>1</snap-per-beat>
+   <edit-head>0</edit-head>
+   <edit-tail>0</edit-tail>
+  </view>
+  <track type="midi" name="Cymbals">
+   <properties>
+    <input-bus>Master</input-bus>
+    <output-bus>Master</output-bus>
+    <midi-omni>0</midi-omni>
+    <midi-channel>0</midi-channel>
+    <midi-bank-sel-method>0</midi-bank-sel-method>
+   </properties>
+   <state>
+    <mute>0</mute>
+    <solo>0</solo>
+    <record>0</record>
+    <monitor>0</monitor>
+    <gain>1</gain>
+    <panning>0</panning>
+   </state>
+   <view>
+    <height>72</height>
+    <background-color>#ccffff</background-color>
+    <foreground-color>#667f7f</foreground-color>
+   </view>
+   <controllers/>
+   <plugins>
+    <plugin type="LV2">
+     <filename>http://calf.sourceforge.net/plugins/Fluidsynth</filename>
+     <index>0</index>
+     <label>Calf_Fluidsynth</label>
+     <preset></preset>
+     <direct-access-param>-1</direct-access-param>
+     <activate-subject-index>6</activate-subject-index>
+     <activated>1</activated>
+     <configs>
+      <config key="urn:calf:soundfont">/usr/share/sounds/sf2/FluidR3_GM.sf2</config>
+      <config key="urn:calf:preset_key_set10">16384</config>
+      <config key="urn:calf:preset_key_set11">0</config>
+      <config key="urn:calf:preset_key_set2">0</config>
+      <config key="urn:calf:preset_key_set12">0</config>
+      <config key="urn:calf:preset_key_set3">0</config>
+      <config key="urn:calf:preset_key_set13">0</config>
+      <config key="urn:calf:preset_key_set4">0</config>
+      <config key="urn:calf:preset_key_set14">0</config>
+      <config key="urn:calf:preset_key_set5">0</config>
+      <config key="urn:calf:preset_key_set15">0</config>
+      <config key="urn:calf:preset_key_set6">0</config>
+      <config key="urn:calf:preset_key_set16">0</config>
+      <config key="urn:calf:preset_key_set7">0</config>
+      <config key="urn:calf:preset_key_set">16386</config>
+      <config key="urn:calf:preset_key_set8">0</config>
+      <config key="urn:calf:preset_key_set9">0</config>
+     </configs>
+     <params>
+      <param index="2" name="Volume">0.757858</param>
+      <param index="3" name="Interpolation">2</param>
+      <param index="4" name="Reverb">0</param>
+      <param index="5" name="Chorus">0</param>
+     </params>
+     <controllers/>
+     <editor-pos>635,403</editor-pos>
+     <form-pos>0,0</form-pos>
+    </plugin>
+    <audio-output-bus-name></audio-output-bus-name>
+    <audio-output-bus>0</audio-output-bus>
+    <audio-output-auto-connect>1</audio-output-auto-connect>
+   </plugins>
+  </track>
+  <track type="midi" name="Snare">
+   <properties>
+    <input-bus>Master</input-bus>
+    <output-bus>Master</output-bus>
+    <midi-omni>0</midi-omni>
+    <midi-channel>1</midi-channel>
+    <midi-bank-sel-method>0</midi-bank-sel-method>
+   </properties>
+   <state>
+    <mute>0</mute>
+    <solo>0</solo>
+    <record>0</record>
+    <monitor>0</monitor>
+    <gain>1</gain>
+    <panning>0</panning>
+   </state>
+   <view>
+    <height>72</height>
+    <background-color>#99ffff</background-color>
+    <foreground-color>#4c7f7f</foreground-color>
+   </view>
+   <controllers/>
+   <plugins>
+    <plugin type="LV2">
+     <filename>http://calf.sourceforge.net/plugins/Fluidsynth</filename>
+     <index>0</index>
+     <label>Calf_Fluidsynth</label>
+     <preset></preset>
+     <direct-access-param>-1</direct-access-param>
+     <activate-subject-index>6</activate-subject-index>
+     <activated>1</activated>
+     <configs>
+      <config key="urn:calf:soundfont">/usr/share/sounds/sf2/FluidR3_GM.sf2</config>
+      <config key="urn:calf:preset_key_set10">16384</config>
+      <config key="urn:calf:preset_key_set11">0</config>
+      <config key="urn:calf:preset_key_set2">16386</config>
+      <config key="urn:calf:preset_key_set12">0</config>
+      <config key="urn:calf:preset_key_set3">0</config>
+      <config key="urn:calf:preset_key_set13">0</config>
+      <config key="urn:calf:preset_key_set4">0</config>
+      <config key="urn:calf:preset_key_set14">0</config>
+      <config key="urn:calf:preset_key_set5">0</config>
+      <config key="urn:calf:preset_key_set15">0</config>
+      <config key="urn:calf:preset_key_set6">0</config>
+      <config key="urn:calf:preset_key_set16">0</config>
+      <config key="urn:calf:preset_key_set7">0</config>
+      <config key="urn:calf:preset_key_set">0</config>
+      <config key="urn:calf:preset_key_set8">0</config>
+      <config key="urn:calf:preset_key_set9">0</config>
+     </configs>
+     <params>
+      <param index="2" name="Volume">1</param>
+      <param index="3" name="Interpolation">2</param>
+      <param index="4" name="Reverb">0</param>
+      <param index="5" name="Chorus">0</param>
+     </params>
+     <controllers/>
+     <editor-pos>635,403</editor-pos>
+     <form-pos>0,0</form-pos>
+    </plugin>
+    <plugin type="AuxSend">
+     <index>2</index>
+     <label>AuxSend</label>
+     <preset></preset>
+     <direct-access-param>0</direct-access-param>
+     <activated>1</activated>
+     <configs>
+      <config key="audioBusName">Reverb</config>
+     </configs>
+     <params>
+      <param index="0" name="Send Gain">0.25</param>
+     </params>
+     <controllers/>
+     <editor-pos>0,0</editor-pos>
+     <form-pos>752,563</form-pos>
+    </plugin>
+    <audio-output-bus-name></audio-output-bus-name>
+    <audio-output-bus>0</audio-output-bus>
+    <audio-output-auto-connect>1</audio-output-auto-connect>
+   </plugins>
+  </track>
+  <track type="midi" name="Kick">
+   <properties>
+    <input-bus>Master</input-bus>
+    <output-bus>Master</output-bus>
+    <midi-omni>0</midi-omni>
+    <midi-channel>2</midi-channel>
+    <midi-bank-sel-method>0</midi-bank-sel-method>
+   </properties>
+   <state>
+    <mute>0</mute>
+    <solo>0</solo>
+    <record>0</record>
+    <monitor>0</monitor>
+    <gain>1</gain>
+    <panning>0</panning>
+   </state>
+   <view>
+    <height>72</height>
+    <background-color>#ffccff</background-color>
+    <foreground-color>#7f667f</foreground-color>
+   </view>
+   <controllers/>
+   <plugins>
+    <plugin type="LV2">
+     <filename>http://calf.sourceforge.net/plugins/Fluidsynth</filename>
+     <index>0</index>
+     <label>Calf_Fluidsynth</label>
+     <preset></preset>
+     <direct-access-param>-1</direct-access-param>
+     <activate-subject-index>6</activate-subject-index>
+     <activated>1</activated>
+     <configs>
+      <config key="urn:calf:soundfont">/usr/share/sounds/sf2/FluidR3_GM.sf2</config>
+      <config key="urn:calf:preset_key_set10">16384</config>
+      <config key="urn:calf:preset_key_set11">0</config>
+      <config key="urn:calf:preset_key_set2">0</config>
+      <config key="urn:calf:preset_key_set12">0</config>
+      <config key="urn:calf:preset_key_set3">16386</config>
+      <config key="urn:calf:preset_key_set13">0</config>
+      <config key="urn:calf:preset_key_set4">0</config>
+      <config key="urn:calf:preset_key_set14">0</config>
+      <config key="urn:calf:preset_key_set5">0</config>
+      <config key="urn:calf:preset_key_set15">0</config>
+      <config key="urn:calf:preset_key_set6">0</config>
+      <config key="urn:calf:preset_key_set16">0</config>
+      <config key="urn:calf:preset_key_set7">0</config>
+      <config key="urn:calf:preset_key_set">0</config>
+      <config key="urn:calf:preset_key_set8">0</config>
+      <config key="urn:calf:preset_key_set9">0</config>
+     </configs>
+     <params>
+      <param index="2" name="Volume">1</param>
+      <param index="3" name="Interpolation">2</param>
+      <param index="4" name="Reverb">0</param>
+      <param index="5" name="Chorus">0</param>
+     </params>
+     <controllers/>
+     <editor-pos>635,403</editor-pos>
+     <form-pos>0,0</form-pos>
+    </plugin>
+    <audio-output-bus-name></audio-output-bus-name>
+    <audio-output-bus>0</audio-output-bus>
+    <audio-output-auto-connect>1</audio-output-auto-connect>
+   </plugins>
+  </track>
+ </tracks>
+</session>
+

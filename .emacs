@@ -949,7 +949,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(holiday-other-holidays (quote islamic-holidays))
  ;; '(ido-everywhere t)
  '(ido-ignore-buffers (quote ("\\` " "*Messages*")))
- ;; '(ido-mode (quote both) nil (ido))
+ '(ido-mode (quote both) nil (ido))
  '(inhibit-startup-echo-area-message (user-login-name))
  '(inhibit-startup-screen t)
  '(keyboard-coding-system (quote utf-8) nil nil "nil before, now utf-8.")

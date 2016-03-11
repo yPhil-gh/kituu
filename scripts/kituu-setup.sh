@@ -25,14 +25,6 @@ RW=false
 if [[ ${arg1} = "-rw" ]]; then RW=true; fi
 if ($RW); then vc_prefix="git@github.com:" && message="RW mode ON" && git config --global user.name "xaccrocheur" && git config --global user.email xaccrocheur@gmail.com ; else vc_prefix="https://github.com/" && message="RW mode OFF"; fi
 
-if [[ $HOSTNAME == "N900" || $HOSTNAME == "RM696" ]] ; then
-    FANCY_ARGS=""
-    SYMLINK_MSG=""
-else
-    FANCY_ARGS="-v"
-    SYMLINK_MSG="(symlink)"
-fi
-
 # Packages
 declare -A pack
 pack[qtractor_svn]="libqt4-dev libjack-dev libalsa-ocaml-dev libsndfile1-dev liblilv-dev zlib1g-dev libladspa-ocaml-dev libsuil-dev dssi-dev libsamplerate-dev librubberband-dev liblo-dev"
@@ -40,7 +32,7 @@ pack[dev_tools]="build-essential autoconf"
 pack[dev_python]="python-pip python-scipy"
 pack[base_utils]="unison baobab gparted"
 pack[image_tools]="gimp inkscape blender"
-pack[music_prod]="qtractor ardour4 qjackctl kxstudio-meta-audio-plugins-lv2 invada-studio-plugins-lv2 ir.lv2 mda-lv2 lv2vocoder distrho-mini-series distrho-mverb distrho-nekobi distrho-plugin-ports-lv2 distrho-plugins-lv2 lingot triceratops-lv2 abgate arctican-plugins-lv2 beatslash-lv2 sorcer so-synth-lv2 swh-lv2 qmidinet calf-plugins hexter swami synthv1-lv2 tal-plugins-lv2 teragonaudio-plugins-lv2 triceratops-lv2 wolpertinger-lv2 x42-plugins zam-plugins drmr carla-plugins-lv2 drumkv1-lv2 synthv1-lv2 samplv1-lv2 jalv lilv-utils guitarix artyfx swh-plugins fluid-soundfont-gm fluid-soundfont-gs zynaddsubx dexed helm audacious audacity linux-signed-lowlatency vmpk cadence"
+pack[music_prod]="qtractor ardour4 qjackctl kxstudio-meta-audio-plugins-lv2 invada-studio-plugins-lv2 ir.lv2 mda-lv2 lv2vocoder distrho-mini-series distrho-mverb distrho-nekobi distrho-plugin-ports-lv2 distrho-plugins-lv2 lingot triceratops-lv2 abgate arctican-plugins-lv2 beatslash-lv2 sorcer so-synth-lv2 swh-lv2 qmidinet calf-plugins hexter synthv1-lv2 tal-plugins-lv2 teragonaudio-plugins-lv2 triceratops-lv2 wolpertinger-lv2 x42-plugins zam-plugins drmr carla-plugins-lv2 drumkv1-lv2 synthv1-lv2 samplv1-lv2 jalv lilv-utils guitarix artyfx swh-plugins fluid-soundfont-gm fluid-soundfont-gs zynaddsubfx dexed helm audacious audacity linux-image-lowlatency vmpk cadence"
 pack[games]="extremetuxracer supertuxkart stuntrally xonotic"
 pack[emacs]="emacs aspell-fr"
 # pack[dev_clojure]="leiningen openjdk-7-jre"
@@ -99,9 +91,9 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     fi
 
     for i in * ; do
-	if [[  ! -h ~/$i && $i != *#* && $i != *~* && $i != *git* && $i != "README.org" && $i != "Qtractor.conf" && $i != "." && "${i}" != ".." ]] ; then
-	    if [[ -e ~/$i ]] ; then echo "(move)" && mv $FANCY_ARGS ~/$i ~/$i.orig ; fi
-	    echo $SYMLINK_MSG && ln -s $FANCY_ARGS $REPODIR/$i ~/
+	if [[  ! -h ~/$i && $i != *#* && $i != *~* && $i != *git* && $i != "README.org" && $i != "Qtractor.conf" && $i != "Template.qtt" && $i != "." && "${i}" != ".." ]] ; then
+	    if [[ -e ~/$i ]] ; then echo "(move)" && mv -v ~/$i ~/$i.orig ; fi
+	    ln -sv $REPODIR/$i ~/
 	fi
     done
 fi
@@ -122,18 +114,17 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     if [[ ! -d /mnt/tmp ]] ; then sudo mkdir -v /mnt/tmp ; else echo -e "/mnt/tmp \t\tOK" ; fi
     if [[ ! $SHELL == "/bin/zsh" ]] ; then echo "Setting SHELL to zsh" && chsh -s /bin/zsh ; else echo -e "zsh shell \t\tOK" ; fi
     sudo adduser $(whoami) audio
-    sudo cp $FANCY_ARGS ~/.kituu/scripts/*.desktop /usr/share/applications/
+    sudo cp -v ~/.kituu/scripts/*.desktop /usr/share/applications/
 fi
 
-read -e -p "#### Symlink Qtractor conf file? [Y/n] " YN
+read -e -p "#### Symlink Qtractor conf files? [Y/n] " YN
 
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-
-Qconf="$REPODIR/Qtractor.conf"
-
-if [[ -e $Qconf ! -h $Qconf ]] ; then rm -fv $Qconf ; fi
-
-    ln -s $REPODIR/Qtractor.conf ~/.config/rncbc.org/
+    Qdir="~/.config/rncbc.org/"
+    Qconf="$Qdir/Qtractor.conf"
+    if [[ -e $Qconf && ! -h $Qconf ]] ; then rm -fv $Qconf ; fi
+    ln -sv $REPODIR/Template.qtt $Qdir
+    ln -sv $REPODIR/Qtractor.conf $Qdir
 fi
 
 # Packages
@@ -152,7 +143,7 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 fi
 
 
-[[ ! -d "$SCRIPTDIR" ]] && mkdir $FANCY_ARGS -p $SCRIPTDIR
+[[ ! -d "$SCRIPTDIR" ]] && mkdir -pv $SCRIPTDIR
 echo -e $SEP"Various repositories"
 read -e -p "#### Stuff? [Y/n] " YN
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
