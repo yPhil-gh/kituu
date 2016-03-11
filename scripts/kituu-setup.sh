@@ -111,20 +111,23 @@ read -e -p "#### Create base dirs, set shell & desktop files, add user to audio?
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     if [[ ! -d ~/tmp ]] ; then mkdir -v ~/tmp ; else echo -e "~/tmp \t\t\tOK" ; fi
     if [[ ! -d ~/src ]] ; then mkdir -vp ~/src ; else echo -e "~/src \t\tOK" ; fi
-    if [[ ! -d /mnt/tmp ]] ; then sudo mkdir -v /mnt/tmp ; else echo -e "/mnt/tmp \t\tOK" ; fi
     if [[ ! $SHELL == "/bin/zsh" ]] ; then echo "Setting SHELL to zsh" && chsh -s /bin/zsh ; else echo -e "zsh shell \t\tOK" ; fi
     sudo adduser $(whoami) audio
-    sudo cp -v ~/.kituu/scripts/*.desktop /usr/share/applications/
+    sudo cp -v ${REPODIR}/scripts/*.desktop /usr/share/applications/
 fi
 
 read -e -p "#### Symlink Qtractor conf files? [Y/n] " YN
 
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-    Qdir="~/.config/rncbc.org/"
-    Qconf="$Qdir/Qtractor.conf"
-    if [[ -e $Qconf && ! -h $Qconf ]] ; then rm -fv $Qconf ; fi
-    ln -sv $REPODIR/Template.qtt $Qdir
-    ln -sv $REPODIR/Qtractor.conf $Qdir
+    Qdir=~/.config/rncbc.org/
+    Qconf=${Qdir}/Qtractor.conf
+    if [[ ! -h ${Qconf} ]] ; then
+        rm -fv ${Qconf}
+        # ln -sv ${REPODIR}/Template.qtt ${Qdir}
+        ln -sv ${REPODIR}/Qtractor.conf ${Qdir}
+    else
+        echo ${Qconf}" Already managed"
+    fi
 fi
 
 # Packages
