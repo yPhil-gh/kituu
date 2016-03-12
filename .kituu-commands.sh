@@ -34,7 +34,7 @@ alias la="ls -A"
 alias k="cd ~/.kituu/"
 alias m="cd ~/Documents/manyrecords"
 alias t="cd ~/tmp"
-alias s="cd ~/bin/src"
+alias s="cd ~/src"
 
 alias pss='ps aux | grep $(echo $1 | sed "s/^\(.\)/[\1]/g")'
 alias mss="sudo cat /var/log/syslog | grep $1"

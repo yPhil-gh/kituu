@@ -32,7 +32,7 @@ declare -A pack
 BASICS="dos2unix python zsh vim byobu apt-file curl wget htop bc locate sshfs git cowsay fortune fortunes-off zenity vinagre x11vnc nmap sox p7zip-full links unison baobab gparted xclip smplayer"
 
 pack[dev_tools]="build-essential autoconf"
-pack[beatnitpicker]="python-pip python-scipy"
+pack[beatnitpicker]="python-gst0.10 python-scipy python-matplotlib"
 pack[optional]="nautilus-dropbox"
 pack[image_tools]="gimp inkscape blender"
 pack[music_prod]="qtractor ardour4 qjackctl kxstudio-meta-audio-plugins-lv2 distrho-plugin-ports-lv2 swh-lv2 qmidinet calf-plugins hexter zam-plugins drumkv1-lv2 synthv1-lv2 samplv1-lv2 jalv lilv-utils guitarix artyfx swh-plugins fluid-soundfont-gm fluid-soundfont-gs zynaddsubfx helm audacious audacity vmpk cadence lv2-dev"
