@@ -30,7 +30,7 @@
      (progn (message "installing %s" package)
             (package-refresh-contents)
             (package-install package))))
- '(less-css-mode tabbar org auto-complete undo-tree magit clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode rainbow-mode))
+ '(less-css-mode tabbar org auto-complete undo-tree clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode rainbow-mode))
 
 
 ;; LIBS! ______________________________________________________________________
@@ -867,7 +867,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "<s-left>") 'px-pop-to-mark-command)
 (global-set-key (kbd "<s-right>") 'px-unpop-to-mark-command)
 
-(global-set-key (kbd "C-x g") 'magit-status)
+;; (global-set-key (kbd "C-x g") 'magit-status)
 
 
 (global-set-key (kbd "C-a") 'mark-whole-buffer)

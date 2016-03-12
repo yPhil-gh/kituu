@@ -22,25 +22,22 @@ AUTOSTART_DIR=~/.config/autostart
 
 SEP="\n################# "
 RW=false
-if [[ ${arg1} = "-rw" ]]; then RW=true; fi
+
+[[ ${arg1} = "-rw" ]] && RW=true
+
 if ($RW); then vc_prefix="git@github.com:" && message="RW mode ON" && git config --global user.name "xaccrocheur" && git config --global user.email xaccrocheur@gmail.com ; else vc_prefix="https://github.com/" && message="RW mode OFF"; fi
 
 # Packages
 declare -A pack
-pack[qtractor_svn]="libqt4-dev libjack-dev libalsa-ocaml-dev libsndfile1-dev liblilv-dev zlib1g-dev libladspa-ocaml-dev libsuil-dev dssi-dev libsamplerate-dev librubberband-dev liblo-dev"
+BASICS="dos2unix python zsh vim byobu apt-file curl wget htop bc locate sshfs git cowsay fortune fortunes-off zenity vinagre x11vnc nmap sox p7zip-full links unison baobab gparted xclip smplayer"
+
 pack[dev_tools]="build-essential autoconf"
-pack[dev_python]="python-pip python-scipy"
-pack[base_utils]="unison baobab gparted"
+pack[beatnitpicker]="python-pip python-scipy"
+pack[optional]="nautilus-dropbox"
 pack[image_tools]="gimp inkscape blender"
-pack[music_prod]="qtractor ardour4 qjackctl kxstudio-meta-audio-plugins-lv2 invada-studio-plugins-lv2 ir.lv2 mda-lv2 lv2vocoder distrho-mini-series distrho-mverb distrho-nekobi distrho-plugin-ports-lv2 distrho-plugins-lv2 lingot triceratops-lv2 abgate arctican-plugins-lv2 beatslash-lv2 sorcer so-synth-lv2 swh-lv2 qmidinet calf-plugins hexter synthv1-lv2 tal-plugins-lv2 teragonaudio-plugins-lv2 triceratops-lv2 wolpertinger-lv2 x42-plugins zam-plugins drmr carla-plugins-lv2 drumkv1-lv2 synthv1-lv2 samplv1-lv2 jalv lilv-utils guitarix artyfx swh-plugins fluid-soundfont-gm fluid-soundfont-gs zynaddsubfx dexed helm audacious audacity linux-image-lowlatency vmpk cadence"
-pack[games]="extremetuxracer supertuxkart stuntrally xonotic"
+pack[music_prod]="qtractor ardour4 qjackctl kxstudio-meta-audio-plugins-lv2 distrho-plugin-ports-lv2 swh-lv2 qmidinet calf-plugins hexter zam-plugins drumkv1-lv2 synthv1-lv2 samplv1-lv2 jalv lilv-utils guitarix artyfx swh-plugins fluid-soundfont-gm fluid-soundfont-gs zynaddsubfx helm audacious audacity vmpk cadence lv2-dev"
+pack[games]="extremetuxracer supertuxkart"
 pack[emacs]="emacs aspell-fr"
-# pack[dev_clojure]="leiningen openjdk-7-jre"
-# pack[emacs24_snapshot]="snapshot-el emacs-snapshot-gtk emacs-snapshot aspell-fr"
-
-BASICS="dos2unix python zsh vim byobu apt-file curl wget htop bc locate sshfs git cowsay fortune fortunes-off zenity vinagre x11vnc nmap sox p7zip-full links unison nautilus-dropbox xclip smplayer"
-
-# icedtea-7-plugin
 
 # MOZilla addons
 MOZURL="https://addons.mozilla.org/firefox/downloads/latest"
