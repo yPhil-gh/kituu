@@ -19,7 +19,7 @@ alias rm="rm -i"
 alias cp="cp -i"
 
 if [[ ! $HOSTNAME == "RM696" ]] ; then
-    alias grep="grep -nIs --color --exclude-dir='.git'"
+    alias grep="grep -Is --color --exclude-dir='.git'"
     alias ls="ls --color --group-directories-first"
 fi
 

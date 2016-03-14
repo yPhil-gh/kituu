@@ -733,12 +733,12 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (setq paragraph-start "\\*\\|$"
       paragraph-separate "$")
 
-(mapcar (lambda (mode)
-	  (font-lock-add-keywords
-           mode
-           '(("\\<\\(FIXME\\):" 1 font-lock-warning-face prepend)
-             ("\\<\\(TODO\\|BUGGY\\):" 1 font-lock-warning-face prepend))))
-	'(text-mode latex-mode html-mode emacs-lisp-mode php-mode texinfo-mode js-mode))
+;; (mapcar (lambda (mode)
+;; 	  (font-lock-add-keywords
+;;            mode
+;;            '(("\\<\\(FIXME\\):" 1 font-lock-warning-face prepend)
+;;              ("\\<\\(TODO\\|BUGGY\\):" 1 font-lock-warning-face prepend))))
+;; 	'(text-mode latex-mode html-mode emacs-lisp-mode php-mode texinfo-mode js-mode))
 
 ;; Externals! _________________________________________________________________
 
