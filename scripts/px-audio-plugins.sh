@@ -11,7 +11,5 @@ selection=$(zenity --list --multiple --checklist --hide-column=4 --print-column=
 
 IFS='|' read -ra URI <<< "$selection"
 for i in "${URI[@]}"; do
-    if [[ $i == http* ]] || [[ $i == urn* ]] ; then
-        jalv.gtkmm --name=${i##*/} ${i} &
-    fi
+    jalv.gtkmm --name=${i##*/} ${i} &
 done
