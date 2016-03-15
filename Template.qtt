@@ -1,7 +1,7 @@
 <!DOCTYPE qtractorSession>
 <session version="Qtractor 0.7.4">
  <properties>
-  <directory>/home/px/Dropbox/STUDIO/Qtractor/</directory>
+  <directory>/home/px/Dropbox/STUDIO/Qtractor</directory>
   <description>Basic template</description>
   <sample-rate>44100</sample-rate>
   <tempo>150</tempo>
@@ -119,7 +119,16 @@
     <input-panning>0</input-panning>
     <input-controllers/>
     <input-plugins/>
-    <input-connects/>
+    <input-connects>
+     <connect index="0">
+      <client>system</client>
+      <port>capture_1</port>
+     </connect>
+     <connect index="1">
+      <client>system</client>
+      <port>capture_2</port>
+     </connect>
+    </input-connects>
     <output-gain>1</output-gain>
     <output-panning>0</output-panning>
     <output-controllers/>
@@ -180,7 +189,7 @@
     </input-plugins>
     <input-connects>
      <connect index="0">
-      <client>128:jack_midi</client>
+      <client>129:jack_midi</client>
       <port>0:port</port>
      </connect>
      <connect index="0">
@@ -188,7 +197,7 @@
       <port>0:nanoKEY2 MIDI 1</port>
      </connect>
      <connect index="0">
-      <client>24:FastTrack Pro</client>
+      <client>16:FastTrack Pro</client>
       <port>0:FastTrack Pro MIDI 1</port>
      </connect>
     </input-connects>
@@ -202,7 +211,7 @@
     </output-plugins>
     <output-connects>
      <connect index="0">
-      <client>128:jack_midi</client>
+      <client>129:jack_midi</client>
       <port>0:port</port>
      </connect>
     </output-connects>
@@ -455,6 +464,47 @@
      </params>
      <controllers/>
      <editor-pos>0,0</editor-pos>
+     <form-pos>0,0</form-pos>
+    </plugin>
+    <audio-output-bus-name></audio-output-bus-name>
+    <audio-output-bus>0</audio-output-bus>
+    <audio-output-auto-connect>1</audio-output-auto-connect>
+   </plugins>
+  </track>
+  <track type="midi" name="Zyn1">
+   <properties>
+    <input-bus>Master</input-bus>
+    <output-bus>Master</output-bus>
+    <midi-omni>0</midi-omni>
+    <midi-channel>3</midi-channel>
+    <midi-bank-sel-method>0</midi-bank-sel-method>
+   </properties>
+   <state>
+    <mute>0</mute>
+    <solo>0</solo>
+    <record>0</record>
+    <monitor>0</monitor>
+    <gain>1</gain>
+    <panning>0</panning>
+   </state>
+   <view>
+    <height>72</height>
+    <background-color>#ccccff</background-color>
+    <foreground-color>#66667f</foreground-color>
+   </view>
+   <controllers/>
+   <plugins>
+    <plugin type="VST">
+     <filename>/usr/lib/vst/ZynAddSubFX.so</filename>
+     <index>0</index>
+     <label>ZynAddSubFX</label>
+     <preset></preset>
+     <direct-access-param>-1</direct-access-param>
+     <activated>1</activated>
+     <configs/>
+     <params/>
+     <controllers/>
+     <editor-pos>797,349</editor-pos>
      <form-pos>0,0</form-pos>
     </plugin>
     <audio-output-bus-name></audio-output-bus-name>
