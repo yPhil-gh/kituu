@@ -49,6 +49,7 @@ alias Push="git push origin"
 alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
 alias a="sudo apt install"
 alias aa="apt-cache search"
+alias aaa="apt-file search"
 
 alias b="bundle"
 alias bi="b install --path vendor"

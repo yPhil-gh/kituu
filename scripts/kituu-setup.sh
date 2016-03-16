@@ -35,9 +35,10 @@ pack[dev_tools]="build-essential autoconf"
 pack[beatnitpicker]="python-gst0.10 python-scipy python-matplotlib"
 pack[optional]="nautilus-dropbox"
 pack[image_tools]="gimp inkscape blender"
-pack[music_prod]="qtractor ardour4 qjackctl kxstudio-meta-audio-plugins-lv2 qmidinet calf-plugins hexter zam-plugins drumkv1-lv2 synthv1-lv2 samplv1-lv2 jalv lilv-utils guitarix artyfx swh-plugins fluid-soundfont-gm fluid-soundfont-gs zynaddsubfx helm audacious audacity vmpk cadence lv2-dev radium-compressor pizmidi-plugins oxefmsynth azr3-jack argotlunar yoshimi dpf-plugins"
+pack[music_prod]="qtractor ardour4 qjackctl kxstudio-meta-audio-plugins-lv2 qmidinet calf-plugins hexter zam-plugins drumkv1-lv2 synthv1-lv2 samplv1-lv2 jalv lilv-utils guitarix artyfx swh-plugins fluid-soundfont-gm fluid-soundfont-gs zynaddsubfx helm audacious audacity vmpk cadence lv2-dev radium-compressor pizmidi-plugins oxefmsynth azr3-jack argotlunar yoshimi dpf-plugins qmidiarp"
 pack[games]="extremetuxracer supertuxkart"
 pack[emacs]="emacs aspell-fr"
+pack[yoshimi_lv2]="libfftw3-dev libmxml-dev libalsa-ocaml-dev libjack-jackd2-dev libboost-all-dev libfltk1.3-dev libreadline-dev"
 
 # MOZilla addons
 MOZURL="https://addons.mozilla.org/firefox/downloads/latest"
