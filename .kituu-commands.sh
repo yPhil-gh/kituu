@@ -69,18 +69,14 @@ alias duf='du -sk * | sort -n | perl -ne '\''($s,$f)=split(m{\t});for (qw(K M G)
 
 # Commands
 
-function px-cleanup-qtractor-takes () {
+function px-qtractor-takes-cleanup () {
 
-    for wav in *.wav
-    # do grep -q -F "$wav" $1 || ls -la "$wav"
-    do grep -q -F "$wav" $1 || rm -rvf "$wav"
+    echo "Usage: $0 <Qtractor session file>"
+
+    for wav in *.wav* ; do
+        grep -q -F "$wav" $1 || rm -rvf "$wav"
+        # grep -q -F "$wav" $1 || ll "$wav"
     done
-
-    # for peak in *.peak
-    # do grep -q -F "$peak" $1 || ls -la "$peak"
-    # done
-
-    # for i in *.wav; do grep -c $i $1; done
 }
 
 

@@ -7,14 +7,16 @@ from urlparse import urlparse
 # # for plugin in os.system("lv2ls"):
 # #     urlsplit(plugin)
 
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, call
 pipe = Popen('lv2ls', shell=True, stdout=PIPE)
 
 for plugin in pipe.stdout:
-    parsed_uri = urlparse(plugin)
-    domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
+    # parsed_uri = urlparse(plugin)
+    # domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
     # print domain
-    print parsed_uri.netloc
+    # print parsed_uri.netloc
+    print plugin
+    # print call(["lv2info", plugin])
     # print(line.strip())
     # print urlsplit(plugin).netloc
     # text = "calf.sourceforge.net"

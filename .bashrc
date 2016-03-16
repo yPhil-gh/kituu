@@ -29,6 +29,7 @@ kituu_user=$(whoami)
 kituu_processes=$(ps ax | wc -l | tr -d " ")
 
 export EDITOR=emacs ALTERNATE_EDITOR=vi
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
 # Try to escape busybox
 if [ -n "${BASH+x}" ] ; then
