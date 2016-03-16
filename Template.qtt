@@ -197,7 +197,7 @@
       <port>0:nanoKEY2 MIDI 1</port>
      </connect>
      <connect index="0">
-      <client>16:FastTrack Pro</client>
+      <client>28:FastTrack Pro</client>
       <port>0:FastTrack Pro MIDI 1</port>
      </connect>
     </input-connects>
@@ -494,18 +494,28 @@
    </view>
    <controllers/>
    <plugins>
-    <plugin type="VST">
-     <filename>/usr/lib/vst/ZynAddSubFX.so</filename>
+    <plugin type="LV2">
+     <filename>urn:50m30n3:plugins:SO-404</filename>
      <index>0</index>
-     <label>ZynAddSubFX</label>
+     <label>SO_404_Bass_Synthesizer</label>
      <preset></preset>
      <direct-access-param>-1</direct-access-param>
+     <activate-subject-index>10</activate-subject-index>
      <activated>1</activated>
      <configs/>
-     <params/>
+     <params>
+      <param index="2" name="Control Mode">0</param>
+      <param index="3" name="Volume">100</param>
+      <param index="4" name="Filter Cutoff">50</param>
+      <param index="5" name="Filter Resonance">100</param>
+      <param index="6" name="Filter Envelope">80</param>
+      <param index="7" name="Portamento Time">64</param>
+      <param index="8" name="Release Time">100</param>
+      <param index="9" name="Midi Channel">3</param>
+     </params>
      <controllers/>
-     <editor-pos>797,349</editor-pos>
-     <form-pos>0,0</form-pos>
+     <editor-pos>0,0</editor-pos>
+     <form-pos>752,428</form-pos>
     </plugin>
     <audio-output-bus-name></audio-output-bus-name>
     <audio-output-bus>0</audio-output-bus>
