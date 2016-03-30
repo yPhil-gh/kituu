@@ -72,11 +72,11 @@ alias duf='du -sk * | sort -n | perl -ne '\''($s,$f)=split(m{\t});for (qw(K M G)
 
 function px-qtractor-takes-cleanup () {
 
-    echo "Usage: $0 <Qtractor session file>"
+[[ "${2:-}" == "--delete" ]] && COMMAND="rm -fv" || COMMAND="ls"
 
-    for wav in *.wav* ; do
-        grep -q -F "$wav" $1 || rm -rvf "$wav"
-        # grep -q -F "$wav" $1 || ll "$wav"
+    echo "Usage: $0 qtr_session_file [--delete)]"
+    for file in *.wav* *.mid* ; do
+        grep -q -F "$file" $1 || eval $COMMAND " $file"
     done
 }
 

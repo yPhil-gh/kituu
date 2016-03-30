@@ -920,19 +920,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(delete-selection-mode t)
  '(diary-file "~/Ubuntu One/org/agenda.org")
  '(ecb-layout-name "left1")
- '(ecb-layout-window-sizes
-   (quote
-    (("Cdev-def"
-      (ecb-directories-buffer-name 0.15418502202643172 . 0.23880597014925373)
-      (ecb-sources-buffer-name 0.1762114537444934 . 0.23880597014925373)
-      (ecb-methods-buffer-name 0.3303964757709251 . 0.19402985074626866)
-      (ecb-analyse-buffer-name 0.3303964757709251 . 0.22388059701492538)
-      (ecb-symboldef-buffer-name 0.3303964757709251 . 0.3283582089552239))
-     ("left1"
-      (ecb-directories-buffer-name 0.27312775330396477 . 0.2835820895522388)
-      (ecb-sources-buffer-name 0.14977973568281938 . 0.34328358208955223)
-      (ecb-history-buffer-name 0.12334801762114538 . 0.34328358208955223)
-      (ecb-methods-buffer-name 0.27312775330396477 . 0.3582089552238806)))))
+ '(ecb-layout-window-sizes (quote (("Cdev-def" (ecb-directories-buffer-name 0.15418502202643172 . 0.23880597014925373) (ecb-sources-buffer-name 0.1762114537444934 . 0.23880597014925373) (ecb-methods-buffer-name 0.3303964757709251 . 0.19402985074626866) (ecb-analyse-buffer-name 0.3303964757709251 . 0.22388059701492538) (ecb-symboldef-buffer-name 0.3303964757709251 . 0.3283582089552239)) ("left1" (ecb-directories-buffer-name 0.27312775330396477 . 0.2835820895522388) (ecb-sources-buffer-name 0.14977973568281938 . 0.34328358208955223) (ecb-history-buffer-name 0.12334801762114538 . 0.34328358208955223) (ecb-methods-buffer-name 0.27312775330396477 . 0.3582089552238806)))))
  '(ecb-options-version "2.40")
  '(ecb-primary-secondary-mouse-buttons (quote mouse-1--mouse-2))
  '(epa-popup-info-window nil)
@@ -942,12 +930,9 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(global-font-lock-mode t)
  '(global-linum-mode t)
  '(global-undo-tree-mode t)
- '(grep-find-ignored-directories
-   (quote
-    ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "compiled" "libs/bootstrap")))
+ '(grep-find-ignored-directories (quote ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "compiled" "libs/bootstrap")))
  '(haml-backspace-backdents-nesting nil)
  '(holiday-other-holidays (quote islamic-holidays))
- ;; '(ido-everywhere t)
  '(ido-ignore-buffers (quote ("\\` " "*Messages*")))
  '(ido-mode (quote both) nil (ido))
  '(inhibit-startup-echo-area-message (user-login-name))
@@ -969,10 +954,12 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(mm-enable-external (quote ask))
  '(mm-text-html-renderer (quote links))
  '(mumamo-margin-use (quote (left-margin 13)))
- '(org-agenda-files (quote ("~/Ubuntu One/org/agenda.org")))
+ '(org-agenda-files nil)
+ '(org-directory "~/Dropbox/txt")
  '(org-html-postamble t)
- '(org-html-validation-link
-   "<a href=\"http://validator.w3.org/check?uri=referer\">Valid HTML</a>")
+ '(org-html-validation-link "<a href=\"http://validator.w3.org/check?uri=referer\">Valid HTML</a>")
+ '(org-mobile-directory "~/Dropbox/txt")
+ '(org-mobile-inbox-for-pull "~/Dropbox/txt/mobile-org-pull-file.org")
  '(org-return-follows-link t)
  '(org-support-shift-select (quote always))
  '(org-use-sub-superscripts nil)
