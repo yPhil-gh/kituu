@@ -104,7 +104,7 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 fi
 
 echo -e $SEP"Various menial janitor tasks"
-read -e -p "#### Create base dirs, set shell & desktop files, add user to audio? [Y/n] " YN
+read -e -p "#### Create base dirs, set shell & .desktop files, add user to audio? [Y/n] " YN
 
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     if [[ ! -d ~/tmp ]] ; then mkdir -v ~/tmp ; else echo -e "~/tmp \t\t\tOK" ; fi
