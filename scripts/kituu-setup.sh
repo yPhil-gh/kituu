@@ -1,42 +1,44 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+# set -o xtrace
+
+# Set magic variables for current file & dir
+__dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+__file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
+__base="$(basename ${__file} .sh)"
+__root="$(cd "$(dirname "${__dir}")" && pwd)" # <-- change this as it depends on your app
+
+arg1="${1:-}"
 
 # Vars
 shopt -s dotglob
 REPODIR=~/.kituu
 LISPDIR=~/.emacs.d/elisp
-SCRIPTDIR=~/bin
+SCRIPTDIR=~/scripts
 AUTOSTART_DIR=~/.config/autostart
 
 SEP="\n################# "
 RW=false
-type -P apt-get &>/dev/null || { debian=true >&2; }
-if [[ $1 = "-rw" ]]; then RW=true; fi
-if ($RW); then vc_prefix="git@github.com:" && message="RW mode ON" && git config --global user.name "xaccrocheur" && git config --global user.email xaccrocheur@gmail.com ; else vc_prefix="https://github.com/" && message="RW mode OFF"; fi
 
-if [[ $HOSTNAME == "N900" || $HOSTNAME == "RM696" ]] ; then
-    FANCY_ARGS=""
-    SYMLINK_MSG=""
-else
-    FANCY_ARGS="-v"
-    SYMLINK_MSG="(symlink)"
-fi
+[[ ${arg1} = "-rw" ]] && RW=true
+
+if ($RW); then vc_prefix="git@github.com:" && message="RW mode ON" && git config --global user.name "xaccrocheur" && git config --global user.email xaccrocheur@gmail.com ; else vc_prefix="https://github.com/" && message="RW mode OFF"; fi
 
 # Packages
 declare -A pack
-pack[qtractor_svn]="libqt4-dev libjack-dev libalsa-ocaml-dev libsndfile1-dev liblilv-dev zlib1g-dev libladspa-ocaml-dev libsuil-dev dssi-dev libsamplerate-dev librubberband-dev liblo-dev"
+BASICS="dos2unix python zsh vim byobu apt-file curl wget htop bc locate sshfs git cowsay fortune fortunes-off zenity vinagre x11vnc nmap sox p7zip-full links unison baobab gparted xclip smplayer"
+
 pack[dev_tools]="build-essential autoconf"
-pack[dev_clojure]="leiningen openjdk-7-jre"
-pack[dev_python]="python-pip python-scipy"
-pack[base_utils]="unison baobab gparted"
-pack[image_tools]="gimp inkscape blender libav-tools ubuntustudio-font-meta"
-pack[music_prod]="qjackctl invada-studio-plugins-lv2 ir.lv2 lv2fil mda-lv2 lv2vocoder distrho-mini-series distrho-mverb distrho-nekobi distrho-plugin-ports-lv2 distrho-plugins-lv2 lingot triceratops-lv2 abgate arctican-plugins-lv2 beatslash-lv2 sorcer so-synth-lv2 swh-lv2 qmidinet calf-plugins hexter swami synthv1-lv2 tal-plugins-lv2 teragonaudio-plugins-lv2 triceratops-lv2 wolpertinger-lv2 x42-plugins zam-plugins sunvox drmr carla-lv2 drumkv1  synthv1 samplv1 jalv lilv-utils guitarix artyfx"
-pack[games]="extremetuxracer supertuxkart stuntrally xonotic"
-pack[emacs24_stable]="emacs24 aspell-fr"
-# pack[emacs24_snapshot]="snapshot-el emacs-snapshot-gtk emacs-snapshot aspell-fr"
-
-BASICS="dos2unix python zsh vim byobu apt-file curl wget htop bc locate sshfs git subversion cowsay fortune fortunes-off zenity vinagre x11vnc nmap sox p7zip-full links gajim unison nautilus-dropbox xclip smplayer"
-
-# icedtea-7-plugin
+pack[beatnitpicker]="python-gst0.10 python-scipy python-matplotlib"
+pack[optional]="nautilus-dropbox"
+pack[image_tools]="gimp inkscape blender"
+pack[music_prod]="qtractor ardour4 qjackctl kxstudio-meta-audio-plugins-lv2 qmidinet calf-plugins hexter zam-plugins drumkv1-lv2 synthv1-lv2 samplv1-lv2 jalv lilv-utils guitarix artyfx swh-plugins fluid-soundfont-gm fluid-soundfont-gs zynaddsubfx helm audacious audacity vmpk cadence lv2-dev radium-compressor pizmidi-plugins oxefmsynth azr3-jack argotlunar yoshimi dpf-plugins qmidiarp"
+pack[games]="extremetuxracer supertuxkart"
+pack[emacs]="emacs aspell-fr"
+pack[yoshimi_lv2]="libfftw3-dev libmxml-dev libalsa-ocaml-dev libjack-jackd2-dev libboost-all-dev libfltk1.3-dev libreadline-dev"
 
 # MOZilla addons
 MOZURL="https://addons.mozilla.org/firefox/downloads/latest"
@@ -87,54 +89,62 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     fi
 
     for i in * ; do
-	if [[  ! -h ~/$i && $i != *#* && $i != *~* && $i != *git* && $i != "README.org" && $i != "." && "${i}" != ".." ]] ; then
-	    if [[ -e ~/$i ]] ; then echo "(move)" && mv $FANCY_ARGS ~/$i ~/$i.orig ; fi
-	    echo $SYMLINK_MSG && ln -s $FANCY_ARGS $REPODIR/$i ~/
+	if [[  ! -h ~/$i && $i != *#* && $i != *~* && $i != *git* && $i != "README.org" && $i != "Qtractor.conf" && $i != "Template.qtt" && $i != "." && "${i}" != ".." ]] ; then
+	    if [[ -e ~/$i ]] ; then echo "(move)" && mv -v ~/$i ~/$i.orig ; fi
+	    ln -sv $REPODIR/$i ~/
 	fi
     done
 fi
 
-if $debian; then
-    echo -e $SEP"Basic binary packages"
-    read -e -p "#### Install basic packages ($BASICS) ? [Y/n] " YN
+echo -e $SEP"Basic binary packages"
+read -e -p "#### Install basic packages ($BASICS) ? [Y/n] " YN
 
-    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-        sudo apt install $BASICS
-    fi
+if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
+    sudo apt install $BASICS
 fi
 
 echo -e $SEP"Various menial janitor tasks"
-read -e -p "#### Clean around? [Y/n] " YN
+read -e -p "#### Create base dirs, set shell & .desktop files, add user to audio? [Y/n] " YN
 
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     if [[ ! -d ~/tmp ]] ; then mkdir -v ~/tmp ; else echo -e "~/tmp \t\t\tOK" ; fi
-    if [[ ! -d ~/bin/src ]] ; then mkdir -vp ~/bin/src ; else echo -e "~/bin/src \t\tOK" ; fi
-    if [[ ! -d /mnt/tmp ]] ; then sudo mkdir -v /mnt/tmp ; else echo -e "/mnt/tmp \t\tOK" ; fi
+    if [[ ! -d ~/src ]] ; then mkdir -vp ~/src ; else echo -e "~/src \t\tOK" ; fi
     if [[ ! $SHELL == "/bin/zsh" ]] ; then echo "Setting SHELL to zsh" && chsh -s /bin/zsh ; else echo -e "zsh shell \t\tOK" ; fi
     sudo adduser $(whoami) audio
-    sudo cp $FANCY_ARGS ~/.kituu/bin/*.desktop /usr/share/applications/
+    sudo cp -v ${REPODIR}/scripts/*.desktop /usr/share/applications/
 fi
 
+read -e -p "#### Symlink Qtractor conf files? [Y/n] " YN
+
+if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
+    Qdir=~/.config/rncbc.org/
+    Qconf=${Qdir}/Qtractor.conf
+    if [[ ! -h ${Qconf} ]] ; then
+        rm -fv ${Qconf}
+        ln -sv ${REPODIR}/Template.qtt ${Qdir}
+        ln -sv ${REPODIR}/Qtractor.conf ${Qdir}
+    else
+        echo ${Qconf}" Already managed"
+    fi
+fi
 
 # Packages
-if $debian; then
-    echo -e $SEP"Binary package groups"
-    read -e -p "#### Install package groups? [Y/n] " YN
+echo -e $SEP"Binary package groups"
+read -e -p "#### Install package groups? [Y/n] " YN
 
-    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
+if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 	for group in "${!pack[@]}" ; do
 	    read -e -p "
 ## Install $group? (${pack[$group]})
 [Y/n] " YN
 	    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-		sudo apt install ${pack[$group]}
+		    sudo apt install ${pack[$group]}
 	    fi
 	done
-    fi
 fi
 
 
-[[ ! -d "$SCRIPTDIR" ]] && mkdir $FANCY_ARGS -p $SCRIPTDIR
+[[ ! -d "$SCRIPTDIR" ]] && mkdir -pv $SCRIPTDIR
 echo -e $SEP"Various repositories"
 read -e -p "#### Stuff? [Y/n] " YN
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
@@ -175,16 +185,17 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     done
 fi
 
-if (type -P firefox &>/dev/null); then
-    PAGE=~/tmp/kituu-addons.html
-    echo -e $SEP"Mozilla add-ons"
-    for ADDON in "${!MOZ[@]}" ; do
+PAGE=~/tmp/kituu-addons.html
+ADDONS=""
+ADDON_NAMES=""
+echo -e $SEP"Mozilla add-ons"
+for ADDON in "${!MOZ[@]}" ; do
 	ADDONS=$ADDONS"    <li><a href='"${MOZ[$ADDON]}"'>$ADDON</a></li>\n"
 	ADDON_NAMES=$ADDON", "$ADDON_NAMES
-    done
-    read -e -p "Install add-ons ($ADDON_NAMES)?
+done
+read -e -p "Install add-ons ($ADDON_NAMES)?
 [Y/n] " YN
-    if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
+if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 	echo -e "
 <html>
 <head>
@@ -201,14 +212,13 @@ if (type -P firefox &>/dev/null); then
 <img id='logo' src='http://people.mozilla.com/~faaborg/files/shiretoko/firefoxIcon/firefox-128-noshadow.png' /></a>
   <h1>Hi $(whoami), click to install extension</h1>
   <ul>" > $PAGE
-echo -e $ADDONS >> $PAGE
-echo -e "</ul>
+    echo -e $ADDONS >> $PAGE
+    echo -e "</ul>
   <hr />
   <div style='margin-left: auto;margin-right: auto;width:75%;text-align:center;'><a href='https://github.com/xaccrocheur/kituu'><img id='id' src='http://a0.twimg.com/profile_images/998643823/xix_normal.jpg' /></a>&nbsp;&nbsp;Don't forget that you're a genius, $(whoami) ;)</div>
 </body>
-</html>" >> $PAGE && firefox $PAGE &
+</html>" >> $PAGE && xdg-open $PAGE
 	# printf $ADDONS
-    fi
 fi
 
 if [ -e $SCRIPTDIR/build-emacs.sh ]; then

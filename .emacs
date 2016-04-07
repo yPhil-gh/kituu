@@ -17,46 +17,27 @@
 
 ;; Packages! ____________________________________________________________________
 
-(if (>= emacs-major-version 24)
-    (progn
-      (package-initialize)
-      (add-to-list 'package-archives
-                   '("melpa" . "http://melpa.milkbox.net/packages/") t)
-      (mapc
-       (lambda (package)
-         (unless (package-installed-p package)
-           (progn (message "installing %s" package)
-                  (package-refresh-contents)
-                  (package-install package))))
-       '(ttl-mode
-         less-css-mode
-         tabbar
-         org
-         auto-complete
-         undo-tree
-         magit
-         clojure-mode
-         markdown-mode
-         yasnippet
-         paredit
-         paredit-menu
-         php-mode
-         haml-mode
-         rainbow-mode))
-
-      (tabbar-mode t)
-      (message "##################### plop!")
-      ))
+(package-initialize)
+(add-to-list 'package-archives
+	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
 ;;(add-to-list 'package-archives
   ;;           '("marmalade" . "http://marmalade-repo.org/packages/"))
+
+(mapc
+ (lambda (package)
+   (unless (package-installed-p package)
+     (progn (message "installing %s" package)
+            (package-refresh-contents)
+            (package-install package))))
+ '(less-css-mode tabbar org auto-complete undo-tree clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode rainbow-mode))
 
 
 ;; LIBS! ______________________________________________________________________
 
 (eval-and-compile
   (require 'cl nil 'noerror)          ; Built-in : Common Lisp lib
-  (require 'edmacro nil 'noerror)     ; Built-in : Macro bits (Required by iswitchb)
+  ;; (require 'edmacro nil 'noerror)     ; Built-in : Macro bits (Required by iswitchb)
   (require 'package nil 'noerror)
   (require 'mail-bug nil 'noerror)
   (require 'pixilang-mode nil 'noerror)
@@ -65,16 +46,16 @@
   (require 'auto-complete nil 'noerror)
   )
 
-(require 'semantic/ia)
-(require 'semantic/bovine/gcc)
+;; (require 'semantic/ia)
+;; (require 'semantic/bovine/gcc)
 
-(semantic-mode 1)
+;; (semantic-mode 1)
 
-(defun my-semantic-hook ()
-  (imenu-add-to-menubar "TAGS"))
-(add-hook 'semantic-init-hooks 'my-semantic-hook)
+;; (defun my-semantic-hook ()
+;;   (imenu-add-to-menubar "TAGS"))
+;; (add-hook 'semantic-init-hooks 'my-semantic-hook)
 
-(global-ede-mode 1)                      ; Enable the Project management system
+;; (global-ede-mode 1)                      ; Enable the Project management system
 ;(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion
 ;(global-srecode-minor-mode 1)            ; Enable template insertion menu
 
@@ -90,11 +71,17 @@
 
 (zeroconf-init nil)                   ; NIL means "local"
 
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+(add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
+
 ;; JIRA! ______________________________________________________________________
 
 ;; (setq jiralib-url "http://jira.sbcmaroc.com:8080")
 
 ;; Vars!
+
+;; Keep unreadable files in recentf
+(setq recentf-keep '(file-remote-p file-readable-p))
 
 ; style I want to use in c++ mode
 (c-add-style "my-style"
@@ -116,23 +103,32 @@
 (setq-default tab-width 4)
 (setq indent-line-function 'insert-tab)
 
-(defvar iswitchb-mode-map)
-(defvar iswitchb-buffer-ignore)
-(defvar show-paren-delay)
-(defvar recentf-max-saved-items)
-(defvar recentf-max-menu-items)
-(defvar ispell-dictionary)
-(defvar desktop-path)
-(defvar desktop-dirname)
-(defvar desktop-base-file-name)
-(defvar display-time-string)
-(defvar ediff-window-setup-function)
-(defvar ediff-split-window-function)
-(defvar tabbar-buffer-groups-function)
-(defvar px-bkp-new-name)
+;; (defvar iswitchb-mode-map)
+;; (defvar iswitchb-buffer-ignore)
+;; (defvar show-paren-delay)
+;; (defvar recentf-max-saved-items)
+;; (defvar recentf-max-menu-items)
+;; (defvar ispell-dictionary)
+;; (defvar desktop-path)
+;; (defvar desktop-dirname)
+;; (defvar desktop-base-file-name)
+;; (defvar display-time-string)
+;; (defvar ediff-window-setup-function)
+;; (defvar ediff-split-window-function)
+;; (defvar tabbar-buffer-groups-function)
+;; (defvar px-bkp-new-name)
 
 ;; Funcs! _________________________________________________________________
 
+(defun px-shell-command (cmd)
+  "Invoke CMD in a `px-shell'"
+  (interactive "sShell command: ")
+      (progn
+        (split-window-sensibly (selected-window))
+        (other-window 1)
+        (shell (get-buffer-create "px-shell"))
+        (process-send-string (get-buffer-process "px-shell") (concat "reset\n" cmd "\nexit 0 &> /dev/null\n")))
+      (other-window 1))
 
 (defun test-rx-read-file (test-file test-reg)
   "Test rx form"
@@ -363,11 +359,7 @@ That means save it, check the hash of the previous commit, and replace it in the
   (progn
     (query-replace-regexp "" "fi")
     (query-replace-regexp "" "ff")
-    (query-replace-regexp "- " "")
-    ;; (query-replace-regexp " \\" "\"")
-    )
-  )
-
+    (query-replace-regexp "- " "")))
 
 (defun px-date ()
   "Insert date"
@@ -378,42 +370,6 @@ That means save it, check the hash of the previous commit, and replace it in the
   "Real, mozilla-like full screen."
   (interactive)
   (set-frame-parameter nil 'fullscreen (if (frame-parameter nil 'fullscreen) nil 'fullboth)))
-
-(defadvice bookmark-jump (after bookmark-jump activate)
-  "Bubble last bookmark to the top of the alist"
-  (progn
-    (let ((latest (bookmark-get-bookmark bookmark)))
-      (setq bookmark-alist (delq latest bookmark-alist))
-      (add-to-list 'bookmark-alist latest))
-    (recenter-top-bottom 15)))
-
-;; Apparently obsolete (and broken : Stays in help-mode)
-
-;; (defadvice view-echo-area-messages (after view-echo-area-messages-in-help-mode)
-;;   "Toggle `help-mode' to use the keys (mostly 'q' to quit)."
-;;   (help-mode))
-
-;; (ad-activate 'view-echo-area-messages)
-
-
-(defun px-bookmarks-toggle-last ()
-  "Jump to last bookmark"
-  (interactive)
-  (bookmark-jump (second bookmark-alist)))
-
-;; (defun px-push-mark-once-and-back ()
-;;   "Mark current point (`push-mark') and `set-mark-command' (C-u C-SPC) away."
-;;   (interactive)
-;;   (let ((current-prefix-arg '(4))) ; C-u
-;;     (if (not (eq last-command 'px-push-mark-once-and-back))
-;;         (progn
-;;           (push-mark)
-;;           (call-interactively 'set-mark-command))
-;;       (call-interactively 'set-mark-command)))
-;;   (recenter-top-bottom)
-;; )
-
-;; (global-set-key (kbd "<s-left>") 'px-push-mark-once-and-back)
 
 (defun px-match-paren (arg)
   "Go to the matching paren if on a paren; otherwise insert <key>."
@@ -586,8 +542,11 @@ Bound to S-SPC."
       (insert ";")
       (goto-char st))))
 
-
-;; (test string)
+(defun px-insert-jq ()
+  "Insert jquery object skel."
+  (interactive)
+  (insert "$(\"\")")
+  (left-char 2))
 
 (defun insert-pair-paren () (interactive) (px-insert-or-enclose-with-signs "(" ")"))
 (defun insert-pair-brace () (interactive) (px-insert-or-enclose-with-signs "{" "}")
@@ -670,15 +629,15 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 (setq tabbar-buffer-groups-function 'px-tabbar-buffer-groups)
 
-(defun iswitchb-local-keys ()
-  "easily switch buffers (F5 or C-x b)"
-  (mapc (lambda (K)
-          (let* ((key (car K)) (fun (cdr K)))
-            (define-key iswitchb-mode-map (edmacro-parse-keys key) fun)))
-        '(("<right>" . iswitchb-next-match)
-          ("<left>"  . iswitchb-prev-match)
-          ("<up>"    . ignore             )
-          ("<down>"  . ignore             ))))
+;; (defun iswitchb-local-keys ()
+;;   "easily switch buffers (F5 or C-x b)"
+;;   (mapc (lambda (K)
+;;           (let* ((key (car K)) (fun (cdr K)))
+;;             (define-key iswitchb-mode-map (edmacro-parse-keys key) fun)))
+;;         '(("<right>" . iswitchb-next-match)
+;;           ("<left>"  . iswitchb-prev-match)
+;;           ("<up>"    . ignore             )
+;;           ("<down>"  . ignore             ))))
 
 (defun px-laptop-mode ()
   "smaller default size"
@@ -692,43 +651,22 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; Sessions! ______________________________________________________________________
 
-(require 'desktop)
-
-;; Desktop
-(setq desktop-path '("~/.emacs.d/backup/"))
-(setq desktop-dirname "~/.emacs.d/backup/")
-(setq desktop-base-file-name "emacs-desktop")
-
-;; (the lock file is ~/.emacs.d/backup/.emacs.desktop.lock)
-(defun px-saved-session ()
-  (file-exists-p (concat desktop-dirname "/" desktop-base-file-name)))
+;; Automatically save and restore sessions
+(setq desktop-dirname             "~/.emacs.d/backup/"
+      desktop-base-file-name      "emacs.desktop"
+      desktop-base-lock-name      "lock"
+      desktop-path                (list desktop-dirname)
+      desktop-save                t
+      desktop-files-not-to-save   "^$" ;reload tramp paths
+      desktop-load-locked-desktop nil)
+(desktop-save-mode 0)
 
 (defun px-session-restore ()
-  "Restore a saved emacs session."
+  "Load the desktop and enable autosaving"
   (interactive)
-  (if (px-saved-session)
-      (progn
-        ;; (delete-file (concat desktop-dirname "/.emacs.desktop.lock"))
-        (desktop-read)
-        (recenter-top-bottom 15))
-    (message "No desktop (session) file found.")))
-
-(defun px-session-save ()
-  "Save an emacs session."
-  (interactive)
-  (if (px-saved-session)
-      (if (y-or-n-p "Save session? ")
-          (desktop-save-in-desktop-dir)
-        (message "Session not saved."))
-    (desktop-save-in-desktop-dir)))
-
-(defun px-session-save-named (px-session-named-name)
-  "Prompt the user for a session name."
-  (interactive "MSession name: ")
-  (message "So what do I do with this: %s ?" px-session-named-name)
-  (desktop-save (concat desktop-dirname "/" px-session-named-name
-                        ".session") t))
-
+  (let ((desktop-load-locked-desktop "ask"))
+    (desktop-read)
+    (desktop-save-mode 1)))
 
 ;; Modes! _____________________________________________________________________
 
@@ -756,8 +694,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 
 ;; Hooks! _____________________________________________________________________
-(add-hook 'java-mode-hook (lambda ()
-                                (setq c-basic-offset 4)))
 
 (defun my-find-file-check-make-large-file-read-only-hook ()
   "If a file is over a given size, make the buffer read only."
@@ -787,7 +723,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
           (lambda ()
             (setq indent-tabs-mode nil)
             (define-key haml-mode-map "\C-m" 'newline-and-indent)))
-(add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)
+;; (add-hook 'iswitchb-define-mode-map-hook 'iswitchb-local-keys)
 (add-hook 'find-file-hooks 'turn-on-font-lock)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
@@ -797,12 +733,12 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (setq paragraph-start "\\*\\|$"
       paragraph-separate "$")
 
-(mapcar (lambda (mode)
-	  (font-lock-add-keywords
-           mode
-           '(("\\<\\(FIXME\\):" 1 font-lock-warning-face prepend)
-             ("\\<\\(TODO\\|BUGGY\\):" 1 font-lock-warning-face prepend))))
-	'(text-mode latex-mode html-mode emacs-lisp-mode php-mode texinfo-mode js-mode))
+;; (mapcar (lambda (mode)
+;; 	  (font-lock-add-keywords
+;;            mode
+;;            '(("\\<\\(FIXME\\):" 1 font-lock-warning-face prepend)
+;;              ("\\<\\(TODO\\|BUGGY\\):" 1 font-lock-warning-face prepend))))
+;; 	'(text-mode latex-mode html-mode emacs-lisp-mode php-mode texinfo-mode js-mode))
 
 ;; Externals! _________________________________________________________________
 
@@ -822,7 +758,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  bookmark-default-file "~/.emacs.d/bookmarks" ;; keep my ~/ clean
  bookmark-save-flag 1
 
- iswitchb-buffer-ignore '("^ " "*.")
+ ;; iswitchb-buffer-ignore '("^ " "*.")
  ispell-dictionary "francais"
 
  ;; delete-by-moving-to-trash t
@@ -849,12 +785,15 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; Keys! ______________________________________________________________________
 
+(global-set-key (kbd "<f6>") 'px-shell-command) ; Keyboard macro! (open new line)
+
 (global-set-key (kbd "<C-return>") (kbd "C-e C-j")) ; Keyboard macro! (open new line)
-
 (global-set-key (kbd "C-c t") 'sgml-tag)
+(global-set-key (kbd "C-c r") 'rgrep)
+(global-set-key (kbd "C-c j") 'px-insert-jq)
 
-(define-key global-map [(super up)] '(lambda() (interactive) (scroll-other-window -1)))
-(define-key global-map [(super down)] '(lambda() (interactive) (scroll-other-window 1)))
+(define-key global-map [(meta up)] '(lambda() (interactive) (scroll-other-window -1)))
+(define-key global-map [(meta down)] '(lambda() (interactive) (scroll-other-window 1)))
 
 (global-set-key (kbd "C-c p") 'php-mode)
 
@@ -895,7 +834,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (define-key global-map [M-f2] 'swap-buffers-in-windows)
 (define-key global-map [f3] 'split-window-vertically)
 (define-key global-map [f4] 'split-window-horizontally)
-(define-key global-map [f5] 'iswitchb-buffer) ;new way
+(define-key global-map [f5] 'ido-switch-buffer) ;std way
 (define-key global-map [f7] 'flyspell-buffer)
 (define-key global-map [M-f7] 'flyspell-mode)
 (define-key global-map [M-f10] 'toggle-truncate-lines)
@@ -928,7 +867,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "<s-left>") 'px-pop-to-mark-command)
 (global-set-key (kbd "<s-right>") 'px-unpop-to-mark-command)
 
-(global-set-key (kbd "C-x g") 'magit-status)
+;; (global-set-key (kbd "C-x g") 'magit-status)
 
 
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
@@ -938,8 +877,10 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-z") 'undo-tree-undo)
 (global-set-key (kbd "C-S-z") 'undo-tree-redo)
 
-(define-key global-map [C-tab] 'tabbar-forward)
-(global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
+;; (define-key global-map [M-tab] 'tabbar-forward)
+;; (global-set-key (kbd "<C-S-iso-lefttab>") 'tabbar-backward)
+(global-set-key (kbd "<M-left>") 'tabbar-backward)
+(global-set-key (kbd "<M-right>") 'tabbar-forward)
 
 (global-set-key (kbd "C-=") 'insert-pair-brace)        ;{}
 (global-set-key (kbd "C-)") 'insert-pair-paren)        ;()
@@ -954,7 +895,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "M-o") 'recentf-open-files)
 (global-set-key (kbd "M-d") 'px-toggle-comments)
 
-;; Custom ! This comes first ______________________________________________________________________
+;; Custom ! ______________________________________________________________________
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -975,7 +916,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(completion-auto-help (quote lazy))
  '(cursor-in-non-selected-windows nil)
  '(custom-enabled-themes (quote (tango-dark)))
- '(custom-safe-themes (quote ("a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
  '(diary-file "~/Ubuntu One/org/agenda.org")
@@ -987,15 +927,16 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(fold-dwim-outline-style-default (quote nested))
  '(font-use-system-font t)
  '(global-auto-complete-mode t)
- '(global-auto-revert-mode nil)
  '(global-font-lock-mode t)
  '(global-linum-mode t)
  '(global-undo-tree-mode t)
+ '(grep-find-ignored-directories (quote ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "compiled" "libs/bootstrap")))
  '(haml-backspace-backdents-nesting nil)
  '(holiday-other-holidays (quote islamic-holidays))
+ '(ido-ignore-buffers (quote ("\\` " "*Messages*")))
+ '(ido-mode (quote both) nil (ido))
  '(inhibit-startup-echo-area-message (user-login-name))
  '(inhibit-startup-screen t)
- '(iswitchb-mode t)
  '(keyboard-coding-system (quote utf-8) nil nil "nil before, now utf-8.")
  '(mail-interactive t)
  '(mark-ring-max 8)
@@ -1013,34 +954,33 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(mm-enable-external (quote ask))
  '(mm-text-html-renderer (quote links))
  '(mumamo-margin-use (quote (left-margin 13)))
- '(org-agenda-files (quote ("~/Ubuntu One/org/agenda.org")))
+ '(org-agenda-files nil)
+ '(org-directory "~/Dropbox/txt")
  '(org-html-postamble t)
  '(org-html-validation-link "<a href=\"http://validator.w3.org/check?uri=referer\">Valid HTML</a>")
+ '(org-mobile-directory "~/Dropbox/txt")
+ '(org-mobile-inbox-for-pull "~/Dropbox/txt/mobile-org-pull-file.org")
  '(org-return-follows-link t)
  '(org-support-shift-select (quote always))
  '(org-use-sub-superscripts nil)
  '(read-file-name-completion-ignore-case t)
  '(recenter-positions (quote (middle top bottom)))
  '(recenter-redisplay nil)
- '(recentf-exclude (quote ("emacs.d")))
- '(recentf-max-menu-items 60)
- '(recentf-max-saved-items 120)
+ '(recentf-auto-cleanup (quote never))
  '(recentf-mode t)
- '(recentf-save-file "~/.emacs.d/backup/recentf")
  '(require-final-newline t)
  '(save-place t nil (saveplace))
  '(save-place-file "~/emacs.d/.places")
  '(savehist-mode t nil (savehist))
  '(scroll-conservatively 200)
  '(scroll-margin 3)
- '(semanticdb-project-roots (quote ("~/bin/src")))
  '(send-mail-function (quote smtpmail-send-it))
  '(server-mode t)
  '(show-paren-delay 0)
  '(show-paren-mode t)
  '(smtpmail-smtp-server "smtp.gmail.com")
  '(standard-indent 4)
- '(tabbar-mode nil nil (tabbar))
+ '(tabbar-mode t nil (tabbar))
  '(tags-add-tables t)
  '(text-mode-hook nil)
  '(tool-bar-mode nil)
@@ -1063,10 +1003,15 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "DejaVu Sans Mono" :background "gray20" :foreground "white" :height 105))))
+ '(default ((t (:background "gray20" :foreground "white"))))
  '(font-lock-comment-face ((t (:slant italic))))
  '(highlight ((t (:background "#ce5c00" :foreground "#2e3436"))))
- '(iswitchb-current-match ((t (:inherit which-func))))
+ '(ido-first-match ((t (:inherit which-func))))
+ '(markdown-header-face-2 ((t (:inherit markdown-header-face :foreground "deep sky blue"))))
+ '(markdown-header-face-3 ((t (:inherit markdown-header-face :foreground "coral"))))
+ '(markdown-header-face-4 ((t (:inherit markdown-header-face :foreground "navajo white"))))
+ '(markdown-header-face-5 ((t (:inherit markdown-header-face :foreground "yellow green"))))
+ '(markdown-header-face-6 ((t (:inherit markdown-header-face :foreground "magenta3"))))
  '(mode-line ((t (:background "gray10" :foreground "white" :box nil))))
  '(mode-line-buffer-id ((t (:weight bold :foreground "OrangeRed1"))))
  '(mode-line-inactive ((t (:inherit mode-line :background "gray33" :foreground "#eeeeec" :box nil :weight light))))
@@ -1081,6 +1026,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(tabbar-unselected ((t (:inherit tabbar-default :background "gray35"))))
  '(web-mode-html-tag-face ((t (:foreground "RosyBrown2"))) t)
  '(which-func ((t (:foreground "OrangeRed1"))) t))
+
 
 ;; ORG! ______________________________________________________________________
 

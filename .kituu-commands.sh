@@ -7,6 +7,7 @@ PATH=$PATH:~/scripts:~/bin
 # Vars
 PYTHONPATH=$PYTHONPATH:/usr/share/gst-python/0.10/examples/
 PATH=$PATH:~/scripts/beatnitpycker/:~/src/radium/bin/
+PATH=$PATH:/opt/nodejs/bin/
 
 # DSSI_PATH=/usr/lib/calf/
 export DSSI_PATH=/usr/lib/dssi/:/usr/lib/calf/:/usr/local/lib/calf/
@@ -18,7 +19,7 @@ alias rm="rm -i"
 alias cp="cp -i"
 
 if [[ ! $HOSTNAME == "RM696" ]] ; then
-    alias grep="grep -nIs --color --exclude-dir='.git'"
+    alias grep="grep -Is --color --exclude-dir='.git'"
     alias ls="ls --color --group-directories-first"
 fi
 
@@ -31,10 +32,9 @@ alias ll="ls -lha"
 alias la="ls -A"
 
 alias k="cd ~/.kituu/"
-alias m="cd /var/www/html/microlabel"
-alias a="cd /var/www/adamweb/git.adamweb"
+alias m="cd ~/Documents/manyrecords"
 alias t="cd ~/tmp"
-alias s="cd ~/bin/src"
+alias s="cd ~/src"
 
 alias pss='ps aux | grep $(echo $1 | sed "s/^\(.\)/[\1]/g")'
 alias mss="sudo cat /var/log/syslog | grep $1"
@@ -47,8 +47,18 @@ alias U="urpmi"
 alias Commit="git commit -am"
 alias Push="git push origin"
 alias Syncmail="offlineimap.py -o -u blinkenlights; reset"
-alias I="sudo apt-get install"
-alias S="sudo apt-cache search"
+alias a="sudo apt install"
+alias aa="apt-cache search"
+alias aaa="apt-file search"
+alias ar="sudo apt remove --purge"
+
+alias b="bundle"
+alias bi="b install --path vendor"
+alias bil="bi --local"
+alias bu="b update"
+alias be="b exec"
+alias binit="bi && b package && echo 'vendor/ruby' >> .gitignore"
+
 
 alias orgsync="cd ~/.org && git-sync.sh "
 
@@ -56,7 +66,25 @@ alias gitlog="git log --pretty=format:'%Cred%h%Creset | %C(yellow)%ad%Creset | %
 
 alias px-shell="gnome-terminal --command byobu --maximize --hide-menubar"
 
+alias duf='du -sk * | sort -n | perl -ne '\''($s,$f)=split(m{\t});for (qw(K M G)) {if($s<1024) {printf("%.1f",$s);print "$_\t$f"; last};$s=$s/1024}'\'
+
 # Commands
+
+function px-qtractor-takes-cleanup () {
+
+[[ "${2:-}" == "--delete" ]] && COMMAND="rm -fv" || COMMAND="ls"
+
+    echo "Usage: $0 qtr_session_file [--delete)]"
+    for file in *.wav* *.mid* ; do
+        grep -q -F "$file" $1 || eval $COMMAND " $file"
+    done
+}
+
+
+px-bell () {
+    paplay /usr/share/sounds/freedesktop/stereo/bell.oga
+    notify-send "Heads Up!"
+}
 
 function px-search-and-replace () {
     find ./ -type f -exec sed -i -e "s/$1/$2/g" {} \;
@@ -64,6 +92,10 @@ function px-search-and-replace () {
 
 function px-install-ketacho-games () {
     sudo apt install A7Xpg Noiz2sa parsec47 tumiki-fighters rrootage
+}
+
+function px-install-audio-plugins () {
+    sudo apt install samplv1-lv2 qmidiarp synthv1-lv2 artyfx swh-lv2 mda-lv2 rkrlv2 carla-lv2 cmt fluid-soundfont-gm dpf-plugins fomp xsynth-dssi distrho-plugin-ports-lv2 tal-plugins calf-plugins
 }
 
 function px-cleanup-filenames () {
@@ -240,8 +272,11 @@ px-notes () {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
+<<<<<<< HEAD
 nabil.zakhbat@gmail.com
 unison -fat -fastcheck true -batch ~/tmp/.pr0n /media/px/Nokia N9/tmp/.pr0n/
+=======
+>>>>>>> 4fb34eb0a527a22ea9417c56514b6e1c696e30ff
 /ssh:user@machine:
 MAC Address: 48:A2:2D:E1:79:74 (Shenzhen Huaxuchang Telecom Technology Co.)
 MAC Address: 48:A2:2D:E1:79:74 (Shenzhen Huaxuchang Telecom Technology Co.)

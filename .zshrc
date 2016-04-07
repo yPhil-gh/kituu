@@ -8,6 +8,7 @@ export LESS_TERMCAP_se=$'\E[0m'           # end standout-mode
 export LESS_TERMCAP_so=$'\E[38;5;246m'    # begin standout-mode - info box
 export LESS_TERMCAP_ue=$'\E[0m'           # end underline
 export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
 [ -n "$TMUX" ] && export TERM=screen-256color
 
@@ -65,34 +66,36 @@ function preexec() {
 
 # See EOF for notes
 # Enable compsys completion.
-autoload -U compinit
-autoload -U complist
-autoload -U colors
+autoload -U compinit && compinit
 
 # Commodities
-setopt AUTO_CD
-setopt COMPLETE_IN_WORD
+setopt auto_cd
+setopt complete_in_word
 setopt emacs
-setopt AUTO_LIST
-# Implied by MENU_COMPLETE
-# setopt AUTO_MENU
-setopt MENU_COMPLETE
-setopt EXTENDED_GLOB
-setopt NO_BARE_GLOB_QUAL
-# HISTORY
+# setopt auto_list
+# implied by menu_complete
+# setopt auto_menu
+setopt menu_complete
+setopt extended_glob
+setopt no_bare_glob_qual
 
+# HISTORY
 # Implied by SHARE_HISTORY
 # setopt INC_APPEND_HISTORY
-setopt SHARE_HISTORY
+setopt share_history
 # timestamp
-setopt EXTENDED_HISTORY
-# This is default but hey
-setopt HIST_SAVE_BY_COPY
-setopt HIST_IGNORE_DUPS
-setopt HIST_SAVE_NO_DUPS
-setopt HIST_EXPIRE_DUPS_FIRST
-setopt HIST_IGNORE_SPACE
-setopt BANG_HIST
+setopt extended_history
+# this is default but hey
+setopt hist_save_by_copy
+setopt hist_ignore_dups # Do not write events to history that are duplicates of previous events
+setopt hist_save_no_dups
+setopt hist_find_no_dups # When searching history don't display results already cycled through twice
+setopt hist_expire_dups_first
+setopt hist_ignore_space # remove command line from history list when first character on the line is a space
+setopt bang_hist
+setopt append_history # Allow multiple terminal sessions to all append to one zsh command history
+setopt inc_append_history # Add comamnds as they are typed, don't wait until shell exit
+setopt hist_expire_dups_first # when trimming history, lose oldest duplicates first
 
 # larger than SAVEHIST to accomodate dups
 export HISTSIZE=10500
@@ -127,11 +130,12 @@ zstyle ':completion:*:*:kill:*:processes' list-colors "=(#b) #([0-9]#)*=36=31"
 # zstyle -e ':completion::*:hosts' hosts 'reply=($(sed -e "/^#/d" -e "s/ .*\$//" -e "s/,/ /g" /etc/ssh_known_hosts(N) ~/.ssh/known_hosts(N) 2>/dev/null | xargs) $(grep \^Host ~/.ssh/config(N) | cut -f2 -d\  2>/dev/null | xargs))'
 
 # zstyle
-zstyle ':completion:*' completer _expand _complete _ignored _approximate
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' menu select=2
-zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
-zstyle ':completion:*:descriptions' format '%U%F{yellow}%d%f%u'
+zstyle ':completion:*' completer _expand _complete _ignored _approximate
+# zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+# zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
+# zstyle ':completion:*:descriptions' format '%U%F{yellow}%d%f%u'
+# ===== Completion
 
 # compdef pkill=kill
 # compdef pkill=killall
@@ -186,7 +190,7 @@ if (type "cowsay" > /dev/null && type "fortune" > /dev/null ); then
 else
     if [[ -x "$HOME/scripts/cowsay.pl" ]]
     then
-        $HOME/scripts/cowsay.pl
+        perl $HOME/scripts/cowsay.pl dlfp
     fi
 fi
 
@@ -210,18 +214,6 @@ function precmd {
 	PR_FILLBAR="\${(l.(($TERMWIDTH - ($promptsize + $pwdsize)))..${PR_HBAR}.)}"
     fi
 }
-
-# setopt extended_glob
-# preexec () {
-#     if [[ "$TERM" == "screen" ]]; then
-# 	local CMD=${1[(wr)^(*=*|sudo|-*)]}
-# 	echo -n "\ek$CMD\e\\"
-#     fi
-# }
-
-# # Activations
-# compinit
-# colors
 
 setprompt () {
     ###
@@ -259,6 +251,12 @@ setprompt () {
         (( count = $count + 1 ))
     done
     PR_NO_COLOUR="%{$terminfo[sgr0]%}"
+
+    if [[ "$HOST" = "mail2" ]]; then
+        HOSTCOLOR=${PR_RED}
+    else
+        HOSTCOLOR=${PR_BLUE}
+    fi
 
     ###
     # See if we can use extended characters to look nicer.
@@ -315,7 +313,7 @@ setprompt () {
 
 	PROMPT='$PR_SET_CHARSET$PR_STITLE${(e)PR_TITLEBAR}\
 $PR_SHIFT_IN$PR_ULCORNER$PR_HBAR$PR_SHIFT_OUT(\
-$PR_GREEN%(!.%SROOT%s.%n)$PR_NO_COLOUR@$PR_RED%m$PR_NO_COLOUR:$PR_GREEN%l\
+$PR_GREEN%(!.%SROOT%s.%n)$PR_NO_COLOUR@$HOSTCOLOR%m$PR_NO_COLOUR:$PR_GREEN%l\
 $PR_NO_COLOUR)$PR_SHIFT_IN$PR_HBAR$PR_HBAR${(e)PR_FILLBAR}$PR_HBAR$PR_SHIFT_OUT(\
 $PR_GREEN%$PR_PWDLEN<...<%~%<<\
 $PR_NO_COLOUR)$PR_SHIFT_IN$PR_HBAR$PR_URCORNER$PR_SHIFT_OUT\
