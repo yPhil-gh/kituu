@@ -1,5 +1,5 @@
 <!DOCTYPE qtractorSession>
-<session version="Qtractor 0.7.5">
+<session version="Qtractor 0.7.6">
  <properties>
   <directory>/home/px/Dropbox/STUDIO/Qtractor/Grenouilles</directory>
   <description>Grenouilles</description>
@@ -127,7 +127,16 @@
     <input-panning>0</input-panning>
     <input-controllers/>
     <input-plugins/>
-    <input-connects/>
+    <input-connects>
+     <connect index="0">
+      <client>system</client>
+      <port>capture_1</port>
+     </connect>
+     <connect index="1">
+      <client>system</client>
+      <port>capture_2</port>
+     </connect>
+    </input-connects>
     <output-gain>1</output-gain>
     <output-panning>0</output-panning>
     <output-controllers/>
@@ -220,8 +229,8 @@
    <horizontal-zoom>50</horizontal-zoom>
    <vertical-zoom>100</vertical-zoom>
    <snap-per-beat>1</snap-per-beat>
-   <edit-head>352800</edit-head>
-   <edit-tail>617400</edit-tail>
+   <edit-head>0</edit-head>
+   <edit-tail>88200</edit-tail>
   </view>
   <track type="midi" name="Cymbals">
    <properties>
