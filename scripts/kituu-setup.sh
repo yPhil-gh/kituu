@@ -96,13 +96,6 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     done
 fi
 
-echo -e $SEP"Basic binary packages"
-read -e -p "#### Install basic packages ($BASICS) ? [Y/n] " YN
-
-if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-    sudo apt install $BASICS
-fi
-
 echo -e $SEP"Various menial janitor tasks"
 read -e -p "#### Create base dirs, set shell & .desktop files, add user to audio? [Y/n] " YN
 
@@ -129,7 +122,14 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 fi
 
 # Packages
+
 echo -e $SEP"Binary package groups"
+read -e -p "#### Install basic packages ($BASICS) ? [Y/n] " YN
+
+if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
+    sudo apt install $BASICS
+fi
+
 read -e -p "#### Install package groups? [Y/n] " YN
 
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
