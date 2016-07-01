@@ -37,7 +37,6 @@ alias t="cd ~/tmp"
 alias s="cd ~/src"
 alias S="cd ~/Dropbox/STUDIO/Qtractor/"
 
-
 alias pss='ps aux | grep $(echo $1 | sed "s/^\(.\)/[\1]/g")'
 alias mss="sudo cat /var/log/syslog | grep $1"
 alias uss="urpmq -Y --summary"
@@ -54,14 +53,14 @@ alias aa="apt-cache search"
 alias aA="dpkg -L"
 alias aaa="apt-file search"
 alias ar="sudo apt remove --purge"
-
+alias v="gpicview"
 alias b="bundle"
 alias bi="b install --path vendor"
 alias bil="bi --local"
 alias bu="b update"
 alias be="b exec"
 alias binit="bi && b package && echo 'vendor/ruby' >> .gitignore"
-
+alias ffox="~/Downloads/firefox/firefox&"
 
 alias orgsync="cd ~/.org && git-sync.sh "
 
@@ -83,6 +82,35 @@ function px-qtractor-takes-cleanup () {
     done
 }
 
+px-lastarg () {
+    $1 $(history -1 | awk '{ print $3 }')
+}
+
+px-30fps () {
+    ffmpeg -i $1 -r 30 $1-30fps.mkv
+}
+
+px-trimvideo () {
+    # [[ $# -ne 3 ]] && echo "Usage: $0 file start end" ||
+    ffmpeg -i $1 -ss $2 -c copy -to $3 $1-trimmed.mp4
+    # ffmpeg -i $1 -ss 00:00:00 -c copy -t $3 $1-trimmed.mp4
+}
+
+px-30fps-no_sound () {
+    ffmpeg -i $1 -r 30 -an $1.mkv
+}
+
+px-scast () {
+    ffmpeg -f alsa -ac 2 -i pulse -f x11grab -r 30 -s 1882x1200 -i :0.0+38,0 -acodec pcm_s16le -vcodec libx264 -preset ultrafast -threads 0 $1.mkv
+}
+
+px-resize () {
+ffmpeg \
+    -i "$1" \
+    -map 0 \
+    -vf "scale=iw*sar*min($MAX_WIDTH/(iw*sar)\,$MAX_HEIGHT/ih):ih*min($MAX_WIDTH/(iw*sar)\,$MAX_HEIGHT/ih),pad=$MAX_WIDTH:$MAX_HEIGHT:(ow-iw)/2:(oh-ih)/2" \
+    $1.mkv
+}
 
 px-bell () {
     paplay /usr/share/sounds/freedesktop/stereo/bell.oga

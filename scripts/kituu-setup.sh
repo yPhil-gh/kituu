@@ -29,16 +29,15 @@ if ($RW); then vc_prefix="git@github.com:" && message="RW mode ON" && git config
 
 # Packages
 declare -A pack
-BASICS="dos2unix python zsh vim byobu apt-file curl wget htop bc locate sshfs git cowsay fortune fortunes-off zenity vinagre x11vnc nmap sox p7zip-full links unison baobab gparted xclip smplayer"
+BASICS="dos2unix python zsh vim byobu apt-file curl wget htop bc locate sshfs git cowsay fortune fortunes-off zenity sox p7zip-full links unison baobab gparted xclip smplayer gpicview"
 
 pack[dev_tools]="build-essential autoconf"
 pack[beatnitpicker]="python-gst0.10 python-scipy python-matplotlib"
 pack[optional]="nautilus-dropbox"
 pack[image_tools]="gimp inkscape blender"
-pack[music_prod]="qtractor ardour4 qjackctl kxstudio-meta-audio-plugins-lv2 qmidinet calf-plugins hexter zam-plugins drumkv1-lv2 synthv1-lv2 samplv1-lv2 jalv lilv-utils guitarix artyfx swh-plugins fluid-soundfont-gm fluid-soundfont-gs zynaddsubfx helm audacious audacity vmpk cadence lv2-dev radium-compressor pizmidi-plugins oxefmsynth azr3-jack argotlunar yoshimi dpf-plugins qmidiarp"
-pack[games]="extremetuxracer supertuxkart"
+pack[music_prod]="qtractor ardour4 qjackctl kxstudio-meta-audio-plugins-lv2 qmidinet calf-plugins hexter zam-plugins drumkv1-lv2 synthv1-lv2 samplv1-lv2 jalv lilv-utils guitarix artyfx swh-plugins fluid-soundfont-gm fluid-soundfont-gs zynaddsubfx helm audacious audacity vmpk cadence lv2-dev radium-compressor pizmidi-plugins oxefmsynth argotlunar yoshimi dpf-plugins qmidiarp"
+pack[games]="extremetuxracer supertuxkart chromium-bsu"
 pack[emacs]="emacs aspell-fr"
-pack[yoshimi_lv2]="libfftw3-dev libmxml-dev libalsa-ocaml-dev libjack-jackd2-dev libboost-all-dev libfltk1.3-dev libreadline-dev"
 
 # MOZilla addons
 MOZURL="https://addons.mozilla.org/firefox/downloads/latest"

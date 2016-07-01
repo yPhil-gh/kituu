@@ -74,6 +74,12 @@
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 (add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
 
+(add-hook 'python-mode-hook
+	  (lambda ()
+	    (setq tab-width 4)
+	    (setq python-indent 4)))
+
+
 ;; JIRA! ______________________________________________________________________
 
 ;; (setq jiralib-url "http://jira.sbcmaroc.com:8080")
@@ -647,7 +653,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (defun px-desktop-mode ()
   "default font size"
   (interactive)
-  (set-face-attribute 'default nil :height 105))
+  (set-face-attribute 'default nil :height 135))
 
 ;; Sessions! ______________________________________________________________________
 
@@ -694,6 +700,10 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 
 ;; Hooks! _____________________________________________________________________
+
+;; (add-hook 'python-mode-hook 'guess-style-guess-tabs-mode)
+;; (add-hook 'python-mode-hook (lambda ()
+;;                               (guess-style-guess-tab-width)))
 
 (defun my-find-file-check-make-large-file-read-only-hook ()
   "If a file is over a given size, make the buffer read only."
@@ -811,7 +821,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
                   (interactive)
                   (join-line -1)))
 
-(setq-default indent-tabs-mode nil)
+;; (setq-default indent-tabs-mode nil)
 
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
@@ -996,6 +1006,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(user-full-name "Philippe Coatmeur")
  '(user-mail-address "philcm@gnu.org")
  '(vc-make-backup-files nil)
+ '(tab-stop-list (quote (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120)))
  '(web-vcs-default-download-directory (quote site-lisp-dir)))
 
 (custom-set-faces
