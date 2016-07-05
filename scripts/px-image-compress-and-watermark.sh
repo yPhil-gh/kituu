@@ -48,12 +48,11 @@ if [[ $jpg != 0  ]] ; then
         Model=$s
         Camera=$o" "$s
 
-        echo -e "'${img%.*}.jpg!$DateTimeOriginal | Exposure / Aperture: $ExposureTime | $MaxApertureValue | Flash GN: $Flash | FocalLength: $FocalLength mm (135 eqv: $FocalLengthIn35mmFilm mm) | $ISOSpeedRatings ISO | $Camera'" >> $jsfile
+        echo -e "'${img%.*}.jpg!$Time | Exposure - Aperture: $ExposureTime - $MaxApertureValue | Flash GN: $Flash | FocalLength: $FocalLength mm (135 eqv: $FocalLengthIn35mmFilm mm) | $ISOSpeedRatings ISO | $Camera'" >> $jsfile
 
         [[ ! "$iter" -eq "$number_of_files" ]] && echo -e "," >> $jsfile
 
 
-        convert -interlace Plane -gaussian-blur 0.05 -quality 25% "${img}" "${img%.*}.jpg"
         # convert -font helvetica -fill blue -pointsize 158 -draw "text 20,60 'plop!'" "${i}" "${i%.*}.jpg"
         # convert -font helvetica -fill red -pointsize 48 -draw "text 15,50 'plop!'" -interlace Plane -gaussian-blur 0.05 -quality 25% "${i}" "${i%.*}.jpg"
     done

@@ -914,6 +914,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  ;; If there is more than one, they won't work right.
  '(ac-auto-show-menu t)
  '(ac-auto-start t)
+ '(add-log-mailing-address "phil@manyrecords.com")
  '(auto-save-file-name-transforms (quote ((".*" "~/.emacs.d/backup/\\1" t))))
  '(backup-directory-alist (quote ((".*" . "~/.emacs.d/backup/"))))
  '(bbdb-use-pop-up nil)
@@ -922,6 +923,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(c-basic-offset (quote set-from-style))
  '(c-default-style (quote ((c++-mode . ""))))
  '(canlock-password "ebef4a12d0fad1c648b4b829291adb16cdefb9da")
+ '(change-log-default-name "changelog")
  '(comment-style (quote extra-line))
  '(completion-auto-help (quote lazy))
  '(cursor-in-non-selected-windows nil)
@@ -930,7 +932,19 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(delete-selection-mode t)
  '(diary-file "~/Ubuntu One/org/agenda.org")
  '(ecb-layout-name "left1")
- '(ecb-layout-window-sizes (quote (("Cdev-def" (ecb-directories-buffer-name 0.15418502202643172 . 0.23880597014925373) (ecb-sources-buffer-name 0.1762114537444934 . 0.23880597014925373) (ecb-methods-buffer-name 0.3303964757709251 . 0.19402985074626866) (ecb-analyse-buffer-name 0.3303964757709251 . 0.22388059701492538) (ecb-symboldef-buffer-name 0.3303964757709251 . 0.3283582089552239)) ("left1" (ecb-directories-buffer-name 0.27312775330396477 . 0.2835820895522388) (ecb-sources-buffer-name 0.14977973568281938 . 0.34328358208955223) (ecb-history-buffer-name 0.12334801762114538 . 0.34328358208955223) (ecb-methods-buffer-name 0.27312775330396477 . 0.3582089552238806)))))
+ '(ecb-layout-window-sizes
+   (quote
+    (("Cdev-def"
+      (ecb-directories-buffer-name 0.15418502202643172 . 0.23880597014925373)
+      (ecb-sources-buffer-name 0.1762114537444934 . 0.23880597014925373)
+      (ecb-methods-buffer-name 0.3303964757709251 . 0.19402985074626866)
+      (ecb-analyse-buffer-name 0.3303964757709251 . 0.22388059701492538)
+      (ecb-symboldef-buffer-name 0.3303964757709251 . 0.3283582089552239))
+     ("left1"
+      (ecb-directories-buffer-name 0.27312775330396477 . 0.2835820895522388)
+      (ecb-sources-buffer-name 0.14977973568281938 . 0.34328358208955223)
+      (ecb-history-buffer-name 0.12334801762114538 . 0.34328358208955223)
+      (ecb-methods-buffer-name 0.27312775330396477 . 0.3582089552238806)))))
  '(ecb-options-version "2.40")
  '(ecb-primary-secondary-mouse-buttons (quote mouse-1--mouse-2))
  '(epa-popup-info-window nil)
@@ -940,7 +954,9 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(global-font-lock-mode t)
  '(global-linum-mode t)
  '(global-undo-tree-mode t)
- '(grep-find-ignored-directories (quote ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "compiled" "libs/bootstrap")))
+ '(grep-find-ignored-directories
+   (quote
+    ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "compiled" "libs/bootstrap")))
  '(haml-backspace-backdents-nesting nil)
  '(holiday-other-holidays (quote islamic-holidays))
  '(ido-ignore-buffers (quote ("\\` " "*Messages*")))
@@ -967,7 +983,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(org-agenda-files nil)
  '(org-directory "~/Dropbox/txt")
  '(org-html-postamble t)
- '(org-html-validation-link "<a href=\"http://validator.w3.org/check?uri=referer\">Valid HTML</a>")
+ '(org-html-validation-link
+   "<a href=\"http://validator.w3.org/check?uri=referer\">Valid HTML</a>")
  '(org-mobile-directory "~/Dropbox/txt")
  '(org-mobile-inbox-for-pull "~/Dropbox/txt/mobile-org-pull-file.org")
  '(org-return-follows-link t)
@@ -990,6 +1007,9 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(show-paren-mode t)
  '(smtpmail-smtp-server "smtp.gmail.com")
  '(standard-indent 4)
+ '(tab-stop-list
+   (quote
+    (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120)))
  '(tabbar-mode t nil (tabbar))
  '(tags-add-tables t)
  '(text-mode-hook nil)
@@ -1006,7 +1026,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(user-full-name "Philippe Coatmeur")
  '(user-mail-address "philcm@gnu.org")
  '(vc-make-backup-files nil)
- '(tab-stop-list (quote (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120)))
  '(web-vcs-default-download-directory (quote site-lisp-dir)))
 
 (custom-set-faces
