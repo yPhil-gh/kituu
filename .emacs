@@ -46,29 +46,6 @@
   (require 'auto-complete nil 'noerror)
   )
 
-;; (require 'semantic/ia)
-;; (require 'semantic/bovine/gcc)
-
-;; (semantic-mode 1)
-
-;; (defun my-semantic-hook ()
-;;   (imenu-add-to-menubar "TAGS"))
-;; (add-hook 'semantic-init-hooks 'my-semantic-hook)
-
-;; (global-ede-mode 1)                      ; Enable the Project management system
-;(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion
-;(global-srecode-minor-mode 1)            ; Enable template insertion menu
-
-;; if you want to enable support for gnu global
-;(when (cedet-gnu-global-version-check t)
-; (semanticdb-enable-gnu-global-databases 'c-mode)
-; (semanticdb-enable-gnu-global-databases 'c++-mode)
-
-;; enable ctags for some languages:
- ;; Unix Shell, Perl, Pascal, Tcl, Fortran, Asm
-;(when (cedet-ectag-version-check t)
-; (semantic-load-enable-primary-exuberent-ctags-support))
-
 (zeroconf-init nil)                   ; NIL means "local"
 
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
@@ -78,16 +55,6 @@
 	  (lambda ()
 	    (setq tab-width 4)
 	    (setq python-indent 4)))
-
-
-;; JIRA! ______________________________________________________________________
-
-;; (setq jiralib-url "http://jira.sbcmaroc.com:8080")
-
-;; Vars!
-
-;; Keep unreadable files in recentf
-(setq recentf-keep '(file-remote-p file-readable-p))
 
 ; style I want to use in c++ mode
 (c-add-style "my-style"
@@ -619,21 +586,40 @@ Again, here by pure nostalgia."
     (comment-dwim nil))
   (deactivate-mark))
 
-(defun px-tabbar-buffer-groups ()
-  "Return the list of group names the current buffer belongs to.
-This function is a custom function for tabbar-mode's tabbar-buffer-groups."
-  (list
-   (cond
-    ((string-equal "*" (substring (buffer-name) 0 1))
-     "Emacs Buffer"
-     )
-    ((eq major-mode 'dired-mode)
-     "Dired"
-     )
-    (t
-     "User Buffer"))))
+;; (defun px-tabbar-buffer-groups ()
+;;   "Return the list of group names the current buffer belongs to.
+;; This function is a custom function for tabbar-mode's tabbar-buffer-groups."
+;;   (list
+;;    (cond
+;;     ((string-equal "*" (substring (buffer-name) 0 1))
+;;      "Emacs Buffer"
+;;      )
+;;     ((eq major-mode 'dired-mode)
+;;      "Dired"
+;;      )
+;;     (t
+;;      "User Buffer"))))
 
-(setq tabbar-buffer-groups-function 'px-tabbar-buffer-groups)
+;; (setq tabbar-buffer-groups-function 'px-tabbar-buffer-groups)
+(setq tabbar-buffer-groups-function
+      (lambda ()
+        (list
+         (cond
+          ((string-equal "*" (substring (buffer-name) 0 1))
+           "Emacs Buffer"
+           )
+          ((eq major-mode 'dired-mode)
+           "Dired"
+           )
+          (t
+           "User Buffer")))))
+
+;; (setq tabbar-buffer-list-function
+;;       (lambda ()
+;;         (remove-if
+;;          (lambda(buffer)
+;;            (find (aref (buffer-name buffer) 0) " *"))
+;;          (buffer-list))))
 
 ;; (defun iswitchb-local-keys ()
 ;;   "easily switch buffers (F5 or C-x b)"
@@ -743,12 +729,12 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (setq paragraph-start "\\*\\|$"
       paragraph-separate "$")
 
-;; (mapcar (lambda (mode)
-;; 	  (font-lock-add-keywords
-;;            mode
-;;            '(("\\<\\(FIXME\\):" 1 font-lock-warning-face prepend)
-;;              ("\\<\\(TODO\\|BUGGY\\):" 1 font-lock-warning-face prepend))))
-;; 	'(text-mode latex-mode html-mode emacs-lisp-mode php-mode texinfo-mode js-mode))
+(mapcar (lambda (mode)
+	  (font-lock-add-keywords
+           mode
+           '(("\\<\\(FIXME\\):" 1 font-lock-warning-face prepend)
+             ("\\<\\(TODO\\|BUGGY\\):" 1 font-lock-warning-face prepend))))
+	'(text-mode latex-mode html-mode emacs-lisp-mode php-mode texinfo-mode js-mode))
 
 ;; Externals! _________________________________________________________________
 
@@ -770,8 +756,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
  ;; iswitchb-buffer-ignore '("^ " "*.")
  ispell-dictionary "francais"
-
- ;; delete-by-moving-to-trash t
 
  text-mode-hook 'turn-on-auto-fill
  fill-column 75
@@ -821,8 +805,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
                   (interactive)
                   (join-line -1)))
 
-;; (setq-default indent-tabs-mode nil)
-
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cc" 'org-capture)
@@ -834,9 +816,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-h *") 'px-scratch)
 
 (global-set-key (kbd "²") 'hippie-expand)
-
-;; (define-key global-map [(meta up)] '(lambda() (interactive) (scroll-other-window -1)))
-;; (define-key global-map [(meta down)] '(lambda() (interactive) (scroll-other-window 1)))
 
 (define-key global-map [f1] 'delete-other-windows)
 (define-key global-map [S-f1] 'px-help-emacs)
@@ -877,9 +856,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "<s-left>") 'px-pop-to-mark-command)
 (global-set-key (kbd "<s-right>") 'px-unpop-to-mark-command)
 
-;; (global-set-key (kbd "C-x g") 'magit-status)
-
-
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
 (global-set-key (kbd "C-o") 'find-file)
 (global-set-key (kbd "C-S-o") 'my-desktop-read)
@@ -901,7 +877,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; (global-set-key (kbd "M-DEL") 'kill-word)
 
-(global-set-key (kbd "M-s") 'save-buffer) ; Meta+s saves !!  (and Jesus too BTW) (see C-h b for all bindings, and C-h k + keystroke(s) for help)
+(global-set-key (kbd "M-s") 'save-buffer) ; Meta+s saves !!  (like Jesus) (see C-h b for all bindings, and C-h k + keystroke(s) for help)
 (global-set-key (kbd "M-o") 'recentf-open-files)
 (global-set-key (kbd "M-d") 'px-toggle-comments)
 
@@ -928,6 +904,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(completion-auto-help (quote lazy))
  '(cursor-in-non-selected-windows nil)
  '(custom-enabled-themes (quote (tango-dark)))
+ '(debian-changelog-full-name "Philip Yassin")
+ '(debian-changelog-mailing-address "phil@manyrecords.com")
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
  '(diary-file "~/Ubuntu One/org/agenda.org")
@@ -959,7 +937,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
     ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "compiled" "libs/bootstrap")))
  '(haml-backspace-backdents-nesting nil)
  '(holiday-other-holidays (quote islamic-holidays))
- '(ido-ignore-buffers (quote ("\\` " "*Messages*")))
+ '(ido-ignore-buffers (quote ("\\` " "*Messages*" "*scratch*")))
  '(ido-mode (quote both) nil (ido))
  '(inhibit-startup-echo-area-message (user-login-name))
  '(inhibit-startup-screen t)
@@ -994,6 +972,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(recenter-positions (quote (middle top bottom)))
  '(recenter-redisplay nil)
  '(recentf-auto-cleanup (quote never))
+ '(recentf-max-menu-items 64)
+ '(recentf-max-saved-items 32)
  '(recentf-mode t)
  '(require-final-newline t)
  '(save-place t nil (saveplace))
