@@ -9,7 +9,6 @@ if [[ $JPG != 0  ]] ; then
     for IMG in *.JPG ; do
         convert -interlace Plane -gaussian-blur 0.05 -quality 25% "${IMG}" "${IMG%.*}.jpg"
         echo "Converting ${IMG} to ${IMG%.*}.jpg"
-        git add -v "${IMG%.*}.jpg"
         rm -fv "${IMG}"
     done
     echo "############### CONVERT DONE"
@@ -22,18 +21,19 @@ if [[ $jpg != 0  ]] ; then
 
     jsfile='images.js'
     iter=0
-    number_of_files=$(ls *.jpg | wc -l)
+    number_of_files=$(ls ./*.jpg | wc -l)
 
     echo "############### ADD"
 
     echo -e "var data = Array(" > $jsfile
 
     for img in *.jpg ; do
-        id=$(identify -verbose $img | grep -E 'exif:ExposureTime|exif:\FocalLength\b|exif:FocalLengthIn35mmFilm|exif:MaxApertureValue|exif:\Flash\b|exif:ISOSpeedRatings|exif:\Make\b|exif:Model|exif:DateTimeOriginal' | sed "s/exif:/ /g")
+        id=$(identify -verbose "$img" | grep -E 'exif:ExposureTime|exif:\FocalLength\b|exif:FocalLengthIn35mmFilm|exif:MaxApertureValue|exif:\Flash\b|exif:ISOSpeedRatings|exif:\Make\b|exif:Model|exif:DateTimeOriginal' | sed "s/exif:/ /g")
 
 
         let "iter++"
         echo "Including file $iter (${img%.*}.jpg) in $jsfile"
+        git add -v "${img%.*}.jpg"
 
         read a b c d e f g h i j k l m n o p q r s t <<< ${id}
         DateTimeOriginal=$b" @ "$c

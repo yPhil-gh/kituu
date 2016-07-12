@@ -175,10 +175,6 @@ insert_ip () { zle end-of-line; zle -U " 192.168." }
 zle -N insert-ip insert_ip
 bindkey "^[i" insert-ip
 
-insert_local () { zle end-of-line; zle -U ".local" }
-zle -N insert-local insert_local
-bindkey "^[l" insert-local
-
 # Generic funcs
 . ~/.kituu-commands.sh
 
