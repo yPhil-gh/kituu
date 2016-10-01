@@ -35,7 +35,7 @@ pack[dev_tools]="build-essential autoconf devscripts dpkg-dev-el"
 pack[beatnitpicker]="python-gst0.10 python-scipy python-matplotlib"
 pack[optional]="nautilus-dropbox"
 pack[image_tools]="gimp inkscape blender"
-pack[music_prod]="qtractor ardour4 qjackctl kxstudio-meta-audio-plugins-lv2 qmidinet calf-plugins hexter zam-plugins drumkv1-lv2 synthv1-lv2 samplv1-lv2 jalv lilv-utils guitarix artyfx swh-plugins fluid-soundfont-gm fluid-soundfont-gs zynaddsubfx helm audacious audacity vmpk cadence lv2-dev radium-compressor pizmidi-plugins oxefmsynth argotlunar yoshimi dpf-plugins qmidiarp"
+pack[music_prod]="qtractor ardour4 qjackctl kxstudio-meta-audio-plugins-lv2 qmidinet calf-plugins hexter zam-plugins drumkv1-lv2 synthv1-lv2 samplv1-lv2 jalv lilv-utils guitarix artyfx fluid-soundfont-gm fluid-soundfont-gs zynaddsubfx helm audacious audacity vmpk cadence lv2-dev radium-compressor pizmidi-plugins oxefmsynth argotlunar yoshimi dpf-plugins qmidiarp rtirq-init distrho-plugin-ports-lv2 swh-lv2 triceratops-lv2 mda-lv2 linux-lowlatency"
 pack[games]="extremetuxracer supertuxkart chromium-bsu"
 pack[emacs]="emacs aspell-fr"
 
@@ -96,7 +96,7 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 fi
 
 echo -e $SEP"Various menial janitor tasks"
-read -e -p "#### Create base dirs, set shell & .desktop files, add user to audio? [Y/n] " YN
+read -e -p "#### Create base dirs, set shell & .desktop (icon) files, add user to audio? [Y/n] " YN
 
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     if [[ ! -d ~/tmp ]] ; then mkdir -v ~/tmp ; else echo -e "~/tmp \t\t\tOK" ; fi
