@@ -53,8 +53,9 @@ alias aa="apt-cache search"
 alias aA="dpkg -L"
 alias aaa="apt-file search"
 alias ar="sudo apt remove --purge"
-alias v="gpicview"
 alias b="bundle"
+alias l="locate -i"
+alias v="gpicview"
 alias bi="b install --path vendor"
 alias bil="bi --local"
 alias bu="b update"
@@ -74,12 +75,13 @@ alias duf='du -sk * | sort -n | perl -ne '\''($s,$f)=split(m{\t});for (qw(K M G)
 
 function px-qtractor-takes-cleanup () {
 
-[[ "${2:-}" == "--delete" ]] && COMMAND="rm -fv" || COMMAND="ls"
+    [[ "${2:-}" == "--delete" ]] && COMMAND="rm -fv" || COMMAND="ls"
 
-    echo "Usage: $0 qtr_session_file [--delete)]"
+    echo "Usage: $0 qtr_session_file [--delete] \n"
     for file in *.wav* *.mid* ; do
         grep -q -F "$file" $1 || eval $COMMAND " $file"
     done
+
 }
 
 px-lastarg () {
