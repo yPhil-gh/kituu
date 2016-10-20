@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
-FILE_PATH="$1"
-FFMPEG="ffmpeg"
-ARTIST="$2"
-ALBUM="$3"
-COVER_FILE_PATH="$4"
-EFFECT="$5"
-
 if [ "$#" -ne 5 ]; then
     echo "Usage: $0 [audio file path] 'artist name' 'album name' [artwork image file path] [point|line|p2p|cline]"
     exit
 fi
+
+FILE_PATH="$1"
+ARTIST="$2"
+ALBUM="$3"
+COVER_FILE_PATH="$4"
+EFFECT="$5"
+FFMPEG="ffmpeg"
 
 convert -resize 1280x720 "${COVER_FILE_PATH}" -background none -gravity center -extent 1280x720 "${COVER_FILE_PATH}.jpg"
 
