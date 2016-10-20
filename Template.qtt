@@ -879,7 +879,34 @@
     <foreground-color>#667f66</foreground-color>
    </view>
    <controllers/>
-   <plugins/>
+   <plugins>
+    <plugin type="LV2">
+     <filename>http://calf.sourceforge.net/plugins/Compressor</filename>
+     <index>0</index>
+     <label>Calf_Compressor</label>
+     <preset></preset>
+     <direct-access-param>-1</direct-access-param>
+     <activate-subject-index>20</activate-subject-index>
+     <activated>1</activated>
+     <configs/>
+     <params>
+      <param index="4" name="Bypass">0</param>
+      <param index="5" name="Input">1</param>
+      <param index="10" name="Threshold">0.125</param>
+      <param index="11" name="Ratio">2</param>
+      <param index="12" name="Attack">20</param>
+      <param index="13" name="Release">250</param>
+      <param index="14" name="Makeup Gain">2</param>
+      <param index="15" name="Knee">2.82843</param>
+      <param index="16" name="Detection">0</param>
+      <param index="17" name="Stereo Link">0</param>
+      <param index="19" name="Mix">1</param>
+     </params>
+     <controllers/>
+     <editor-pos>602,467</editor-pos>
+     <form-pos>0,0</form-pos>
+    </plugin>
+   </plugins>
   </track>
   <track type="midi" name="Zyn1">
    <properties>
