@@ -22,6 +22,7 @@ exec --no-startup-id i3-msg 'workspace 1; exec gnome-terminal --command byobu --
 #exec --no-startup-id i3-msg 'workspace 1; exec gnome-terminal --command byobu --maximize --hide-menubar; workspace 2; append_layout ~/.i3/workspace-jackaudio.json'
 
 for_window [class="Qtractor" instance="Mixer - Qtractor"] floating disable
+exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon
 
 font pango:DejaVu Sans Mono 8
 
