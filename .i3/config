@@ -23,7 +23,7 @@ exec --no-startup-id i3-msg 'workspace 1; exec gnome-terminal --command byobu --
 
 for_window [class="Qtractor" instance="Mixer - Qtractor"] floating disable
 # for_window [window_role="pop-up"] stacking enable
-for_window [title="Mixer"] floating disable
+# for_window [title="Mixer"] floating disable
 
 set $green  #90A959
 set $lblue  #6A9FB5
@@ -31,6 +31,19 @@ set $orange #FF4318
 set $gray   #333333
 set $lgray  #696969
 set $red    #FF0000
+
+font pango:DejaVu Sans Mono 8
+
+mode "App launch" {
+bindsym t exec thunar
+bindsym f exec firefox
+bindsym j exec qjackctl
+bindsym q exec qtractor
+
+bindsym Return mode "default"
+bindsym Escape mode "default"
+}
+bindsym $mod+l mode "App launch"
 
 # bar {
 #     colors {
@@ -76,7 +89,7 @@ client.urgent             #2f343a #900000 #ffffff #900000
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below. ISO 10646 = Unicode
-font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+# font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 # The font above is very space-efficient, that is, it looks good, sharp and
 # clear in small sizes. However, if you need a lot of unicode glyphs or
 # right-to-left text rendering, you should instead use pango for rendering and
@@ -102,7 +115,7 @@ bindsym $mod+d exec dmenu_run
 # change focus
 bindsym $mod+j focus left
 bindsym $mod+k focus down
-bindsym $mod+l focus up
+# bindsym $mod+l focus up
 bindsym $mod+semicolon focus right
 
 # alternatively, you can use the cursor keys:
