@@ -305,7 +305,15 @@ px-notes () {
     if [ ! $1 ] ; then
 echo -e "
 ################# NOTES
+<<<<<<< HEAD
+<<<<<<< HEAD
+nabil.zakhbat@gmail.com
+unison -fat -fastcheck true -batch ~/tmp/.pr0n /media/px/Nokia N9/tmp/.pr0n/
+=======
+>>>>>>> 4fb34eb0a527a22ea9417c56514b6e1c696e30ff
+=======
 Qtractor menu : Shift-F12
+>>>>>>> 06bbe6bea2d89c606a1ffcec28ba975d6892a83f
 /ssh:user@machine:
 MAC Address: 48:A2:2D:E1:79:74 (Shenzhen Huaxuchang Telecom Technology Co.)
 MAC Address: 48:A2:2D:E1:79:74 (Shenzhen Huaxuchang Telecom Technology Co.)
