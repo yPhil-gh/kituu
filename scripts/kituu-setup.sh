@@ -29,16 +29,15 @@ if ($RW); then vc_prefix="git@github.com:" && message="RW mode ON" && git config
 
 # Packages
 declare -A pack
-BASICS="dos2unix python zsh vim byobu apt-file curl wget htop bc locate sshfs git cowsay fortune fortunes-off zenity vinagre x11vnc nmap sox p7zip-full links unison baobab gparted xclip smplayer"
+BASICS="dos2unix python zsh vim byobu apt-file curl wget htop bc locate sshfs git cowsay fortune fortunes-off zenity sox p7zip-full links unison baobab gparted xclip smplayer gpicview"
 
-pack[dev_tools]="build-essential autoconf"
+pack[dev_tools]="build-essential autoconf devscripts dpkg-dev-el"
 pack[beatnitpicker]="python-gst0.10 python-scipy python-matplotlib"
 pack[optional]="nautilus-dropbox"
 pack[image_tools]="gimp inkscape blender"
-pack[music_prod]="qtractor ardour4 qjackctl kxstudio-meta-audio-plugins-lv2 qmidinet calf-plugins hexter zam-plugins drumkv1-lv2 synthv1-lv2 samplv1-lv2 jalv lilv-utils guitarix artyfx swh-plugins fluid-soundfont-gm fluid-soundfont-gs zynaddsubfx helm audacious audacity vmpk cadence lv2-dev radium-compressor pizmidi-plugins oxefmsynth azr3-jack argotlunar yoshimi dpf-plugins qmidiarp"
-pack[games]="extremetuxracer supertuxkart"
+pack[music_prod]="qtractor ardour4 qjackctl kxstudio-meta-audio-plugins-lv2 qmidinet calf-plugins hexter zam-plugins drumkv1-lv2 synthv1-lv2 samplv1-lv2 jalv lilv-utils guitarix artyfx fluid-soundfont-gm fluid-soundfont-gs zynaddsubfx helm audacious audacity vmpk cadence lv2-dev radium-compressor pizmidi-plugins oxefmsynth argotlunar yoshimi dpf-plugins qmidiarp rtirq-init distrho-plugin-ports-lv2 swh-lv2 triceratops-lv2 mda-lv2 linux-lowlatency"
+pack[games]="extremetuxracer supertuxkart chromium-bsu"
 pack[emacs]="emacs aspell-fr"
-pack[yoshimi_lv2]="libfftw3-dev libmxml-dev libalsa-ocaml-dev libjack-jackd2-dev libboost-all-dev libfltk1.3-dev libreadline-dev"
 
 # MOZilla addons
 MOZURL="https://addons.mozilla.org/firefox/downloads/latest"
@@ -96,15 +95,8 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     done
 fi
 
-echo -e $SEP"Basic binary packages"
-read -e -p "#### Install basic packages ($BASICS) ? [Y/n] " YN
-
-if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-    sudo apt install $BASICS
-fi
-
 echo -e $SEP"Various menial janitor tasks"
-read -e -p "#### Create base dirs, set shell & .desktop files, add user to audio? [Y/n] " YN
+read -e -p "#### Create base dirs, set shell & .desktop (icon) files, add user to audio? [Y/n] " YN
 
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     if [[ ! -d ~/tmp ]] ; then mkdir -v ~/tmp ; else echo -e "~/tmp \t\t\tOK" ; fi
@@ -129,7 +121,14 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 fi
 
 # Packages
+
 echo -e $SEP"Binary package groups"
+read -e -p "#### Install basic packages ($BASICS) ? [Y/n] " YN
+
+if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
+    sudo apt install $BASICS
+fi
+
 read -e -p "#### Install package groups? [Y/n] " YN
 
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then

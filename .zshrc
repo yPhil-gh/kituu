@@ -1,3 +1,4 @@
+
 # My .zshrc - created 01 Jul 2012
 
 #colourful man pages
@@ -9,6 +10,7 @@ export LESS_TERMCAP_so=$'\E[38;5;246m'    # begin standout-mode - info box
 export LESS_TERMCAP_ue=$'\E[0m'           # end underline
 export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+export PATH=$PATH:$HOME/src/depot_tools
 
 [ -n "$TMUX" ] && export TERM=screen-256color
 
@@ -173,12 +175,11 @@ insert_ip () { zle end-of-line; zle -U " 192.168." }
 zle -N insert-ip insert_ip
 bindkey "^[i" insert-ip
 
-insert_local () { zle end-of-line; zle -U ".local" }
-zle -N insert-local insert_local
-bindkey "^[l" insert-local
-
 # Generic funcs
 . ~/.kituu-commands.sh
+
+# z
+. ~/src/z/z.sh
 
 # Init
 zdump Africa/Morocco Europe/Paris

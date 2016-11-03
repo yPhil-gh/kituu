@@ -18,11 +18,10 @@
 ;; Packages! ____________________________________________________________________
 
 (package-initialize)
-(add-to-list 'package-archives
-	     '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
-;;(add-to-list 'package-archives
-  ;;           '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
+;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 (mapc
  (lambda (package)
@@ -30,7 +29,7 @@
      (progn (message "installing %s" package)
             (package-refresh-contents)
             (package-install package))))
- '(less-css-mode tabbar org auto-complete undo-tree clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode rainbow-mode))
+ '(flycheck less-css-mode tabbar org auto-complete undo-tree clojure-mode markdown-mode yasnippet paredit paredit-menu php-mode haml-mode rainbow-mode))
 
 
 ;; LIBS! ______________________________________________________________________
@@ -46,42 +45,15 @@
   (require 'auto-complete nil 'noerror)
   )
 
-;; (require 'semantic/ia)
-;; (require 'semantic/bovine/gcc)
-
-;; (semantic-mode 1)
-
-;; (defun my-semantic-hook ()
-;;   (imenu-add-to-menubar "TAGS"))
-;; (add-hook 'semantic-init-hooks 'my-semantic-hook)
-
-;; (global-ede-mode 1)                      ; Enable the Project management system
-;(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion
-;(global-srecode-minor-mode 1)            ; Enable template insertion menu
-
-;; if you want to enable support for gnu global
-;(when (cedet-gnu-global-version-check t)
-; (semanticdb-enable-gnu-global-databases 'c-mode)
-; (semanticdb-enable-gnu-global-databases 'c++-mode)
-
-;; enable ctags for some languages:
- ;; Unix Shell, Perl, Pascal, Tcl, Fortran, Asm
-;(when (cedet-ectag-version-check t)
-; (semantic-load-enable-primary-exuberent-ctags-support))
-
 (zeroconf-init nil)                   ; NIL means "local"
 
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 (add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
 
-;; JIRA! ______________________________________________________________________
-
-;; (setq jiralib-url "http://jira.sbcmaroc.com:8080")
-
-;; Vars!
-
-;; Keep unreadable files in recentf
-(setq recentf-keep '(file-remote-p file-readable-p))
+(add-hook 'python-mode-hook
+	  (lambda ()
+	    (setq tab-width 4)
+	    (setq python-indent 4)))
 
 ; style I want to use in c++ mode
 (c-add-style "my-style"
@@ -613,21 +585,40 @@ Again, here by pure nostalgia."
     (comment-dwim nil))
   (deactivate-mark))
 
-(defun px-tabbar-buffer-groups ()
-  "Return the list of group names the current buffer belongs to.
-This function is a custom function for tabbar-mode's tabbar-buffer-groups."
-  (list
-   (cond
-    ((string-equal "*" (substring (buffer-name) 0 1))
-     "Emacs Buffer"
-     )
-    ((eq major-mode 'dired-mode)
-     "Dired"
-     )
-    (t
-     "User Buffer"))))
+;; (defun px-tabbar-buffer-groups ()
+;;   "Return the list of group names the current buffer belongs to.
+;; This function is a custom function for tabbar-mode's tabbar-buffer-groups."
+;;   (list
+;;    (cond
+;;     ((string-equal "*" (substring (buffer-name) 0 1))
+;;      "Emacs Buffer"
+;;      )
+;;     ((eq major-mode 'dired-mode)
+;;      "Dired"
+;;      )
+;;     (t
+;;      "User Buffer"))))
 
-(setq tabbar-buffer-groups-function 'px-tabbar-buffer-groups)
+;; (setq tabbar-buffer-groups-function 'px-tabbar-buffer-groups)
+(setq tabbar-buffer-groups-function
+      (lambda ()
+        (list
+         (cond
+          ((string-equal "*" (substring (buffer-name) 0 1))
+           "Emacs Buffer"
+           )
+          ((eq major-mode 'dired-mode)
+           "Dired"
+           )
+          (t
+           "User Buffer")))))
+
+;; (setq tabbar-buffer-list-function
+;;       (lambda ()
+;;         (remove-if
+;;          (lambda(buffer)
+;;            (find (aref (buffer-name buffer) 0) " *"))
+;;          (buffer-list))))
 
 ;; (defun iswitchb-local-keys ()
 ;;   "easily switch buffers (F5 or C-x b)"
@@ -647,7 +638,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (defun px-desktop-mode ()
   "default font size"
   (interactive)
-  (set-face-attribute 'default nil :height 105))
+  (set-face-attribute 'default nil :height 135))
 
 ;; Sessions! ______________________________________________________________________
 
@@ -695,6 +686,10 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; Hooks! _____________________________________________________________________
 
+;; (add-hook 'python-mode-hook 'guess-style-guess-tabs-mode)
+;; (add-hook 'python-mode-hook (lambda ()
+;;                               (guess-style-guess-tab-width)))
+
 (defun my-find-file-check-make-large-file-read-only-hook ()
   "If a file is over a given size, make the buffer read only."
   (when (> (buffer-size) (* 1024 1024))
@@ -733,12 +728,12 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (setq paragraph-start "\\*\\|$"
       paragraph-separate "$")
 
-;; (mapcar (lambda (mode)
-;; 	  (font-lock-add-keywords
-;;            mode
-;;            '(("\\<\\(FIXME\\):" 1 font-lock-warning-face prepend)
-;;              ("\\<\\(TODO\\|BUGGY\\):" 1 font-lock-warning-face prepend))))
-;; 	'(text-mode latex-mode html-mode emacs-lisp-mode php-mode texinfo-mode js-mode))
+(mapcar (lambda (mode)
+	  (font-lock-add-keywords
+           mode
+           '(("\\<\\(FIXME\\):" 1 font-lock-warning-face prepend)
+             ("\\<\\(TODO\\|BUGGY\\):" 1 font-lock-warning-face prepend))))
+	'(text-mode latex-mode html-mode emacs-lisp-mode php-mode texinfo-mode js-mode))
 
 ;; Externals! _________________________________________________________________
 
@@ -760,8 +755,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
  ;; iswitchb-buffer-ignore '("^ " "*.")
  ispell-dictionary "francais"
-
- ;; delete-by-moving-to-trash t
 
  text-mode-hook 'turn-on-auto-fill
  fill-column 75
@@ -811,8 +804,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
                   (interactive)
                   (join-line -1)))
 
-(setq-default indent-tabs-mode nil)
-
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cc" 'org-capture)
@@ -824,9 +815,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "C-h *") 'px-scratch)
 
 (global-set-key (kbd "²") 'hippie-expand)
-
-;; (define-key global-map [(meta up)] '(lambda() (interactive) (scroll-other-window -1)))
-;; (define-key global-map [(meta down)] '(lambda() (interactive) (scroll-other-window 1)))
 
 (define-key global-map [f1] 'delete-other-windows)
 (define-key global-map [S-f1] 'px-help-emacs)
@@ -867,9 +855,6 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 (global-set-key (kbd "<s-left>") 'px-pop-to-mark-command)
 (global-set-key (kbd "<s-right>") 'px-unpop-to-mark-command)
 
-;; (global-set-key (kbd "C-x g") 'magit-status)
-
-
 (global-set-key (kbd "C-a") 'mark-whole-buffer)
 (global-set-key (kbd "C-o") 'find-file)
 (global-set-key (kbd "C-S-o") 'my-desktop-read)
@@ -891,7 +876,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
 
 ;; (global-set-key (kbd "M-DEL") 'kill-word)
 
-(global-set-key (kbd "M-s") 'save-buffer) ; Meta+s saves !!  (and Jesus too BTW) (see C-h b for all bindings, and C-h k + keystroke(s) for help)
+(global-set-key (kbd "M-s") 'save-buffer) ; Meta+s saves !!  (like Jesus) (see C-h b for all bindings, and C-h k + keystroke(s) for help)
 (global-set-key (kbd "M-o") 'recentf-open-files)
 (global-set-key (kbd "M-d") 'px-toggle-comments)
 
@@ -904,6 +889,7 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  ;; If there is more than one, they won't work right.
  '(ac-auto-show-menu t)
  '(ac-auto-start t)
+ '(add-log-mailing-address "phil@manyrecords.com")
  '(auto-save-file-name-transforms (quote ((".*" "~/.emacs.d/backup/\\1" t))))
  '(backup-directory-alist (quote ((".*" . "~/.emacs.d/backup/"))))
  '(bbdb-use-pop-up nil)
@@ -912,15 +898,30 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(c-basic-offset (quote set-from-style))
  '(c-default-style (quote ((c++-mode . ""))))
  '(canlock-password "ebef4a12d0fad1c648b4b829291adb16cdefb9da")
+ '(change-log-default-name "changelog")
  '(comment-style (quote extra-line))
  '(completion-auto-help (quote lazy))
  '(cursor-in-non-selected-windows nil)
  '(custom-enabled-themes (quote (tango-dark)))
+ '(debian-changelog-full-name "Philip Yassin")
+ '(debian-changelog-mailing-address "phil@manyrecords.com")
  '(delete-by-moving-to-trash t)
  '(delete-selection-mode t)
  '(diary-file "~/Ubuntu One/org/agenda.org")
  '(ecb-layout-name "left1")
- '(ecb-layout-window-sizes (quote (("Cdev-def" (ecb-directories-buffer-name 0.15418502202643172 . 0.23880597014925373) (ecb-sources-buffer-name 0.1762114537444934 . 0.23880597014925373) (ecb-methods-buffer-name 0.3303964757709251 . 0.19402985074626866) (ecb-analyse-buffer-name 0.3303964757709251 . 0.22388059701492538) (ecb-symboldef-buffer-name 0.3303964757709251 . 0.3283582089552239)) ("left1" (ecb-directories-buffer-name 0.27312775330396477 . 0.2835820895522388) (ecb-sources-buffer-name 0.14977973568281938 . 0.34328358208955223) (ecb-history-buffer-name 0.12334801762114538 . 0.34328358208955223) (ecb-methods-buffer-name 0.27312775330396477 . 0.3582089552238806)))))
+ '(ecb-layout-window-sizes
+   (quote
+    (("Cdev-def"
+      (ecb-directories-buffer-name 0.15418502202643172 . 0.23880597014925373)
+      (ecb-sources-buffer-name 0.1762114537444934 . 0.23880597014925373)
+      (ecb-methods-buffer-name 0.3303964757709251 . 0.19402985074626866)
+      (ecb-analyse-buffer-name 0.3303964757709251 . 0.22388059701492538)
+      (ecb-symboldef-buffer-name 0.3303964757709251 . 0.3283582089552239))
+     ("left1"
+      (ecb-directories-buffer-name 0.27312775330396477 . 0.2835820895522388)
+      (ecb-sources-buffer-name 0.14977973568281938 . 0.34328358208955223)
+      (ecb-history-buffer-name 0.12334801762114538 . 0.34328358208955223)
+      (ecb-methods-buffer-name 0.27312775330396477 . 0.3582089552238806)))))
  '(ecb-options-version "2.40")
  '(ecb-primary-secondary-mouse-buttons (quote mouse-1--mouse-2))
  '(epa-popup-info-window nil)
@@ -930,10 +931,12 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(global-font-lock-mode t)
  '(global-linum-mode t)
  '(global-undo-tree-mode t)
- '(grep-find-ignored-directories (quote ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "compiled" "libs/bootstrap")))
+ '(grep-find-ignored-directories
+   (quote
+    ("SCCS" "RCS" "CVS" "MCVS" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "compiled" "libs/bootstrap")))
  '(haml-backspace-backdents-nesting nil)
  '(holiday-other-holidays (quote islamic-holidays))
- '(ido-ignore-buffers (quote ("\\` " "*Messages*")))
+ '(ido-ignore-buffers (quote ("\\` " "*Messages*" "*scratch*")))
  '(ido-mode (quote both) nil (ido))
  '(inhibit-startup-echo-area-message (user-login-name))
  '(inhibit-startup-screen t)
@@ -957,7 +960,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(org-agenda-files nil)
  '(org-directory "~/Dropbox/txt")
  '(org-html-postamble t)
- '(org-html-validation-link "<a href=\"http://validator.w3.org/check?uri=referer\">Valid HTML</a>")
+ '(org-html-validation-link
+   "<a href=\"http://validator.w3.org/check?uri=referer\">Valid HTML</a>")
  '(org-mobile-directory "~/Dropbox/txt")
  '(org-mobile-inbox-for-pull "~/Dropbox/txt/mobile-org-pull-file.org")
  '(org-return-follows-link t)
@@ -967,6 +971,8 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(recenter-positions (quote (middle top bottom)))
  '(recenter-redisplay nil)
  '(recentf-auto-cleanup (quote never))
+ '(recentf-max-menu-items 64)
+ '(recentf-max-saved-items 32)
  '(recentf-mode t)
  '(require-final-newline t)
  '(save-place t nil (saveplace))
@@ -980,6 +986,9 @@ This function is a custom function for tabbar-mode's tabbar-buffer-groups."
  '(show-paren-mode t)
  '(smtpmail-smtp-server "smtp.gmail.com")
  '(standard-indent 4)
+ '(tab-stop-list
+   (quote
+    (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120)))
  '(tabbar-mode t nil (tabbar))
  '(tags-add-tables t)
  '(text-mode-hook nil)
