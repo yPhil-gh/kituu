@@ -22,28 +22,21 @@ exec --no-startup-id i3-msg 'workspace 1; exec gnome-terminal --command byobu --
 #exec --no-startup-id i3-msg 'workspace 1; exec gnome-terminal --command byobu --maximize --hide-menubar; workspace 2; append_layout ~/.i3/workspace-jackaudio.json'
 
 for_window [class="Qtractor" instance="Mixer - Qtractor"] floating disable
-# for_window [window_role="pop-up"] stacking enable
-# for_window [title="Mixer"] floating disable
-
-set $green  #90A959
-set $lblue  #6A9FB5
-set $orange #FF4318
-set $gray   #333333
-set $lgray  #696969
-set $red    #FF0000
 
 font pango:DejaVu Sans Mono 8
 
+# MODES
 mode "App launch" {
-bindsym t exec thunar
-bindsym f exec firefox
-bindsym j exec qjackctl
-bindsym q exec qtractor
+    bindsym t exec thunar
+    bindsym f exec firefox
+    bindsym j exec qjackctl
+    bindsym q exec qtractor
 
-bindsym Return mode "default"
-bindsym Escape mode "default"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
 }
 bindsym $mod+l mode "App launch"
+bindsym $mod+x [urgent=latest] focus
 
 # bar {
 #     colors {
@@ -59,28 +52,42 @@ bindsym $mod+l mode "App launch"
 #     }
 # }
 
+set $green  #90A959
+set $white  #FFFFFF
+set $black  #000000
+set $lblue  #6A9FB5
+set $orange #FF4318
+set $gray   #333333
+set $lgray  #888888
+set $red    #900000
+set $oblue  #0088CC
+set $llgray #2f343a
+set $bgray #292d2e
 
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
 bar {
-    status_command i3status
+    # status_command i3status
+    status_command i3status -c ~/.i3/i3status.conf
     colors {
         separator #666666
         background #222222
         statusline #dddddd
-        focused_workspace #0088CC #0088CC #ffffff
-        active_workspace #333333 #333333 #ffffff
-        inactive_workspace #333333 #333333 #888888
-        urgent_workspace #2f343a #900000 #ffffff
+        #class             border  backgr. text
+        focused_workspace  $gray   $orange  $white
+        active_workspace   $gray   $gray    $white
+        inactive_workspace $gray   $gray    $lgray
+        urgent_workspace   $llgray $gray    $orange
     }
 }
 
 # Window Decorations Colors
-#class                    border    backgr.    text    indicator
-client.focused            $lgray    $gray      $orange  $red
-client.focused_inactive   #333333 #333333 #888888 #292d2e
-client.unfocused          #333333 #333333 #888888 #292d2e
-client.urgent             #2f343a #900000 #ffffff #900000
+#class                    border    backgr.  text    indicator
+client.focused            $lgray    $gray    $orange  $red
+client.focused_inactive   $gray     $gray    $lgray   $bgray
+client.unfocused          $gray     $gray    $lgray   $bgray
+client.urgent             $llgray   $gray    $orange  $red
+
+# lock screen
+bindsym $mod+Control+l exec ~/scripts/px-i3lock.sh
 
 # client.focused
 
@@ -125,10 +132,10 @@ bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 # move focused window
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+colon move right
+# bindsym $mod+Shift+j move left
+# bindsym $mod+Shift+k move down
+# bindsym $mod+Shift+l move up
+# bindsym $mod+Shift+colon move right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
