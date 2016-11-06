@@ -54,6 +54,7 @@ mode "App launch" {
     bindsym f exec firefox
     bindsym j exec qjackctl
     bindsym q exec qtractor
+    bindsym e exec emacs
 
     bindsym Return mode "default"
     bindsym Escape mode "default"

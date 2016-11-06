@@ -131,6 +131,25 @@ function px-install-audio-plugins () {
     sudo apt install samplv1-lv2 qmidiarp synthv1-lv2 artyfx swh-lv2 mda-lv2 rkrlv2 carla-lv2 cmt fluid-soundfont-gm dpf-plugins fomp xsynth-dssi distrho-plugin-ports-lv2 tal-plugins calf-plugins
 }
 
+function px-kx-repos-install () {
+    # Install required dependencies if needed
+    sudo apt-get install apt-transport-https software-properties-common wget
+
+    # Download package file
+    wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos_9.4.1~kxstudio1_all.deb
+
+    # Install it
+    sudo dpkg -i kxstudio-repos_9.4.1~kxstudio1_all.deb
+    # Install required dependencies if needed
+    sudo apt-get install libglibmm-2.4-1v5
+
+    # Download package file
+    wget https://launchpad.net/~kxstudio-debian/+archive/kxstudio/+files/kxstudio-repos-gcc5_9.4.1~kxstudio1_all.deb
+
+    # Install it
+    sudo dpkg -i kxstudio-repos-gcc5_9.4.1~kxstudio1_all.deb
+}
+
 function px-cleanup-filenames () {
     find -type f | rename -v 's/%20/_/g'
     find -type f | rename -v 's/ /_/g'
