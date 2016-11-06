@@ -59,6 +59,7 @@ mode "App launch" {
     bindsym Escape mode "default"
 }
 bindsym $mod+l mode "App launch"
+
 bindsym $mod+x [urgent=latest] focus
 
 set $mode_system System (l) lock, (e) logout, (s) suspend, (r) reboot, (Shift+s) shutdown
