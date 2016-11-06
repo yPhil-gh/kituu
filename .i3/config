@@ -23,6 +23,12 @@ bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightne
 # Touchpad controls
 bindsym XF86TouchpadToggle exec /some/path/toggletouchpad.sh # toggle touchpad
 
+# Screenshot
+bindsym Print exec scrot 'scrot_%Y-%m-%d-%T_$wx$h.png' -e 'mv $f ~/Pictures/'
+# scrot & gimp - select window or rectangle
+# bindsym Mod1+Print exec scrot -s -e 'mv $f /tmp/ && gimp /tmp/$f'
+bindsym $mod+Print exec scrot 'screenshot-%Y-%m-%d-%T_$wx$h.png' -s -e 'mv $f ~/Pictures/ && gimp ~/Pictures/screenshot-%Y-%m-%d-%T_$wx$h.png'
+
 # Media player controls
 bindsym XF86AudioPlay exec playerctl play
 bindsym XF86AudioPause exec playerctl pause
@@ -54,6 +60,21 @@ mode "App launch" {
 }
 bindsym $mod+l mode "App launch"
 bindsym $mod+x [urgent=latest] focus
+
+set $mode_system System (l) lock, (e) logout, (s) suspend, (r) reboot, (Shift+s) shutdown
+mode "Exit mode" {
+    bindsym l exec --no-startup-id i3exit.sh lock, mode "default"
+    bindsym e exec --no-startup-id i3exit.sh logout, mode "default"
+    bindsym s exec --no-startup-id i3exit.sh lock, mode "default", exec --no-startup-id systemctl suspend
+    bindsym r exec --no-startup-id i3exit.sh reboot, mode "default"
+    bindsym Shift+s exec --no-startup-id i3exit.sh shutdown, mode "default"
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bindsym $mod+Delete mode "Exit mode"
 
 # bar {
 #     colors {
@@ -125,12 +146,13 @@ floating_modifier $mod
 
 # start a terminal
 bindsym $mod+Return exec i3-sensible-terminal
-
+exec --no-startup-id redshift-gtk
 # kill focused window
 bindsym $mod+Shift+Q kill
 
 # start dmenu (a program launcher)
 bindsym $mod+d exec dmenu_run
+bindsym $mod+Shift+d exec i3-dmenu-desktop
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
