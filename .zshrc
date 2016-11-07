@@ -14,6 +14,8 @@ export PATH=$PATH:$HOME/src/depot_tools
 
 [ -n "$TMUX" ] && export TERM=screen-256color
 
+setxkbmap fr
+
 # format titles for screen and rxvt
 function title() {
   # escape '%' chars in $1, make nonprintables visible

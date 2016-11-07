@@ -2,17 +2,17 @@
 # https://github.com/xaccrocheur/kituu
 
 # Path
-PATH=$PATH:~/scripts:~/bin
+PATH=~/scripts:~/bin:$PATH
 
 # Vars
-PYTHONPATH=$PYTHONPATH:/usr/share/gst-python/0.10/examples/
-PATH=$PATH:~/scripts/beatnitpycker/:~/src/radium/bin/
-PATH=$PATH:/opt/nodejs/bin/
+# PYTHONPATH=$PYTHONPATH:/usr/share/gst-python/0.10/examples/
+# PATH=$PATH:~/scripts/beatnitpycker/:~/src/radium/bin/
+# PATH=$PATH:/opt/nodejs/bin/
 
 # DSSI_PATH=/usr/lib/calf/
-export DSSI_PATH=/usr/lib/dssi/:/usr/lib/calf/:/usr/local/lib/calf/
-export LADSPA_PATH=/usr/lib/ladspa/:/usr/local/lib/calf/
-export VST_PATH=/usr/local/lib/lxvst/
+# export DSSI_PATH=/usr/lib/dssi/:/usr/lib/calf/:/usr/local/lib/calf/
+# export LADSPA_PATH=/usr/lib/ladspa/:/usr/local/lib/calf/
+# export VST_PATH=/usr/local/lib/lxvst/
 
 # Aliases
 alias rm="rm -i"

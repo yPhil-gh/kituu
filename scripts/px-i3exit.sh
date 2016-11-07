@@ -1,4 +1,5 @@
 #!/bin/sh
+
 lock() {
     i3lock -d -c 000000
 }
