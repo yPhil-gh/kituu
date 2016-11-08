@@ -12,9 +12,9 @@
 set $mod Mod4
 
 # Pulse Audio controls
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #volume up
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #volume down
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute
 
 # Sreen brightness controls
 bindsym XF86MonBrightnessUp exec xbacklight -inc 20 # increase screen brightness
@@ -39,14 +39,13 @@ bindsym $mod+Tab workspace next
 
 hide_edge_borders both
 
+# WORKSPACES
 #exec --no-startup-id i3-msg 'workspace 1; exec gnome-terminal --command byobu --maximize --hide-menubar; workspace 2; exec firefox; workspace 3; exec thunderbird'
-exec --no-startup-id i3-msg 'workspace 1; exec gnome-terminal --command byobu --maximize --hide-menubar ; exec thunar; workspace 2; exec qjackctl'
+exec --no-startup-id i3-msg 'workspace 1; exec gnome-terminal --command byobu --hide-menubar ; exec thunar; workspace 2; exec qjackctl'
 #exec --no-startup-id i3-msg 'workspace 1; exec gnome-terminal --command byobu --maximize --hide-menubar; workspace 2; append_layout ~/.i3/workspace-jackaudio.json'
 
 for_window [class="Qtractor" instance="Mixer - Qtractor"] floating disable
 # exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon
-
-font pango:DejaVu Sans Mono 8
 
 # MODES
 mode "App launch" {
@@ -55,46 +54,42 @@ mode "App launch" {
     bindsym j exec qjackctl, mode "default"
     bindsym q exec qtractor, mode "default"
     bindsym e exec emacs, mode "default"
-    bindsym p exec plop, mode "default"
+    bindsym m exec thunderbird, mode "default"
 
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
-bindsym $mod+l mode "App launch"
 
-bindsym $mod+p exec --no-startup-id ~/scripts/px-i3exit.sh
-
-bindsym $mod+x [urgent=latest] focus
-
-set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
-mode "$mode_system" {
+set $system_mode System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
+mode "$system_mode" {
     bindsym l exec --no-startup-id ~/scripts/px-i3exit.sh lock, mode "default"
     bindsym e exec --no-startup-id px-i3exit.sh logout, mode "default"
     bindsym s exec --no-startup-id px-i3exit.sh suspend, mode "default"
     bindsym h exec --no-startup-id px-i3exit.sh hibernate, mode "default"
     bindsym r exec --no-startup-id px-i3exit.sh reboot, mode "default"
-    # bindsym r exec --no-startup-id smplayer reboot, mode "default"
     bindsym Shift+s exec --no-startup-id px-i3exit.sh shutdown, mode "default"
-    # back to normal: Enter or Escape
+
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
 
-bindsym $mod+Delete mode "$mode_system"
+mode "resize" {
+    bindsym Left resize shrink width 10 px or 10 ppt
+    bindsym Down resize grow height 10 px or 10 ppt
+    bindsym Up resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow width 10 px or 10 ppt
 
-# bar {
-#     colors {
-#         background #000000
-#         statusline #ffffff
-#         separator #666666
+    bindsym j resize shrink width 10 px or 10 ppt
+    bindsym k resize grow height 10 px or 10 ppt
+    bindsym l resize shrink height 10 px or 10 ppt
+    bindsym semicolon resize grow width 10 px or 10 ppt
 
-#         focused_workspace  #4c7899 #285577 #ffffff
-#         active_workspace   #333333 #5f676a #ffffff
-#         inactive_workspace #333333 #222222 #888888
-#         urgent_workspace   #2f343a #900000 #ffffff
-#         binding_mode       #2f343a #900000 #ffffff
-#     }
-# }
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+# THEME
+font pango:Ubuntu Sans Mono 8
 
 set $green  #90A959
 set $white  #FFFFFF
@@ -102,73 +97,65 @@ set $black  #000000
 set $lblue  #6A9FB5
 set $orange #FF4318
 set $gray   #333333
-set $lgray  #888888
+set $lgray  #555555
 set $red    #900000
+set $dred   #300000
+set $yel    #AAAA99
 set $oblue  #0088CC
 set $llgray #2f343a
-set $bgray #292d2e
+set $dgray  #222222
+set $bgray  #292d2e
+
+# Window Decorations Colors
+#class                    border    backgr.  text    indicator
+client.focused            $gray     $gray    $orange  $red
+client.unfocused          $gray     $lgray   $yel     $bgray
+client.focused_inactive   $gray     $gray    $lgray   $bgray
+client.urgent             $llgray   $gray    $orange  $red
 
 bar {
     # status_command i3status
     status_command i3status -c ~/.i3/i3status.conf
     colors {
-        separator #666666
-        background #222222
-        statusline #dddddd
+        separator  $lgray
+        background $dgray
+        statusline $orange
         #class             border  backgr. text
-        focused_workspace  $gray   $orange  $white
+        focused_workspace  $orange $orange  $dgray
         active_workspace   $gray   $gray    $white
         inactive_workspace $gray   $gray    $lgray
-        urgent_workspace   $llgray $gray    $orange
+        urgent_workspace   $orange $gray    $orange
     }
 }
-
-# Window Decorations Colors
-#class                    border    backgr.  text    indicator
-client.focused            $lgray    $gray    $orange  $red
-client.focused_inactive   $gray     $gray    $lgray   $bgray
-client.unfocused          $gray     $gray    $lgray   $bgray
-client.urgent             $llgray   $gray    $orange  $red
-
-# lock screen
-bindsym $mod+Control+l exec ~/scripts/px-i3lock.sh
-
-# client.focused
-
-# gtk-theme-name Adwaita
-# gtk-fallback-icon-theme gnome
-
-# Font for window titles. Will also be used by the bar unless a different font
-# is used in the bar {} block below. ISO 10646 = Unicode
-# font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
-# The font above is very space-efficient, that is, it looks good, sharp and
-# clear in small sizes. However, if you need a lot of unicode glyphs or
-# right-to-left text rendering, you should instead use pango for rendering and
-# chose a FreeType font, such as:
-# font pango:DejaVu Sans Mono 10
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
-# start a terminal
-bindsym $mod+Return exec i3-sensible-terminal
+# STARTUP APPS
+exec --no-startup-id nm-applet
 exec --no-startup-id redshift-gtk
-# kill focused window
-bindsym $mod+Shift+Q kill
 
-# start dmenu (a program launcher)
+# MODES
+bindsym $mod+Delete mode "$system_mode"
+bindsym $mod+r mode "resize"
+bindsym $mod+a mode "App launch"
+
+# WINDOW COMMANDS
+bindsym $mod+q kill
+
 bindsym $mod+d exec dmenu_run
-bindsym $mod+Shift+d exec i3-dmenu-desktop
-# There also is the (new) i3-dmenu-desktop which only displays applications
-# shipping a .desktop file. It is a wrapper around dmenu, so you need that
-# installed.
-# bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
+bindsym $mod+Return exec exec gnome-terminal --command byobu --hide-menubar
+bindsym $mod+Shift+d exec j4-dmenu-desktop
+
+bindsym $mod+p exec echo play | jack_transport
+bindsym $mod+Shift+p exec echo stop | jack_transport
 
 # change focus
 bindsym $mod+j focus left
 bindsym $mod+k focus down
-# bindsym $mod+l focus up
+bindsym $mod+l focus up
 bindsym $mod+semicolon focus right
+bindsym $mod+x [urgent=latest] focus
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left focus left
@@ -177,10 +164,10 @@ bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 # move focused window
-# bindsym $mod+Shift+j move left
-# bindsym $mod+Shift+k move down
-# bindsym $mod+Shift+l move up
-# bindsym $mod+Shift+colon move right
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+colon move right
 
 # alternatively, you can use the cursor keys:
 bindsym $mod+Shift+Left move left
@@ -209,7 +196,7 @@ bindsym $mod+Shift+space floating toggle
 bindsym $mod+space focus mode_toggle
 
 # focus the parent container
-bindsym $mod+a focus parent
+# bindsym $mod+a focus parent
 
 # focus the child container
 #bindsym $mod+d focus child
@@ -244,29 +231,3 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
-
-# resize window (you can also use the mouse for that)
-mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode
-
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink the window’s height.
-        # Pressing down will grow the window’s height.
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym semicolon resize grow width 10 px or 10 ppt
-
-        # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
-
-        # back to normal: Enter or Escape
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-}
-
-bindsym $mod+r mode "resize"
