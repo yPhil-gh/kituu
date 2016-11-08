@@ -50,27 +50,31 @@ font pango:DejaVu Sans Mono 8
 
 # MODES
 mode "App launch" {
-    bindsym t exec thunar
-    bindsym f exec firefox
-    bindsym j exec qjackctl
-    bindsym q exec qtractor
-    bindsym e exec emacs
+    bindsym t exec thunar, mode "default"
+    bindsym f exec firefox, mode "default"
+    bindsym j exec qjackctl, mode "default"
+    bindsym q exec qtractor, mode "default"
+    bindsym e exec emacs, mode "default"
+    bindsym p exec plop, mode "default"
 
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
 bindsym $mod+l mode "App launch"
 
+bindsym $mod+p exec --no-startup-id ~/scripts/px-i3exit.sh
+
 bindsym $mod+x [urgent=latest] focus
 
 set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
 mode "$mode_system" {
-    bindsym l exec --no-startup-id ~/.i3/i3exit lock, mode "default"
-    bindsym e exec --no-startup-id ~/.i3/i3exit logout, mode "default"
-    bindsym s exec --no-startup-id ~/.i3/i3exit suspend, mode "default"
-    bindsym h exec --no-startup-id ~/.i3/i3exit hibernate, mode "default"
-    bindsym r exec --no-startup-id ~/.i3/i3exit reboot, mode "default"
-    bindsym Shift+s exec --no-startup-id ~/.i3/i3exit shutdown, mode "default"
+    bindsym l exec --no-startup-id ~/scripts/px-i3exit.sh lock, mode "default"
+    bindsym e exec --no-startup-id px-i3exit.sh logout, mode "default"
+    bindsym s exec --no-startup-id px-i3exit.sh suspend, mode "default"
+    bindsym h exec --no-startup-id px-i3exit.sh hibernate, mode "default"
+    bindsym r exec --no-startup-id px-i3exit.sh reboot, mode "default"
+    # bindsym r exec --no-startup-id smplayer reboot, mode "default"
+    bindsym Shift+s exec --no-startup-id px-i3exit.sh shutdown, mode "default"
     # back to normal: Enter or Escape
     bindsym Return mode "default"
     bindsym Escape mode "default"

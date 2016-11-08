@@ -25,6 +25,9 @@ RW=false
 
 [[ ${arg1} = "-rw" ]] && RW=true
 
+
+sudo apt install git zsh
+
 if ($RW); then vc_prefix="git@github.com:" && message="RW mode ON" && git config --global user.name "xaccrocheur" && git config --global user.email xaccrocheur@gmail.com ; else vc_prefix="https://github.com/" && message="RW mode OFF"; fi
 
 # Packages
