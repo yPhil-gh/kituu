@@ -30,6 +30,7 @@ esac
 
 exit 0
 
+
 # #!/bin/sh
 # lock() {
 #     i3lock
