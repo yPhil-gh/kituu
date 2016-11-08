@@ -41,7 +41,7 @@ hide_edge_borders both
 
 # WORKSPACES
 #exec --no-startup-id i3-msg 'workspace 1; exec gnome-terminal --command byobu --maximize --hide-menubar; workspace 2; exec firefox; workspace 3; exec thunderbird'
-exec --no-startup-id i3-msg 'workspace 1; exec gnome-terminal --command byobu --hide-menubar ; exec thunar; workspace 2; exec qjackctl'
+exec --no-startup-id i3-msg 'workspace 1; exec gnome-terminal --command byobu --hide-menubar'
 #exec --no-startup-id i3-msg 'workspace 1; exec gnome-terminal --command byobu --maximize --hide-menubar; workspace 2; append_layout ~/.i3/workspace-jackaudio.json'
 
 for_window [class="Qtractor" instance="Mixer - Qtractor"] floating disable
@@ -49,8 +49,8 @@ for_window [class="Qtractor" instance="Mixer - Qtractor"] floating disable
 
 # MODES
 mode "App launch" {
-    bindsym t exec thunar, mode "default"
-    bindsym f exec firefox, mode "default"
+    bindsym f exec thunar, mode "default"
+    bindsym w exec firefox, mode "default"
     bindsym j exec qjackctl, mode "default"
     bindsym q exec qtractor, mode "default"
     bindsym e exec emacs, mode "default"
@@ -128,12 +128,34 @@ bar {
     }
 }
 
+
+# # Start i3bar to display a workspace bar (plus the system information i3status
+# # finds out, if available)
+# bar {
+# 	mode dock
+# 	position top
+# 	workspace_buttons yes
+#     status_command sh ~/.config/i3/status.sh
+# 	tray_output none
+# 	font -*-terminus-medium-r-*-*-12-*-*-*-*-*-iso10646-*
+# 	colors {
+# 		background #1f1f1f
+# 		statusline #605c5a
+# 		# item			border   bg   fg
+# 		focused_workspace #101010 #101010 #51df1d
+# 		active_workspace #3300FF #101010 #101010
+# 		inactive_workspace #222222 #222222 #A0A0A0
+# 		urgent_workspace #2e3436 #9a878f
+# 	}
+# }
+
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
 # STARTUP APPS
 exec --no-startup-id nm-applet
 exec --no-startup-id redshift-gtk
+exec --no-startup-id xsetroot -solid "#333333"
 
 # MODES
 bindsym $mod+Delete mode "$system_mode"

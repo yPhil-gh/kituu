@@ -73,6 +73,15 @@ alias duf='du -sk * | sort -n | perl -ne '\''($s,$f)=split(m{\t});for (qw(K M G)
 
 # Commands
 
+function px-freemem () {
+
+    item=$(egrep 'MemAvailable' /proc/meminfo | awk '{print $2;}')
+    total=$(egrep 'MemTotal' /proc/meminfo | awk '{print $2;}')
+    percent=$(awk "BEGIN { pc=100*${item}/${total}; i=int(pc); print (pc-i<0.5)?i:i+1 }")
+
+    echo "$percent%"
+}
+
 function px-qtractor-takes-cleanup () {
 
     [[ "${2:-}" == "--delete" ]] && COMMAND="rm -fv" || COMMAND="ls"

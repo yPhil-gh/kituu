@@ -70,10 +70,9 @@ LISP[pixilang-mode]="git clone ${vc_prefix}xaccrocheur/pixilang-mode.git"
 
 # Various repos (that go in $SCRIPTDIR)
 declare -A VARIOUS
-VARIOUS[beatnitpicker]="git clone ${vc_prefix}xaccrocheur/beatnitpicker.git"
+# VARIOUS[beatnitpicker]="git clone ${vc_prefix}xaccrocheur/beatnitpicker.git"
 VARIOUS[leecher]="git clone ${vc_prefix}xaccrocheur/leecher.git"
-VARIOUS[regard]="git clone ${vc_prefix}xaccrocheur/regard.git"
-# VARIOUS[git-sync]="git clone https://github.com/simonthum/git-sync"
+VARIOUS[z]="git clone ${vc_prefix}rupa/z.git"
 
 echo -e $SEP"Kituu! #################
 
@@ -100,7 +99,8 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 fi
 
 echo -e $SEP"Various menial janitor tasks"
-read -e -p "#### Create base dirs, set shell & .desktop (icon) files, add user to audio? [Y/n] " YN
+read -e -p "
+#### Create base dirs, set shell & .desktop (icon) files, add user to audio? [Y/n] " YN
 
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     if [[ ! -d ~/tmp ]] ; then mkdir -v ~/tmp ; else echo -e "~/tmp \t\t\tOK" ; fi
@@ -110,7 +110,8 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     sudo cp -v ${REPODIR}/scripts/*.desktop /usr/share/applications/
 fi
 
-read -e -p "#### Symlink Qtractor conf files? [Y/n] " YN
+read -e -p "
+#### Symlink Qtractor conf files? [Y/n] " YN
 
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     Qdir=~/.config/rncbc.org
@@ -126,14 +127,15 @@ fi
 
 # Packages
 
-echo -e $SEP"Binary package groups"
-read -e -p "#### Install basic packages ($BASICS) ? [Y/n] " YN
+read -e -p "
+#### Install basic packages ($BASICS) ? [Y/n] " YN
 
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     sudo apt install $BASICS
 fi
 
-read -e -p "#### Install package groups? [Y/n] " YN
+read -e -p "
+#### Install package groups? [Y/n] " YN
 
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 	for group in "${!pack[@]}" ; do
