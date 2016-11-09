@@ -117,6 +117,7 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     Qdir=~/.config/rncbc.org
     Qconf=${Qdir}/Qtractor.conf
     Sconf=${Qdir}/synthv1.conf
+
     if [[ ! -h ${Qconf} ]] ; then
         rm -fv ${Qconf}
         ln -sv ${REPODIR}/Template.qtt ${Qdir}
