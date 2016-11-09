@@ -32,7 +32,7 @@ if ($RW); then vc_prefix="git@github.com:" && message="RW mode ON" && git config
 
 # Packages
 declare -A pack
-BASICS="dos2unix python zsh vim byobu apt-file curl wget htop bc locate sshfs git cowsay fortune fortunes-off zenity sox p7zip-full links unison baobab gparted xclip smplayer gpicview gnome-terminal"
+BASICS="dos2unix python zsh vim byobu apt-file curl wget htop bc locate sshfs git cowsay fortune fortunes-off zenity sox p7zip-full links unison baobab gparted xclip smplayer gpicview gnome-terminal "
 
 pack[dev_tools]="build-essential autoconf devscripts dpkg-dev-el"
 pack[beatnitpicker]="python-gst0.10 python-scipy python-matplotlib"
@@ -147,7 +147,6 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 	    fi
 	done
 fi
-
 
 [[ ! -d "$SCRIPTDIR" ]] && mkdir -pv $SCRIPTDIR
 echo -e $SEP"Various repositories"
