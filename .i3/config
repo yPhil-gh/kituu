@@ -104,7 +104,7 @@ set $gray   #333333
 set $lgray  #555555
 set $red    #900000
 set $dred   #300000
-set $yel    #AAAA99
+set $yel    #CCCC99
 set $oblue  #0088CC
 set $llgray #2f343a
 set $dgray  #222222
@@ -127,7 +127,7 @@ bar {
         #class             border  backgr. text
         focused_workspace  $orange $orange  $dgray
         active_workspace   $gray   $gray    $white
-        inactive_workspace $gray   $gray    $lgray
+        inactive_workspace $gray   $gray    $yel
         urgent_workspace   $orange $gray    $orange
     }
 }
