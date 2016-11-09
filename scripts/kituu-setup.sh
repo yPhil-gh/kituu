@@ -99,8 +99,7 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 fi
 
 echo -e $SEP"Various menial janitor tasks"
-read -e -p "
-#### Create base dirs, set shell & .desktop (icon) files, add user to audio? [Y/n] " YN
+read -e -p "#### Create base dirs, set shell & .desktop (icon) files, add user to audio? [Y/n] " YN
 
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     if [[ ! -d ~/tmp ]] ; then mkdir -v ~/tmp ; else echo -e "~/tmp \t\t\tOK" ; fi
@@ -116,23 +115,35 @@ read -e -p "
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     Qdir=~/.config/rncbc.org
     Qconf=${Qdir}/Qtractor.conf
+    Qtplt=${Qdir}/Template.qtt
     Sconf=${Qdir}/synthv1.conf
 
-    if [[ ! -h ${Qconf} ]] ; then
-        rm -fv ${Qconf}
-        ln -sv ${REPODIR}/Template.qtt ${Qdir}
-        ln -sv ${REPODIR}/Qtractor.conf ${Qdir}
-    else
-        echo ${Qconf}" Already managed"
-    fi
+    for i in $Qconf $Qtplt $Sconf ; do
 
-    if [[ ! -h ${Sconf} ]] ; then
-        rm -fv ${Sconf}
-        ln -sv ${REPODIR}/Template.qtt ${Qdir}
-        ln -sv ${REPODIR}/Qtractor.conf ${Qdir}
-    else
-        echo ${Sconf}" Already managed"
-    fi
+        if [[ ! -h ${i} ]] ; then
+            # echo "Yo! ${REPODIR}/config-files/${i##*/} is NOT a link"
+            rm -fv ${i}
+            ln -sv ${REPODIR}/config-files/${i##*/} ${Qdir}
+        else
+            # echo "Yo! ${i##*/} is a link"
+            echo "${i} is already version-controlled"
+        fi
+
+    done
+
+    # if [[ ! -h ${Qconf} ]] ; then
+    #     rm -fv ${Qconf}
+    #     ln -sv ${REPODIR}/config-files/Qtractor.conf ${Qdir}
+    # else
+    #     echo ${Qconf}" Already managed"
+    # fi
+
+    # if [[ ! -h ${Sconf} ]] ; then
+    #     rm -fv ${Sconf}
+    #     ln -sv ${REPODIR}/Qtractor.conf ${Qdir}
+    # else
+    #     echo ${Sconf}" Already managed"
+    # fi
 fi
 
 # Packages
