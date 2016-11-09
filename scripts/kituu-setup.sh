@@ -111,17 +111,26 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 fi
 
 read -e -p "
-#### Symlink Qtractor conf files? [Y/n] " YN
+#### Symlink Qtractor (& synthv1) conf files? [Y/n] " YN
 
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     Qdir=~/.config/rncbc.org
     Qconf=${Qdir}/Qtractor.conf
+    Sconf=${Qdir}/synthv1.conf
     if [[ ! -h ${Qconf} ]] ; then
         rm -fv ${Qconf}
         ln -sv ${REPODIR}/Template.qtt ${Qdir}
         ln -sv ${REPODIR}/Qtractor.conf ${Qdir}
     else
         echo ${Qconf}" Already managed"
+    fi
+
+    if [[ ! -h ${Sconf} ]] ; then
+        rm -fv ${Sconf}
+        ln -sv ${REPODIR}/Template.qtt ${Qdir}
+        ln -sv ${REPODIR}/Qtractor.conf ${Qdir}
+    else
+        echo ${Sconf}" Already managed"
     fi
 fi
 
