@@ -41,7 +41,7 @@ pack[image_tools]="gimp inkscape"
 pack[music_prod]="qtractor qjackctl kxstudio-meta-audio-plugins-lv2 qmidinet calf-plugins hexter zam-plugins drumkv1-lv2 synthv1-lv2 samplv1-lv2 jalv lilv-utils guitarix artyfx fluid-soundfont-gm fluid-soundfont-gs zynaddsubfx helm audacious audacity vmpk cadence lv2-dev radium-compressor pizmidi-plugins oxefmsynth argotlunar yoshimi dpf-plugins qmidiarp rtirq-init distrho-plugin-ports-lv2 swh-lv2 triceratops-lv2 mda-lv2"
 pack[games]="extremetuxracer supertuxkart chromium-bsu"
 pack[emacs]="emacs aspell-fr"
-pack[i3]="i3 dmenu i3status i3lock thunar scrot"
+pack[i3]="i3 dmenu i3status i3lock thunar scrot numlockx"
 
 # MOZilla addons
 MOZURL="https://addons.mozilla.org/firefox/downloads/latest"
