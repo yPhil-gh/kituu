@@ -42,6 +42,7 @@ bindsym XF86AudioPrev exec playerctl previous
 bindsym $mod+Tab workspace next
 
 hide_edge_borders both
+new_window pixel 3
 
 # WORKSPACES
 #exec --no-startup-id i3-msg 'workspace 1; exec gnome-terminal --command byobu --maximize --hide-menubar; workspace 2; exec firefox; workspace 3; exec thunderbird'
@@ -103,7 +104,7 @@ set $orange #FF4318
 set $gray   #333333
 set $lgray  #555555
 set $red    #900000
-set $dred   #300000
+set $dred   #200000
 set $yel    #CCCC99
 set $oblue  #0088CC
 set $llgray #2f343a
@@ -112,7 +113,7 @@ set $bgray  #292d2e
 
 # Window Decorations Colors
 #class                    border    backgr.  text    indicator
-client.focused            $gray     $gray    $orange  $red
+client.focused            $gray     $dred    $orange   $red
 client.unfocused          $gray     $lgray   $yel     $bgray
 client.focused_inactive   $gray     $gray    $lgray   $bgray
 client.urgent             $llgray   $gray    $orange  $red

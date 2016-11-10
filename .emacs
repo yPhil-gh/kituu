@@ -937,7 +937,7 @@ Again, here by pure nostalgia."
  '(haml-backspace-backdents-nesting nil)
  '(holiday-other-holidays (quote islamic-holidays))
  '(ido-ignore-buffers (quote ("\\` " "*Messages*" "*scratch*")))
- '(ido-mode (quote both) nil (ido))
+ ;; '(ido-mode (quote both) nil (ido))
  '(inhibit-startup-echo-area-message (user-login-name))
  '(inhibit-startup-screen t)
  '(keyboard-coding-system (quote utf-8) nil nil "nil before, now utf-8.")
