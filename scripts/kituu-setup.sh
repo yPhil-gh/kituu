@@ -33,6 +33,11 @@ if ($RW); then vc_prefix="git@github.com:" && message="RW mode ON" && git config
 # Packages
 BASICS="dos2unix python zsh vim byobu apt-file curl wget htop bc locate sshfs git cowsay fortune fortunes-off zenity sox p7zip-full links unison baobab gparted xclip xsel smplayer gpicview gnome-terminal "
 
+declare -A CONF
+CONF[Qtractor.conf]="rncbc.org"
+CONF[synthv1.conf]="rncbc.org"
+CONF[Template.qtt]="rncbc.org"
+
 declare -A pack
 pack[dev_tools]="build-essential autoconf devscripts dpkg-dev-el"
 pack[beatnitpicker]="python-gst0.10 python-scipy python-matplotlib"
@@ -109,13 +114,7 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     sudo cp -v ${REPODIR}/scripts/*.desktop /usr/share/applications/
 fi
 
-declare -A CONF
-CONF[Qtractor.conf]="rncbc.org"
-CONF[synthv1.conf]="rncbc.org"
-CONF[Template.qtt]="rncbc.org"
-
 confs=$(printf "%s, " "${!CONF[@]}")
-
 read -e -p "
 #### Symlink (${confs::-2}) config files? [Y/n] " YN
 
@@ -127,7 +126,7 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
 
         if [[ ! -h ~/$file ]] ; then
             rm -fv ~/$file
-            ln -sv $file ~/$file
+            ln -sv ${REPODIR}/$file ~/$file
         else
             echo "~/$file is already version-controlled"
         fi
@@ -263,16 +262,3 @@ Comment=Byobu tmuxed (zsh) shell" > $AUTOSTART_DIR/byobu.desktop
 fi
 
 echo -e $SEP"...Done."
-
-# NOTES
-# packages in probation: apt-file zile gdm xfce4 xfce4-terminal xfce4-goodies xfce4-taskmanager libgtk2.0-dev
-# pack[glamp]="apache2 mysql-server phpmyadmin"
-# Thunderbird no longer opens xpis. (But it has a new add-ons panel that makes it much easier to search&install them).
-# pack[xscreensaver]="xscreensaver-gl xscreensaver-gl-extra xscreensaver-data-extra xscreensaver-data"
-# pack[xubuntu]="xubuntu"
-# pack[dev_env]="perl-doc"
-# pack[dev_libs]="libncurses5-dev libgnutls-dev librsvg2-dev libxpm-dev libjpeg62-dev libtiff-dev libgif-dev libqt4-dev libgtk-3-dev"
-# pack[emacs_friends]="bbdb mailutils w3m-el"
-# http://archive.canonical.com/ubuntu/pool/partner/a/adobe-flashplugin/adobe-flashplugin_11.2.202.236-0precise1_i386.deb
-# https://addons.mozilla.org/en-US/firefox/addon/youtubedownloader/?src=userprofile
-# sudo netstat -tlnp
