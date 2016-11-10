@@ -31,9 +31,9 @@ sudo apt install git zsh
 if ($RW); then vc_prefix="git@github.com:" && message="RW mode ON" && git config --global user.name "xaccrocheur" && git config --global user.email xaccrocheur@gmail.com ; else vc_prefix="https://github.com/" && message="RW mode OFF"; fi
 
 # Packages
-declare -A pack
 BASICS="dos2unix python zsh vim byobu apt-file curl wget htop bc locate sshfs git cowsay fortune fortunes-off zenity sox p7zip-full links unison baobab gparted xclip xsel smplayer gpicview gnome-terminal "
 
+declare -A pack
 pack[dev_tools]="build-essential autoconf devscripts dpkg-dev-el"
 pack[beatnitpicker]="python-gst0.10 python-scipy python-matplotlib"
 pack[optional]="nautilus-dropbox"
@@ -109,41 +109,30 @@ if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
     sudo cp -v ${REPODIR}/scripts/*.desktop /usr/share/applications/
 fi
 
+declare -A CONF
+CONF[Qtractor.conf]="rncbc.org"
+CONF[synthv1.conf]="rncbc.org"
+CONF[Template.qtt]="rncbc.org"
+
+confs=$(printf "%s, " "${!CONF[@]}")
+
 read -e -p "
-#### Symlink Qtractor (& synthv1) conf files? [Y/n] " YN
+#### Symlink (${confs::-2}) config files? [Y/n] " YN
 
 if [[ $YN == "y" || $YN == "Y" || $YN == "" ]] ; then
-    Qdir=~/.config/rncbc.org
-    Qconf=${Qdir}/Qtractor.conf
-    Qtplt=${Qdir}/Template.qtt
-    Sconf=${Qdir}/synthv1.conf
 
-    for i in $Qconf $Qtplt $Sconf ; do
+    for conf in "${!CONF[@]}" ; do
 
-        if [[ ! -h ${i} ]] ; then
-            # echo "Yo! ${REPODIR}/config-files/${i##*/} is NOT a link"
-            rm -fv ${i}
-            ln -sv ${REPODIR}/config-files/${i##*/} ${Qdir}
+        file=".config/${CONF[$conf]}/$conf"
+
+        if [[ ! -h ~/$file ]] ; then
+            rm -fv ~/$file
+            ln -sv $file ~/$file
         else
-            # echo "Yo! ${i##*/} is a link"
-            echo "${i} is already version-controlled"
+            echo "~/$file is already version-controlled"
         fi
 
     done
-
-    # if [[ ! -h ${Qconf} ]] ; then
-    #     rm -fv ${Qconf}
-    #     ln -sv ${REPODIR}/config-files/Qtractor.conf ${Qdir}
-    # else
-    #     echo ${Qconf}" Already managed"
-    # fi
-
-    # if [[ ! -h ${Sconf} ]] ; then
-    #     rm -fv ${Sconf}
-    #     ln -sv ${REPODIR}/Qtractor.conf ${Qdir}
-    # else
-    #     echo ${Sconf}" Already managed"
-    # fi
 fi
 
 # Packages
