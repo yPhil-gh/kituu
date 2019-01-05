@@ -3,12 +3,11 @@
 usage() {
 cat <<-EOM
 Usage: $(basename $0) OPTIONS
-  -w Wave file (required)
+  -w A .wav file (required)
   -i Image (required)
   -a Artist name (optional)
   -t Title of song or album (optional)
   -s Style of waveform (optional). Can be point, line, p2p, or cline. Default is line.
-  -S Style color (optional). Defaults to 
   -o Override the output file name (optional). Otherwise, -a and -i are used to construct file name.
 EOM
 }
@@ -66,9 +65,8 @@ if [ $OUT_FILE ]; then
   OUTPUT=${OUT_FILE}.mp4
 elif [ $ARTIST -a $TITLE ]; then
     OUTPUT=${ARTIST}-${TITLE}.mp4
-  else
-    error Output file name could not be determined.
-  fi
+else
+  error Output file name could not be determined.
 fi
 
 [[ $WAV ]] || error Missing required -w option.
